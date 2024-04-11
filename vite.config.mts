@@ -5,10 +5,10 @@ import dynamicImport from 'vite-plugin-dynamic-import'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import topLevelAwait from 'vite-plugin-top-level-await'
 
-import i18nextLoader from './packages/pastebar-frontend/src/lib/i18n-vite-loaded/loader'
+import i18nextLoader from './packages/pastebar-ui/src/lib/i18n-vite-loaded/loader'
 
 export default defineConfig({
-  root: 'packages/pastebar-frontend',
+  root: 'packages/pastebar-ui',
   clearScreen: false,
   server: {
     port: 1420,
@@ -44,14 +44,14 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '~': path.join(__dirname, 'packages/pastebar-frontend/src'),
+      '~': path.join(__dirname, 'packages/pastebar-ui/src'),
     },
   },
   plugins: [
     react(),
     dynamicImport(),
     i18nextLoader({
-      paths: ['./packages/pastebar-frontend/src/locales/lang'],
+      paths: ['./packages/pastebar-ui/src/locales/lang'],
       namespaceResolution: 'basename',
     }),
     viteStaticCopy({

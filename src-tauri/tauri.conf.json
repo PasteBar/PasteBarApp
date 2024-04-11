@@ -1,9 +1,9 @@
 {
   "build": {
     "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run ui:build",
-    "devPath": "../dist-frontend",
-    "distDir": "../dist-frontend",
+    "beforeBuildCommand": "npm run ui:build:local",
+    "devPath": "../dist-ui",
+    "distDir": "../dist-ui",
     "withGlobalTauri": false
   },
   "package": {

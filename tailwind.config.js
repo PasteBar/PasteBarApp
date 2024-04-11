@@ -95,10 +95,10 @@ const SAFELIST_COLORS_PATTERNS = SAFELIST_COLORS.map(color => [
 module.exports = {
   darkMode: ['class'],
   content: [
-    './packages/pastebar-frontend/index.html',
+    './packages/pastebar-ui/index.html',
     './tailwind-safelist.txt',
-    './packages/pastebar-frontend/src/**/*.{js,ts,jsx,tsx}',
-    './packages/pastebar-frontend/src/components/**/*.{js,ts,jsx,tsx}',
+    './packages/pastebar-ui/src/**/*.{js,ts,jsx,tsx}',
+    './packages/pastebar-ui/src/components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     container: {
