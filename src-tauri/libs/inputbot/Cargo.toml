@@ -1,0 +1,31 @@
+[package]
+name = "inputbot"
+version = "0.5.5"
+authors = ["obv-mikhail <obv.mikhail@gmail.com>"]
+description = "Cross-platform (Windows & Linux) library for simulating keyboard/mouse input events and registering global input device event handlers."
+documentation = "https://docs.rs/inputbot"
+homepage = "https://github.com/obv-mikhail/inputbot"
+repository = "https://github.com/obv-mikhail/inputbot"
+readme = "README.md"
+keywords = ["hotkey", "mouse", "keyboard", "input", "bot"]
+categories = ["api-bindings"]
+license = "MIT"
+edition = "2018"
+
+[dependencies]
+strum = { version = "0.24.0", features = ["derive"] }
+strum_macros = "0.24.0"
+once_cell = "1.9.0"
+
+[target.'cfg(target_os="macos")'.dependencies]
+core-graphics = "0.22.2"
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3.9", features = ["winuser"] }
+
+[target.'cfg(target_os="linux")'.dependencies]
+libc = "0.2.113"
+input = "0.7.1"
+nix = "0.24.1"
+x11 = { version = "2.19.1", features = ["xlib", "xtest"] }
+uinput = { version = "0.1.3", default-features = false }

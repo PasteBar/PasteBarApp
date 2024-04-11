@@ -1,0 +1,7 @@
+{
+  "tauri": {
+    "systemTray": {
+      "iconPath": "icons/tray128x128-white.png"
+    }
+  }
+}

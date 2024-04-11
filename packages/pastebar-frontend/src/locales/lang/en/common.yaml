@@ -1,0 +1,303 @@
+'': ''
+' No': ' No'
+' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': ' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.'
+About PasteBar: About PasteBar
+About PasteBar Pro: About PasteBar Pro
+Action Menu: Action Menu
+? Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
+Add Clip: Add Clip
+Add First Option: Add First Option
+Add License: Add License
+Add Link Card: Add Link Card
+Add Menu: Add Menu
+Add Option: Add Option
+Add PasteBar to Accessibility: Add PasteBar to Accessibility
+Add to: Add to
+Add to Clips: Add to Clip
+Add to Clips or Menu: Add to Clips or Menu
+Add to Menu: Add to Menu
+Add to clip or menu: Add to clip or menu
+Add to template fields: Add to template fields
+Allow PasteBar to Copy and Paste from Clipboard: Allow PasteBar to Copy and Paste from Clipboard
+Are you sure you want to delete?: Are you sure you want to delete?
+Are you sure?: Are you sure?
+Back: Back
+Build on {{buildDate}}: Build on {{buildDate}}
+Cancel: Cancel
+Cancel Reset: Cancel Reset
+Check: Check
+Check / Done: Check / Done
+Check and Close: Check and Close
+Check and Done: Check and Done
+Check for Updates: Check for Updates
+Clear found results and filters: Clear found results and filters
+Click to Confirm: Click to Confirm
+Clip: Clip
+Clipboard: Clipboard
+Clipboard History: Clipboard History
+Clipboard History Settings: Clipboard History Settings
+Close: Close
+Close Edit: Close Edit
+Close Find: Close Find
+Close Large View Edit: Close Large View Edit
+Confirm: Confirm
+Confirm  action: Confirm  action
+Confirm Delete: Confirm Delete
+Confirm Email: Confirm Email
+Confirm Passcode: Confirm Passcode
+Confirm Password: Confirm Password
+Confirm Remove: Confirm Remove
+Confirm Your Passcode: Confirm Your Passcode
+Confirm license remove: Confirm license remove
+Confirm passcode reset: Confirm passcode reset
+Confirm password reset: Confirm password reset
+Confirm password reset action: Confirm password reset action
+Confirm remove license: Confirm remove license
+Confirm your action: Confirm your action
+Confirm {{action}}: Confirm {{action}}
+Copied: Copied
+Copy: Copy
+Copy & Paste: Copy & Paste
+Copy and Paste: Copy and Paste
+'Copy of ': 'Copy of '
+Copy to Clipboard: Copy to Clipboard
+Create: Create
+Created: Created
+Delay Next: Delay Next
+Delete: Delete
+Deselect All: Deselect All
+Deselect pinned: Deselect pinned
+Digits Only Passcode: Digits Only Passcode
+Disabled: Disabled
+Done: Done
+Done Adding: Done Adding
+Done Edit: Done Edit
+Done Reorder: Done Reorder
+Drag: Drag
+Drag to Move: Drag to Move
+Drop To Add: Drop To Add
+Drop Zone: Drop Zone
+Edit: Edit
+Edit Label: Edit Label
+Edit name: Edit name
+Emoji: Emoji
+Empty: Empty
+Empty Select: Empty Select
+Enable / Disable: Enable / Disable
+Enable PasteBar in Accessibility Settings: Enable PasteBar in Accessibility Settings
+Enabled: Enabled
+Enter Current Passcode: Enter Current Passcode
+Enter Digits Only Passcode: Enter Digits Only Passcode
+Enter Email: Enter Email
+Enter Passcode: Enter Passcode
+Enter Password: Enter Password
+Enter Recovery Email: Enter Recovery Email
+Enter Recovery Password: Enter Recovery Password
+Enter passcode or password to unlock: Enter passcode or password to unlock
+Expires on {{licenseExpInDays}}: Expires on {{licenseExpInDays}}
+Expires on {{proExpiresOn}}: Expires on {{proExpiresOn}}
+? Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+Field is not found in the template: Field is not found in the template
+Find Clip: Find Clip
+Find History: Find History
+Found in template but missing from fields definition: Found in template but missing from fields definition
+Got it: Got it
+Hide Muli Select: Hide Muli Select
+Hide Pinned Board: Hide Pinned Board
+Image: Image
+Image Scale {{ImageScale}}x: Image Scale {{ImageScale}}x
+Image size: Image size
+Image size in pixels: Image size in pixels
+In Large View: In Large View
+Inactive: Inactive
+Large View: Large View
+Large View Edit: Large View Edit
+Later: Later
+Light: Light
+Lines Wrap: Lines Wrap
+Make Active: Make Active
+Make Disabled: Make Disabled
+Make Enabled: Make Enabled
+Make Inactive: Make Inactive
+Manage: Manage
+Move Down: Move Down
+Move Up: Move Up
+Multi Select: Multi Select
+Next Delay: Next Delay
+No: No
+No Wrap: No Wrap
+Not found in the template: Not found in the template
+Nothing found: Nothing found
+Number of lines: Number of lines
+Ok, but later: Ok, but later
+Open: Open
+Open Accessibility: Open Accessibility
+Open Window: Open Window
+Options: Options
+Password: Password
+Paste Delay: Paste Delay
+Paste Menu: Paste Menu
+Paste in {{pastingCountDown}}...: Paste in {{pastingCountDown}}...
+PasteBar: PasteBar
+PasteBar Pro: PasteBar Pro
+PasteBar application now can access the clipboard and perform copy and paste operations across applications.: PasteBar application now can access the clipboard and perform copy and paste operations across applications.
+PasteBar was successfuly added to Accessibility settings: PasteBar was successfuly added to Accessibility settings
+Pasted: Pasted
+Path: Path
+? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+: 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+Pin Selected: Pin Selected
+Pinned: Pinned
+Please add PasteBar to the list of apps in: Please add PasteBar to the list of apps in
+Please confirm your action!: Please confirm your action!
+Press: Press
+Press ESC key to close: Press ESC key to close
+Pro: Pro
+Quit: Quit
+Rebuild Menu: Rebuild Menu
+Recent History: Recent History
+Recovery Email: Recovery Email
+Recovery Password: Recovery Password
+Register License: Register License
+Remove: Remove
+Remove License: Remove License
+Remove Link Card: Remove Link Card
+Remove Selected Star: Remove Selected Star
+Remove all fields from template: Remove all fields from template
+Remove from template: Remove from template
+Rename: Rename
+Reorder pinned: Reorder pinned
+Reset: Reset
+Reset Passcode: Reset Passcode
+Reset Password: Reset Password
+Reset with Passcode: Reset with Passcode
+Reverse Order: Reverse Order
+Run and Copy Response: Run and Copy Response
+Run and Paste Response: Run and Paste Response
+Running: Running
+Save: Save
+Save It!: Save It!
+Saved: Saved
+Scroll to Top: Scroll to Top
+Second: Second
+Seconds: Seconds
+Select: Select
+Select Default Option: Select Default Option
+Select Language: Select Language
+Select default: Select default
+Select is Empty: Select is Empty
+Select is empty: Select is empty
+Select option: Select option
+Select pinned: Select pinned
+Sequence Copy: Sequence Copy
+Sequence Copy Paste: Sequence Copy Paste
+Sequence Delay Next: Sequence Delay Next
+Sequence Next Delay: Sequence Next Delay
+Sequence Paste: Sequence Paste
+Sequence Reverse Order: Sequence Reverse Order
+Set: Set
+Set Email: Set Email
+Set License: Set License
+Set Password: Set Password
+Show Large View: Show Large View
+Show all: Show all
+Star: Star
+Star Selected: Star Selected
+Success!: Success!
+Swap Panels Layout: Swap Panels Layout
+System Settings -> Privacy & Security -> Accessibility: System Settings -> Privacy & Security -> Accessibility
+Thank you for using Pro: Thank you for using Pro
+This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.: This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.
+Too long: Too long
+Too short: Too short
+Toolbar:
+  Blank Text Formatting: Blank Text Formatting
+  Bold Formatting: Bold Formatting
+  Bold Text Formatting: Bold Text Formatting
+  Copy and Paste Formatting: Copy and Paste Formatting
+  Header Formatting: Header Formatting
+  Hightlight Text Formatting: Hightlight Text Formatting
+  Italic Formatting: Italic Formatting
+  Masked Text Formatting: Masked Text Formatting
+  Remove Text Formatting: Remove Text Formatting
+Type:
+  App: App
+  Auto Fill: Auto Fill
+  AutoFill: AutoFill
+  Clip: Clip
+  Code: Code
+  Code Snippet: Code Snippet
+  Command: Command
+  Email: Email
+  Emoji: Emoji
+  Empty: Empty
+  Error: Error
+  File, Path or App: File, Path or App
+  Form Auto Fill: Form Auto Fill
+  Image: Image
+  Label: Label
+  Link: Link
+  Link or Email: Link or Email
+  Menu: Menu
+  Path: Path
+  Plain Text: Plain Text
+  Request: Request
+  Run Auto Fill: Run Auto Fill
+  Scraper: Scraper
+  Secret: Secret
+  Shell Command: Shell Command
+  Template: Template
+  Template Fill: Template Fill
+  Text: Text
+  Video: Video
+  Web Request (HTTP): Web Request (HTTP)
+  Web Scraper / Parser: Web Scraper / Parser
+TypeMenu:
+  Clip Type: Clip Type
+  Code Snippet: Code Snippet
+  File, Path or App: File, Path or App
+  Form Auto Fill: Form Auto Fill
+  Image: Image
+  Link or Email: Link or Email
+  Link or File, Path or App: Link or File, Path or App
+  Plain Text: Plain Text
+  Run, Execute: Run, Execute
+  Select Language: Select Language
+  Shell Command: Shell Command
+  Template: Template
+  Template Fill: Template Fill
+  Text Template: Text Template
+  Web Request (HTTP): Web Request (HTTP)
+  Web Scraper / Parser: Web Scraper / Parser
+UnPin All: UnPin All
+UnPin Selected: UnPin Selected
+Unlock Application Screen: Unlock Application Screen
+Unlock Pro features: Unlock Pro features
+Unlock Screen: Unlock Screen
+Unlock all features: Unlock all features
+Unsaved label: Unsaved label
+Update history list: Update history list
+Updated: Updated
+Upgrade to Pro: Upgrade to Pro
+Upgrade to Pro 🚀: Upgrade to Pro 🚀
+Use Passcode: Use Passcode
+Use Password: Use Password
+Using <b>{{Clipboard}}</b> field, allows you to copy text to the clipboard, and it will be inserted into the template: Using <b>{{Clipboard}}</b> field, allows you to copy text to the clipboard, and it will be inserted into the template
+Verify: Verify
+Verify Current Password: Verify Current Password
+Verify Recovery Password: Verify Recovery Password
+'Version: 1.0.0': 'Version: 1.0.0'
+Views:
+  Paste Menu: Paste Menu
+Yes: Yes
+chars: chars
+found: found
+license Expired: license Expired
+lines: lines
+menu items in: menu items in
+minutes: minutes
+second: second
+seconds: seconds
+show less: show less

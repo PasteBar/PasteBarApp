@@ -1,0 +1,104 @@
+[package]
+name = "pastebar-app"
+version = "0.0.1"
+description = "PasteBar App"
+license = "Creative Commons Attribution-NonCommercial (CC BY-NC) License"
+repository = "https://github.com/PasteBar/PasteBarApp"
+edition = "2021"
+rust-version = "1.75.0"
+
+[build-dependencies.tauri-build]
+version = "1.4"
+features = []
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.52.0"
+
+[dependencies]
+keyring = "2.3.2"
+bcrypt = "0.15.1"
+reqwest-middleware = "0.2.5"
+http-cache-reqwest = { version = "0.13.0", default-features = false }
+http-cache-mokadeser = "0.1.3"
+
+# log = "0.4"
+serde_yaml = "0.9.0"
+jsonpath-rust = "0.4.0"
+ajson = "0.3.1"
+scraper = "0.18.1"
+is_executable = "1.0.1"
+opener = "0.6.1"
+platform-dirs = "0.3.0"
+serde_json = "1.0"
+clokwerk = "0.4"
+colored_json = "3.2.0"
+reqwest = "0.11.12"
+nanoid = "0.4.0"
+anyhow = "1.0.66"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.6", features = [ "api-all", "system-tray", "icon-png", "clipboard"] }
+tokio = { version = "1.28.2", features = ["full"] } 
+
+inputbot = { path = "libs/inputbot" }
+tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-single-instance = { git = "https://github.com/kurdin/tauri-plugin-single-instance", branch = "dev" }
+
+tracing = "0.1.37"
+tracing-subscriber = "0.3.16"
+dirs = "5.0.0"
+diesel = { version = "2.1.4", features = ["sqlite", "chrono", "r2d2", "64-column-tables"] }
+
+r2d2 = "0.8"
+lazy_static = "1.4.0"
+
+diesel_migrations = "2.1.0"
+libsqlite3-sys = { version = "0.28.0", features = ["bundled"] }
+chrono = { version = "0.4.24", features = ["serde"] }
+uuid = "1.3.1"
+once_cell = "1.7.0"
+thiserror = "1.0"
+arboard = "3.2.1"
+image = "0.24.9"
+tempfile = "3"
+base64 = "0.22.0"
+clipboard-master = "3.1.3"
+img_hash = "3.2.0"
+sha-1 = "0.10.1"
+regex = "1.9.3"
+
+lang_detect = { path = "libs/lang_detect" }
+auto-launch = { path = "libs/auto-launch" }
+tao = { path = "libs/tao-0.16.7" }
+
+linkify = "0.10.0"
+tl = { version = "0.7.7" }
+tld = "2.33.0"
+url = "2.4.1"
+html-escape = "0.2.13"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+macos-accessibility-client = { git = "https://github.com/kurdin/macos-accessibility-client", branch = "master", version = "0.0.1" } 
+objc = "0.2.7"
+cocoa = "0.25.0"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+inputbotlinux = { path = "libs/inputbotlinux" }
+
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = ["custom-protocol"]
+# this feature is used used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+system-tray = ["tauri/system-tray"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[patch.crates-io]
+tao = { path = "libs/tao-0.16.7" }
+
+[profile.release]
+# panic = "abort" # Strip expensive panic clean-up logic
+# codegen-units = 1 # Compile crates one after another so the compiler can optimize better
+# lto = true # Enables link to optimizations
+# opt-level = "z" # Optimize for size
+strip = true # Remove debug symbols

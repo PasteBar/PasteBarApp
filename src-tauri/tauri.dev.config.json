@@ -1,0 +1,7 @@
+{
+  "build": {
+    "beforeDevCommand": "cd ../pastebar-frontend && npm run dev",
+    "beforeBuildCommand": "cd ../pastebar-frontend npm run build && cp -r -f ../pastebar-frontend/dist-frontend/* ./dist-frontend",
+    "devPath": "http://localhost:4422"
+  }
+}

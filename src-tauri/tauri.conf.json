@@ -1,0 +1,92 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run ui:build",
+    "devPath": "../dist-frontend",
+    "distDir": "../dist-frontend",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "PasteBar",
+    "version": "../package.json"
+  },
+  "tauri": {
+    "systemTray": {
+      "iconPath": "icons/tray128x128.png",
+      "iconAsTemplate": true
+    },
+    "allowlist": {
+      "shell": {
+        "open": true
+      },
+      "dialog": {
+        "all": true
+      },
+      "http": {
+        "all": true
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["**"]
+      },
+      "clipboard": {
+        "all": true
+      },
+      "all": true,
+      "path": {
+        "all": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Productivity",
+      "copyright": "",
+      "deb": {
+        "depends": []
+      },
+      "externalBin": [],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "app.anothervision.pasteBar",
+      "longDescription": "",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      },
+      "resources": [],
+      "shortDescription": "",
+      "targets": "all",
+      "windows": {
+        "certificateThumbprint": "EE33202C716E13EDF250B69C7E61E15624DDB1F0",
+        "digestAlgorithm": "sha256",
+        "timestampUrl": "http://time.certum.pl",
+        "nsis": {
+          "installerIcon": "./icons/icon.ico"
+        },
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        }
+      }
+    },
+    "security": {
+      "csp": {
+        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app",
+        "connect-src": "ipc: https://ipc.localhost",
+        "img-src": "'self' asset: https://asset.localhost blob: data:",
+        "img-srcset": "'self' asset: https://asset.localhost blob: data:",
+        "style-src": "'unsafe-inline' 'self' asset: https://asset.localhost"
+      }
+    },
+    "updater": {
+      "active": false
+    }
+  }
+}

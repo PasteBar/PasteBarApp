@@ -1,0 +1,65 @@
+en:
+  add_first_item_here: Add First Item Here
+  disable_history_capture: Disable History Capture
+  enable_history_capture: Enable History Capture
+  clipboard_image_size: Clipboard Image size
+  history_capture_is_disabled: Clipboard History Capture is Disabled
+  recent_history: Recent History
+  open_pastebar: Open PasteBar
+  unlock_pastebar: Unlock PasteBar
+  quit: Quit
+
+de:
+  add_first_item_here: Menü hier hinzufügen
+  disable_history_capture: Zwischenablageerfassung deaktivieren
+  enable_history_capture: Zwischenablageerfassung aktivieren
+  clipboard_image_size: Bild in Zwischenablage
+  history_capture_is_disabled: Zwischenablageerfassung deaktiviert
+  recent_history: Zwischenablageverlauf
+  open_pastebar: PasteBar öffnen
+  unlock_pastebar: PasteBar entsperren
+  quit: Beenden
+
+es:
+  add_first_item_here: Añadir menú aquí
+  disable_history_capture: Desactivar captura del portapapeles
+  enable_history_capture: Activar captura del portapapeles
+  clipboard_image_size: Imagen en portapapeles
+  history_capture_is_disabled: Captura del portapapeles desactivada
+  recent_history: Historial reciente
+  open_pastebar: Abrir PasteBar
+  unlock_pastebar: Desbloquear PasteBar
+  quit: Salir
+
+fr:
+  add_first_item_here: Ajouter menu ici
+  disable_history_capture: Désactiver capture du presse-papiers
+  enable_history_capture: Activer capture du presse-papiers
+  clipboard_image_size: Image dans presse-papiers
+  history_capture_is_disabled: Capture du presse-papiers désactivée
+  recent_history: Historique récent
+  open_pastebar: Ouvrir PasteBar
+  unlock_pastebar: Déverrouiller PasteBar
+  quit: Quitter
+
+uk:
+  add_first_item_here: Додати сюди меню
+  disable_history_capture: Вимкнути захоплення буфера
+  enable_history_capture: Увімкнути захоплення буфера
+  clipboard_image_size: Зображення у буфері
+  history_capture_is_disabled: Захоплення буфера вимкнено
+  recent_history: Історія буферу
+  open_pastebar: Відкрити PasteBar
+  unlock_pastebar: Розблокувати PasteBar
+  quit: Вийти
+
+ru:
+  add_first_item_here: Добавить сюда меню
+  disable_history_capture: Отключить захват буфера
+  enable_history_capture: Включить захват буфера
+  clipboard_image_size: Изображение в буфере
+  history_capture_is_disabled: Захват истории отключен
+  recent_history: История буфера
+  open_pastebar: Открыть PasteBar
+  unlock_pastebar: Разблокировать PasteBar
+  quit: Выйти

@@ -1,0 +1,10 @@
+[package]
+name = "lang_detect"
+version = "0.1.0"
+authors = ["Sergey <skurdin@yahoo.com>"]
+edition = "2021"
+
+[dependencies]
+lazy_static = "1.4"
+regex = "1.9.3"
+once_cell = "1.8"
