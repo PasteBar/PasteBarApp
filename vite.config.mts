@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react-swc'
 import { defineConfig } from 'vite'
 import dynamicImport from 'vite-plugin-dynamic-import'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
-import topLevelAwait from 'vite-plugin-top-level-await'
 
 import i18nextLoader from './packages/pastebar-ui/src/lib/i18n-vite-loaded/loader'
 
@@ -61,10 +60,6 @@ export default defineConfig({
           dest: '.',
         },
       ],
-    }),
-    topLevelAwait({
-      promiseExportName: '__tla',
-      promiseImportName: i => `__tla_${i}`,
     }),
   ],
 })
