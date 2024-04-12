@@ -14,7 +14,6 @@ clip-images/**/*
 src-tauri/http-cacache/**/*
 
 node_modules
-dist-ui/**/*
 packages/dist-ui/**/*
 dist-ssr
 *.local
