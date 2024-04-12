@@ -1,6 +1,0 @@
-{
-  "build": {
-    "beforeDevCommand": "cd ../PasteBarApp-UI && npm run dev",
-    "devPath": "http://localhost:4422"
-  }
-}

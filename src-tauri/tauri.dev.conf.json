@@ -1,0 +1,6 @@
+{
+  "build": {
+    "beforeDevCommand": "",
+    "devPath": "http://localhost:4422/"
+  }
+}
