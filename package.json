@@ -10,6 +10,7 @@
     "ui:build:ts": "tsc && vite build",
     "format": "npx prettier --write . --ignore-path .gitignore ",
     "app:build:local": "tauri build",
+    "build": "tauri build --config src-tauri/tauri.release.conf.json",
     "app:build": "tauri build --config src-tauri/tauri.release.conf.json",
     "app:build:osx:universal": "tauri build --config src-tauri/tauri.release.conf.json --target universal-apple-darwin",
     "app:build:windows:arm": "tauri build --config src-tauri/tauri.release.conf.json --target aarch64-pc-windows-msvc --bundles nsis",
