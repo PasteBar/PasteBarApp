@@ -498,6 +498,20 @@ async fn main() {
       app.manage(app_settings);
       cron_jobs::setup_cron_jobs();
 
+      // let handle = app.handle();
+      // tauri::async_runtime::spawn(async move {
+      //   match tauri::updater::builder(handle).check().await {
+      //     Ok(update) => {
+      //       if update.is_update_available() {
+      //         update.download_and_install().await.unwrap();
+      //       }
+      //     }
+      //     Err(e) => {
+      //       println!("Error checking for update: {:?}", e);
+      //     }
+      //   }
+      // });
+
       let menu = Menu::new().add_submenu(Submenu::new(
         "PasteBar",
         Menu::new()
