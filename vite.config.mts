@@ -32,7 +32,7 @@ export default defineConfig({
     outDir: path.join(__dirname, 'packages/dist-ui'),
     emptyOutDir: true,
     commonjsOptions: { defaultIsModuleExports: 'auto' },
-    target: process.env.TAURI_PLATFORM == 'windows' ? 'chrome100' : 'safari12',
+    target: ['es2015', 'safari11'],
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     sourcemap: !!process.env.TAURI_DEBUG,
   },

@@ -8,6 +8,7 @@
 extern crate objc;
 
 use auto_launch::AutoLaunchBuilder;
+use dotenv::dotenv;
 use menu::DbRecentHistoryItems;
 use opener;
 use services::settings_service::insert_or_update_setting_by_name;
@@ -252,6 +253,7 @@ fn set_icon(app_handle: tauri::AppHandle, name: &str, is_dark: bool) {
 
 #[tokio::main]
 async fn main() {
+  dotenv().ok();
   let db_items_state = DbItems(Mutex::new(Vec::new()));
   let db_recent_history_items_state = DbRecentHistoryItems(Mutex::new(Vec::new()));
 
@@ -497,6 +499,20 @@ async fn main() {
       let app_settings = get_all_settings(None).unwrap_or_default();
       app.manage(app_settings);
       cron_jobs::setup_cron_jobs();
+
+      // let handle = app.handle();
+      // tauri::async_runtime::spawn(async move {
+      //   match tauri::updater::builder(handle).check().await {
+      //     Ok(update) => {
+      //       if update.is_update_available() {
+      //         update.download_and_install().await.unwrap();
+      //       }
+      //     }
+      //     Err(e) => {
+      //       println!("Error checking for update: {:?}", e);
+      //     }
+      //   }
+      // });
 
       let menu = Menu::new().add_submenu(Submenu::new(
         "PasteBar",

@@ -1,6 +1,0 @@
-{
-  "build": {
-    "beforeBuildCommand": "",
-    "distDir": "../dist-ui"
-  }
-}

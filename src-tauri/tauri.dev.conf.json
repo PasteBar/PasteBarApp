@@ -1,0 +1,19 @@
+{
+  "build": {
+    "beforeDevCommand": "cd ../PasteBarApp-UI && npm run dev",
+    "devPath": "http://localhost:4422/"
+  },
+  "tauri": {
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "http://localhost:8787/check/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "windows": {
+        "installMode": "passive"
+      },
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk3RjEzQzA5RDMyRTg0OTEKUldTUmhDN1RDVHp4bHhHN3AwMVU5SVFIZ3VCT0l3aGRTUkRsOXUzdkREalU5MHMyOElTdU5EMTMK"
+    }
+  }
+}

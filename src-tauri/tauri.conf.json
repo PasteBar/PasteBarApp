@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "npm run ui:dev",
     "beforeBuildCommand": "npm run ui:build:local",
     "devPath": "../dist-ui",
     "distDir": "../dist-ui",
@@ -86,7 +86,15 @@
       }
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": [
+        "https://updater.pastebar.app/check/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "windows": {
+        "installMode": "passive"
+      },
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk3RjEzQzA5RDMyRTg0OTEKUldTUmhDN1RDVHp4bHhHN3AwMVU5SVFIZ3VCT0l3aGRTUkRsOXUzdkREalU5MHMyOElTdU5EMTMK"
     }
   }
 }

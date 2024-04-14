@@ -32,8 +32,6 @@ import { Icons } from '~/components/icons'
 import { ThemeModeToggle } from '~/components/theme-mode-toggle'
 import { Badge, Box, Button, Flex, Shortcut, Text } from '~/components/ui'
 
-import { useSelectCollectionById } from '~/hooks/queries/use-collections'
-
 import Logo from './Logo'
 
 export function NavBar() {
@@ -42,10 +40,9 @@ export function NavBar() {
   const navigate = useNavigate()
 
   const { systemTheme } = useTheme()
-  const { setSystemTheme, themeDark } = useAtomValue(themeStoreAtom)
+  const { setSystemTheme } = useAtomValue(themeStoreAtom)
 
   const { currentCollectionId, collections } = useAtomValue(collectionsStoreAtom)
-  const isDark = themeDark()
 
   useEffect(() => {
     invoke('is_autostart_enabled').then(isEnabled => {

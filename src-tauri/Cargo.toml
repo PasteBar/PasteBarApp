@@ -16,6 +16,7 @@ winreg = "0.52.0"
 
 [dependencies]
 keyring = "2.3.2"
+dotenv = "0.15.0"
 bcrypt = "0.15.1"
 reqwest-middleware = "0.2.5"
 http-cache-reqwest = { version = "0.13.0", default-features = false }
@@ -36,7 +37,7 @@ reqwest = "0.11.12"
 nanoid = "0.4.0"
 anyhow = "1.0.66"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.6", features = [ "api-all", "system-tray", "icon-png", "clipboard"] }
+tauri = { version = "1.6", features = [ "api-all", "system-tray", "icon-png", "clipboard", "updater", "reqwest-client"] }
 tokio = { version = "1.28.2", features = ["full"] } 
 
 inputbot = { path = "libs/inputbot" }
