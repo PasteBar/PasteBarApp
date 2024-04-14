@@ -63,7 +63,7 @@
       },
       "resources": [],
       "shortDescription": "",
-      "targets": "all",
+      "targets": ["appimage", "nsis", "app", "dmg", "updater"],
       "windows": {
         "certificateThumbprint": "EE33202C716E13EDF250B69C7E61E15624DDB1F0",
         "digestAlgorithm": "sha256",
