@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeBuildCommand": "cd ../PasteBarApp-UI && npm run build && npm run sync:ui:app",
-    "distDir": "../dist-ui"
+    "beforeBuildCommand": "npm run build:clear && cd ../PasteBarApp-UI && npm run build:ui:sync",
+    "distDir": "../build"
   }
 }

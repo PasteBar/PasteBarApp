@@ -16,6 +16,7 @@ src-tauri/http-cacache/**/*
 node_modules
 packages/dist-ui/**/*
 dist-ssr
+build/**/*
 *.local
 *.data
 
