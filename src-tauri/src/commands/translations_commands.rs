@@ -35,13 +35,21 @@ pub async fn update_translation_keys(translations: Vec<Translation>) -> Result<S
   if !cfg!(debug_assertions) {
     return Err("This command is only available in debug mode".to_string());
   }
+
+  let base_path = std::env::var("MISSING_TRANSLATION_SAVE_PATH").unwrap();
+
+  if base_path.is_empty() {
+    return Err("MISSING_TRANSLATION_SAVE_PATH is not set".to_string());
+  }
+
   for translation in translations.iter() {
     println!("Adding missing translation key {:?}", translation);
 
     let path_str = format!(
-      "../src/locales/lang/{}/{}.yaml",
-      translation.language, translation.namespace
+      "{}/{}/{}.yaml",
+      base_path, translation.language, translation.namespace
     );
+
     let path = Path::new(&path_str);
 
     // Ensure the directory exists
@@ -114,10 +122,17 @@ pub async fn update_translation_keys(translations: Vec<Translation>) -> Result<S
       .create(true)
       .truncate(true)
       .open(path)
-      .map_err(|e| e.to_string())?;
+      .map_err(|e| {
+        eprintln!("Failed to open file: {}", e);
+        e.to_string()
+      })?;
 
     let yaml = serde_yaml::to_string(&sorted_map).map_err(|e| e.to_string())?;
-    file.write_all(yaml.as_bytes()).map_err(|e| e.to_string())?;
+    // println!("YAML: {:?}", yaml);
+    file.write_all(yaml.as_bytes()).map_err(|e| {
+      eprintln!("Failed to write to file: {}", e);
+      e.to_string()
+    })?;
 
     println!("Updated translation key with text: {:?}", translation);
   }

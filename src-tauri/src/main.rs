@@ -8,6 +8,7 @@
 extern crate objc;
 
 use auto_launch::AutoLaunchBuilder;
+use dotenv::dotenv;
 use menu::DbRecentHistoryItems;
 use opener;
 use services::settings_service::insert_or_update_setting_by_name;
@@ -252,6 +253,7 @@ fn set_icon(app_handle: tauri::AppHandle, name: &str, is_dark: bool) {
 
 #[tokio::main]
 async fn main() {
+  dotenv().ok();
   let db_items_state = DbItems(Mutex::new(Vec::new()));
   let db_recent_history_items_state = DbRecentHistoryItems(Mutex::new(Vec::new()));
 

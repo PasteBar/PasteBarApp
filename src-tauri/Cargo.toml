@@ -16,6 +16,7 @@ winreg = "0.52.0"
 
 [dependencies]
 keyring = "2.3.2"
+dotenv = "0.15.0"
 bcrypt = "0.15.1"
 reqwest-middleware = "0.2.5"
 http-cache-reqwest = { version = "0.13.0", default-features = false }
