@@ -106,7 +106,7 @@ INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('autoMaskWordsList', '', NULL, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
-VALUES ('appVersion', '0.0.1', NULL, NULL);
+VALUES ('appLastUpdateVersion', '0.0.1', NULL, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('isAutoCloseOnCopyPaste', NULL, false, NULL);
