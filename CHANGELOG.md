@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.0.7
+
+### Patch Changes
+
+- e362b7e: test
+
 ## 0.0.6
 
 ### Patch Changes
