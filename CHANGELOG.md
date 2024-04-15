@@ -1,5 +1,14 @@
 # pastebar-app
 
+## 0.0.8
+
+### Patch Changes
+
+- Update to Dark Theme for Global Search
+- test
+- This is UI Test changes
+- UI test changeset
+
 ## 0.0.7
 
 ### Patch Changes
