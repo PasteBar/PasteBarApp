@@ -20,8 +20,7 @@
     "taze:minor": "taze minor -w",
     "preview": "vite preview",
     "changeset": "changeset",
-    "publish:packages": "changeset publish",
-    "version:packages": "changeset version"
+    "version": "changeset version"
   },
   "dependencies": {
     "@codastic/react-positioning-portal": "^0.7.0",
