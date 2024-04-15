@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.0.6
+
+### Patch Changes
+
+- f124571: Update to Dark Theme for Global Search
+
 ## 0.0.5
 
 ### Patch Changes
