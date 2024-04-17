@@ -4,7 +4,7 @@
     "beforeBuildCommand": "npm run ui:build:local",
     "devPath": "../dist-ui",
     "distDir": "../dist-ui",
-    "withGlobalTauri": false
+    "withGlobalTauri": true
   },
   "package": {
     "productName": "PasteBar",
@@ -17,7 +17,15 @@
     },
     "allowlist": {
       "shell": {
-        "open": true
+        "open": true,
+        "sidecar": true,
+        "scope": [
+          {
+            "name": "bin/tauri_in_app_purchase_helper",
+            "sidecar": true,
+            "args": true
+          }
+        ]
       },
       "dialog": {
         "all": true
@@ -27,7 +35,9 @@
       },
       "protocol": {
         "asset": true,
-        "assetScope": ["**"]
+        "assetScope": [
+          "**"
+        ]
       },
       "clipboard": {
         "all": true
@@ -44,7 +54,7 @@
       "deb": {
         "depends": []
       },
-      "externalBin": [],
+      "externalBin": ["bin/tauri_in_app_purchase_helper"],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -63,7 +73,13 @@
       },
       "resources": [],
       "shortDescription": "",
-      "targets": ["appimage", "nsis", "app", "dmg", "updater"],
+      "targets": [
+        "appimage",
+        "nsis",
+        "app",
+        "dmg",
+        "updater"
+      ],
       "windows": {
         "certificateThumbprint": "EE33202C716E13EDF250B69C7E61E15624DDB1F0",
         "digestAlgorithm": "sha256",
