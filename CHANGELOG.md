@@ -1,5 +1,12 @@
 # pastebar-app
 
+## 0.0.10
+
+### Patch Changes
+
+- Test version sync
+- This is another test for UI changes
+
 ## 0.0.9
 
 ### Patch Changes

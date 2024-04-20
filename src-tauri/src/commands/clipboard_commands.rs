@@ -9,7 +9,7 @@ use crate::services::shell_service::{
   run_shell_command, ExecHomeDir, OutputRegexFilter, OutputTemplate,
 };
 use crate::services::utils::{
-  ensure_url_or_email_prefix, ensure_url_prefix, remove_special_bbcode_tags,
+  ensure_url_or_email_prefix, ensure_url_prefix, mask_value, remove_special_bbcode_tags,
 };
 use crate::{constants, services::items_service::get_item_by_id};
 use arboard::{Clipboard, ImageData};
@@ -66,6 +66,7 @@ pub struct TemplateOption {
   pub id: Option<String>,
   pub label: Option<String>,
   pub value: Option<String>,
+  pub is_value_masked: Option<bool>,
   pub select_options: Option<Vec<String>>,
   pub is_enable: Option<bool>,
 }
@@ -221,7 +222,12 @@ pub async fn copy_clip_item(
 
       match all_options {
         Ok(options) => {
-          match run_template_fill(app_handle, item.value.clone(), options.template_options) {
+          match run_template_fill(
+            app_handle,
+            item.value.clone(),
+            options.template_options,
+            None,
+          ) {
             Ok(filled_template) => {
               manager
                 .write_text(&filled_template)
@@ -542,6 +548,7 @@ pub fn run_template_fill(
   app_handle: AppHandle,
   template_value: Option<String>,
   template_options: Vec<TemplateOption>,
+  is_preview: Option<bool>,
 ) -> Result<String, String> {
   let manager = app_handle.clipboard_manager();
   let mut replaced_template = template_value.unwrap_or_default();
@@ -562,11 +569,20 @@ pub fn run_template_fill(
         ))
         .map_err(|e| format!("Invalid regex: {}", e))?;
 
-        if field.label.as_deref().unwrap_or_default() == "Clipboard" {
-          let clipboard_text = manager
-            .read_text()
-            .map_err(|e| format!("Failed to read from clipboard: {}", e))?
-            .unwrap_or_default();
+        if field
+          .label
+          .as_deref()
+          .unwrap_or_default()
+          .eq_ignore_ascii_case("clipboard")
+        {
+          let clipboard_text = manager.read_text().unwrap_or(None).unwrap_or_default();
+
+          if is_preview.unwrap_or(false) && field.is_value_masked.unwrap_or(false) {
+            replaced_template = regex
+              .replace_all(&replaced_template, mask_value(&clipboard_text))
+              .to_string();
+            continue;
+          }
 
           replaced_template = regex
             .replace_all(&replaced_template, &clipboard_text)
