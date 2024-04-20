@@ -2,7 +2,7 @@ use crate::types::{LanguagePattern, Type};
 use once_cell::sync::Lazy;
 use regex::Regex;
 
-pub static JSX: [LanguagePattern; 15] = [
+pub static JSX: [LanguagePattern; 16] = [
   // Matches JSX expressions within curly braces within <tag> or <Tag> blocks
   LanguagePattern {
     pattern: Lazy::new(|| {
@@ -106,5 +106,10 @@ pub static JSX: [LanguagePattern; 15] = [
     pattern: Lazy::new(|| Regex::new(r"\bclass=").unwrap()),
     r#type: Type::Not,
     near_top: None,
+  },
+  LanguagePattern {
+    pattern: Lazy::new(|| Regex::new(r"https?://").unwrap()),
+    r#type: Type::Not,
+    near_top: Some(true),
   },
 ];
