@@ -2,5 +2,57 @@
   "build": {
     "beforeBuildCommand": "npm run build:clear && cd ../PasteBarApp-UI && npm run build:ui:sync",
     "distDir": "../build"
+  },
+  "tauri": {
+    "bundle": {
+      "active": true,
+      "category": "Productivity",
+      "copyright": "",
+      "deb": {
+        "depends": []
+      },
+      "externalBin": [],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "app.anothervision.pasteBar",
+      "longDescription": "",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      },
+      "resources": [],
+      "shortDescription": "",
+      "targets": ["appimage", "nsis", "app", "dmg", "updater"],
+      "windows": {
+        "certificateThumbprint": "EE33202C716E13EDF250B69C7E61E15624DDB1F0",
+        "digestAlgorithm": "sha256",
+        "timestampUrl": "http://time.certum.pl",
+        "nsis": {
+          "installerIcon": "./icons/icon.ico"
+        },
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        }
+      }
+    },
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://updater.pastebar.app/check/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "windows": {
+        "installMode": "passive"
+      },
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk3RjEzQzA5RDMyRTg0OTEKUldTUmhDN1RDVHp4bHhHN3AwMVU5SVFIZ3VCT0l3aGRTUkRsOXUzdkREalU5MHMyOElTdU5EMTMK"
+    }
   }
 }

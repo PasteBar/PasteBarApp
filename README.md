@@ -3,10 +3,10 @@
 * **Rust**: Tauri, Diesel ORM, Reqwest, Anyhow, Serde, Tokio.
 * **Javascript**: Typescript, React, Vite, TailwindCSS, Signals, Jotai, Zustand.
 
-# Build PastBar App
+# Build Local PastBar App
 
 ```
-$ npm run app:build
+$ npm run build
 ```
 
 # Development Start
