@@ -65,9 +65,6 @@
       "shortDescription": "",
       "targets": ["appimage", "nsis", "app", "dmg", "updater"],
       "windows": {
-        "certificateThumbprint": "EE33202C716E13EDF250B69C7E61E15624DDB1F0",
-        "digestAlgorithm": "sha256",
-        "timestampUrl": "http://time.certum.pl",
         "nsis": {
           "installerIcon": "./icons/icon.ico"
         },
@@ -94,7 +91,7 @@
         "installMode": "passive"
       },
       "dialog": false,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk3RjEzQzA5RDMyRTg0OTEKUldTUmhDN1RDVHp4bHhHN3AwMVU5SVFIZ3VCT0l3aGRTUkRsOXUzdkREalU5MHMyOElTdU5EMTMK"
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk3RjEzQzA5RDMyRTg0OTEKUldTUmhDN1RDVHp4bHhHN3AwMVU5SVFIZ3VCT0l3aGRTUkRsOXUzdkREalU5MHMyOElTdU5EMTMK1"
     }
   }
 }
