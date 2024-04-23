@@ -75,8 +75,9 @@
     },
     "security": {
       "csp": {
-        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app",
+        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app pastebar.ru *.pastebar.ru",
         "connect-src": "ipc: https://ipc.localhost",
+        "frame-src": "'self' https://*.pastebar.app https://*.pastebar.ru",
         "img-src": "'self' asset: https://asset.localhost blob: data:",
         "img-srcset": "'self' asset: https://asset.localhost blob: data:",
         "style-src": "'unsafe-inline' 'self' asset: https://asset.localhost"
