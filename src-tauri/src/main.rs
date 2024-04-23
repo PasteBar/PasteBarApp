@@ -33,6 +33,7 @@ mod commands;
 mod constants;
 mod cron_jobs;
 mod db;
+mod helpers;
 mod menu;
 mod metadata;
 mod models;
@@ -256,6 +257,7 @@ async fn main() {
   dotenv().ok();
   let db_items_state = DbItems(Mutex::new(Vec::new()));
   let db_recent_history_items_state = DbRecentHistoryItems(Mutex::new(Vec::new()));
+  tauri_plugin_deep_link::prepare("app.anothervision.pasteBar");
 
   tauri::Builder::default()
     .manage(db_items_state)
@@ -630,6 +632,36 @@ async fn main() {
         }
       } else {
         window.hide().unwrap();
+      }
+
+      // tauri_plugin_deep_link::register(
+      //   "my-scheme",
+      //   move |request| {
+      //     dbg!(&request);
+      //     handle.emit_all("scheme-request-received", request).unwrap();
+      //   },
+      // )
+      // .unwrap(/* If listening to the scheme is optional for your app, you don't want to unwrap here. */);
+
+      let handle = app.handle().clone();
+
+      tauri_plugin_deep_link::register("pastebar", move |request| {
+        debug_output(|| {
+          println!("scheme request received: {:?}", &request);
+        });
+        handle.emit_all("scheme-request-received", request).unwrap();
+      });
+
+      #[cfg(not(target_os = "macos"))]
+      // on macos the plugin handles this (macos doesn't use cli args for the url)
+      if let Some(url) = std::env::args().nth(1) {
+        debug_output(|| {
+          println!("scheme request received on start url: {:?}", &url);
+        });
+        app
+          .app_handle()
+          .emit_all("scheme-request-received", url)
+          .unwrap();
       }
 
       std::thread::spawn(move || {});

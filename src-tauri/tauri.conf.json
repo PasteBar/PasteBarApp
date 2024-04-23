@@ -32,6 +32,9 @@
       "clipboard": {
         "all": true
       },
+      "globalShortcut": {
+        "all": true
+      },
       "all": true,
       "path": {
         "all": true
