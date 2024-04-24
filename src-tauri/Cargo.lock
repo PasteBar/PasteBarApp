@@ -2096,6 +2096,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hmac-sha256"
+version = "1.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3688e69b38018fec1557254f64c8dc2cc8ec502890182f395dbb0aa997aa5735"
+
+[[package]]
 name = "home"
 version = "0.5.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2952,6 +2958,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "mid"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b94379593210bf68fd4d7a738b55a0ba7c4398ea1f1302455ae6c5a363da8079"
+dependencies = [
+ "hex",
+ "hmac-sha256",
+]
+
+[[package]]
 name = "migrations_internals"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3615,6 +3631,7 @@ dependencies = [
  "libsqlite3-sys",
  "linkify",
  "macos-accessibility-client",
+ "mid",
  "nanoid",
  "objc",
  "once_cell",

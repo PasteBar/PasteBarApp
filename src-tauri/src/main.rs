@@ -100,6 +100,19 @@ fn open_path_or_app(path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn get_hardware_id() -> Result<String, String> {
+  match mid::get("pastbarapp") {
+    Ok(id) => {
+      debug_output(|| {
+        println!("Hardware ID: {}", id);
+      });
+      Ok(id)
+    }
+    Err(e) => Err(e.to_string()),
+  }
+}
+
+#[tauri::command]
 fn update_setting(setting: Setting, app_handle: tauri::AppHandle) -> Result<String, String> {
   match insert_or_update_setting_by_name(&setting, app_handle) {
     Ok(result) => Ok(result),
@@ -634,23 +647,15 @@ async fn main() {
         window.hide().unwrap();
       }
 
-      // tauri_plugin_deep_link::register(
-      //   "my-scheme",
-      //   move |request| {
-      //     dbg!(&request);
-      //     handle.emit_all("scheme-request-received", request).unwrap();
-      //   },
-      // )
-      // .unwrap(/* If listening to the scheme is optional for your app, you don't want to unwrap here. */);
-
       let handle = app.handle().clone();
 
-      tauri_plugin_deep_link::register("pastebar", move |request| {
+      let _ = tauri_plugin_deep_link::register("pastebar", move |request| {
         debug_output(|| {
           println!("scheme request received: {:?}", &request);
         });
         handle.emit_all("scheme-request-received", request).unwrap();
-      });
+      })
+      .unwrap();
 
       #[cfg(not(target_os = "macos"))]
       // on macos the plugin handles this (macos doesn't use cli args for the url)
@@ -735,6 +740,7 @@ async fn main() {
       history_commands::search_clipboard_histories_by_value_or_filters,
       history_commands::save_to_file_history_item,
       menu::build_system_menu,
+      get_hardware_id,
       shell_commands::check_path,
       shell_commands::path_type_check,
       shell_commands::run_shell_command,
