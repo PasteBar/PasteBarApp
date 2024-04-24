@@ -3,7 +3,7 @@ use crate::services::history_service;
 
 use crate::services::items_service::update_item_by_id;
 use crate::services::request_service::{
-  run_web_request, run_web_scraping, HttpMethod, HttpRequest, HttpScraping, ScrapingOptions,
+  run_web_request, run_web_scraping, HttpRequest, HttpScraping,
 };
 use crate::services::shell_service::{
   run_shell_command, ExecHomeDir, OutputRegexFilter, OutputTemplate,
@@ -13,16 +13,15 @@ use crate::services::utils::{
 };
 use crate::{constants, services::items_service::get_item_by_id};
 use arboard::{Clipboard, ImageData};
+use constants::IMAGE_NOT_FOUND_BASE64;
 use image::GenericImageView;
-use inputbot::KeybdKey::{self, *};
+use inputbot::KeybdKey::*;
 use serde::{Deserialize, Serialize};
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::{thread, time::Duration};
-use tauri::{ClipboardManager, Manager};
-
-use constants::IMAGE_NOT_FOUND_BASE64;
-use std::borrow::Cow;
 use tauri::{self, AppHandle};
+use tauri::{ClipboardManager, Manager};
 
 #[derive(Debug, Serialize, Deserialize)]
 
