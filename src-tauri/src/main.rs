@@ -652,7 +652,9 @@ async fn main() {
         debug_output(|| {
           println!("scheme request received: {:?}", &request);
         });
-        handle.emit_all("scheme-request-received", request).unwrap();
+        if request.starts_with("pastebar://") {
+          handle.emit_all("scheme-request-received", request).unwrap();
+        }
       })
       .unwrap();
 
@@ -662,10 +664,12 @@ async fn main() {
         debug_output(|| {
           println!("scheme request received on start url: {:?}", &url);
         });
-        app
-          .app_handle()
-          .emit_all("scheme-request-received", url)
-          .unwrap();
+        if url.starts_with("pastebar://") {
+          app
+            .handle()
+            .emit_all("scheme-request-received", url)
+            .unwrap();
+        }
       }
 
       std::thread::spawn(move || {});
