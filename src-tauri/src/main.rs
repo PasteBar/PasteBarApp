@@ -76,7 +76,6 @@ use std::time::Duration as StdDuration;
 use std::time::Instant;
 use tauri_plugin_window_state::AppHandleExt;
 use tauri_plugin_window_state::StateFlags;
-
 use tokio::sync::Mutex as TokioMutex;
 
 #[derive(Serialize)]
@@ -100,13 +99,13 @@ fn open_path_or_app(path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_hardware_id() -> Result<String, String> {
-  match mid::get("pastbarapp") {
+fn get_device_id() -> Result<String, String> {
+  match mid::get("PasteBarApp") {
     Ok(id) => {
       debug_output(|| {
-        println!("Hardware ID: {}", id);
+        println!("Device ID: {}", &id[..24]);
       });
-      Ok(id)
+      Ok(id[..24].to_string())
     }
     Err(e) => Err(e.to_string()),
   }
@@ -740,7 +739,7 @@ async fn main() {
       history_commands::search_clipboard_histories_by_value_or_filters,
       history_commands::save_to_file_history_item,
       menu::build_system_menu,
-      get_hardware_id,
+      get_device_id,
       shell_commands::check_path,
       shell_commands::path_type_check,
       shell_commands::run_shell_command,
