@@ -101,7 +101,7 @@ fn open_path_or_app(path: String) -> Result<(), String> {
 
 #[tauri::command]
 fn get_hardware_id() -> Result<String, String> {
-  match mid::get("ca91690f5af031b774fd541977") {
+  match mid::get("pastbarapp") {
     Ok(id) => {
       debug_output(|| {
         println!("Hardware ID: {}", id);
