@@ -78,9 +78,9 @@
     },
     "security": {
       "csp": {
-        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app pastebar.ru *.pastebar.ru",
-        "connect-src": "ipc: https://ipc.localhost asset: https://*.pastebar.app https://*.pastebar.ru",
-        "frame-src": "'self' https://*.pastebar.app https://*.pastebar.ru",
+        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app pastebar.ru *.pastebar.ru *.paypal.com",
+        "connect-src": "ipc: https://ipc.localhost asset: https://*.pastebar.app https://*.pastebar.ru https://*.paypal.com",
+        "frame-src": "'self' https://*.pastebar.app https://*.pastebar.ru https://*.paypal.com",
         "img-src": "'self' asset: https://asset.localhost blob: data:",
         "img-srcset": "'self' asset: https://asset.localhost blob: data:",
         "style-src": "'unsafe-inline' 'self' asset: https://asset.localhost"
