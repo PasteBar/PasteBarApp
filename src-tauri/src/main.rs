@@ -653,6 +653,10 @@ async fn main() {
           println!("scheme request received: {:?}", &request);
         });
         if request.starts_with("pastebar://") {
+          let w = app.get_window("main").unwrap();
+          w.set_focus().unwrap();
+          w.show().unwrap();
+
           handle.emit_all("scheme-request-received", request).unwrap();
         }
       })
@@ -665,6 +669,9 @@ async fn main() {
           println!("scheme request received on start url: {:?}", &url);
         });
         if url.starts_with("pastebar://") {
+          let w = app.get_window("main").unwrap();
+          w.set_focus().unwrap();
+          w.show().unwrap();
           app
             .handle()
             .emit_all("scheme-request-received", url)
