@@ -38,6 +38,7 @@ pub struct Options {
   pub heuristic: Option<bool>,
   pub no_unknown: Option<bool>,
   pub languages_to_detect: Option<Vec<String>>,
+  pub prioritized_languages: Option<Vec<String>>, // Add this field
 }
 
 #[derive(Debug)]

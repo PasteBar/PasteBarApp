@@ -9,6 +9,7 @@ static LANGUAGES: &[(&str, &[LanguagePattern])] = &[
   ("csharp", &crate::languages::cs::CS),
   ("css", &crate::languages::css::CSS),
   ("docker", &crate::languages::docker::DOCKERFILE),
+  ("dart", &crate::languages::dart::DART),
   ("go", &crate::languages::go::GO),
   ("html", &crate::languages::html::HTML),
   ("java", &crate::languages::java::JAVA),
@@ -26,8 +27,8 @@ static LANGUAGES: &[(&str, &[LanguagePattern])] = &[
   ("sql", &crate::languages::sql::SQL),
   ("swift", &crate::languages::swift::SWIFT),
   ("yaml", &crate::languages::yaml::YAML),
+  ("dart", &crate::languages::dart::DART),
 ];
-
 
 #[derive(Debug, Clone, Copy)]
 enum Detected {
@@ -77,25 +78,14 @@ pub fn detect_language(snippet: &str, opts: Option<Options>) -> DetectedLanguage
     lines_of_code
   };
 
-  // Shebang check
-  let detected_shebang = if let Some(first_line) = filtered_lines_of_code.first() {
+  if let Some(first_line) = filtered_lines_of_code.first() {
     if first_line.starts_with("#!") {
       if let Some(language) = SHEBANG_MAP.get(first_line.split_whitespace().nth(2).unwrap_or("")) {
-        Some(Detected::new(language, 1))
+        return DetectedLanguage::from_detected(Detected::new(language, 1));
       } else if first_line.starts_with("#!/bin/bash") {
-        Some(Detected::new("bash", 1))
-      } else {
-        None
+        return DetectedLanguage::from_detected(Detected::new("bash", 1));
       }
-    } else {
-      None
     }
-  } else {
-    None
-  };
-
-  if let Some(detected) = detected_shebang {
-    return DetectedLanguage::from_detected(detected);
   }
 
   if filtered_lines_of_code
@@ -105,26 +95,39 @@ pub fn detect_language(snippet: &str, opts: Option<Options>) -> DetectedLanguage
     return DetectedLanguage::from_detected(Detected::Unknown);
   }
 
-  // Filter LANGUAGES based on provided list of languages in options
-  let filtered_languages: Vec<_> = LANGUAGES
-    .iter()
-    .filter(|&&(language, _)| {
-      if let Some(languages_to_detect) = &options.languages_to_detect {
-        languages_to_detect.contains(&language.to_string())
-      } else {
-        true
-      }
-    })
-    .collect();
+  let mut languages: Vec<(&str, &[LanguagePattern])> = LANGUAGES.to_vec();
+
+  if let Some(prioritized_languages) = &options.prioritized_languages {
+    languages.sort_by_key(|&(lang, _)| {
+      prioritized_languages
+        .iter()
+        .position(|x| x == lang)
+        .unwrap_or(usize::MAX)
+    });
+  }
 
   let mut results: Vec<Detected> = Vec::new();
-  for &(language, checkers) in filtered_languages.iter() {
+  for &(language, checkers) in languages.iter() {
+    if let Some(languages_to_detect) = &options.languages_to_detect {
+      if !languages_to_detect.contains(&language.to_string()) {
+        continue;
+      }
+    }
+
     let mut points = 0;
     for line in &filtered_lines_of_code {
       if !line.trim().is_empty() {
         points += get_points(line, checkers);
       }
     }
+
+    if let Some(prioritized_languages) = &options.prioritized_languages {
+      if let Some(pos) = prioritized_languages.iter().position(|x| x == language) {
+        // Add more points based on the position in the prioritized_languages list
+        points += (prioritized_languages.len() - pos) as i32;
+      }
+    }
+
     results.push(Detected::new(language, points));
   }
 

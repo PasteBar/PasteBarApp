@@ -386,6 +386,7 @@ pub fn add_clipboard_history_from_text(
   {
     let options = lang_detect::types::Options {
       languages_to_detect: Some(detect_options.enabled_languages),
+      // prioritized_languages: Some(detect_options.prioritized_languages),
       ..Default::default()
     };
     match detect_language(&text, Some(options)) {

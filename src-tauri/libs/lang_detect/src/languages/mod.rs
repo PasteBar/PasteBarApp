@@ -2,6 +2,7 @@ pub mod c;
 pub mod cpp;
 pub mod cs;
 pub mod css;
+pub mod dart;
 pub mod docker;
 pub mod go;
 pub mod html;

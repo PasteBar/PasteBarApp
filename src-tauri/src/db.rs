@@ -26,7 +26,7 @@ type Pool = r2d2::Pool<diesel_r2d2::ConnectionManager<SqliteConnection>>;
 pub struct AppConstants<'a> {
   pub app_data_dir: std::path::PathBuf,
   pub app_dev_data_dir: std::path::PathBuf,
-  pub app_detect_languages_supported: [&'a str; 22],
+  pub app_detect_languages_supported: [&'a str; 23],
 }
 pub static APP_CONSTANTS: OnceCell<AppConstants> = OnceCell::new();
 
@@ -134,6 +134,7 @@ pub fn init(app: &mut tauri::App) {
       "csharp",
       "css",
       "docker",
+      "dart",
       "go",
       "html",
       "java",
