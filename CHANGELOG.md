@@ -1,5 +1,12 @@
 # pastebar-app
 
+## 0.0.14
+
+### Patch Changes
+
+- Prioritized languages list settings
+- History and Menu panel size adaptive change
+
 ## 0.0.13
 
 ### Patch Changes
