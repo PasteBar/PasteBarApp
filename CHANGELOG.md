@@ -1,5 +1,13 @@
 # pastebar-app
 
+## 0.0.13
+
+### Patch Changes
+
+- Test version sync
+- This is another test for UI changes
+- History and Menu panel size adaptive change
+
 ## 0.0.12
 
 ### Patch Changes
