@@ -1,5 +1,6 @@
 use once_cell::sync::Lazy;
 
+#[derive(Debug)]
 pub enum Type {
   CommentLine,
   CommentDocumentation,
@@ -27,6 +28,7 @@ pub enum Type {
   Not,
 }
 
+#[derive(Debug)]
 pub struct LanguagePattern {
   pub pattern: Lazy<regex::Regex>,
   pub r#type: Type,

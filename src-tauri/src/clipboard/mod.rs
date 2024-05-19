@@ -26,6 +26,7 @@ pub struct LanguageDetectOptions {
   pub should_detect_language: bool,
   pub min_lines_required: usize,
   pub enabled_languages: Vec<String>,
+  pub prioritized_languages: Vec<String>,
   pub auto_mask_words_list: Vec<String>,
 }
 
@@ -134,6 +135,13 @@ where
               langs.split(',').map(String::from).collect()
             });
 
+          let prioritized_languages: Vec<String> = settings_map
+            .get("historyDetectLanguagesPrioritizedList")
+            .and_then(|s| s.value_text.as_ref())
+            .map_or(Vec::new(), |langs| {
+              langs.split(',').map(String::from).collect()
+            });
+
           let auto_mask_words_list = {
             if let Some(is_enabled) = settings_map
               .get("isAutoMaskWordsListEnabled")
@@ -158,6 +166,7 @@ where
             should_detect_language,
             min_lines_required,
             enabled_languages,
+            prioritized_languages,
             auto_mask_words_list,
           };
 
