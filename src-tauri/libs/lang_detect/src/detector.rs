@@ -123,11 +123,11 @@ pub fn detect_language(snippet: &str, opts: Option<Options>) -> DetectedLanguage
 
     if let Some(prioritized_languages) = &options.prioritized_languages {
       if let Some(pos) = prioritized_languages.iter().position(|x| x == language) {
-        // Add more points based on the position in the prioritized_languages list
-        points += (prioritized_languages.len() - pos) as i32;
+        // Calculate the weight factor based on the position in the prioritized_languages list
+        let weight_factor = 1.0 + (prioritized_languages.len() - pos) as f32 * 0.1;
+        points = (points as f32 * weight_factor) as i32;
       }
     }
-
     results.push(Detected::new(language, points));
   }
 
