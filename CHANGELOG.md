@@ -1,5 +1,12 @@
 # pastebar-app
 
+## 0.0.15
+
+### Patch Changes
+
+- Code viewer for markdown added render HTML view
+- Added user preferences for clip notes hover delay
+
 ## 0.0.14
 
 ### Patch Changes
