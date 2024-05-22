@@ -220,7 +220,7 @@ fn open_osx_accessibility_preferences() {
 fn check_osx_accessibility_preferences() -> bool {
   #[cfg(target_os = "macos")]
   {
-    macos_accessibility_client::accessibility::application_is_trusted_with_prompt()
+    macos_accessibility_client::accessibility::application_is_trusted()
   }
 
   #[cfg(target_os = "windows")]
