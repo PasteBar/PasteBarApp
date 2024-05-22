@@ -1,6 +1,6 @@
 {
   "name": "pastebar-app",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "private": true,
   "scripts": {
     "dev": "tauri dev --config src-tauri/tauri.dev.conf.json",
