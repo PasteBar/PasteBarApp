@@ -1,5 +1,16 @@
 # pastebar-app
 
+## 0.0.20
+
+### Patch Changes
+
+- Code viewer for markdown added render HTML view
+- Save clip saves clip name if edit active
+- Added user preferences for clip notes hover delay
+- Edit clip name direct context menu
+- Auto check for system permissions in accessibility preferences on Mac OSX
+- Clip notes popup maximum dimensions user preferences
+
 ## 0.0.19
 
 ### Patch Changes
