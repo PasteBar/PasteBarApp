@@ -21,7 +21,6 @@ bcrypt = "0.15.1"
 reqwest-middleware = "0.2.5"
 http-cache-reqwest = { version = "0.13.0", default-features = false }
 http-cache-mokadeser = "0.1.3"
-mid = "2.0.0"
 # log = "0.4"
 serde_yaml = "0.9.0"
 jsonpath-rust = "0.4.0"
@@ -72,6 +71,7 @@ regex = "1.9.3"
 lang_detect = { path = "libs/lang_detect" }
 auto-launch = { path = "libs/auto-launch" }
 tao = { path = "libs/tao-0.16.7" }
+mid = { path = "libs/mid-hardware-id" }
 
 linkify = "0.10.0"
 tl = { version = "0.7.7" }
