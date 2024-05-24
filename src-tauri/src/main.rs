@@ -78,8 +78,6 @@ use tauri_plugin_window_state::AppHandleExt;
 use tauri_plugin_window_state::StateFlags;
 use tokio::sync::Mutex as TokioMutex;
 
-const CREATE_NO_WINDOW: u32 = 0x08000000;
-
 #[derive(Serialize)]
 struct AppReadyResponse<'a> {
   permissionstrusted: bool,
