@@ -2960,8 +2960,6 @@ dependencies = [
 [[package]]
 name = "mid"
 version = "2.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b94379593210bf68fd4d7a738b55a0ba7c4398ea1f1302455ae6c5a363da8079"
 dependencies = [
  "hex",
  "hmac-sha256",
