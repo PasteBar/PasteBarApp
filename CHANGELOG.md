@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.0.23
+
+### Patch Changes
+
+- 24ae6b8: Updated hardware uuid detection for Mac and Windows
+
 ## 0.0.22
 
 ### Patch Changes
