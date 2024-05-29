@@ -1,5 +1,12 @@
 # pastebar-app
 
+## 0.0.23
+
+### Patch Changes
+
+- Move to position added to context menu for clips and boards
+- 24ae6b8: Updated hardware uuid detection for Mac and Windows
+
 ## 0.0.22
 
 ### Patch Changes
