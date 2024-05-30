@@ -11,11 +11,11 @@ VALUES ('Xw9dvUr0jK19nwdSMRRZH', 'AI prompt collection', 'AI prompt collection t
 
 -- Item clipboard_history
 INSERT INTO clipboard_history (history_id, title, value, value_preview, value_more_preview_lines, value_more_preview_chars, value_hash, is_image, image_path_full_res, image_data_low_res, image_preview_height, image_height, image_width, image_data_url, image_hash, is_image_data, is_masked, is_text, is_code, is_link, is_video, has_emoji, has_masked_words, links, is_pinned, is_favorite, detected_language, pinned_order_number, created_at, updated_at, created_date, updated_date)
-VALUES ('EXog1zZzYpkV8R7ZCvWCZ', 'Clipboard Sample History Text', 'Clipboard sample text', NULL, 0, 0, NULL, FALSE, NULL, NULL, 0, 0, 0, NULL, NULL, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, NULL, FALSE, FALSE, NULL, NULL, 1696707981208, 1696707981208, '2023-10-07 19:46:21.208581', '2023-10-07 19:46:21.208581');
+VALUES ('EXog1zZzYpkV8R7ZCvWCZ', 'Welcome to the Clipboard History', 'Welcome to the Clipboard History', NULL, 0, 0, NULL, FALSE, NULL, NULL, 0, 0, 0, NULL, NULL, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, NULL, FALSE, FALSE, NULL, NULL, 1696707981208, 1696707981208, '2023-10-07 19:46:21.208581', '2023-10-07 19:46:21.208581');
 
--- 3 months old Item clipboard_history
+-- -- 3 months old Item clipboard_history
 INSERT INTO clipboard_history (history_id, title, value, value_preview, value_more_preview_lines, value_more_preview_chars, value_hash, is_image, image_path_full_res, image_data_low_res, image_preview_height, image_height, image_width, image_data_url, image_hash, is_image_data, is_masked, is_text, is_code, is_link, is_video, has_emoji, has_masked_words, links, is_pinned, is_favorite, detected_language, pinned_order_number, created_at, updated_at, created_date, updated_date)
-VALUES ('EXog2zZzYpkV8R7ZCvWCZ', 'Clipboard at least 3 months old Sample History Text', 'Clipboard at least 3 months old sample text', NULL, 0, 0, NULL, FALSE, NULL, NULL, 0, 0, 0, NULL, NULL, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, NULL, FALSE, FALSE, NULL, NULL, 1688769981000, 1688769981000, '2023-07-07 19:46:21.208581', '2023-07-07 19:46:21.208581');
+VALUES ('EXog2zZzYpkV8R7ZCvWCZ', 'Copy something to the clipboard, and it will appear in your history', 'Copy something to the clipboard, and it will appear in your history', NULL, 0, 0, NULL, FALSE, NULL, NULL, 0, 0, 0, NULL, NULL, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, NULL, FALSE, FALSE, NULL, NULL, 1688769981000, 1688769981000, '2023-07-07 19:46:21.208581', '2023-07-07 19:46:21.208581');
 
 -- Settings
 INSERT INTO settings (name, value_text, value_bool, value_int)
@@ -58,7 +58,7 @@ INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('pasteSequenceEachSeparator', '', NULL, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
-VALUES ('historyDetectLanguagesEnabledList', 'javascript,css,jsx,json,rust', NULL, NULL);
+VALUES ('historyDetectLanguagesEnabledList', 'javascript,css,jsx,json,rust,html,markdown', NULL, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('isExclusionListEnabled', NULL, false, NULL);
