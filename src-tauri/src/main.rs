@@ -542,7 +542,7 @@ async fn main() {
       let mut window_builder =
         tauri::WindowBuilder::new(app, "main", tauri::WindowUrl::App("index.html".into()))
           // .skip_taskbar(if cfg!(debug_assertions) { false } else { true })
-          .inner_size(1100., 800.)
+          .inner_size(1100., 730.)
           .min_inner_size(750., 600.)
           // .decorations(false)
           // .title_bar_style(tauri::TitleBarStyle::Overlay)
@@ -620,14 +620,14 @@ async fn main() {
         window.on_window_event(move |e| match e {
           tauri::WindowEvent::Moved(_) => {
             let now = Instant::now();
-            if now - last_save_time.get() >= StdDuration::from_secs(3) {
+            if now - last_save_time.get() >= StdDuration::from_secs(2) {
               app_handle.save_window_state(StateFlags::all()).unwrap();
               last_save_time.set(now);
             }
           }
           tauri::WindowEvent::Resized(_) => {
             let now = Instant::now();
-            if now - last_save_time.get() >= StdDuration::from_secs(3) {
+            if now - last_save_time.get() >= StdDuration::from_secs(2) {
               app_handle.save_window_state(StateFlags::all()).unwrap();
               last_save_time.set(now);
             }
