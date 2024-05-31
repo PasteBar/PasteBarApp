@@ -6,7 +6,7 @@
 
 - Window size auto update in min size detection
 - Move to position added to context menu for clips and boards
-- 24ae6b8: Updated hardware uuid detection for Mac and Windows
+- Updated hardware uuid detection for Mac and Windows
 
 ## 0.0.22
 
