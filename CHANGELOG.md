@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.2.1
+
+### Patch Changes
+
+- Contact Form and Pro Support Form added
+
 ## 0.2.0
 
 ### Minor Changes
