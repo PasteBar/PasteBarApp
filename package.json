@@ -15,7 +15,7 @@
     "app:build": "tauri build --config src-tauri/tauri.release.conf.json",
     "app:build:debug": "tauri build --config src-tauri/tauri.release.conf.json --debug",
     "app:build:osx:universal": "tauri build --config src-tauri/tauri.release.conf.json --target universal-apple-darwin",
-    "app:build:windows:arm": "tauri build --config src-tauri/tauri.release.conf.json --target aarch64-pc-windows-msvc --bundles nsis",
+    "app:build:windows:arm": "tauri build --config src-tauri/tauri.release.conf.json --target aarch64-pc-windows-msvc",
     "diesel:migration:run": "diesel migration run",
     "taze": "taze major -I",
     "taze:minor": "taze minor -w",
