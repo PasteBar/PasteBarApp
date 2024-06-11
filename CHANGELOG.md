@@ -6,33 +6,11 @@
 
 - Contact Form and Pro Support Form added
 
-## 0.2.1
-
-### Patch Changes
-
-- Contact Form and Pro Support Form added
-
 ## 0.2.0
 
 ### Minor Changes
 
 - Added Application Guided Tours
-
-### Patch Changes
-
-- Window size auto update in min size detection
-- Move to position added to context menu for clips and boards
-- Fix: delete history item when auto update is off
-
-## 0.0.24
-
-### Patch Changes
-
-- Window size auto update in min size detection
-- Move to position added to context menu for clips and boards
-- Fix: delete history item when auto update is off
-
-## 0.0.23
 
 ### Patch Changes
 
