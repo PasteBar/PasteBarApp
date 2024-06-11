@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.2.3
+
+### Patch Changes
+
+- New Version Release Notes Markdown View
+
 ## 0.2.2
 
 ### Patch Changes
