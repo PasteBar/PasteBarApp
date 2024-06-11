@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.2.2
+
+### Patch Changes
+
+- React compiler added to build frontend ui
+
 ## 0.2.1
 
 ### Patch Changes
