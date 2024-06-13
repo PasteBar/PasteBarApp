@@ -52,6 +52,7 @@ use crate::services::utils::ensure_url_or_email_prefix;
 use crate::services::utils::remove_special_bbcode_tags;
 use commands::clipboard_commands;
 use commands::collections_commands;
+use commands::download_update;
 use commands::history_commands;
 use commands::items_commands;
 use commands::link_metadata_commands;
@@ -60,6 +61,7 @@ use commands::security_commands;
 use commands::shell_commands;
 use commands::tabs_commands;
 use commands::translations_commands;
+
 use db::AppConstants;
 use std::collections::HashMap;
 
@@ -730,6 +732,7 @@ async fn main() {
       collections_commands::update_collection_by_id,
       collections_commands::select_collection_by_id,
       collections_commands::update_moved_clips_in_collection,
+      download_update::download_and_execute,
       history_commands::get_clipboard_history,
       history_commands::get_clipboard_history_pinned,
       history_commands::get_clipboard_history_by_id,
