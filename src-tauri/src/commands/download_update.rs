@@ -17,7 +17,7 @@ struct UpdateInfo {
 #[tauri::command(async)]
 pub async fn download_and_execute() -> Result<String, String> {
   let client = Client::new();
-  let updater_endpoint = "http://localhost:8787/latest/{{platform}}/{{arch}}"; // Replace with your update URL
+  let updater_endpoint = "https://updater.pastebar.app/latest/{{platform}}/{{arch}}";
 
   let platform = if cfg!(target_os = "windows") {
     "windows".to_string()
