@@ -23,7 +23,12 @@
         "all": true
       },
       "http": {
-        "all": true
+        "all": true,
+        "request": true,
+        "scope": [
+          "http://localhost:8788/api/error-report",
+          "https://license.pastebar.app/api/error-report"
+        ]
       },
       "protocol": {
         "asset": true,
