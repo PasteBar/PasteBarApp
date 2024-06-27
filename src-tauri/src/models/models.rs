@@ -105,6 +105,7 @@ pub struct UpdatedItemData {
   pub command_request_last_run_at: Option<i64>,
   pub request_options: Option<String>,
   pub form_template_options: Option<String>,
+  pub item_options: Option<String>,
 }
 
 #[derive(AsChangeset, Default, Serialize, Debug, Deserialize)]
@@ -194,6 +195,7 @@ pub struct Item {
   pub updated_at: i64,
   pub created_date: NaiveDateTime,
   pub updated_date: NaiveDateTime,
+  pub item_options: Option<String>,
 }
 
 #[derive(
@@ -299,6 +301,11 @@ pub struct LinkMetadata {
   pub link_image: Option<String>,
   pub link_domain: Option<String>,
   pub link_favicon: Option<String>,
+  pub link_track_artist: Option<String>,
+  pub link_track_title: Option<String>,
+  pub link_track_album: Option<String>,
+  pub link_track_year: Option<String>,
+  pub link_is_track: Option<bool>,
 }
 
 #[derive(

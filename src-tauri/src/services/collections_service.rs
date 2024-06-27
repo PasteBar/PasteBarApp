@@ -48,6 +48,7 @@ pub struct SelectByCollectionId {
 #[serde(rename_all = "camelCase")]
 pub struct AssociatedClips {
   pub item_id: String,
+  pub item_options: Option<String>,
   pub name: String,
   pub description: Option<String>,
   pub value: Option<String>,
@@ -114,6 +115,7 @@ pub struct AssociatedClips {
 #[serde(rename_all = "camelCase")]
 pub struct AssociatedMenu {
   pub item_id: String,
+  pub item_options: Option<String>,
   pub name: String,
   pub description: Option<String>,
   pub value: Option<String>,
@@ -305,6 +307,7 @@ pub fn get_active_collection_with_menu_items() -> Result<CollectionWithItems, Er
     .inner_join(items.on(items_dsl::item_id.eq(collection_menu_dsl::item_id)))
     .select((
       items_dsl::item_id,
+      items_dsl::item_options,
       items_dsl::name,
       items_dsl::description,
       items_dsl::value,
@@ -380,6 +383,7 @@ pub fn get_active_collection_with_clips() -> Result<CollectionWithClips, Error> 
     .inner_join(tabs.on(tab_dsl::tab_id.eq(collection_clips_dsl::tab_id)))
     .select((
       items_dsl::item_id,
+      items_dsl::item_options,
       items_dsl::name,
       items_dsl::description,
       items_dsl::value,
@@ -592,6 +596,7 @@ pub fn get_selected_collection_id() -> Result<String, diesel::result::Error> {
 pub fn create_default_menu_item(collection_id: String) -> Result<String, diesel::result::Error> {
   let new_item = Item {
     item_id: nanoid::nanoid!(),
+    item_options: None,
     name: "Menu Item".to_string(),
     description: None,
     value: None,
@@ -667,6 +672,7 @@ pub fn create_default_board_item(
 ) -> Result<String, diesel::result::Error> {
   let new_item = Item {
     item_id: nanoid::nanoid!(),
+    item_options: None,
     name: "Board".to_string(),
     description: None,
     value: None,

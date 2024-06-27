@@ -168,6 +168,7 @@ pub fn clear_clipboard_history_older_than(duration_type: String, older_then: Str
 pub async fn save_to_file_history_item(
   history_id: String,
   as_image: Option<bool>,
+  as_mp3: Option<bool>,
 ) -> Result<String, String> {
   let current_datetime = Local::now().format("%Y-%m-%d-%H%M%S");
 
@@ -176,7 +177,40 @@ pub async fn save_to_file_history_item(
     None => return Ok("History item not found".to_string()),
   };
 
-  if let Some(true) = as_image {
+  if let Some(true) = as_mp3 {
+    if let Some(url) = &history_item.value {
+      let parsed_url = Url::parse(url).map_err(|e| e.to_string())?;
+
+      let file_name = parsed_url
+        .path_segments()
+        .and_then(|segments| segments.last())
+        .and_then(|name| {
+          if name.is_empty() {
+            None
+          } else {
+            Some(name.to_string())
+          }
+        })
+        .unwrap_or_else(|| format!("audio_{}.mp3", current_datetime));
+
+      let destination_path = FileDialogBuilder::new()
+        .set_file_name(&file_name)
+        .save_file();
+
+      if let Some(path) = destination_path {
+        let response = reqwest::get(url).await.map_err(|e| e.to_string())?;
+        let bytes = response.bytes().await.map_err(|e| e.to_string())?;
+
+        // Save the MP3 file
+        std::fs::write(&path, bytes).map_err(|e| e.to_string())?;
+        return Ok("saved".to_string());
+      } else {
+        return Ok("cancel".to_string());
+      }
+    } else {
+      return Err("No URL found for MP3 download".to_string());
+    }
+  } else if let Some(true) = as_image {
     let mut img_data: Option<Vec<u8>> = None;
     let mut file_name = format!("saved_clipboard_image_{}.png", current_datetime);
 

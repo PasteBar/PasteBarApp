@@ -8,9 +8,19 @@ use crate::models::{Item, Setting};
 use crate::services::collections_service::{add_item_to_collection, add_menu_to_collection};
 use crate::services::history_service;
 use crate::services::items_service::{self, CreateItem};
-use crate::services::utils::{pretty_print_json, pretty_print_struct};
+use crate::services::utils::{
+  ensure_url_prefix, is_base64_image, pretty_print_json, pretty_print_struct,
+};
 use base64::{engine::general_purpose, Engine as _};
+use chrono::Local;
 use nanoid::nanoid;
+use tauri::api::dialog::blocking::FileDialogBuilder;
+use url::Url;
+
+use std::fs::File;
+use std::io::Write;
+
+use super::link_metadata_commands::fetch_link_metadata;
 
 #[tauri::command]
 pub fn update_item_by_id(updated_item: UpdatedItemData) -> String {
@@ -409,6 +419,7 @@ pub fn create_item(item: CreateItem) -> String {
     updated_at: chrono::Utc::now().timestamp_millis(),
     created_date: chrono::Utc::now().naive_utc(),
     updated_date: chrono::Utc::now().naive_utc(),
+    item_options: None,
   };
 
   let new_item_id = items_service::create_item(&new_item);
@@ -450,4 +461,119 @@ pub fn move_pinned_clip_item_up_down(
   move_down: Option<bool>,
 ) -> String {
   items_service::move_pinned_item_up_down(&item_id, move_up, move_down)
+}
+
+#[tauri::command(async)]
+pub async fn save_to_file_clip_item(
+  item_id: String,
+  as_image: Option<bool>,
+  as_mp3: Option<bool>,
+) -> Result<String, String> {
+  let current_datetime = Local::now().format("%Y-%m-%d-%H%M%S");
+
+  let item = match items_service::get_item_by_id(item_id.clone()) {
+    Ok(i) => i,
+    Err(e) => {
+      eprintln!("Failed to find item: {}", e);
+      return Err("Failed to find item".to_string());
+    }
+  };
+
+  if let Some(true) = as_mp3 {
+    if let Some(url) = &item.value {
+      let parsed_url = Url::parse(url).map_err(|e| e.to_string())?;
+
+      let file_name = parsed_url
+        .path_segments()
+        .and_then(|segments| segments.last())
+        .and_then(|name| {
+          if name.is_empty() {
+            None
+          } else {
+            Some(name.to_string())
+          }
+        })
+        .unwrap_or_else(|| format!("audio_{}.mp3", current_datetime));
+
+      let destination_path = FileDialogBuilder::new()
+        .set_file_name(&file_name)
+        .save_file();
+
+      if let Some(path) = destination_path {
+        let response = reqwest::get(url).await.map_err(|e| e.to_string())?;
+        let bytes = response.bytes().await.map_err(|e| e.to_string())?;
+
+        // Save the MP3 file
+        std::fs::write(&path, bytes).map_err(|e| e.to_string())?;
+        return Ok("saved".to_string());
+      } else {
+        return Ok("cancel".to_string());
+      }
+    } else {
+      return Err("No URL found for MP3 download".to_string());
+    }
+  } else if let Some(true) = as_image {
+    let mut img_data: Option<Vec<u8>> = None;
+    let mut file_name = format!("saved_clipboard_image_{}.png", current_datetime);
+
+    if let Some(true) = item.is_image_data {
+      if let Some(_base64_string) = &item.value {
+        if is_base64_image(&_base64_string) {
+          let base64_data = _base64_string.split(',').nth(1).unwrap_or(&_base64_string);
+          img_data = Some(base64::decode(base64_data).map_err(|e| e.to_string())?);
+        } else {
+          return Err("Provided string is not a valid base64 image data".to_string());
+        }
+      }
+    } else if let (Some(image_path), Some(true)) = (item.image_path_full_res, item.is_image) {
+      img_data = Some(std::fs::read(&image_path).map_err(|e| e.to_string())?);
+    } else if let Some(true) = item.is_link {
+      if let Some(image_url) = &item.value {
+        let parsed_url = Url::parse(&ensure_url_prefix(image_url)).map_err(|e| e.to_string())?;
+        file_name = parsed_url
+          .path_segments()
+          .and_then(|segments| segments.last())
+          .unwrap_or(&file_name)
+          .to_string();
+
+        let image_response = reqwest::get(image_url).await.map_err(|e| e.to_string())?;
+        let bytes = image_response.bytes().await.map_err(|e| e.to_string())?;
+        img_data = Some(bytes.to_vec());
+      }
+    }
+    if let Some(data) = img_data {
+      let destination_path = FileDialogBuilder::new()
+        .set_file_name(&file_name)
+        .save_file();
+
+      if let Some(path) = destination_path {
+        std::fs::write(&path, data).map_err(|e| e.to_string())?;
+        return Ok("saved".to_string());
+      } else {
+        return Ok("cancel".to_string());
+      }
+    } else {
+      return Err("Failed to obtain image data".to_string());
+    }
+  } else {
+    let value = match &item.value {
+      Some(val) => val,
+      None => return Ok("History item value is missing".to_string()),
+    };
+
+    let file_name = format!("saved_clip_{}.txt", current_datetime);
+    let destination_path = FileDialogBuilder::new()
+      .set_file_name(&file_name)
+      .save_file();
+
+    if let Some(path) = destination_path {
+      let mut file = File::create(&path).map_err(|e| e.to_string())?;
+      file
+        .write_all(value.as_bytes())
+        .map_err(|e| e.to_string())?;
+      return Ok("saved".to_string());
+    } else {
+      return Ok("cancel".to_string());
+    }
+  }
 }

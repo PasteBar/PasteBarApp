@@ -133,6 +133,7 @@ diesel::table! {
         updated_at -> BigInt,
         created_date -> Timestamp,
         updated_date -> Timestamp,
+        item_options -> Nullable<Text>,
     }
 }
 
@@ -147,6 +148,11 @@ diesel::table! {
         link_image -> Nullable<Text>,
         link_domain -> Nullable<Text>,
         link_favicon -> Nullable<Text>,
+        link_track_artist -> Nullable<Text>,
+        link_track_title -> Nullable<Text>,
+        link_track_album -> Nullable<Text>,
+        link_track_year -> Nullable<Text>,
+        link_is_track -> Nullable<Bool>,
     }
 }
 
@@ -182,12 +188,12 @@ diesel::joinable!(link_metadata -> items (item_id));
 diesel::joinable!(tabs -> collections (collection_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
-  clipboard_history,
-  collection_clips,
-  collection_menu,
-  collections,
-  items,
-  link_metadata,
-  settings,
-  tabs,
+    clipboard_history,
+    collection_clips,
+    collection_menu,
+    collections,
+    items,
+    link_metadata,
+    settings,
+    tabs,
 );
