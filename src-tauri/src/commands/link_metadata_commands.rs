@@ -1,10 +1,12 @@
+use std::path::Path;
+
 use crate::models::models::LinkMetadata;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
 
 use crate::services::link_metadata_service::{
-  self, check_audio_file, delete_link_metadata_by_history_id, delete_link_metadata_by_item_id,
-  insert_or_update_link_metadata, AudioInfo,
+  self, check_audio_file, check_local_audio_file, delete_link_metadata_by_history_id,
+  delete_link_metadata_by_item_id, insert_or_update_link_metadata, AudioInfo,
 };
 
 use crate::services::utils::{decode_html_entities, ensure_url_prefix};
@@ -20,6 +22,67 @@ pub async fn validate_audio(url_or_path: String) -> Result<AudioInfo, String> {
   check_audio_file(&url_or_path)
     .await
     .map_err(|e| e.to_string())
+}
+
+#[tauri::command(async)]
+pub async fn fetch_path_metadata(
+  file_path: String,
+  item_id: String,
+  force_update: Option<bool>,
+) -> Result<LinkMetadata, String> {
+  let force_update = force_update.unwrap_or(false);
+
+  // println!("force_update metadata for file: {}", force_update);
+  // println!("item_id: {}", item_id);
+
+  if !force_update {
+    if let Some(existing_metadata) = get_link_metadata_by_item_id(item_id.clone()) {
+      return Ok(existing_metadata);
+    }
+  }
+
+  if !file_path.to_lowercase().ends_with(".mp3") {
+    return Err("The file is not an MP3".to_string());
+  }
+
+  let path = Path::new(&file_path);
+  if !path.exists() {
+    return Err("File does not exist".to_string());
+  }
+
+  let audio_info = check_local_audio_file(&file_path)
+    .await
+    .map_err(|e| format!("Failed to read MP3 file: {}", e))?;
+
+  if !audio_info.is_valid {
+    return Err(
+      audio_info
+        .error
+        .unwrap_or_else(|| "Invalid audio file".to_string()),
+    );
+  }
+
+  let metadata = LinkMetadata {
+    metadata_id: nanoid!(),
+    item_id: Some(item_id),
+    history_id: None,
+    link_domain: None,
+    link_url: Some(file_path),
+    link_title: audio_info.title.clone(),
+    link_favicon: None,
+    link_description: None,
+    link_image: None,
+    link_track_album: audio_info.album,
+    link_track_artist: audio_info.artist,
+    link_track_title: audio_info.title,
+    link_track_year: audio_info.year,
+    link_is_track: Some(true),
+  };
+
+  insert_or_update_link_metadata(&metadata)
+    .map_err(|e| format!("Failed to save link metadata: {:?}", e))?;
+
+  Ok(metadata)
 }
 
 #[tauri::command(async)]

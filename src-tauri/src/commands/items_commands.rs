@@ -20,8 +20,6 @@ use url::Url;
 use std::fs::File;
 use std::io::Write;
 
-use super::link_metadata_commands::fetch_link_metadata;
-
 #[tauri::command]
 pub fn update_item_by_id(updated_item: UpdatedItemData) -> String {
   if updated_item.item_id.is_none() {

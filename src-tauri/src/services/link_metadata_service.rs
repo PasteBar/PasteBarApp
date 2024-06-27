@@ -33,7 +33,7 @@ pub async fn check_audio_file(url_or_path: &str) -> Result<AudioInfo, Box<dyn st
   }
 }
 
-async fn check_local_audio_file(path: &str) -> Result<AudioInfo, Box<dyn std::error::Error>> {
+pub async fn check_local_audio_file(path: &str) -> Result<AudioInfo, Box<dyn std::error::Error>> {
   let path = Path::new(path);
 
   // Check file extension

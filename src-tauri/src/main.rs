@@ -720,6 +720,7 @@ async fn main() {
       clipboard_commands::run_form_fill,
       clipboard_commands::run_template_fill,
       link_metadata_commands::fetch_link_metadata,
+      link_metadata_commands::fetch_path_metadata,
       link_metadata_commands::validate_audio,
       link_metadata_commands::delete_link_metadata,
       link_metadata_commands::get_link_metadata_by_item_id,

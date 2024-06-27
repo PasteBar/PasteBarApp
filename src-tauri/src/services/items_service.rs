@@ -6,8 +6,6 @@ use crate::models::models::UpdatedItemData;
 use crate::models::Item;
 use crate::services::utils::debug_output;
 use image::ImageFormat;
-use serde_json::de;
-use tracing_subscriber::field::debug;
 
 use crate::schema::collection_clips::dsl::collection_clips;
 use crate::schema::collection_clips::dsl::{self as collection_clips_dsl};
