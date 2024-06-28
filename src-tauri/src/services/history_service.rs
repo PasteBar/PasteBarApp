@@ -714,6 +714,10 @@ pub fn find_clipboard_histories_by_value_or_filter(
       query_builder = query_builder.filter(is_link.eq(true));
     }
 
+    if filters.contains(&"audio".to_string()) {
+      query_builder = query_builder.filter(is_link.eq(true).and(value.like("%.mp3")));
+    }
+
     if filters.contains(&"code".to_string()) {
       query_builder = query_builder.filter(is_code.eq(true));
     }
@@ -740,6 +744,10 @@ pub fn find_clipboard_histories_by_value_or_filter(
 
     if filters.contains(&"link".to_string()) {
       query_builder = query_builder.or_filter(is_link.eq(true));
+    }
+
+    if filters.contains(&"audio".to_string()) {
+      query_builder = query_builder.filter(is_link.eq(true).and(value.like("%.mp3")));
     }
 
     if filters.contains(&"code".to_string()) {

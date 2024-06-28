@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::path::Path;
 use std::sync::Mutex;
 
 use crate::menu::{self, update_system_menu};
@@ -478,31 +479,44 @@ pub async fn save_to_file_clip_item(
   };
 
   if let Some(true) = as_mp3 {
-    if let Some(url) = &item.value {
-      let parsed_url = Url::parse(url).map_err(|e| e.to_string())?;
+    if let Some(value) = &item.value {
+      let file_name: String;
+      let mp3_data: Vec<u8>;
 
-      let file_name = parsed_url
-        .path_segments()
-        .and_then(|segments| segments.last())
-        .and_then(|name| {
-          if name.is_empty() {
-            None
-          } else {
-            Some(name.to_string())
-          }
-        })
-        .unwrap_or_else(|| format!("audio_{}.mp3", current_datetime));
+      let path = Path::new(value);
+      if path.exists() {
+        file_name = path
+          .file_name()
+          .and_then(|name| name.to_str())
+          .map(String::from)
+          .unwrap_or_else(|| format!("audio_{}.mp3", current_datetime));
+
+        mp3_data = std::fs::read(path).map_err(|e| e.to_string())?;
+      } else {
+        let parsed_url = Url::parse(value).map_err(|e| e.to_string())?;
+        file_name = parsed_url
+          .path_segments()
+          .and_then(|segments| segments.last())
+          .and_then(|name| {
+            if name.is_empty() {
+              None
+            } else {
+              Some(name.to_string())
+            }
+          })
+          .unwrap_or_else(|| format!("audio_{}.mp3", current_datetime));
+
+        let response = reqwest::get(value).await.map_err(|e| e.to_string())?;
+        mp3_data = response.bytes().await.map_err(|e| e.to_string())?.to_vec();
+      }
 
       let destination_path = FileDialogBuilder::new()
         .set_file_name(&file_name)
         .save_file();
 
       if let Some(path) = destination_path {
-        let response = reqwest::get(url).await.map_err(|e| e.to_string())?;
-        let bytes = response.bytes().await.map_err(|e| e.to_string())?;
-
         // Save the MP3 file
-        std::fs::write(&path, bytes).map_err(|e| e.to_string())?;
+        std::fs::write(&path, mp3_data).map_err(|e| e.to_string())?;
         return Ok("saved".to_string());
       } else {
         return Ok("cancel".to_string());

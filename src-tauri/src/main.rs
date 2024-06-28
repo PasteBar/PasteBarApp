@@ -725,6 +725,7 @@ async fn main() {
       link_metadata_commands::delete_link_metadata,
       link_metadata_commands::get_link_metadata_by_item_id,
       link_metadata_commands::copy_link_metadata_to_new_item_id,
+      link_metadata_commands::download_audio,
       collections_commands::get_collections,
       collections_commands::create_collection,
       collections_commands::get_collection,

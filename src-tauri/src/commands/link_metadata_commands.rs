@@ -17,6 +17,59 @@ use reqwest::Client;
 use reqwest::StatusCode;
 use url::Url;
 
+use chrono::Local;
+use reqwest;
+use tauri::api::dialog::blocking::FileDialogBuilder;
+
+#[tauri::command(async)]
+pub async fn download_audio(url_or_path: String) -> Result<String, String> {
+  let current_datetime = Local::now().format("%Y-%m-%d-%H%M%S");
+
+  let file_name: String;
+  let audio_data: Vec<u8>;
+
+  let path = Path::new(&url_or_path);
+  if path.exists() {
+    file_name = path
+      .file_name()
+      .and_then(|name| name.to_str())
+      .map(String::from)
+      .unwrap_or_else(|| format!("audio_{}.mp3", current_datetime));
+
+    audio_data = std::fs::read(path).map_err(|e| e.to_string())?;
+  } else {
+    let parsed_url = Url::parse(&url_or_path).map_err(|e| e.to_string())?;
+    file_name = parsed_url
+      .path_segments()
+      .and_then(|segments| segments.last())
+      .and_then(|name| {
+        if name.is_empty() {
+          None
+        } else {
+          Some(name.to_string())
+        }
+      })
+      .unwrap_or_else(|| format!("audio_{}.mp3", current_datetime));
+
+    let response = reqwest::get(&url_or_path)
+      .await
+      .map_err(|e| e.to_string())?;
+    audio_data = response.bytes().await.map_err(|e| e.to_string())?.to_vec();
+  }
+
+  let destination_path = FileDialogBuilder::new()
+    .set_file_name(&file_name)
+    .save_file();
+
+  if let Some(path) = destination_path {
+    // Save the audio file
+    std::fs::write(&path, audio_data).map_err(|e| e.to_string())?;
+    Ok("saved".to_string())
+  } else {
+    Ok("cancel".to_string())
+  }
+}
+
 #[tauri::command(async)]
 pub async fn validate_audio(url_or_path: String) -> Result<AudioInfo, String> {
   check_audio_file(&url_or_path)

@@ -25,10 +25,8 @@ pub struct AudioInfo {
 
 pub async fn check_audio_file(url_or_path: &str) -> Result<AudioInfo, Box<dyn std::error::Error>> {
   if Path::new(url_or_path).exists() {
-    // Handle local file
     check_local_audio_file(url_or_path).await
   } else {
-    // Handle URL
     check_url_audio_file(url_or_path).await
   }
 }
@@ -36,7 +34,6 @@ pub async fn check_audio_file(url_or_path: &str) -> Result<AudioInfo, Box<dyn st
 pub async fn check_local_audio_file(path: &str) -> Result<AudioInfo, Box<dyn std::error::Error>> {
   let path = Path::new(path);
 
-  // Check file extension
   if !is_valid_audio_file_extension(path) {
     return Ok(AudioInfo {
       is_valid: false,
