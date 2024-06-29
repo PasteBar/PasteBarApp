@@ -100,6 +100,7 @@ pub struct UpdatedItemData {
   pub icon: Option<String>,
   pub icon_visibility: Option<String>,
   pub detected_language: Option<String>,
+
   pub pinned_order_number: Option<i32>,
   pub command_request_output: Option<String>,
   pub command_request_last_run_at: Option<i64>,
@@ -113,6 +114,7 @@ pub struct UpdatedItemData {
 #[diesel(table_name = clipboard_history)]
 pub struct UpdatedHistoryData {
   pub history_id: Option<String>,
+  pub history_options: Option<String>,
   pub title: Option<String>,
   pub value: Option<String>,
   pub is_text: Option<bool>,
@@ -271,6 +273,7 @@ pub struct ClipboardHistory {
   pub updated_at: i64,
   pub created_date: NaiveDateTime,
   pub updated_date: NaiveDateTime,
+  pub history_options: Option<String>,
 }
 
 #[derive(

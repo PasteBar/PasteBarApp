@@ -100,6 +100,7 @@ pub struct RecentClipboardHistoryData {
 #[serde(rename_all = "camelCase")]
 pub struct ClipboardHistoryWithMetaData {
   pub history_id: String,
+  pub history_options: Option<String>,
   pub title: Option<String>,
   pub value: Option<String>,
   pub value_preview: Option<String>,
@@ -174,6 +175,7 @@ impl ClipboardHistoryWithMetaData {
       updated_at: history.updated_at,
       created_date: history.created_date,
       updated_date: history.updated_date,
+      history_options: history.history_options,
       link_metadata,
     };
 
@@ -320,6 +322,7 @@ fn create_new_history(
 ) -> ClipboardHistory {
   ClipboardHistory {
     history_id: _history_id,
+    history_options: None,
     title: None,
     value: None,
     value_preview: None,
@@ -493,6 +496,7 @@ pub fn add_clipboard_history_from_text(
 
     let new_history = ClipboardHistory {
       history_id: new_history_id,
+      history_options: None,
       title: None,
       value: if !_text_as_json.is_empty() {
         Some(_text_as_json)

@@ -36,6 +36,7 @@ use super::utils::delete_file_and_maybe_parent;
 #[serde(rename_all = "camelCase")]
 pub struct CreateItem {
   pub history_id: Option<String>,
+  pub history_options: Option<String>,
   pub item_options: Option<String>,
   pub name: String,
   pub description: Option<String>,

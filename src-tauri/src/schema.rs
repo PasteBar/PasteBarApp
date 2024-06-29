@@ -34,6 +34,7 @@ diesel::table! {
         updated_at -> BigInt,
         created_date -> Timestamp,
         updated_date -> Timestamp,
+        history_options -> Nullable<Text>,
     }
 }
 
