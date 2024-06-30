@@ -180,6 +180,15 @@ pub fn get_link_metadata_by_item_id(item_id_value: String) -> Option<LinkMetadat
     .ok()
 }
 
+pub fn get_link_metadata_by_history_id(history_id_value: String) -> Option<LinkMetadata> {
+  let connection = &mut establish_pool_db_connection();
+
+  link_metadata
+    .filter(history_id.eq(history_id_value))
+    .first(connection)
+    .ok()
+}
+
 pub fn copy_link_metadata_to_new_item_id(
   metadata_id_value: String,
   item_id_value: String,

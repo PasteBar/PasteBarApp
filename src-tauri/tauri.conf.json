@@ -88,12 +88,12 @@
       "csp": {
         "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app pastebar.ru *.pastebar.ru *.paypal.com",
         "connect-src": "ipc: https://ipc.localhost asset: https://*.pastebar.app https://*.pastebar.ru https://*.paypal.com tauri://localhost https://tauri.localhost",
-        "frame-src": "'self' https://*.pastebar.app https://*.pastebar.ru https://*.paypal.com https://*.youtube.com https://*.youtube-nocookie.com",
+        "frame-src": "'self' https://*.pastebar.app https://*.pastebar.ru https://*.paypal.com https://*.youtube.com https://*.youtube-nocookie.com https://*.x.com https://*.twitter.com https://*.instagram.com",
         "img-src": "'self' asset: https://asset.localhost blob: data: *",
         "img-srcset": "'self' asset: https://asset.localhost blob: data:",
         "media-src": "'self' asset: https://asset.localhost blob: data: *",
         "style-src": "'unsafe-inline' 'self' asset: https://asset.localhost",
-        "script-src": "'self' 'wasm-unsafe-eval' asset: https://*.pastebar.app"
+        "script-src": "'self' 'wasm-unsafe-eval' asset: https://*.pastebar.app https://*.x.com https://*.twitter.com https://*.instagram.com"
       }
     },
     "updater": {

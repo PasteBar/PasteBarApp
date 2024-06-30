@@ -126,6 +126,7 @@
     "react-virtuoso": "^4.6.2",
     "react-window": "^1.8.10",
     "react-window-infinite-loader": "^1.0.9",
+    "react-youtube": "^10.1.0",
     "recharts": "^2.10.1",
     "resize-observer-polyfill": "^1.5.1",
     "rollup": "^4.10.0",
