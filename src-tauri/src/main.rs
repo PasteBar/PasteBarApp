@@ -266,6 +266,117 @@ fn set_icon(app_handle: tauri::AppHandle, name: &str, is_dark: bool) {
   }
 }
 
+#[tauri::command]
+fn close_history_window(app_handle: tauri::AppHandle) -> Result<(), String> {
+  let window = app_handle
+    .get_window("history")
+    .ok_or_else(|| "Failed to get history window".to_string())?;
+
+  app_handle
+    .emit_all("window-events", "history-window-closed")
+    .unwrap();
+
+  window.close().map_err(|e| e.to_string())?;
+  Ok(())
+}
+
+#[tauri::command]
+fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), String> {
+  // check if the window is already open
+  if app_handle.get_window("history").is_some() {
+    // show if exist and return
+    let window = app_handle
+      .get_window("history")
+      .ok_or_else(|| "Failed to get history window".to_string())?;
+    // bring to front
+    window.show().map_err(|e| e.to_string())?;
+    // window.set_focus().map_err(|e| e.to_string())?;
+
+    return Ok(());
+  }
+  let menu = Menu::new().add_submenu(Submenu::new(
+    "PasteBar",
+    Menu::new()
+      .add_native_item(MenuItem::CloseWindow)
+      .add_native_item(MenuItem::Copy)
+      .add_native_item(MenuItem::SelectAll)
+      .add_native_item(MenuItem::Undo)
+      .add_native_item(MenuItem::Redo)
+      .add_native_item(MenuItem::Paste),
+  ));
+
+  let main_window = app_handle
+    .get_window("main")
+    .ok_or_else(|| "Failed to get main window".to_string())?;
+
+  let main_size = main_window.outer_size().map_err(|e| e.to_string())?;
+
+  let mut window_builder = tauri::WindowBuilder::new(
+    &app_handle,
+    "history",
+    tauri::WindowUrl::App("history-index".into()),
+  )
+  .title("PasteBar History")
+  .inner_size(width, main_size.height as f64)
+  .max_inner_size(700.0, 2200.0)
+  .min_inner_size(300.0, 400.0)
+  .menu(menu)
+  .visible(false);
+
+  #[cfg(target_os = "macos")]
+  {
+    window_builder = window_builder
+      .title_bar_style(tauri::TitleBarStyle::Overlay)
+      .hidden_title(true);
+  }
+
+  #[cfg(target_os = "windows")]
+  {
+    window_builder = window_builder.decorations(false).transparent(true);
+  }
+
+  let history_window = window_builder.build().map_err(|e| e.to_string())?;
+
+  #[cfg(target_os = "macos")]
+  {
+    history_window.set_transparent_titlebar(true);
+    history_window.position_traffic_lights(-10., -10.);
+  }
+
+  {
+    let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+
+    history_window.on_window_event(move |e| match e {
+      tauri::WindowEvent::Destroyed => {
+        app_handle
+          .emit_all("window-events", "history-window-closed")
+          .unwrap();
+      }
+      tauri::WindowEvent::Moved(_) => {
+        let now = Instant::now();
+        if now - last_save_time.get() >= StdDuration::from_secs(1) {
+          app_handle.save_window_state(StateFlags::POSITION).unwrap();
+          last_save_time.set(now);
+        }
+      }
+      tauri::WindowEvent::Resized(_) => {
+        let now = Instant::now();
+        if now - last_save_time.get() >= StdDuration::from_secs(1) {
+          println!("saved on resiz");
+          app_handle.save_window_state(StateFlags::SIZE).unwrap();
+          last_save_time.set(now);
+        }
+      }
+      _ => {}
+    });
+  }
+
+  history_window.hide().map_err(|e| e.to_string())?;
+  history_window.show().map_err(|e| e.to_string())?;
+  history_window.set_focus().map_err(|e| e.to_string())?;
+
+  Ok(())
+}
 #[tokio::main]
 async fn main() {
   dotenv().ok();
@@ -286,6 +397,7 @@ async fn main() {
         }
         "open" => {
           let w = app.get_window("main").unwrap();
+          w.emit_all("window-events", "main-window-show").unwrap();
           w.show().unwrap();
           w.set_focus().unwrap();
         }
@@ -497,12 +609,21 @@ async fn main() {
         if _win.label() == "main" {
           _win.position_traffic_lights(-10., -10.);
         }
+        if _win.label() == "history" {
+          _win.position_traffic_lights(-10., -10.);
+        }
       };
 
       match event.event() {
         tauri::WindowEvent::CloseRequested { api, .. } => {
-          event.window().hide().unwrap();
-          api.prevent_close();
+          println!("Close Requested");
+          let _win = event.window();
+          if _win.label() != "history" {
+            _win.emit_all("window-events", "main-window-hide").unwrap();
+
+            event.window().hide().unwrap();
+            api.prevent_close();
+          }
         }
         tauri::WindowEvent::Focused(false) => {}
         tauri::WindowEvent::ThemeChanged(..) => apply_offset(),
@@ -515,20 +636,6 @@ async fn main() {
       let app_settings = get_all_settings(None).unwrap_or_default();
       app.manage(app_settings);
       cron_jobs::setup_cron_jobs();
-
-      // let handle = app.handle();
-      // tauri::async_runtime::spawn(async move {
-      //   match tauri::updater::builder(handle).check().await {
-      //     Ok(update) => {
-      //       if update.is_update_available() {
-      //         update.download_and_install().await.unwrap();
-      //       }
-      //     }
-      //     Err(e) => {
-      //       println!("Error checking for update: {:?}", e);
-      //     }
-      //   }
-      // });
 
       let menu = Menu::new().add_submenu(Submenu::new(
         "PasteBar",
@@ -543,7 +650,6 @@ async fn main() {
 
       let mut window_builder =
         tauri::WindowBuilder::new(app, "main", tauri::WindowUrl::App("index.html".into()))
-          // .skip_taskbar(if cfg!(debug_assertions) { false } else { true })
           .inner_size(1100., 730.)
           .min_inner_size(750., 600.)
           // .decorations(false)
@@ -623,14 +729,14 @@ async fn main() {
           tauri::WindowEvent::Moved(_) => {
             let now = Instant::now();
             if now - last_save_time.get() >= StdDuration::from_secs(2) {
-              app_handle.save_window_state(StateFlags::all()).unwrap();
+              app_handle.save_window_state(StateFlags::POSITION).unwrap();
               last_save_time.set(now);
             }
           }
           tauri::WindowEvent::Resized(_) => {
             let now = Instant::now();
             if now - last_save_time.get() >= StdDuration::from_secs(2) {
-              app_handle.save_window_state(StateFlags::all()).unwrap();
+              app_handle.save_window_state(StateFlags::SIZE).unwrap();
               last_save_time.set(now);
             }
           }
@@ -776,6 +882,8 @@ async fn main() {
       open_path_or_app,
       autostart,
       is_autostart_enabled,
+      open_history_window,
+      close_history_window,
       set_icon
     ])
     .plugin(clipboard::init())
