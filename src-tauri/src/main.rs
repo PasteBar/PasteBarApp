@@ -338,7 +338,6 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
       tauri::WindowEvent::Resized(_) => {
         let now = Instant::now();
         if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          println!("saved on resiz");
           app_handle.save_window_state(StateFlags::SIZE).unwrap();
           last_save_time.set(now);
         }
@@ -424,7 +423,6 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
       tauri::WindowEvent::Resized(_) => {
         let now = Instant::now();
         if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          println!("saved on resiz");
           app_handle.save_window_state(StateFlags::SIZE).unwrap();
           last_save_time.set(now);
         }
