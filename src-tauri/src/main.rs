@@ -913,6 +913,7 @@ async fn main() {
       history_commands::get_recent_clipboard_histories,
       history_commands::get_clipboard_histories_within_date_range,
       history_commands::clear_clipboard_history_older_than,
+      history_commands::clear_recent_clipboard_history,
       history_commands::count_clipboard_histories,
       history_commands::insert_clipboard_history,
       history_commands::update_clipboard_history_by_id,

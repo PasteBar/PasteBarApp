@@ -1,6 +1,4 @@
 use crate::clipboard::LanguageDetectOptions;
-use diesel::dsl::max;
-use diesel::sql_types::Bool;
 use lazy_static::lazy_static;
 
 use crate::db::establish_pool_db_connection;
@@ -16,7 +14,7 @@ use regex::Regex;
 use serde_json::to_string;
 
 use base64::{engine::general_purpose, Engine as _};
-use chrono::{Duration, NaiveDateTime};
+use chrono::{Duration, NaiveDateTime, Utc};
 use std::{collections::HashMap, sync::Mutex};
 
 use diesel::prelude::*;
@@ -46,6 +44,9 @@ use crate::services::utils::{
 };
 
 use super::utils::is_valid_json;
+
+use diesel::debug_query;
+use diesel::sqlite::Sqlite;
 
 type ImageHashSize = [u8; 8];
 
@@ -237,7 +238,7 @@ pub fn add_clipboard_history_from_image(
     if !is_favorite_item && should_auto_star_on_double_copy {
       match first_item {
         Ok(first_item) => {
-          let current_time = chrono::Utc::now().timestamp_millis();
+          let current_time = Utc::now().timestamp_millis();
           let time_difference = current_time - first_item.updated_at;
 
           if first_item.history_id == existing_history.history_id
@@ -257,8 +258,8 @@ pub fn add_clipboard_history_from_image(
     let _ = diesel::update(clipboard_history.filter(history_id.eq(&existing_history.history_id)))
       .set((
         is_favorite.eq(is_favorite_item),
-        updated_at.eq(chrono::Utc::now().timestamp_millis()),
-        updated_date.eq(chrono::Utc::now().naive_utc()),
+        updated_at.eq(Utc::now().timestamp_millis()),
+        updated_date.eq(Utc::now().naive_utc()),
       ))
       .execute(connection);
   } else {
@@ -350,10 +351,10 @@ fn create_new_history(
     links: None,
     detected_language: None,
     pinned_order_number: None,
-    created_at: chrono::Utc::now().timestamp_millis(),
-    updated_at: chrono::Utc::now().timestamp_millis(),
-    created_date: chrono::Utc::now().naive_utc(),
-    updated_date: chrono::Utc::now().naive_utc(),
+    created_at: Utc::now().timestamp_millis(),
+    updated_at: Utc::now().timestamp_millis(),
+    created_date: Utc::now().naive_utc(),
+    updated_date: Utc::now().naive_utc(),
   }
 }
 
@@ -417,7 +418,7 @@ pub fn add_clipboard_history_from_text(
     if !is_favorite_item && should_auto_star_on_double_copy {
       match first_item {
         Ok(first_item) => {
-          let current_time = chrono::Utc::now().timestamp_millis();
+          let current_time = Utc::now().timestamp_millis();
           let time_difference = current_time - first_item.updated_at;
 
           if first_item.history_id == existing_history.history_id
@@ -440,8 +441,8 @@ pub fn add_clipboard_history_from_text(
     let _ = diesel::update(clipboard_history.filter(history_id.eq(&existing_history.history_id)))
       .set((
         is_favorite.eq(is_favorite_item),
-        updated_at.eq(chrono::Utc::now().timestamp_millis()),
-        updated_date.eq(chrono::Utc::now().naive_utc()),
+        updated_at.eq(Utc::now().timestamp_millis()),
+        updated_date.eq(Utc::now().naive_utc()),
       ))
       .execute(connection);
 
@@ -528,10 +529,10 @@ pub fn add_clipboard_history_from_text(
       links: Some(found_links_json).filter(|_| _is_link),
       detected_language: detected_language_str,
       pinned_order_number: None,
-      created_at: chrono::Utc::now().timestamp_millis(),
-      updated_at: chrono::Utc::now().timestamp_millis(),
-      created_date: chrono::Utc::now().naive_utc(),
-      updated_date: chrono::Utc::now().naive_utc(),
+      created_at: Utc::now().timestamp_millis(),
+      updated_at: Utc::now().timestamp_millis(),
+      created_date: Utc::now().naive_utc(),
+      updated_date: Utc::now().naive_utc(),
     };
 
     let _ = insert_clipboard_history(&new_history);
@@ -595,41 +596,98 @@ pub fn get_clipboard_history_by_id(history_id_value: &String) -> Option<Clipboar
     .ok()
 }
 
-pub fn delete_clipboard_history_older_than(age: Duration) -> String {
+pub fn delete_clipboard_history_older_than(age: Duration) -> Result<String, diesel::result::Error> {
   let connection = &mut establish_pool_db_connection();
 
-  let threshold_date = (chrono::Utc::now() - age).naive_utc();
+  let now = Utc::now().timestamp_millis();
+  let threshold_timestamp = now - age.num_milliseconds();
 
-  let image_items_to_delete = clipboard_history
-    .filter(created_date.lt(threshold_date).and(is_image.eq(true)))
-    .load::<ClipboardHistory>(connection)
-    .expect("Error loading clipboard history items");
+  // Handle image files
+  let image_items_to_delete = clipboard_history::table
+    .filter(updated_at.lt(threshold_timestamp).and(is_image.eq(true)))
+    .load::<ClipboardHistory>(connection)?;
 
   for item in image_items_to_delete.iter() {
     if let Some(ref path) = item.image_path_full_res {
-      match delete_file_and_maybe_parent(&Path::new(path)) {
-        Ok(_) => println!("Successfully deleted image file: {}", path),
-        Err(e) => eprintln!("Error deleting image file {}: {}", path, e),
+      if let Err(e) = delete_file_and_maybe_parent(&Path::new(path)) {
+        eprintln!("Error deleting image file {}: {}", path, e);
       }
     }
   }
 
-  let links_items_to_delete = clipboard_history
-    .filter(created_date.lt(threshold_date).and(is_link.eq(true)))
-    .load::<ClipboardHistory>(connection)
-    .expect("Error loading clipboard history items");
+  // Handle link items
+  let links_items_to_delete = clipboard_history::table
+    .filter(updated_at.lt(threshold_timestamp).and(is_link.eq(true)))
+    .load::<ClipboardHistory>(connection)?;
 
   let history_ids_to_delete: Vec<String> = links_items_to_delete
     .iter()
     .map(|item| item.history_id.clone())
     .collect();
 
-  let _ =
-    diesel::delete(clipboard_history.filter(created_date.lt(threshold_date))).execute(connection);
+  // Perform the main delete operation
+  let deleted_count =
+    diesel::delete(clipboard_history::table.filter(updated_at.lt(threshold_timestamp)))
+      .execute(connection)?;
 
+  // Delete associated link metadata
   delete_link_metadata_by_history_ids(&history_ids_to_delete);
 
-  "ok".to_string()
+  Ok(format!("Successfully deleted {} items", deleted_count))
+}
+
+pub fn delete_recent_clipboard_history(
+  delete_duration: Duration,
+) -> Result<String, diesel::result::Error> {
+  let connection = &mut establish_pool_db_connection();
+
+  let now = Utc::now().timestamp_millis();
+  let delete_threshold = now - delete_duration.num_milliseconds();
+
+  // Find records to delete (newer than delete_threshold)
+  let records_to_delete = clipboard_history::table
+    .filter(updated_at.gt(delete_threshold))
+    .load::<ClipboardHistory>(connection)?;
+
+  // Handle image files
+  let image_items: Vec<&ClipboardHistory> = records_to_delete
+    .iter()
+    .filter(|item| item.is_image == Some(true))
+    .collect();
+
+  for item in image_items {
+    if let Some(ref path) = item.image_path_full_res {
+      if let Err(e) = delete_file_and_maybe_parent(&Path::new(path)) {
+        eprintln!("Error deleting image file {}: {}", path, e);
+      }
+    }
+  }
+
+  println!("deleted_count: {:?}", records_to_delete);
+
+  // Handle link items
+  let link_items: Vec<&ClipboardHistory> = records_to_delete
+    .iter()
+    .filter(|item| item.is_link == Some(true))
+    .collect();
+
+  let history_ids_to_delete: Vec<String> = link_items
+    .iter()
+    .map(|item| item.history_id.clone())
+    .collect();
+
+  // Perform the main delete operation
+  let deleted_count =
+    diesel::delete(clipboard_history::table.filter(updated_at.gt(delete_threshold)))
+      .execute(connection)?;
+
+  // Delete associated link metadata
+  delete_link_metadata_by_history_ids(&history_ids_to_delete);
+
+  Ok(format!(
+    "Successfully deleted {} recent items",
+    deleted_count
+  ))
 }
 
 pub fn delete_all_clipboard_histories() -> String {

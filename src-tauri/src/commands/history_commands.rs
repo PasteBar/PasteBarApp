@@ -136,6 +136,11 @@ pub fn clear_clipboard_history_older_than(duration_type: String, older_then: Str
   // Convert older_then string to an integer.
   let duration_value: i64 = older_then.parse().unwrap_or(0);
 
+  println!(
+    "Clearing clipboard history older than {} {}",
+    duration_value, duration_type
+  );
+
   match duration_type.as_str() {
     "days" => {
       if duration_value == 0 {
@@ -154,6 +159,40 @@ pub fn clear_clipboard_history_older_than(duration_type: String, older_then: Str
     "year" => {
       // Roughly considering a year as 52 weeks.
       history_service::delete_clipboard_history_older_than(Duration::days(356 * duration_value));
+    }
+    _ => {
+      println!("Unsupported duration type: {}", duration_type);
+      return "error".to_string();
+    }
+  }
+
+  "ok".to_string()
+}
+
+#[tauri::command]
+pub fn clear_recent_clipboard_history(duration_type: String, duration: String) -> String {
+  let duration_value: i64 = duration.parse().unwrap_or(0);
+
+  println!(
+    "Clearing recent clipboard history for last {} {}",
+    duration_value, duration_type
+  );
+
+  match duration_type.as_str() {
+    "hour" => {
+      history_service::delete_recent_clipboard_history(Duration::hours(duration_value));
+    }
+    "days" => {
+      history_service::delete_recent_clipboard_history(Duration::days(duration_value));
+    }
+    "weeks" => {
+      history_service::delete_recent_clipboard_history(Duration::weeks(duration_value));
+    }
+    "months" => {
+      history_service::delete_recent_clipboard_history(Duration::days(30 * duration_value));
+    }
+    "year" => {
+      history_service::delete_recent_clipboard_history(Duration::days(356 * duration_value));
     }
     _ => {
       println!("Unsupported duration type: {}", duration_type);
