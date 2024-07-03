@@ -255,9 +255,9 @@ fn set_icon(app_handle: tauri::AppHandle, name: &str, is_dark: bool) {
       .tray_handle()
       .set_icon(if cfg!(windows) {
         if is_dark || is_windows_system_dark_mode {
-          tauri::Icon::Raw(include_bytes!("../icons/tray128x128-white.png").to_vec())
+          tauri::Icon::Raw(include_bytes!("../icons/tray128x128-color.png").to_vec())
         } else {
-          tauri::Icon::Raw(include_bytes!("../icons/tray128x128.png").to_vec())
+          tauri::Icon::Raw(include_bytes!("../icons/tray128x128-color.png").to_vec())
         }
       } else {
         tauri::Icon::Raw(include_bytes!("../icons/tray128x128.png").to_vec())
