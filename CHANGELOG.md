@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.3.1
+
+### Patch Changes
+
+- Added Application Submission Error Report Page
+
 ## 0.3.0
 
 ### Minor Changes
