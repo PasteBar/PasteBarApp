@@ -22,11 +22,11 @@ jobs:
         id: check_changes
         run: |
           if [ -n "$(ls .changeset/*.md 2>/dev/null)" ]; then
-            echo "CHANGES_DETECTED"
+            echo "CHANGESET UPDATE DETECTED"
             echo "changes_detected=true" >> $GITHUB_ENV
           else
             echo "changes_detected=false" >> $GITHUB_ENV
-            echo "CHANGES NOT DETECTED"
+            echo "CHANGESET UPDATE NOT DETECTED"
           fi
           
       - name: Create Pull Request
@@ -35,7 +35,6 @@ jobs:
           CHANGES_DETECTED: ${{ env.changes_detected }}
           
         run: |
-          echo "CHANGES_DETECTED=${CHANGES_DETECTED}"
           if [ "${CHANGES_DETECTED}" != "true" ]; then
             echo "No changesets detected. Skipping version bump and PR creation."
             exit 0
