@@ -1,6 +1,6 @@
 {
-  "name": "@pastebar/ui",
-  "version": "0.3.1",
+  "name": "pastebar-app-ui",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -11,9 +11,7 @@
     "taze": "taze major -I",
     "taze:minor": "taze minor -w",
     "preview": "vite preview",
-    "audit:prod": "npm audit --omit=dev",
-    "changeset": "changeset",
-    "version": "changeset version"
+    "audit:prod": "npm audit --omit=dev"
   },
   "dependencies": {
     "@codastic/react-positioning-portal": "^0.7.0",
