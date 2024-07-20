@@ -16,7 +16,7 @@ jobs:
           node-version: lts/*
 
       - name: Install dependencies
-        run: npm ci
+        run: npm i
 
       - name: Check for changesets
         id: check_changes
