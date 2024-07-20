@@ -35,6 +35,9 @@ jobs:
           # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
           targets: ${{ matrix.settings.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
+      - name: install packages
+        run: npm install
+
       # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any asstes.
       - uses: tauri-apps/tauri-action@v0
         env:
