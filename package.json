@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "tauri dev",
     "start": "tauri dev",
+    "tauri": "tauri",
     "format": "npx prettier --write . --ignore-path .gitignore ",
     "build": "npm run app:build",
     "app:build": "tauri build --config src-tauri/tauri.release.conf.json",
