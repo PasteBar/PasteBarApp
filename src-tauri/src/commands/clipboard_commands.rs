@@ -30,8 +30,16 @@ pub enum ClipFormKeyPress {
   Tab,
   TabTab,
   TabTabTab,
+  EnterEnter,
   TabEnter,
   TabTabEnter,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ItemField {
+  pub press_keys_after_paste: Option<ClipFormKeyPress>,
+  pub no_link_card: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -444,7 +452,7 @@ pub async fn copy_clip_item(
 pub async fn copy_paste_clip_item_from_menu(
   app_handle: AppHandle,
   item_id: String,
-  _delay: i32,
+  delay: i32,
 ) -> String {
   let is_link_or_app = copy_clip_item(app_handle, item_id.clone(), true).await;
 
@@ -453,10 +461,34 @@ pub async fn copy_paste_clip_item_from_menu(
   }
 
   if is_link_or_app == "ok".to_string() {
-    println!("before delay");
+    let item = match get_item_by_id(item_id.clone()) {
+      Ok(i) => i,
+      Err(e) => {
+        eprintln!("Failed to find item: {}", e);
+        return "Item not found".to_string();
+      }
+    };
 
-    if _delay > 0 {
-      tokio::time::sleep(tokio::time::Duration::from_secs(_delay as u64)).await;
+    if let Some(item_options) = item.item_options {
+      if let Ok(item_field) = serde_json::from_str::<ItemField>(&item_options) {
+        if let Some(key_press) = item_field.press_keys_after_paste {
+          if delay > 0 {
+            tokio::time::sleep(tokio::time::Duration::from_secs(delay as u64)).await;
+          }
+
+          paste_clipboard(0);
+
+          tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
+
+          simulate_key_press(&key_press).await;
+
+          return "ok".to_string();
+        }
+      }
+    }
+
+    if delay > 0 {
+      tokio::time::sleep(tokio::time::Duration::from_secs(delay as u64)).await;
     }
 
     return paste_clipboard(0);
@@ -476,6 +508,30 @@ pub async fn copy_paste_clip_item(
   if is_copy_only {
     return "ok".to_string();
   }
+  // Get the item by id
+  let item = match get_item_by_id(item_id.clone()) {
+    Ok(i) => i,
+    Err(e) => {
+      eprintln!("Failed to find item: {}", e);
+      return "Item not found".to_string();
+    }
+  };
+
+  if let Some(item_options) = item.item_options {
+    if let Ok(item_field) = serde_json::from_str::<ItemField>(&item_options) {
+      if let Some(key_press) = item_field.press_keys_after_paste {
+        paste_clipboard(delay);
+
+        tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
+
+        // Simulate the key press
+        simulate_key_press(&key_press).await;
+
+        return "ok".to_string();
+      }
+    }
+  }
+
   paste_clipboard(delay)
 }
 
@@ -651,6 +707,10 @@ async fn simulate_key_press(key_press: &ClipFormKeyPress) {
     ClipFormKeyPress::TabTab => {
       VKey.press_tab();
       VKey.press_tab();
+    }
+    ClipFormKeyPress::EnterEnter => {
+      VKey.press_enter();
+      VKey.press_enter();
     }
     ClipFormKeyPress::TabTabTab => {
       VKey.press_tab();

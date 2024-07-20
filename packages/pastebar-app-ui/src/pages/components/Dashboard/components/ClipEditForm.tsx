@@ -45,12 +45,19 @@ import { useSignal } from '~/hooks/use-signal'
 
 import { ClipFormKeyPress, ClipFormTemplateOptions } from './ClipCard'
 
-export const ClipFormAfterInputKeyPress = ['Tab', 'Enter', 'TabTab', 'TabEnter'] as const
+export const ClipFormAfterInputKeyPress = [
+  'Tab',
+  'Enter',
+  'EnterEnter',
+  'TabTab',
+  'TabEnter',
+] as const
 
 export const ClipFormKeyPressDisplayValueMap = {
   Tab: 'Tab',
   Enter: 'Enter',
   TabTab: '2 Tabs',
+  EnterEnter: '2 Enters',
   TabTabTab: '3 Tabs',
   TabEnter: 'Tab, Enter',
   TabTabEnter: '2Tabs, Enter',

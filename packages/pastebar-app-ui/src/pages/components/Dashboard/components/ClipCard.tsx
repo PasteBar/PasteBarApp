@@ -95,6 +95,7 @@ export const ClipFormKeyPress = [
   'Enter',
   'TabTab',
   'TabTabTab',
+  'EnterEnter',
   'TabEnter',
   'TabTabEnter',
 ] as const
