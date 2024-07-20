@@ -18,7 +18,7 @@ const ReactCompilerConfig = { runtimeModule: 'react-compiler-runtime' };
 
 async function loadPasteBarAppPackage() {
   try {
-    const pastebarAppPath = process.env.PASTEBAR_APP_PATH;
+    const pastebarAppPath = process.env.PASTEBAR_APP_PATH || path.resolve(__dirname, '../..');
     const packageJsonPath = path.join(pastebarAppPath, 'package.json');
     const packageJsonUrl = pathToFileURL(packageJsonPath).href;
 
