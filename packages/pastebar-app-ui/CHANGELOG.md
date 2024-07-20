@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.5.2
+
+### Patch Changes
+
+- 93f2887: Test version bump
+
 ## 0.5.1
 
 ### Patch Changes
