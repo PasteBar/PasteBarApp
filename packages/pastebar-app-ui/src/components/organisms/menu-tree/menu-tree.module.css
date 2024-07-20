@@ -1,0 +1,98 @@
+[role='treeitem']:has(.node) {
+  border-radius: 8px;
+  padding: 0 4px;
+  cursor: pointer;
+  font-weight: 400;
+  user-select: none;
+}
+
+[role='treeitem']:has(.node):focus-visible {
+  background-color: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+[role='treeitem'][aria-selected='true']:has(.node):focus-visible {
+  background-color: rgba(203, 213, 225, 0.9);
+  outline: none;
+}
+
+[role='treeitem'][aria-selected='true']:has(.node) {
+  background-color: rgba(203, 213, 225, 0.9);
+  font-weight: 600;
+}
+
+[role='treeitem']:has(.node:global(.willReceiveDrop)) {
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 2px dashed;
+}
+
+.node {
+  margin: 0 12px 0 8px;
+  height: 100%;
+  white-space: nowrap;
+}
+
+/* Dropdown arrow */
+.node span:nth-child(1) {
+  width: 20px;
+  display: flex;
+}
+
+/* Icon */
+.node span:nth-child(2) {
+  margin-right: 18px;
+  display: flex;
+  align-items: center;
+}
+
+/* Name */
+.node span:nth-child(3) {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropCursor {
+  width: 100%;
+  height: 18px;
+  position: absolute;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  gap: 8px;
+}
+
+.mobileWarning {
+  background: var(--primaryColor);
+  color: white;
+  padding: 1em;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 4px;
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .mainContent {
+    flex-direction: column;
+    padding-right: 0;
+  }
+  .content {
+    order: 1;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin: 6px;
+  }
+  .sidebar {
+    order: 2;
+    height: 80vh;
+    width: 100%;
+  }
+
+  .mobileWarning {
+    display: block;
+  }
+}

@@ -18,10 +18,10 @@
     "baseUrl": ".",
     "jsx": "react-jsx",
     "paths": {
-      "~/*": ["packages/pastebar-ui/src/*"]
+      "~/*": ["packages/pastebar-app-ui/src/*"]
     }
   },
-  "include": ["packages/pastebar-ui/src"],
+  "include": ["packages/pastebar-app-ui/src"],
   "exclude": ["node_modules", "src-tauri", "dist-frontend", ".next"],
   "references": [
     {

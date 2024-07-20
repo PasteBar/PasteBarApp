@@ -4,8 +4,6 @@ import { defineConfig } from 'vite'
 import dynamicImport from 'vite-plugin-dynamic-import'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
-import i18nextLoader from './packages/pastebar-ui/src/lib/i18n-vite-loaded/loader'
-
 export default defineConfig({
   root: 'packages/pastebar-ui',
   clearScreen: false,
@@ -41,18 +39,9 @@ export default defineConfig({
       plugins: [],
     },
   },
-  resolve: {
-    alias: {
-      '~': path.join(__dirname, 'packages/pastebar-ui/src'),
-    },
-  },
   plugins: [
     react(),
     dynamicImport(),
-    i18nextLoader({
-      paths: ['./packages/pastebar-ui/src/locales/lang'],
-      namespaceResolution: 'basename',
-    }),
     viteStaticCopy({
       targets: [
         {

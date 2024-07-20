@@ -1,0 +1,38 @@
+.visible {
+  opacity: 0;
+  transform: translate(-20%, 60%);
+  pointer-events: none;
+}
+
+.arrow {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -4px;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  @apply border-t-slate-600;
+  border-bottom: 0;
+}
+
+.empty-data {
+  pointer-events: none;
+  padding: 0 10px;
+  font-family: sans-serif;
+  line-height: 1.5;
+  letter-spacing: 1;
+}
+
+.shared-container {
+  position: absolute;
+  transform: translate(-20%, 40%);
+  z-index: 999;
+  @apply bg-slate-600;
+  box-shadow: 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+  @apply rounded-md;
+}

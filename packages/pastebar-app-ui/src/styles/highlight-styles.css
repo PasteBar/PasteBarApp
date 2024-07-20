@@ -1,0 +1,177 @@
+:root {
+  --selection: rgba(224, 146, 58, 0.35);
+  --text: #abb2bf;
+  --string: #a11;
+  --number: #164;
+  --title: #e2b155;
+  --built_in: #30a;
+  --keyword: #55ccaf;
+  --function: #e0923a;
+  --params: #508be5;
+  --comment: #5c6370;
+}
+
+.hljs::selection {
+  background: var(--selection) !important;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #282c34;
+  color: var(--text);
+}
+
+.hljs-string,
+.hljs-meta-string {
+  color: var(--string);
+}
+
+.hljs-number,
+.hljs-class {
+  color: var(--number) !important;
+}
+
+.hljs-title {
+  color: var(--title) !important;
+}
+
+.hljs-built_in,
+.hljs-type {
+  color: var(--built_in) !important;
+}
+
+.hljs-keyword,
+.hljs-literal,
+.hljs-symbol,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-meta-keyword,
+.hljs-doctag {
+  color: var(--keyword) !important;
+}
+
+.hljs-function > .hljs-keyword,
+.hljs-subst,
+.hljs-function,
+.hljs-params,
+.hljs-formula {
+  color: var(--function);
+  font-style: italic;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: var(--comment);
+}
+
+.hljs-link {
+  color: var(--params);
+  text-decoration: underline;
+}
+
+.hljs-regexp,
+.hljs-template-tag {
+  color: #9a5334;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #bd63c5;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-builtin-name {
+  color: #9cdcfe;
+}
+
+.hljs-section {
+  color: gold;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-bullet,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #d7ba7d;
+}
+
+.hljs-addition {
+  background-color: #144212;
+  display: inline-block;
+  width: 100%;
+}
+
+.hljs-deletion {
+  background-color: #600;
+  display: inline-block;
+  width: 100%;
+}
+
+.hljs,
+.hljs-subst {
+  color: #444;
+}
+
+.hljs-attribute {
+  color: #0e9a00;
+}
+
+.hljs-builtin-name {
+  color: #99069a;
+}
+
+.hljs-type,
+.hljs-string,
+.hljs-number,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-deletion {
+  color: #880000;
+}
+
+.hljs-title,
+.hljs-section {
+  color: #880000;
+  font-weight: bold;
+}
+
+.hljs-regexp,
+.hljs-symbol,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-link,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #bc6060;
+}
+
+.hljs-literal {
+  color: #78a960;
+}
+
+.hljs-code,
+.hljs-addition {
+  color: #0c9a9a;
+}
+
+.hljs-meta {
+  color: #1f7199;
+}
+
+.hljs-meta-string {
+  color: #4d99bf;
+}
