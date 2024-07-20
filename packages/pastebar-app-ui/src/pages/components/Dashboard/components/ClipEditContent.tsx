@@ -33,6 +33,7 @@ import {
   Heading,
   Image,
   Italic,
+  Keyboard,
   Pin,
   PinOff,
   PlayCircle,
@@ -67,6 +68,7 @@ import {
   Box,
   Button,
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
@@ -93,7 +95,11 @@ import { ClipFormTemplateOptions, ClipWebRequestOptions } from './ClipCard'
 import { ClipCardTypeMenu } from './ClipCardTypeMenu'
 import { ClipDelete } from './ClipDelete'
 import { ClipDropZone } from './ClipDropZone'
-import { ClipEditForm } from './ClipEditForm'
+import {
+  ClipEditForm,
+  ClipFormAfterInputKeyPress,
+  ClipFormKeyPressDisplayValueMap,
+} from './ClipEditForm'
 import { ClipEditTemplate } from './ClipEditTemplate'
 import { ClipEditWebRequest } from './ClipEditWebRequest'
 import { ClipEditWebScraping } from './ClipEditWebScraping'
@@ -168,6 +174,7 @@ export function ClipEditContent({
   const clipValue = useSignal('')
   const itemLocalOptions = useSignal<{
     noLinkCard?: boolean | undefined
+    pressKeysAfterPaste?: string | undefined
   }>({})
   const webrequestLocalOptions = useSignal<ClipWebRequestOptions>({
     method: 'GET',
@@ -638,9 +645,6 @@ export function ClipEditContent({
         },
       })
     }
-
-    // check if itemLocalOptions is empty
-    // if not, update itemLocalOptions
 
     if (Object.keys(itemLocalOptions.value).length > 0) {
       itemOptions = JSON.stringify(itemLocalOptions.value)
@@ -1957,6 +1961,89 @@ export function ClipEditContent({
                   <ClipDelete clipId={clipId} onComplete={onCancel} />
                 </DropdownMenuContent>
               </DropdownMenu>
+              {!isCommand &&
+                !isTemplate &&
+                !isForm &&
+                !isWebRequest &&
+                !isWebScraping && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Box tabIndex={0}>
+                        <ToolTip
+                          text={
+                            itemLocalOptions.value.pressKeysAfterPaste
+                              ? t('Key Press After Paste: {{keyPress}}', {
+                                  ns: 'dashboard',
+                                  keyPress: itemLocalOptions.value.pressKeysAfterPaste,
+                                })
+                              : t('Add Key Press After Paste', {
+                                  ns: 'dashboard',
+                                })
+                          }
+                          isCompact
+                          side="bottom"
+                          asChild
+                        >
+                          <Button
+                            variant="outline"
+                            size="mini"
+                            className={`ml-1 px-1 h-8 w-8 ${
+                              itemLocalOptions.value.pressKeysAfterPaste
+                                ? 'text-green-500 dark:text-green-600'
+                                : 'text-slate-500'
+                            } border-0 hover:text-blue-500`}
+                          >
+                            <Keyboard size={16} />
+                          </Button>
+                        </ToolTip>
+                      </Box>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent sideOffset={12} align="center">
+                      <DropdownMenuItem
+                        className="text-center items-center justify-center py-0.5"
+                        disabled={true}
+                      >
+                        <Text>{t('Key Press After Paste', { ns: 'dashboard' })}</Text>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuCheckboxItem
+                        checked={!itemLocalOptions.value.pressKeysAfterPaste}
+                        onCheckedChange={() => {
+                          itemLocalOptions.value.pressKeysAfterPaste = undefined
+                        }}
+                        className={
+                          !itemLocalOptions.value.pressKeysAfterPaste
+                            ? 'font-semibold'
+                            : ''
+                        }
+                      >
+                        {t('No Key Press', { ns: 'common' })}
+                      </DropdownMenuCheckboxItem>
+                      {ClipFormAfterInputKeyPress.map(type => {
+                        return (
+                          <DropdownMenuCheckboxItem
+                            checked={itemLocalOptions.value.pressKeysAfterPaste === type}
+                            onCheckedChange={
+                              itemLocalOptions.value.pressKeysAfterPaste === type
+                                ? undefined
+                                : () => {
+                                    itemLocalOptions.value.pressKeysAfterPaste = type
+                                  }
+                            }
+                            key={type}
+                            className={
+                              itemLocalOptions.value.pressKeysAfterPaste === type
+                                ? 'font-semibold'
+                                : ''
+                            }
+                          >
+                            {ClipFormKeyPressDisplayValueMap[type]}
+                          </DropdownMenuCheckboxItem>
+                        )
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
             </Flex>
             <Flex className="items-end ml-auto mt-1">
               <ToolTip
