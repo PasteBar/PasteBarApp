@@ -1,8 +1,7 @@
-name: Version Bump
+name: Build Test and Version Bump
 on:
   push:
     branches: [ "main" ]
-
 jobs:
   version-bump:
     runs-on: ubuntu-latest
@@ -17,7 +16,7 @@ jobs:
           node-version: lts/*
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Check for changesets
         id: check_changes
@@ -44,12 +43,36 @@ jobs:
           
           # Commit changes
           git add .
-          git commit -m "Version bump and changelog update"
+          git commit -m "Version bump, changelog update"
           
           # Push the branch
           git push origin version-bump-${{ github.sha }}
           
           # Create Pull Request
-          gh pr create --title "Version Bump and Changelog Update" --body "Automated version bump and changelog update" --base main --head version-bump-${{ github.sha }}
+          gh pr create --title "Version Bump and Changelog Update" --body "Automated version bump, changelog update, and package-lock.json synchronization" --base main --head version-bump-${{ github.sha }}
 
-  # test-tauri job remains commented out as in the previous version
+  # test-tauri:
+  #   needs: version-bump
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Setup node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: lts/*
+  #
+  #     - name: Install Rust stable
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #         targets: aarch64-apple-darwin
+  #
+  #     - name: Install packages
+  #       run: npm install
+  #
+  #     - name: Build Tauri App
+  #       uses: tauri-apps/tauri-action@v0
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         args: "--target aarch64-apple-darwin"
