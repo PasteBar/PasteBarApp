@@ -1,16 +1,10 @@
 # pastebar-app
 
-## 0.5.2
-
-### Patch Changes
-
-- 93f2887: Test version bump
-
 ## 0.5.1
 
 ### Patch Changes
 
-- c06b404: New clip option: After paste key press
+- New: After paste key press clip option
 
 ## 0.5.0
 
