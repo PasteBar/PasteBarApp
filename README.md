@@ -18,7 +18,7 @@ $ cargo install diesel_cli --no-default-features --features sqlite
 
 ```
 $ npm install
-$ npm run dev
+$ npm start
 ```
 
 
