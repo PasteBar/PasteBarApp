@@ -650,8 +650,6 @@ export function ClipEditContent({
       itemOptions = JSON.stringify(itemLocalOptions.value)
     }
 
-    console.log('itemOptions', itemOptions)
-
     await updateItemById({
       updatedItem: {
         value: saveValue,

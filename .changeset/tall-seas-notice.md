@@ -2,4 +2,4 @@
 'pastebar-app-ui': patch
 ---
 
-After paste press keys option added for clips
+New clip option: After paste key press

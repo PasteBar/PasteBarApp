@@ -9,6 +9,7 @@ Add First Board: Добавить первую доску
 Add Form Field: Добавить поле формы
 Add Header: Добавить заголовок
 Add Key Press: Добавить нажатие клавиши
+Add Key Press After Paste: Добавить нажатие клавиш после вставки
 Add Link Card: Добавить карточку ссылки
 Add Open URL: Добавить открытие URL
 Add Output Template: Добавить шаблон вывода
@@ -155,13 +156,14 @@ HTML: HTML
 Headers: Заголовки
 Hide Label: Скрыть метку
 History capture is off: Запись истории выключена
-Key Press: Нажатие клавиши
-Key Press After: Нажатие клавиши после
+Key Press: Нажатие клавиш
+Key Press After: Нажатие клавиш после
+Key Press After Paste: Нажатие клавиш после вставки
+'Key Press After Paste: {{keyPress}}': 'Нажатие клавиш после вставки: {{keyPress}}'
 Label Left: Метка слева
 Label Top: Метка сверху
 Label on Left: Метка слева
 Labels: Поля
-Last Only: Last Only
 Last run: Последний запуск
 Last update: Последнее обновление
 Layout Max Width: Максимальная ширина макета
