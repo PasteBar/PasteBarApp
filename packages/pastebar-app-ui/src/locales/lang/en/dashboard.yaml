@@ -9,6 +9,7 @@ Add First Board: Add First Board
 Add Form Field: Add Form Field
 Add Header: Add Header
 Add Key Press: Add Key Press
+Add Key Press After Paste: Add Key Press After Paste
 Add Link Card: Add Link Card
 Add Open URL: Add Open URL
 Add Output Template: Add Output Template
@@ -93,7 +94,6 @@ Drop image file here, or use a separate window for drag and drop.: Drop image fi
 Drop to Pin: Drop to Pin
 Edit Note: Edit Note
 Edit Template: Edit Template
-Rename: Rename
 Edit subtitle: Edit subtitle
 Edit tab name: Edit tab name
 Enable / Disable: Enable / Disable
@@ -155,6 +155,8 @@ Hide Label: Hide Label
 History capture is off: History capture is off
 Key Press: Key Press
 Key Press After: Key Press After
+Key Press After Paste: Key Press After Paste
+'Key Press After Paste: {{keyPress}}': 'Key Press After Paste: {{keyPress}}'
 Label Left: Label Left
 Label Top: Label Top
 Label on Left: Label on Left
@@ -195,6 +197,7 @@ Regex Match Group Filter: Regex Match Group Filter
 Remove Open URL: Remove Open URL
 Remove headers: Remove headers
 Remove image: Remove image
+Rename: Rename
 Reset to Defaults: Reset to Defaults
 Response Filters: Response Filters
 Result: Result
@@ -235,8 +238,8 @@ Type:
   Request: Request
   Scraper: Scraper
 URL: URL
-Unsaved note: Unsaved note
 Unsaved name: Unsaved name
+Unsaved note: Unsaved note
 Unsaved subtitle: Unsaved subtitle
 Unsaved title: Unsaved title
 Update Link Card: Update Link Card

@@ -2,29 +2,87 @@ name: Build Test and Version Bump
 on:
   push:
     branches: [ "main" ]
-
 jobs:
-  test-tauri:
-    runs-on: macos-latest
+  version-bump:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-apple-darwin
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Install packages
-        run: npm install
+      - name: Check for changesets
+        id: check_changes
+        run: |
+          if [ -n "$(ls .changeset/*.md 2>/dev/null)" ]; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Build Tauri App
-        uses: tauri-apps/tauri-action@v0
+      - name: Create Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: "--target aarch64-apple-darwin"
+        run: |
+          if [ "${{ steps.check_changes.outputs.changes_detected }}" != "true" ]; then
+            echo "No changesets detected. Skipping version bump and PR creation."
+            exit 0
+          fi
+
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          
+          # Create a new branch
+          git checkout -b version-bump-${{ github.sha }}
+          
+          # Run version bump
+          npm run version
+          
+          # Check if there are changes to commit
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit after version bump. Exiting."
+            exit 0
+          fi
+          
+          # Commit changes
+          git add .
+          git commit -m "Version bump, changelog update"
+          
+          # Push the branch
+          git push origin version-bump-${{ github.sha }}
+          
+          # Create Pull Request
+          gh pr create --title "Version Bump and Changelog Update" --body "Automated version bump, changelog update, and package-lock.json synchronization" --base main --head version-bump-${{ github.sha }}
+
+  # test-tauri:
+  #   needs: version-bump
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - name: Setup node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: lts/*
+  #
+  #     - name: Install Rust stable
+  #       uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #         targets: aarch64-apple-darwin
+  #
+  #     - name: Install packages
+  #       run: npm install
+  #
+  #     - name: Build Tauri App
+  #       uses: tauri-apps/tauri-action@v0
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         args: "--target aarch64-apple-darwin"
