@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- fc8c65f: New: Integrated Audio Player with playlist support for both local and remote MP3 files.
+- New: Integrated Audio Player with playlist support for both local and remote MP3 files.
   New: Clipboard history now accessible in a separate window from the main interface.
   New: Automatically generate card links in clipboard history.
   New: Auto preview for X.com (Twitter) links in clips.

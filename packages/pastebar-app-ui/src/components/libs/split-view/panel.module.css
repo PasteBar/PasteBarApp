@@ -1,0 +1,153 @@
+.PanelGroupWrapper {
+  height: 20rem;
+}
+
+.PanelGroup {
+  font-size: 2rem;
+}
+
+.Panel {
+  display: flex;
+  flex-direction: row;
+  font-size: 2rem;
+}
+
+.PanelColumn,
+.PanelRow {
+  display: flex;
+}
+.PanelColumn {
+  flex-direction: column;
+}
+.PanelRow {
+  flex-direction: row;
+}
+
+.Centered {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-panel-background);
+  border-radius: 0.5rem;
+  overflow: auto;
+  font-size: 1rem;
+  padding: 0.5rem;
+  word-break: break-all;
+}
+
+.ResizeHandle {
+}
+
+.Overflow {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 1rem;
+
+  /* Firefox fixes */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scroll-thumb) transparent;
+}
+
+.Button,
+.ButtonDisabled {
+  background-color: var(--color-button-background);
+  color: var(--color-default);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+.Button:hover {
+  background-color: var(--color-button-background-hover);
+}
+.ButtonDisabled {
+  opacity: 0.5;
+}
+
+.Buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1ch;
+  margin-bottom: 1rem;
+}
+
+.Capitalize {
+  text-transform: capitalize;
+}
+
+.WarningBlock {
+  display: inline-block;
+  background: var(--color-warning-background);
+  padding: 0.25em 1ch;
+  border-radius: 0.5rem;
+}
+
+.InlineCode {
+  margin-right: 1.5ch;
+}
+
+.ResizeHandleOuter {
+  flex: 0 0 1.25rem;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  padding: 0.4rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  outline: none;
+
+  --background-color: transparent;
+}
+.ResizeHandleOuter[data-resize-handle-active],
+.ResizeHandleInner[data-collapsed] {
+  --background-color: var(--color-solid-resize-bar);
+}
+
+@media (max-width: 500px) {
+  .ResizeHandleOuter {
+    flex: 0 0 2.5rem;
+  }
+}
+
+.ResizeHandleInner {
+  flex: 1;
+  border-radius: 0.75rem;
+  background-color: var(--background-color);
+  transition: background-color 0.2s linear;
+  position: relative;
+}
+
+.ResizeHandleInner::after {
+  height: 0.75rem;
+  width: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--color-solid-resize-bar);
+  position: absolute;
+  left: calc(50% - 0.5rem);
+  top: calc(50% - 0.5rem);
+}
+
+.HorizontalIcon,
+.VerticalIcon {
+  position: absolute;
+  left: calc(50% - 8px);
+  top: calc(50% - 0.5rem);
+}
+
+.ResizeHandleOuter[data-panel-group-direction='horizontal'] .HorizontalIcon,
+.ResizeHandleOuter[data-panel-group-direction='vertical'] .VerticalIcon {
+  display: block;
+}
+.ResizeHandleOuter[data-panel-group-direction='vertical'] .HorizontalIcon,
+.ResizeHandleOuter[data-panel-group-direction='horizontal'] .VerticalIcon {
+  display: none;
+}
+.ResizeHandleOuter[data-resize-handle-active] .HorizontalIcon,
+.ResizeHandleOuter[data-resize-handle-active] .VerticalIcon {
+  display: none;
+}

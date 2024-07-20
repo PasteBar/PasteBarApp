@@ -1,0 +1,64 @@
+.TopRow {
+  flex: 0 0 auto;
+  text-align: center;
+}
+.BottomRow {
+  flex: 1 1 auto;
+}
+
+.Panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.PanelContent {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.ResizeHandleOuter {
+  flex: 0 0 0.8em;
+  position: relative;
+  outline: none;
+
+  --background-color: transparent;
+}
+.ResizeHandleOuter[data-resize-handle-active] {
+  --background-color: var(--color-solid-resize-bar-handle);
+}
+
+.ResizeHandleInner {
+  position: absolute;
+  top: 0.15em;
+  bottom: 0.15em;
+  left: 0.15em;
+  right: 0.15em;
+  border-radius: 0.25em;
+  background-color: var(--background-color);
+  transition: background-color 0.2s linear;
+}
+
+.Button {
+  color: var(--color-default);
+  background-color: var(--color-button-background);
+  border: 1px solid var(--color-button-border);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+.Button:hover {
+  background-color: var(--color-button-background-hover);
+}
+
+.Icon {
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  left: calc(50% - 7px);
+  top: calc(50% - 7px);
+}

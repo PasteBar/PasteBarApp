@@ -3,15 +3,10 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "dev": "tauri dev --config src-tauri/tauri.dev.conf.json",
+    "dev": "tauri dev",
     "start": "tauri dev",
-    "ui:dev": "vite",
-    "ui:build:local": "vite build",
-    "ui:build:ts": "tsc && vite build",
     "format": "npx prettier --write . --ignore-path .gitignore ",
-    "app:build:local": "tauri build",
-    "build:clear": "rimraf build",
-    "build": "tauri build",
+    "build": "npm run app:build",
     "app:build": "tauri build --config src-tauri/tauri.release.conf.json",
     "app:build:debug": "tauri build --config src-tauri/tauri.release.conf.json --debug",
     "app:build:osx:universal": "tauri build --config src-tauri/tauri.release.conf.json --target universal-apple-darwin",
@@ -146,6 +141,9 @@
     "zustand": "^4.4.6",
     "zustand-logger-middleware": "^1.0.9"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@tailwindcss/line-clamp": "^0.4.4",

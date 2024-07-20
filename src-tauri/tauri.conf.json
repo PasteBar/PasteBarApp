@@ -1,9 +1,9 @@
 {
   "build": {
-    "beforeDevCommand": "npm run ui:dev",
-    "beforeBuildCommand": "npm run ui:build:local",
-    "devPath": "../dist-ui",
-    "distDir": "../dist-ui",
+    "beforeBuildCommand": "cd ./packages/pastebar-app-ui && npm run build",
+    "distDir": "../packages/pastebar-app-ui/dist-ui",
+    "beforeDevCommand": "cd packages/pastebar-app-ui && npm run dev",
+    "devPath": "http://localhost:4422/",
     "withGlobalTauri": false
   },
   "package": {
@@ -29,8 +29,9 @@
         "all": true,
         "request": true,
         "scope": [
+          "http://localhost:8788/api/user/*",
           "http://localhost:8788/api/error-report",
-          "https://license.pastebar.app/api/error-report"
+          "https://contact.pastebar.app/api/error-report"
         ]
       },
       "protocol": {
@@ -86,9 +87,9 @@
     },
     "security": {
       "csp": {
-        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app pastebar.ru *.pastebar.ru *.paypal.com",
-        "connect-src": "ipc: https://ipc.localhost asset: https://*.pastebar.app https://*.pastebar.ru https://*.paypal.com tauri://localhost https://tauri.localhost",
-        "frame-src": "'self' https://*.pastebar.app https://*.pastebar.ru https://*.paypal.com https://*.youtube.com https://*.youtube-nocookie.com https://*.x.com https://*.twitter.com https://*.instagram.com",
+        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app pastebar.ru *.pastebar.ru",
+        "connect-src": "ipc: https://ipc.localhost asset: https://*.pastebar.app https://*.pastebar.ru tauri://localhost https://tauri.localhost",
+        "frame-src": "'self' https://*.pastebar.app https://*.youtube.com https://*.youtube-nocookie.com https://*.x.com https://*.twitter.com https://*.instagram.com",
         "img-src": "'self' asset: https://asset.localhost blob: data: *",
         "img-srcset": "'self' asset: https://asset.localhost blob: data:",
         "media-src": "'self' asset: https://asset.localhost blob: data: *",
