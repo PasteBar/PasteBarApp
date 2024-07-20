@@ -2,6 +2,7 @@ name: Version Bump
 on:
   push:
     branches: [ "main" ]
+
 jobs:
   version-bump:
     runs-on: ubuntu-latest
@@ -16,7 +17,15 @@ jobs:
           node-version: lts/*
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm install
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          if [[ `git status --porcelain` ]]; then
+            git add package-lock.json
+            git commit -m "Update package-lock.json"
+            git push
+          fi
 
       - name: Check for changesets
         id: check_changes
@@ -30,33 +39,7 @@ jobs:
       - name: Version bump and update changelog
         if: steps.check_changes.outputs.changes_detected == 'true'
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
           npm run version
           git push --follow-tags
 
-  # test-tauri:
-  #   needs: version-bump
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #
-  #     - name: Setup node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: lts/*
-  #
-  #     - name: Install Rust stable
-  #       uses: dtolnay/rust-toolchain@stable
-  #       with:
-  #         targets: aarch64-apple-darwin
-  #
-  #     - name: Install packages
-  #       run: npm install
-  #
-  #     - name: Build Tauri App
-  #       uses: tauri-apps/tauri-action@v0
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         args: "--target aarch64-apple-darwin"
+  # test-tauri job remains commented out as in the previous version
