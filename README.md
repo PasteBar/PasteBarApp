@@ -1,4 +1,4 @@
-# PasteBar App for Mac and Windows
+# PasteBar - Limitless, Free Clipboard Manager for Mac and Windows.
 
 * **Rust**: Tauri, Diesel ORM, Reqwest, Anyhow, Serde, Tokio.
 * **Javascript**: Typescript, React, Vite, TailwindCSS, Signals, Jotai, Zustand.
