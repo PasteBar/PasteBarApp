@@ -1,10 +1,15 @@
 # PasteBar - Limitless, Free Clipboard Manager for Mac and Windows.
+![pastebar-screenshot-main-split](https://github.com/user-attachments/assets/c3024edb-67ae-4e92-a02f-a0957fb153a2)
 
-![pastbar-screenshot-main-themed](https://github.com/user-attachments/assets/6b3a5b37-24b8-4464-bce7-11d9aae0b00f)
+- Effortless Management Of Everything You Copy and Paste.
+- Private, Safe and Secure Stored on Your Local Device.
+- Free and Open Source
 
+### Stack
+* **Rust**: Tauri Apps, Diesel ORM, Reqwest, Anyhow, Serde, Tokio.
+* **Javascript**: Typescript, React, React Query, Vite, TailwindCSS, Signals, Jotai, Zustand.
 
-* **Rust**: Tauri, Diesel ORM, Reqwest, Anyhow, Serde, Tokio.
-* **Javascript**: Typescript, React, Vite, TailwindCSS, Signals, Jotai, Zustand.
+https://www.pastebar.app
 
 # Build Local PastBar App
 
