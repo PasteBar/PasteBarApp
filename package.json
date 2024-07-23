@@ -1,6 +1,6 @@
 {
   "name": "pastebar-app",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "scripts": {
     "dev": "tauri dev",
@@ -67,7 +67,7 @@
     "@tanstack/react-query": "5.25.0",
     "@tanstack/react-query-devtools": "5.25.0",
     "@tanstack/react-query-persist-client": "5.25.0",
-    "@tauri-apps/api": "^1.5.3",
+    "@tauri-apps/api": "^1.6.0",
     "@types/node": "^20.10.0",
     "@uiw/codemirror-extensions-langs": "^4.21.21",
     "@uiw/codemirror-theme-github": "^4.21.21",
@@ -149,7 +149,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@tailwindcss/line-clamp": "^0.4.4",
-    "@tauri-apps/cli": "^1.5.6",
+    "@tauri-apps/cli": "^1.6.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/codemirror": "^5.60.15",
