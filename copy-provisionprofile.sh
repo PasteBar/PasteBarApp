@@ -1,0 +1,1 @@
+cp ../Production_Mac_Store_Submit_PasteBar.provisionprofile /Users/kurdin/projects/pasteBar/PasteBarApp/src-tauri/target/universal-apple-darwin/release/bundle/macos/PasteBar.app/Contents/embedded.provisionprofile
