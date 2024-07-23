@@ -142,7 +142,6 @@ export function NavBar() {
 
   useEffect(() => {
     if (systemTheme) {
-      // invoke('set_icon', { name: 'main', isDark: systemTheme === 'dark' })
       setSystemTheme(systemTheme)
     }
   }, [systemTheme])
@@ -251,8 +250,14 @@ export function NavBar() {
     navigate('/app-settings/preferences', { replace: true })
   })
 
-  useHotkeys('ctrl+q', () => {
+  useHotkeys(['ctrl+q'], () => {
     if (isWindows) {
+      closeWindow()
+    }
+  })
+
+  useHotkeys(['meta+q'], () => {
+    if (!isWindows) {
       closeWindow()
     }
   })

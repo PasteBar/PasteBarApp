@@ -37,7 +37,7 @@ reqwest = "0.11.12"
 nanoid = "0.4.0"
 anyhow = "1.0.66"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.6", features = [ "api-all", "system-tray", "icon-png", "clipboard", "updater", "reqwest-client"] }
+tauri = { version = "1.7", features = [ "api-all", "system-tray", "icon-png", "clipboard", "updater", "reqwest-client"] }
 tokio = { version = "1.28.2", features = ["full"] } 
 #single-instance = "0.3.3"
 
@@ -73,7 +73,7 @@ regex = "1.9.3"
 
 lang_detect = { path = "libs/lang_detect" }
 auto-launch = { path = "libs/auto-launch" }
-tao = { path = "libs/tao-0.16.7" }
+# tao = { path = "libs/tao-0.16.7" }
 mid = { path = "libs/mid-hardware-id" }
 
 linkify = "0.10.0"
@@ -99,8 +99,8 @@ default = ["custom-protocol"]
 system-tray = ["tauri/system-tray"]
 custom-protocol = ["tauri/custom-protocol"]
 
-[patch.crates-io]
-tao = { path = "libs/tao-0.16.7" }
+# [patch.crates-io]
+# tao = { path = "libs/tao-0.16.7" }
 
 [profile.release]
 # panic = "abort" # Strip expensive panic clean-up logic
