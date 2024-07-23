@@ -65,28 +65,28 @@ jobs:
           # Create Pull Request
           gh pr create --title "Version Bump and Changelog Update" --body "Automated version bump, changelog update, and package-lock.json synchronization" --base main --head version-bump-${{ github.sha }}
 
-  # test-tauri:
-  #   needs: version-bump
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #
-  #     - name: Setup node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: lts/*
-  #
-  #     - name: Install Rust stable
-  #       uses: dtolnay/rust-toolchain@stable
-  #       with:
-  #         targets: aarch64-apple-darwin
-  #
-  #     - name: Install packages
-  #       run: npm install
-  #
-  #     - name: Build Tauri App
-  #       uses: tauri-apps/tauri-action@v0
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         args: "--target aarch64-apple-darwin"
+  test-tauri:
+    needs: version-bump
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+  
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+  
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+  
+      - name: Install packages
+        run: npm install
+  
+      - name: Build Tauri App
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "--target aarch64-apple-darwin --bundle app"
