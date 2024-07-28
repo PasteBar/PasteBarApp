@@ -27,11 +27,11 @@ Key features are:
 - Web scraping and API data extraction capabilities
 - Available for macOS and Windows (including Apple Silicon M1, Intel, AMD, and ARM processors)
 
+https://www.pastebar.app
+
 ### Stack
 * **Rust**: Tauri Apps, Diesel ORM, Reqwest, Anyhow, Serde, Tokio.
 * **Javascript**: Typescript, React, React Query, Vite, TailwindCSS, Signals, Jotai, Zustand.
-
-https://www.pastebar.app
 
 # Build Local PastBar App
 
