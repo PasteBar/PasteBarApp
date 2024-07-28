@@ -5,9 +5,27 @@
 
 
 
-- Effortless Management Of Everything You Copy and Paste.
-- Private, Safe and Secure Stored on Your Local Device.
-- Free and Open Source
+Effortless Management Of Everything You Copy and Paste. Free and open-source.
+
+Key features are:  
+
+- Unlimited clipboard history
+- Searchable copy history
+- Custom saved clips
+- Quick-access paste menus
+- Collections, tabs, and boards for organization
+- Local storage for privacy and security
+- Lock screen and passcode protection
+- Support for text, images, files, links, and code snippets
+- Automatic programming language detection and syntax highlighting
+- Markdown support in notes
+- Instant pasting from system menu
+- Dark theme
+- Global search functionality
+- Customizable clips and menus
+- Support for forms and templates
+- Web scraping and API data extraction capabilities
+- Available for macOS and Windows (including Apple Silicon M1, Intel, AMD, and ARM processors)
 
 ### Stack
 * **Rust**: Tauri Apps, Diesel ORM, Reqwest, Anyhow, Serde, Tokio.
