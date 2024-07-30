@@ -17,6 +17,8 @@ use tauri::{
   Manager, Runtime,
 };
 
+use active_win_pos_rs::get_active_window;
+
 use crate::cron_jobs;
 use crate::models::Setting;
 use crate::services::history_service;
@@ -97,6 +99,15 @@ where
       text = text.trim().to_string();
 
       if !text.is_empty() {
+        match get_active_window() {
+          Ok(active_window) => {
+            println!("active window: {:#?}", active_window);
+          }
+          Err(()) => {
+            println!("error occurred while getting the active window");
+          }
+        }
+
         let mut is_excluded = false;
         if let Some(setting) = settings_map.get("isExclusionListEnabled") {
           if let Some(value_bool) = setting.value_bool {
