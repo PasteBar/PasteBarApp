@@ -95,19 +95,15 @@ where
       .and_then(|s| s.value_bool)
       .unwrap_or(true);
 
+    let copied_from_app = match get_active_window() {
+      Ok(active_window) => Some(active_window.app_name),
+      Err(()) => None,
+    };
+
     if let Ok(mut text) = clipboard_text {
       text = text.trim().to_string();
 
       if !text.is_empty() {
-        match get_active_window() {
-          Ok(active_window) => {
-            println!("active window: {:#?}", active_window);
-          }
-          Err(()) => {
-            println!("error occurred while getting the active window");
-          }
-        }
-
         let mut is_excluded = false;
         if let Some(setting) = settings_map.get("isExclusionListEnabled") {
           if let Some(value_bool) = setting.value_bool {
@@ -185,6 +181,7 @@ where
             text,
             detect_options,
             should_auto_star_on_double_copy,
+            copied_from_app,
           ));
         }
       }
@@ -192,6 +189,7 @@ where
       do_refresh_clipboard = Some(history_service::add_clipboard_history_from_image(
         image_binary,
         should_auto_star_on_double_copy,
+        copied_from_app,
       ));
     }
 

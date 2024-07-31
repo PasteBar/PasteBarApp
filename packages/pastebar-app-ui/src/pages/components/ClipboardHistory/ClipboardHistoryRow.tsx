@@ -320,6 +320,11 @@ export function ClipboardHistoryRowComponent({
                 : undefined,
       }}
       ref={isDragPreview && !(isHovering || isSelected) ? null : setNodeRef}
+      title={
+        clipboard?.copiedFromApp && isHovering
+          ? `${t('Source:')} ${clipboard?.copiedFromApp}`
+          : ''
+      }
       {...(isSelected || isHovering ? listeners : {})}
     >
       <Box ref={rowRef}>
@@ -1014,6 +1019,7 @@ export function ClipboardHistoryRowComponent({
           </ContextMenuTrigger>
           <ClipboardHistoryRowContextMenu
             historyId={clipboard.historyId}
+            copiedFromApp={clipboard.copiedFromApp}
             isMasked={clipboard.isMasked}
             setSavingItem={setSavingItem}
             value={clipboard.value}

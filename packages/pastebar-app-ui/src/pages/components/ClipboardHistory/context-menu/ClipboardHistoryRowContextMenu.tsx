@@ -16,6 +16,7 @@ import {
   ArrowDownToLine,
   CheckSquare,
   ClipboardPaste,
+  ClipboardX,
   EqualNot,
   Expand,
   GalleryVertical,
@@ -64,6 +65,7 @@ interface ClipboardHistoryRowContextMenuProps {
   arrLinks: string[]
   isImage: boolean
   isText: boolean
+  copiedFromApp: string | null
   isMasked: boolean
   isImageData: boolean
   isMp3: boolean | undefined
@@ -88,6 +90,7 @@ interface ClipboardHistoryRowContextMenuProps {
 export default function ClipboardHistoryRowContextMenu({
   historyId,
   value,
+  copiedFromApp,
   arrLinks,
   isImage,
   isText,
@@ -353,6 +356,25 @@ export default function ClipboardHistoryRowContextMenu({
             </ContextMenuItem>
           </ContextMenuSubContent>
         </ContextMenuSub>
+
+        {copiedFromApp && (
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>{copiedFromApp} ...</ContextMenuSubTrigger>
+            <ContextMenuSubContent>
+              <ContextMenuItem
+                onClick={() => {
+                  hasDashboardItemCreate.value = CreateDashboardItemType.CLIP
+                  createClipHistoryItemIds.value = [historyId]
+                }}
+              >
+                {t('AddTo:::Add to Ignore', { ns: 'contextMenus' })}
+                <div className="ml-auto pl-2">
+                  <ClipboardX size={15} />
+                </div>
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+        )}
 
         <ContextMenuSeparator />
         {(arrLinks?.length > 0 && !detectedLanguage) ||

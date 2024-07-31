@@ -115,6 +115,7 @@ pub struct UpdatedItemData {
 pub struct UpdatedHistoryData {
   pub history_id: Option<String>,
   pub history_options: Option<String>,
+  pub copied_from_app: Option<String>,
   pub title: Option<String>,
   pub value: Option<String>,
   pub is_text: Option<bool>,
@@ -274,6 +275,7 @@ pub struct ClipboardHistory {
   pub created_date: NaiveDateTime,
   pub updated_date: NaiveDateTime,
   pub history_options: Option<String>,
+  pub copied_from_app: Option<String>,
 }
 
 #[derive(

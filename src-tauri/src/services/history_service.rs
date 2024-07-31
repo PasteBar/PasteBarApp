@@ -102,6 +102,7 @@ pub struct RecentClipboardHistoryData {
 pub struct ClipboardHistoryWithMetaData {
   pub history_id: String,
   pub history_options: Option<String>,
+  pub copied_from_app: Option<String>,
   pub title: Option<String>,
   pub value: Option<String>,
   pub value_preview: Option<String>,
@@ -177,6 +178,7 @@ impl ClipboardHistoryWithMetaData {
       created_date: history.created_date,
       updated_date: history.updated_date,
       history_options: history.history_options,
+      copied_from_app: history.copied_from_app,
       link_metadata,
     };
 
@@ -188,6 +190,7 @@ impl ClipboardHistoryWithMetaData {
 pub fn add_clipboard_history_from_image(
   image_data: ImageData,
   should_auto_star_on_double_copy: bool,
+  _copied_from_app: Option<String>,
 ) -> String {
   let image = match ImageBuffer::from_raw(
     image_data
@@ -277,6 +280,7 @@ pub fn add_clipboard_history_from_image(
       _preview_height.try_into().unwrap(),
       _image_height.try_into().unwrap(),
       _image_width.try_into().unwrap(),
+      _copied_from_app,
     );
 
     let _ = insert_clipboard_history(&new_history);
@@ -320,10 +324,12 @@ fn create_new_history(
   _image_preview_height: i32,
   _image_height: i32,
   _image_width: i32,
+  _copied_from_app: Option<String>,
 ) -> ClipboardHistory {
   ClipboardHistory {
     history_id: _history_id,
     history_options: None,
+    copied_from_app: _copied_from_app,
     title: None,
     value: None,
     value_preview: None,
@@ -362,6 +368,7 @@ pub fn add_clipboard_history_from_text(
   text: String,
   detect_options: LanguageDetectOptions,
   should_auto_star_on_double_copy: bool,
+  _copied_from_app: Option<String>,
 ) -> String {
   let mut _is_image_data = is_base64_image(&text);
   let mut _text_as_json = String::new();
@@ -498,6 +505,7 @@ pub fn add_clipboard_history_from_text(
     let new_history = ClipboardHistory {
       history_id: new_history_id,
       history_options: None,
+      copied_from_app: _copied_from_app,
       title: None,
       value: if !_text_as_json.is_empty() {
         Some(_text_as_json)
