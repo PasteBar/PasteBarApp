@@ -125,6 +125,27 @@ where
         }
 
         if !is_excluded {
+          if let Some(setting) = settings_map.get("isExclusionAppListEnabled") {
+            if let Some(value_bool) = setting.value_bool {
+              if value_bool {
+                if let Some(app_name) = &copied_from_app {
+                  let exclusion_app_list: Vec<String> = settings_map
+                    .get("historyExclusionAppList")
+                    .and_then(|s| s.value_text.as_ref())
+                    .map_or(Vec::new(), |exclusion_list_text| {
+                      exclusion_list_text.lines().map(String::from).collect()
+                    });
+
+                  is_excluded |= exclusion_app_list
+                    .iter()
+                    .any(|item| item.to_lowercase() == app_name.to_lowercase());
+                }
+              }
+            }
+          }
+        }
+
+        if !is_excluded {
           let should_detect_language = settings_map
             .get("isHistoryDetectLanguageEnabled")
             .and_then(|s| s.value_bool)
@@ -186,11 +207,34 @@ where
         }
       }
     } else if let Ok(image_binary) = clipboard_manager.get_image_binary() {
-      do_refresh_clipboard = Some(history_service::add_clipboard_history_from_image(
-        image_binary,
-        should_auto_star_on_double_copy,
-        copied_from_app,
-      ));
+      let mut is_app_excluded = false;
+
+      if let Some(setting) = settings_map.get("isExclusionAppListEnabled") {
+        if let Some(value_bool) = setting.value_bool {
+          if value_bool {
+            if let Some(app_name) = &copied_from_app {
+              let exclusion_app_list: Vec<String> = settings_map
+                .get("historyExclusionAppList")
+                .and_then(|s| s.value_text.as_ref())
+                .map_or(Vec::new(), |exclusion_list_text| {
+                  exclusion_list_text.lines().map(String::from).collect()
+                });
+
+              is_app_excluded |= exclusion_app_list
+                .iter()
+                .any(|item| item.to_lowercase() == app_name.to_lowercase());
+            }
+          }
+        }
+      }
+
+      if !is_app_excluded {
+        do_refresh_clipboard = Some(history_service::add_clipboard_history_from_image(
+          image_binary,
+          should_auto_star_on_double_copy,
+          copied_from_app,
+        ));
+      }
     }
 
     if let Some(refresh_value) = &do_refresh_clipboard {

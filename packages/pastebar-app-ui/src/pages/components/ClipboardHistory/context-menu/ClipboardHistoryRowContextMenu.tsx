@@ -113,8 +113,13 @@ export default function ClipboardHistoryRowContextMenu({
 }: ClipboardHistoryRowContextMenuProps) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const { copyPasteDelay, setCopyPasteDelay, historyDetectLanguagesEnabledList } =
-    useAtomValue(settingsStoreAtom)
+  const {
+    copyPasteDelay,
+    setCopyPasteDelay,
+    historyDetectLanguagesEnabledList,
+    setIsExclusionAppListEnabled,
+    addToHistoryExclusionAppList,
+  } = useAtomValue(settingsStoreAtom)
 
   const { deleteClipboardHistoryItem } = useAtomValue(clipboardHistoryStoreAtom)
 
@@ -363,11 +368,12 @@ export default function ClipboardHistoryRowContextMenu({
             <ContextMenuSubContent>
               <ContextMenuItem
                 onClick={() => {
-                  hasDashboardItemCreate.value = CreateDashboardItemType.CLIP
-                  createClipHistoryItemIds.value = [historyId]
+                  addToHistoryExclusionAppList(copiedFromApp)
+                  setIsExclusionAppListEnabled(true)
+                  deleteClipboardHistoryByIds({ historyIds: [historyId] })
                 }}
               >
-                {t('AddTo:::Add to Ignore', { ns: 'contextMenus' })}
+                {t('AddTo:::Add to Exclude and Delete', { ns: 'contextMenus' })}
                 <div className="ml-auto pl-2">
                   <ClipboardX size={15} />
                 </div>

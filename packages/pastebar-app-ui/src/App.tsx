@@ -116,7 +116,9 @@ function App() {
             settings.isHistoryDetectLanguageEnabled?.valueBool,
           historyDetectLanguageMinLines: settings.historyDetectLanguageMinLines?.valueInt,
           historyExclusionList: settings.historyExclusionList?.valueText,
+          historyExclusionAppList: settings.historyExclusionAppList?.valueText,
           isExclusionListEnabled: settings.isExclusionListEnabled?.valueBool,
+          isExclusionAppListEnabled: settings.isExclusionAppListEnabled?.valueBool,
           isAutoMaskWordsListEnabled: settings.isAutoMaskWordsListEnabled?.valueBool,
           autoMaskWordsList: settings.autoMaskWordsList?.valueText,
           historyDetectLanguagesPrioritizedList:
