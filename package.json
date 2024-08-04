@@ -1,6 +1,6 @@
 {
   "name": "pastebar-app",
-  "version": "0.5.3",
+  "version": "0.5.2",
   "private": true,
   "scripts": {
     "dev": "tauri dev",
