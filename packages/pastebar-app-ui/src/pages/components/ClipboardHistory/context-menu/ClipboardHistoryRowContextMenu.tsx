@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api'
@@ -19,7 +20,9 @@ import {
   ClipboardX,
   EqualNot,
   Expand,
+  Filter,
   GalleryVertical,
+  ListFilter,
   MenuSquare,
   MinusSquare,
   PanelTop,
@@ -85,6 +88,8 @@ interface ClipboardHistoryRowContextMenuProps {
   removeLinkMetaData?: (historyId: UniqueIdentifier) => Promise<void>
   setSelectHistoryItem: (id: UniqueIdentifier) => void
   onCopyPaste: (id: UniqueIdentifier, delay?: number) => void
+  setHistoryFilters?: Dispatch<SetStateAction<string[]>>
+  setAppFilters?: Dispatch<SetStateAction<string[]>>
 }
 
 export default function ClipboardHistoryRowContextMenu({
@@ -104,6 +109,8 @@ export default function ClipboardHistoryRowContextMenu({
   invalidateClipboardHistoryQuery = () => {},
   generateLinkMetaData = () => Promise.resolve(),
   removeLinkMetaData = () => Promise.resolve(),
+  setHistoryFilters = () => {},
+  setAppFilters = () => {},
   isSelected,
   hasLinkCard,
   setSavingItem,
@@ -366,6 +373,17 @@ export default function ClipboardHistoryRowContextMenu({
           <ContextMenuSub>
             <ContextMenuSubTrigger>{copiedFromApp} ...</ContextMenuSubTrigger>
             <ContextMenuSubContent>
+              <ContextMenuItem
+                onClick={() => {
+                  setAppFilters([copiedFromApp])
+                  setHistoryFilters(['source'])
+                }}
+              >
+                {t('AddTo:::Add to Filter by Source', { ns: 'contextMenus' })}
+                <div className="ml-auto pl-2">
+                  <ListFilter size={15} />
+                </div>
+              </ContextMenuItem>
               <ContextMenuItem
                 onClick={() => {
                   addToHistoryExclusionAppList(copiedFromApp)

@@ -12,7 +12,7 @@ Do you really want to remove ALL clipboard history items?: Do you really want to
 Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}
 Enable Capture History: Enable Capture History
 Filters:
-  App: App
+  App Filters: App Filters
   Audio: Audio
   Clear Filters: Clear Filters
   Code: Code
@@ -26,7 +26,9 @@ Filters:
   Pinned: Pinned
   Secret: Secret
   Select Filters: Select Filters
+  Source: Source
   Source Application: Source Application
+  Source Filters: Source Filters
   Starred: Starred
   Text: Text
   Video: Video

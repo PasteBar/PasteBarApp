@@ -1,4 +1,5 @@
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
+import { invoke } from '@tauri-apps/api/tauri'
 import { uiStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
 import { AppWindow, FunctionSquare, X } from 'lucide-react'
@@ -29,7 +30,7 @@ const HISTORY_FILTERS = {
   EMOJI: 'emoji',
   SECRET: 'secret',
   CODE: 'code',
-  APP: 'app',
+  SOURCE: 'source',
 } as const
 
 type ClipboardHistoryListFilterProps = {
@@ -39,6 +40,8 @@ type ClipboardHistoryListFilterProps = {
   children?: ReactNode
   avaliableCodeLanguages: string[]
   setHistoryFilters: (filters: string[]) => void
+  appFilters: string[]
+  setAppFilters: (filters: string[]) => void
 }
 
 export const ClipboardHistoryListFilter = ({
@@ -47,9 +50,23 @@ export const ClipboardHistoryListFilter = ({
   codeFilters,
   avaliableCodeLanguages,
   setCodeFilters,
+  appFilters,
+  setAppFilters,
   children,
 }: ClipboardHistoryListFilterProps) => {
   const { t } = useTranslation()
+  const [appFilterOptions, setAppFilterOptions] = useState<string[]>([])
+
+  async function fetchSourceApps() {
+    try {
+      const sourceApps = (await invoke('get_history_items_source_apps')) as string[]
+      return sourceApps
+    } catch (error) {
+      console.error('Error fetching source apps:', error)
+      return []
+    }
+  }
+
   const changeFilter = (filter: string, only?: boolean) => {
     if (only) {
       setHistoryFilters([filter])
@@ -75,9 +92,33 @@ export const ClipboardHistoryListFilter = ({
     }
   }
 
+  const changeAppFilter = (filter: string, only?: boolean) => {
+    if (only) {
+      setAppFilters([filter])
+      return
+    }
+
+    if (appFilters.includes(filter)) {
+      setAppFilters(appFilters.filter(f => f !== filter))
+    } else {
+      setAppFilters([...appFilters, filter])
+    }
+  }
+
   useEffect(() => {
     if (!historyFilters.includes(HISTORY_FILTERS.CODE)) {
       setCodeFilters([])
+    }
+  }, [historyFilters])
+
+  useEffect(() => {
+    if (historyFilters.includes(HISTORY_FILTERS.SOURCE)) {
+      fetchSourceApps().then((apps: string[]) => {
+        setAppFilterOptions(apps.filter(a => a))
+      })
+    }
+    if (!historyFilters.includes(HISTORY_FILTERS.SOURCE)) {
+      setAppFilters([])
     }
   }, [historyFilters])
 
@@ -199,27 +240,27 @@ export const ClipboardHistoryListFilter = ({
             </DropdownMenuSubContent>
           </DropdownMenuSub>
         )}
-        {historyFilters.includes(HISTORY_FILTERS.APP) && (
+        {historyFilters.includes(HISTORY_FILTERS.SOURCE) && (
           <DropdownMenuSub>
             <DropdownMenuSubTrigger noRightIcon={isSwapPanels} disabled={false}>
               <AppWindow className="mr-2 h-4 w-4" />
-              <Text>{t('Filters:::Source Application', { ns: 'history' })}</Text>
-              {codeFilters.length > 0 && (
-                <Badge className="ml-auto py-0">{codeFilters.length}</Badge>
+              <Text>{t('Filters:::App Filters', { ns: 'history' })}</Text>
+              {appFilters.length > 0 && (
+                <Badge className="ml-auto py-0">{appFilters.length}</Badge>
               )}
             </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="w-48">
+            <DropdownMenuSubContent className="w-56">
               <DropdownMenuItem
                 className="text-center items-center justify-center py-0.5"
-                disabled={!codeFilters.length}
+                disabled={!appFilters.length}
                 onClick={e => {
                   e.preventDefault()
                   e.stopPropagation()
-                  setCodeFilters([])
+                  setAppFilters([])
                 }}
               >
-                {!codeFilters.length ? (
-                  <Text>{t('Filters:::Source Application', { ns: 'history' })}</Text>
+                {!appFilterOptions.length ? (
+                  <Text>{t('Filters:::App Filters', { ns: 'history' })}</Text>
                 ) : (
                   <Flex className="justify-between items-center w-full">
                     <Box className="w-6 h-4"></Box>
@@ -234,24 +275,24 @@ export const ClipboardHistoryListFilter = ({
                 style={{ height: 'auto', maxHeight: '190px' }}
                 autoHide={false}
               >
-                {avaliableCodeLanguages.map(filter => (
+                {appFilterOptions.map(filter => (
                   <DropdownMenuItem
                     key={filter}
                     onClick={e => {
                       e.preventDefault()
-                      changeCodeFilter(filter)
+                      changeAppFilter(filter)
                     }}
                   >
                     <CheckBoxFilter
                       label={filter}
-                      checked={codeFilters.includes(filter)}
+                      checked={appFilters.includes(filter)}
                     />
                     <DropdownMenuShortcut>
                       <Box
                         onClick={e => {
                           e.preventDefault()
                           e.stopPropagation()
-                          changeCodeFilter(filter, true)
+                          changeAppFilter(filter, true)
                         }}
                         className="cursor-pointer hover:underline"
                       >

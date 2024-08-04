@@ -924,6 +924,7 @@ async fn main() {
       history_commands::find_clipboard_history_by_id,
       history_commands::search_clipboard_histories_by_value_or_filters,
       history_commands::save_to_file_history_item,
+      history_commands::get_history_items_source_apps,
       menu::build_system_menu,
       get_device_id,
       shell_commands::check_path,

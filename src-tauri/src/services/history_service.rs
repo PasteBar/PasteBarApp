@@ -1,4 +1,6 @@
 use crate::clipboard::LanguageDetectOptions;
+use diesel::dsl::select;
+
 use lazy_static::lazy_static;
 
 use crate::db::establish_pool_db_connection;
@@ -185,6 +187,17 @@ impl ClipboardHistoryWithMetaData {
     process_history_item(&mut history_with_metadata, auto_mask_words_list);
     history_with_metadata
   }
+}
+
+pub fn get_source_apps_list() -> Result<Vec<Option<String>>, Error> {
+  let connection = &mut establish_pool_db_connection();
+
+  let source_apps = clipboard_history
+    .select(copied_from_app)
+    .distinct()
+    .load::<Option<String>>(connection)?;
+
+  Ok(source_apps)
 }
 
 pub fn add_clipboard_history_from_image(
@@ -749,6 +762,7 @@ pub fn find_clipboard_histories_by_value_or_filter(
   query: &String,
   filters: &Vec<String>,
   code_filters: &Vec<String>,
+  app_filters: &Vec<String>,
   max_results: i64,
   app_settings: tauri::State<Mutex<HashMap<String, Setting>>>,
 ) -> Result<Vec<ClipboardHistoryWithMetaData>, Error> {
@@ -843,6 +857,10 @@ pub fn find_clipboard_histories_by_value_or_filter(
 
   if !code_filters.is_empty() {
     query_builder = query_builder.filter(detected_language.eq_any(code_filters));
+  }
+
+  if !app_filters.is_empty() {
+    query_builder = query_builder.filter(copied_from_app.eq_any(app_filters));
   }
 
   let settings_map = app_settings.lock().unwrap();

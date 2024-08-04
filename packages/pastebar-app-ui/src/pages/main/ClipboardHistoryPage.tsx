@@ -174,6 +174,8 @@ export default function ClipboardHistoryPage() {
 
   const [historyFilters, setHistoryFilters] = useState<string[]>([])
   const [codeFilters, setCodeFilters] = useState<string[]>([])
+  const [appFilters, setAppFilters] = useState<string[]>([])
+
   const historyListSimpleBarRef = useRef<HTMLElement | null>(null)
   const [isMenuDeleting, setIsMenuDeleting] = useState(false)
 
@@ -302,6 +304,7 @@ export default function ClipboardHistoryPage() {
     query: debouncedSearchTerm,
     filters: historyFilters,
     codeFilters,
+    appFilters,
   })
 
   const doRefetchFindClipboardHistory = useCallback(() => {
@@ -368,11 +371,12 @@ export default function ClipboardHistoryPage() {
     if (
       debouncedSearchTerm.length > 1 ||
       historyFilters.length > 0 ||
+      appFilters.length > 0 ||
       codeFilters.length > 0
     ) {
       refetchFindClipboardHistory()
     }
-  }, [debouncedSearchTerm, historyFilters, codeFilters])
+  }, [debouncedSearchTerm, historyFilters, codeFilters, appFilters])
 
   useEffect(() => {
     if (!scrollBarRef.current?.setDisableScroll || !historyListSimpleBarRef.current) {
@@ -786,6 +790,8 @@ export default function ClipboardHistoryPage() {
                               historyFilters={historyFilters}
                               avaliableCodeLanguages={historyDetectLanguagesEnabledList}
                               codeFilters={codeFilters}
+                              appFilters={appFilters}
+                              setAppFilters={setAppFilters}
                               setCodeFilters={setCodeFilters}
                             >
                               <Button
@@ -823,6 +829,7 @@ export default function ClipboardHistoryPage() {
                               setSearchTerm('')
                               setHistoryFilters([])
                               setCodeFilters([])
+                              setAppFilters([])
                               if (
                                 searchHistoryInputRef?.current &&
                                 searchHistoryInputRef.current.value
@@ -939,6 +946,8 @@ export default function ClipboardHistoryPage() {
                                               hasClipboardHistoryURLErrors={clipboardHistoryIdsURLErrors.includes(
                                                 historyId
                                               )}
+                                              setHistoryFilters={setHistoryFilters}
+                                              setAppFilters={setAppFilters}
                                               addToClipboardHistoryIdsURLErrors={
                                                 addToClipboardHistoryIdsURLErrors
                                               }
@@ -1573,6 +1582,8 @@ export default function ClipboardHistoryPage() {
                                               hasGenerateLinkMetaDataInProgress={clipboardHistoryGenerateLinkMetaDataInProgress.includes(
                                                 historyId
                                               )}
+                                              setHistoryFilters={setHistoryFilters}
+                                              setAppFilters={setAppFilters}
                                               setSelectHistoryItem={setSelectHistoryItem}
                                               onCopy={setCopiedItem}
                                               onCopyPaste={setPastedItem}
@@ -1711,6 +1722,7 @@ export default function ClipboardHistoryPage() {
                                   setSearchTerm('')
                                   setHistoryFilters([])
                                   setCodeFilters([])
+                                  setAppFilters([])
                                   if (
                                     searchHistoryInputRef?.current &&
                                     searchHistoryInputRef.current.value
@@ -1764,6 +1776,7 @@ export default function ClipboardHistoryPage() {
                                       setSearchTerm('')
                                       setHistoryFilters([])
                                       setCodeFilters([])
+                                      setAppFilters([])
                                       if (
                                         searchHistoryInputRef?.current &&
                                         searchHistoryInputRef.current.value

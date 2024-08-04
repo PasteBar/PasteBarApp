@@ -1,4 +1,12 @@
-import { CSSProperties, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import {
+  CSSProperties,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { UniqueIdentifier, useDraggable } from '@dnd-kit/core'
 import NoWrapIcon from '~/assets/icons/nowrap'
 import WrapIcon from '~/assets/icons/wrap'
@@ -105,6 +113,8 @@ interface ClipboardHistoryRowProps {
   clipboard?: ClipboardHistoryItem
   isDark: boolean
   setRowHeight?: (index: number, height: number) => void
+  setHistoryFilters?: Dispatch<SetStateAction<string[]>>
+  setAppFilters?: Dispatch<SetStateAction<string[]>>
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -155,6 +165,8 @@ export function ClipboardHistoryRowComponent({
   setSelectHistoryItem = () => {},
   isDragPreview = false,
   setRowHeight = () => {},
+  setHistoryFilters = () => {},
+  setAppFilters = () => {},
 }: ClipboardHistoryRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
@@ -1040,6 +1052,8 @@ export function ClipboardHistoryRowComponent({
             removeLinkMetaData={removeLinkMetaData}
             setSelectHistoryItem={setSelectHistoryItem}
             onCopyPaste={onCopyPaste}
+            setHistoryFilters={setHistoryFilters}
+            setAppFilters={setAppFilters}
           />
         </ContextMenu>
       </Box>
