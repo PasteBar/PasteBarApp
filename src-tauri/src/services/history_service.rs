@@ -684,8 +684,6 @@ pub fn delete_recent_clipboard_history(
     }
   }
 
-  println!("deleted_count: {:?}", records_to_delete);
-
   // Handle link items
   let link_items: Vec<&ClipboardHistory> = records_to_delete
     .iter()

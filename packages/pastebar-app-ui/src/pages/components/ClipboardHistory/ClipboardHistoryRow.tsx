@@ -334,7 +334,7 @@ export function ClipboardHistoryRowComponent({
       ref={isDragPreview && !(isHovering || isSelected) ? null : setNodeRef}
       title={
         clipboard?.copiedFromApp && isHovering
-          ? `${t('Source:')} ${clipboard?.copiedFromApp}`
+          ? `${t('Source')}: ${clipboard?.copiedFromApp}`
           : ''
       }
       {...(isSelected || isHovering ? listeners : {})}
