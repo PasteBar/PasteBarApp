@@ -10,6 +10,7 @@ Application Color Theme: Цветовая тема приложения
 Application UI Color Theme: Цветовая тема интерфейса приложения
 Application UI Fonts Scale: Масштаб шрифтов интерфейса приложения
 Application UI Language: Язык интерфейса приложения
+Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Приложения, перечисленные ниже, не будут фиксировать действия копирования в историю буфера обмена. Регистр не учитывается.
 Auto Disable History Capture when Screen Unlocked: Автоматически отключать захват истории при разблокировке экрана
 Auto Lock Screen on User Inactivity: Автоматическая блокировка экрана при бездействии пользователя
 Auto Lock the Screen on User Inactivity: Автоматическая блокировка экрана при бездействии пользователя
@@ -64,6 +65,7 @@ Enter Passcode length: Введите длину кода доступа
 Enter recovery password to reset passcode.: Введите пароль восстановления для сброса кода доступа.
 Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Введите ваш <strong>{{screenLockPassCodeLength}}-значный</strong> код доступа
 Entered Passcode is invalid: Введенный код доступа недействителен
+Excluded Apps List: Список Исключенных Приложений
 Execute Web Requests: Выполнять веб-запросы
 Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: Выполняйте терминальные или shell-команды непосредственно из клипа PasteBar и копируйте результаты в буфер обмена.
 'Expires:': 'Истекает:'
@@ -76,6 +78,7 @@ Incorrect passcode.: Неверный код доступа.
 Increase UI Font Size: Увеличить шрифт интерфейса
 Issued: Выдана
 Large: Большой
+List each application name or window identifier on a new line.: Каждое название приложения или идентификатор окна на новой строке.
 List each word or sentence on a new line.: Каждое слово или предложение списка должно быть на новой строке.
 Lock Screen Clipboard History Capture Control: Управление захватом истории буфера обмена на экране блокировки
 Lock Screen Passcode: Код доступа экрана блокировки

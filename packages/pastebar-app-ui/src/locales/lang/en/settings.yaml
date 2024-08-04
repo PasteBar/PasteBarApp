@@ -11,6 +11,7 @@ Application Color Theme: Application Color Theme
 Application UI Color Theme: Application UI Color Theme
 Application UI Fonts Scale: Application UI Fonts Scale
 Application UI Language: Application UI Language
+Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.
 Auto Disable History Capture when Screen Unlocked: Auto Disable History Capture when Screen Unlocked
 Auto Lock Application Screen on User Inactivity: Auto Lock Application Screen on User Inactivity
 Auto Lock Screen on User Inactivity: Auto Lock Screen on User Inactivity
@@ -65,6 +66,7 @@ Enter Passcode length: Enter Passcode length
 Enter recovery password to reset passcode.: Enter recovery password to reset passcode.
 Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode
 Entered Passcode is invalid: Entered Passcode is invalid
+Excluded Apps List: Excluded Apps List
 Execute Web Requests: Execute Web Requests
 Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.
 'Expires:': 'Expires:'
@@ -78,6 +80,7 @@ Incorrect passcode.: Incorrect passcode.
 Increase UI Font Size: Increase UI Font Size
 Issued: Issued
 Large: Large
+List each application name or window identifier on a new line.: List each application name or window identifier on a new line.
 List each word or sentence on a new line.: List each word or sentence on a new line.
 Lock Screen Clipboard History Capture Control: Lock Screen Clipboard History Capture Control
 Lock Screen PassCode: Lock Screen PassCode

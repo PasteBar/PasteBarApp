@@ -64,6 +64,9 @@ INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('isExclusionListEnabled', NULL, false, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
+VALUES ('isExclusionAppListEnabled', NULL, false, NULL);
+
+INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('historyExclusionList', '', NULL, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)

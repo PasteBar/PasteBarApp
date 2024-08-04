@@ -37,7 +37,7 @@ reqwest = "0.11.12"
 nanoid = "0.4.0"
 anyhow = "1.0.66"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.7", features = [ "api-all", "system-tray", "icon-png", "clipboard", "updater", "reqwest-client"] }
+tauri = { version = "1.7.1", features = [ "api-all", "system-tray", "icon-png", "clipboard", "updater", "reqwest-client"] }
 tokio = { version = "1.28.2", features = ["full"] } 
 #single-instance = "0.3.3"
 
@@ -70,6 +70,7 @@ clipboard-master = "3.1.3"
 img_hash = "3.2.0"
 sha-1 = "0.10.1"
 regex = "1.9.3"
+active-win-pos-rs = "0.8"
 
 lang_detect = { path = "libs/lang_detect" }
 auto-launch = { path = "libs/auto-launch" }

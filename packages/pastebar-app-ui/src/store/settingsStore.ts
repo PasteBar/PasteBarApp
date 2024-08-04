@@ -34,12 +34,14 @@ type Settings = {
   clipNotesMaxHeight: number
   isHistoryEnabled: boolean
   historyExclusionList: string
+  historyExclusionAppList: string
   historyDetectLanguagesEnabledList: string[]
   appToursCompletedList: string[]
   appToursSkippedList: string[]
   historyDetectLanguagesPrioritizedList: string[]
   isHistoryDetectLanguageEnabled: boolean
   isExclusionListEnabled: boolean
+  isExclusionAppListEnabled: boolean
   historyDetectLanguageMinLines: number
   isAutoMaskWordsListEnabled: boolean
   isAutoClearSettingsEnabled: boolean
@@ -89,8 +91,11 @@ export interface SettingsStoreState {
   setPasteSequenceEachSeparator: (separator: string) => void
   setHistoryDetectLanguageMinLines: (lines: number) => void
   setHistoryExclusionList: (text: string) => void
+  setHistoryExclusionAppList: (text: string) => void
+  addToHistoryExclusionAppList: (text: string) => void
   setIsHistoryDetectLanguageEnabled: (isEnabled: boolean) => void
   setIsExclusionListEnabled: (isEnabled: boolean) => void
+  setIsExclusionAppListEnabled: (isEnabled: boolean) => void
   setIsAutoClearSettingsEnabled: (isEnabled: boolean) => void
   setAutoClearSettingsDuration: (duration: number) => void
   setAutoClearSettingsDurationType: (type: string) => void
@@ -158,7 +163,9 @@ const initialState: SettingsStoreState & Settings = {
   appToursSkippedList: [],
   historyDetectLanguagesPrioritizedList: [],
   historyExclusionList: '',
+  historyExclusionAppList: '',
   isExclusionListEnabled: false,
+  isExclusionAppListEnabled: false,
   isAutoClearSettingsEnabled: false,
   isAutoMaskWordsListEnabled: false,
   isNotTourCompletedOrSkipped: () => false,
@@ -205,12 +212,15 @@ const initialState: SettingsStoreState & Settings = {
   setCopyPasteSequenceIsReversOrder: () => {},
   setPasteSequenceEachSeparator: () => {},
   setIsExclusionListEnabled: () => {},
+  setHistoryExclusionAppList: () => {},
+  setIsExclusionAppListEnabled: () => {},
   setHistoryDetectLanguageMinLines: () => {},
   setAutoClearSettingsDuration: () => {},
   setAutoClearSettingsDurationType: () => {},
   setIsHistoryDetectLanguageEnabled: () => {},
   setHistoryExclusionList: () => {},
   setIsHistoryAutoUpdateOnCaputureEnabled: () => {},
+  addToHistoryExclusionAppList: () => {},
   setHistoryDetectLanguagesEnabledList: () => {},
   setAppToursCompletedList: () => {},
   setAppToursSkippedList: () => {},
@@ -363,6 +373,16 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   setHistoryExclusionList: async (text: string) => {
     return get().updateSetting('historyExclusionList', text)
   },
+  setHistoryExclusionAppList: async (text: string) => {
+    return get().updateSetting('historyExclusionAppList', text)
+  },
+  addToHistoryExclusionAppList: async (text: string) => {
+    const { historyExclusionAppList } = get()
+    const list = historyExclusionAppList.split('\n').filter(Boolean)
+    list.push(text)
+    const newList = Array.from(new Set(list)).join('\n')
+    return get().updateSetting('historyExclusionAppList', newList)
+  },
   setAutoMaskWordsList: async (text: string) => {
     return get().updateSetting('autoMaskWordsList', text)
   },
@@ -399,6 +419,9 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsExclusionListEnabled: async (isEnabled: boolean) => {
     return get().updateSetting('isExclusionListEnabled', isEnabled)
+  },
+  setIsExclusionAppListEnabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isExclusionAppListEnabled', isEnabled)
   },
   setIsShowCollectionNameOnNavBar: async (isEnabled: boolean) => {
     return get().updateSetting('isShowCollectionNameOnNavBar', isEnabled)
