@@ -1,4 +1,4 @@
-<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.: Установлен <strong>{{screenLockPassCodeLength}}</strong>-значный код доступа.
+"<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.": Установлен <strong>{{screenLockPassCodeLength}}</strong>-значный код доступа.
 Activation Success: Успешная активация
 ? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
 : Добавляйте в избранное, когда копируете его дважды в течение 1 секунды. Это позволяет быстро добавлять скопированный текст или ссылки в избранное и легко находить их в истории буфера обмена.
