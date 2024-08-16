@@ -456,7 +456,10 @@ export function ClipboardHistoryRowComponent({
                   ) : (
                     showCopyPasteIndexNumber && (
                       <Box className="flex flex-row items-center pr-2 z-100">
-                        <Badge className="font-mono text-[11px]" variant="outline">
+                        <Badge
+                          className="font-mono bg-slate-200 dark:bg-slate-700 !py-0"
+                          variant="outline"
+                        >
                           {index + 1}
                         </Badge>
                       </Box>
@@ -994,7 +997,9 @@ export function ClipboardHistoryRowComponent({
                 </Box>
               ) : isCopiedOrPasted && !pastingCountDown ? (
                 <Box
-                  className={`absolute z-50 w-full ${pinnedTopOffsetFirst} flex justify-center fade-in-animation`}
+                  className={`absolute z-50 w-full ${pinnedTopOffsetFirst} flex justify-center ${
+                    showCopyPasteIndexNumber ? '' : 'fade-in-animation'
+                  }`}
                 >
                   <Badge
                     variant="default"
