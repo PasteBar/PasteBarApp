@@ -460,7 +460,7 @@ export function ClipboardHistoryRowComponent({
                           className="font-mono bg-slate-200 dark:bg-slate-700 !py-0"
                           variant="outline"
                         >
-                          {index + 1}
+                          {index === 9 ? 0 : index + 1}
                         </Badge>
                       </Box>
                     )

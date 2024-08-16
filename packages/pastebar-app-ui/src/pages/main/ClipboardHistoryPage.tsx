@@ -317,7 +317,7 @@ export default function ClipboardHistoryPage() {
   useHotkeys(
     [...Array(10).keys()].map(i => `ctrl+${i.toString()}`),
     e => {
-      const index = e.key === '0' ? 10 : Number(e.key) - 1
+      const index = e.key === '0' ? 9 : Number(e.key) - 1
       const itemId = clipboardHistory[Number(index)]?.historyId
 
       if (!itemId) {
@@ -329,9 +329,9 @@ export default function ClipboardHistoryPage() {
   )
 
   useHotkeys(
-    [...Array(10).keys()].map(i => `ctrl+meta+${i.toString()}`),
+    [...Array(10).keys()].map(i => `ctrl+${isWindows ? 'alt' : 'meta'}+${i.toString()}`),
     e => {
-      const index = e.key === '0' ? 10 : Number(e.key) - 1
+      const index = e.key === '0' ? 9 : Number(e.key) - 1
       const itemId = clipboardHistory[Number(index)]?.historyId
 
       if (!itemId) {
