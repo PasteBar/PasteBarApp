@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
+import { formatLocale as format } from '~/locales/date-locales'
 import { timeAgoInstance } from '~/locales/locales'
 import {
   collectionsStoreAtom,
@@ -9,13 +10,12 @@ import {
   showEditClipNameId,
   showLargeViewClipId,
 } from '~/store'
-import format from 'date-fns/format'
 import { useAtomValue } from 'jotai'
 import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import ToolTip from '~/components/atoms/tooltip'
-import { Badge, Box, Button } from '~/components/ui'
+import { Badge, Box } from '~/components/ui'
 
 import { useGetCollectionWithClips } from '~/hooks/queries/use-collections'
 

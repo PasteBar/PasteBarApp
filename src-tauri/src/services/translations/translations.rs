@@ -9,8 +9,9 @@ pub struct Translations {
   de: HashMap<String, String>,
   uk: HashMap<String, String>,
   fr: HashMap<String, String>,
-  es: HashMap<String, String>,
+  esES: HashMap<String, String>,
   ru: HashMap<String, String>,
+  zhCN: HashMap<String, String>,
 }
 
 static CURRENT_LANGUAGE: Lazy<RwLock<String>> = Lazy::new(|| RwLock::new("en".to_string()));
@@ -44,7 +45,8 @@ impl Translations {
       "ru" => Some(&self.ru),
       "uk" => Some(&self.uk),
       "fr" => Some(&self.fr),
-      "es" => Some(&self.es),
+      "esES" => Some(&self.esES),
+      "zhCN" => Some(&self.zhCN),
       _ => Some(&self.en),
     }
   }

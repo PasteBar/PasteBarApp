@@ -12,12 +12,12 @@ import NoWrapIcon from '~/assets/icons/nowrap'
 import WrapIcon from '~/assets/icons/wrap'
 import { MINUTE_IN_MS } from '~/constants'
 import { isEmailNotUrl } from '~/libs/utils'
+import { formatLocale as format } from '~/locales/date-locales'
 import {
   hoveringHistoryRowId,
   isKeyAltPressed,
   showHistoryDeleteConfirmationId,
 } from '~/store'
-import format from 'date-fns/format'
 import {
   ArrowDownToLine,
   Check,

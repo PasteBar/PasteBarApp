@@ -723,7 +723,10 @@ export function NavBar() {
         </MenubarMenu>
 
         <MenubarMenu>
-          <MenubarTrigger className="font-normal px-2.5" id="navbar-view_tour">
+          <MenubarTrigger
+            className="font-normal px-2.5 whitespace-nowrap"
+            id="navbar-view_tour"
+          >
             {t('View', { ns: 'navbar' })}
           </MenubarTrigger>
           <MenubarContent>
@@ -1368,7 +1371,10 @@ export function NavBar() {
             <>
               {playerSongs.length > 0 && <PlayerMenu />}
               <MenubarMenu>
-                <MenubarTrigger className="font-normal px-2.5" id="navbar-help_tour">
+                <MenubarTrigger
+                  className="font-normal px-2.5 whitespace-nowrap"
+                  id="navbar-help_tour"
+                >
                   {t('Help', { ns: 'help' })}
                 </MenubarTrigger>
                 <MenubarContent>
