@@ -1,0 +1,352 @@
+' No': ' Ні'
+' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': ' Цей дозвіл гарантує, що PasteBar може отримати доступ до буфера обміну та виконувати операції копіювання та вставки між додатками.'
+About PasteBar: Про PasteBar
+Action Menu: Контекстне меню
+Activation Error: Помилка активації
+Add Clip: Додати Кліп
+Add First Option: Додати перший варіант
+Add Link Card: Додати картку посилання
+Add Menu: Додати Меню
+Add Option: Додати варіант
+Add PasteBar to Accessibility: Додати PasteBar до Спеціальних можливостей
+Add To Player: Додати до плеєра
+Add to: Додати до
+Add to Clips: Додати до Кліпів
+Add to Clips or Menu: Додати до Кліпів або Меню
+Add to Menu: Додати до Меню
+Add to clip or menu: Додати до кліпів або меню
+Add to template fields: Додати до полів шаблону
+Add {{Clipboard}} field to template. This allows you to copy text to the clipboard, and it will be inserted into the template: Додайте поле <b>{{Clipboard}}</b> до шаблону. Це дозволить копіювати текст до буфера обміну, і він буде вставлений у шаблон
+Added: Додано
+Adding this file to the player is not recommended unless you trust the source.: Додавання цього файлу до плеєра не рекомендується, якщо ви не довіряєте джерелу.
+Allow PasteBar to Copy and Paste from Clipboard: Дозволити PasteBar копіювати та вставляти з буфера обміну
+Are you sure you want to delete?: Ви впевнені, що хочете видалити?
+Are you sure?: Ви впевнені?
+Back: Назад
+Build on {{buildDate}}: Збірка від {{buildDate}}
+Cancel: Скасувати
+Cancel Reset: Скасувати скидання
+Check: Перевірити
+Check / Done: Перевірити / Готово
+Check and Close: Перевірити та закрити
+Check and Done: Перевірити та готово
+Clear Tracks: Очистити треки
+Clear found results and filters: Очистити знайдені результати та фільтри
+Click to Confirm: Натисніть для підтвердження
+Clip: Кліп
+Clip Boards: Збережені Кліпи
+Clipboard: Буфер обміну
+Clipboard History: Історія буфера
+Clipboard History Settings: Налаштування Історії Буфера
+Close: Закрити
+Close Edit: Закрити редагування
+Close Expand Edit: Згорнути редагування
+Close Find: Закрити пошук
+Close History Window: Закрити Вікно Історії
+Close modal and continue in browser: Закрити вікно і продовжити в браузері
+Confirm: Підтвердити
+Confirm Delete: Підтвердити видалення
+Confirm Email: Підтвердити видалення
+Confirm Passcode: Підтвердіть код
+Confirm Password: Підтвердіть пароль
+Confirm Remove: Підтвердити видалення
+Confirm Your Passcode: Підтвердіть ваш код доступу
+Confirm action: Підтвердити дію
+Confirm password reset: Підтвердити скидання пароля
+Confirm password reset action: Підтвердити дію скидання пароля
+Confirm your action: Підтвердіть вашу дію
+Confirm {{action}}: Підтвердити {{action}}
+Contact Form: Форма зв'язку
+Copied: Скопійовано
+Copy: Копіювати
+Copy & Paste: Копіювати та вставити
+Copy and Paste: Копіювати та вставити
+Copy of: Копія
+Copy to Clipboard: Копіювати до буфера обміну
+Create: Створити
+Created: Створено
+Delay Next: Затримка наступного
+Delete: Видалити
+Deselect All: Зняти виділення
+Deselect pinned: Зняти виділення закріплених
+Digits Only Passcode: Код лише цифри
+Disabled: Вимкнено
+Done: Готово
+Done Adding: Завершити
+Done Edit: Завершити
+Done Reorder: Завершити
+Download mp3: Завантажити mp3
+Drag: Перетягнути
+Drag to Move: Перетягніть для переміщення
+Drop To Add: Перетягніть для додавання
+Drop Zone: Зона перетягування
+Edit: Редагувати
+Edit Label: Змінити назву
+'Email: {{email}}': 'Email: {{email}}'
+Emoji: Емодзі
+Empty: Порожній
+Empty Select: Порожній вибір
+Enable / Disable: Увімкнути / Вимкнути
+Enable PasteBar in Accessibility Settings: Дозволити доступ до спеціальних можливостей
+Enabled: Увімкнено
+Enter Current Passcode: Введіть поточний код доступу
+Enter Digits Only Passcode: Введіть код доступу, що складається лише з цифр
+Enter Email: Введіть email
+Enter Passcode: Введіть код доступу
+Enter Password: Введіть пароль
+Enter Recovery Password: Введіть пароль відновлення
+Enter passcode or password to unlock: Введіть код доступу або пароль для розблокування
+Errors:
+  Error loading link: Помилка завантаження посилання
+  Cant save file: Неможливо зберегти файл
+  Something went wrong! {{err}} Please try again.: Щось пішло не так! {{err}} Будь ласка, спробуйте ще раз.
+Expand Edit: Розгорнути редагування
+Field is not found in the template: Поле не знайдено в шаблоні
+? Field {{Clipboard}} has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Поле <b>{{Clipboard}}</b> знайдено в шаблоні. Це дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
+Find Clip: Знайти кліп
+Find History: Знайти в історії
+Found in template but missing from fields definition: Знайдено в шаблоні, але відсутнє у визначенні полів
+Got it: Зрозуміло
+Hide Muli Select: Приховати множинний вибір
+Hide Pinned Board: Приховати закріплену дошку
+History: Історія
+Image: Зображення
+Image Scale {{ImageScale}}x: Масштаб зображення {{ImageScale}}x
+Image size: Розмір зображення
+Image size in pixels: Розмір зображення в пікселях
+In View: у перегляді
+Inactive: Неактивно
+Large View: Збільшений вигляд
+Later: Не зараз
+Light: Світлий
+Lines Wrap: Перенос рядків
+Make Active: Зробити активним
+Make Disabled: Зробити вимкненими
+Make Enabled: Зробити увімкненим
+Make Inactive: Зробити неактивним
+Manage: Керування
+Maximum height: Висота максимум
+Maximum width: Ширина максимум
+Menu: Меню
+Move Down: Перемістити вниз
+Move Up: Перемістити вгору
+Multi Select: Множинний вибір
+Next Delay: Наступна затримка
+Next Track: Наступний трек
+No: Ні
+No Key Press: Без натискання клавіш
+No Wrap: Без переносу
+Not Now: Не зараз
+Not found in the template: Не знайдено в шаблоні
+Nothing found: Нічого не знайдено
+Number of lines: Кількість рядків
+Ok, but later: Добре, але пізніше
+Open: Відкрити
+Open Accessibility: Відкрити Спеціальні можливості
+Open Window: Відкрити вікно
+Open contact form in browser: Відкрити форму зв'язку в браузері
+Open payment in browser: Відкрити платіж у браузері
+Options: Параметри
+Password: Пароль
+Paste: Вставка
+Paste Delay: Затримка вставки
+Paste Menu: Меню вставки
+Paste in {{pastingCountDown}}...: Вставка через {{pastingCountDown}}...
+PasteBar: PasteBar
+PasteBar Application Error: Помилка додатку PasteBar
+PasteBar application now can access the clipboard and perform copy and paste operations across applications.: Додаток PasteBar тепер має доступ до буфера обміну і може виконувати операції копіювання та вставки між додатками.
+PasteBar was successfuly added to Accessibility settings: PasteBar був успішно доданий до налаштувань Спеціальних можливостей
+Pasted: Вставлено
+Path: Шлях
+Pause: Пауза
+Pause Playing: Пауза
+? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+: 'Помилка перевірки: PasteBar не був успішно доданий до налаштувань Спеціальних можливостей. Будь ласка, надайте необхідні дозволи та натисніть «Готово» ще раз.'
+Pin Selected: Закріпити вибране
+Pinned: Закріплений
+Pinned_few: Закріплених
+Pinned_many: Закріплених
+Pinned_one: Закріплений
+Pinned_two: Закріплених
+Pinned_zero: Закріплених
+Play: Грати
+Please add PasteBar to the list of apps in: Будь ласка, додайте PasteBar до списку додатків в
+Please confirm your action!: Будь ласка, підтвердіть свою дію!
+Press: Натиснути
+Press ESC key to close: Натисніть клавішу ESC для закриття
+Previous Track: Попередній трек
+Pro: Pro
+Quit: Вийти
+Rebuild Menu: Перебудувати меню
+Recent History: Недавня історія
+Recovery Password: Пароль відновлення
+Remove: Видалити
+Remove Link Card: Видалити картку посилання
+Remove Selected Star: Видалити з обраних
+Remove all fields from template: Видалити всі поля з шаблону
+Remove all tracks: Прибрати всі треки
+Remove current track: Прибрати поточний трек
+Remove from Player: Видалити з плеєра
+Remove from template: Видалити з шаблону
+Rename: Перейменувати
+Renew: Продовжити
+Reorder pinned: Змінити порядок закріплених
+Repeat 1: Повторити 1
+Repeat all: Повторити все
+Repeat off: Повтор вимкнено
+Report and Try Again: Повідомте про помилку та повторіть
+Reset: Скинути
+Reset Passcode: Скинути код доступу
+Reset Password: Скинути пароль
+Reset with Passcode: Скинути за допомогою коду доступу
+Restart: Перезапустити
+Reverse Order: Зворотний порядок
+Rule Type: Тип правила
+Run and Copy Response: Запустити і скопіювати відповідь
+Run and Paste Response: Запустити і вставити відповідь
+Running: Виконується
+Save: Зберегти
+Save It!: Зберегти так!
+Saved: Збережено
+Scroll to Top: Прокрутити вгору
+Second: Секунда
+Seconds: Секунди
+'Security Alert: MP3 Verification Failed': 'Увага: Перевірка MP3 не вдалася'
+Select: Вибрати
+Select Default Option: Вибрати варіант за замовчуванням
+Select Language: Вибрати мову
+Select default: Вибрати за замовчуванням
+Select is empty: Вибір порожній
+Select option: Вибрати варіант
+Select pinned: Вибрати закріплене
+Sequence Copy: Послідовне копіювання
+Sequence Copy Paste: Послідовне копіювання та вставка
+Sequence Delay Next: Послідовна затримка наступного
+Sequence Next Delay: Послідовна наступна затримка
+Sequence Paste: Послідовна вставка
+Sequence Reverse Order: Послідовний зворотний порядок
+Set: Встановити
+Set Password: Встановити пароль
+Show Large View: Збільшений вигляд
+Show all: Показати все
+Something goes wrong! Please try again.: Щось пішло не так! Будь ласка, спробуйте ще раз.
+Source: Джерело
+Split History Window: Розділити вікно з історією буфера
+Star: Обране
+Star Selected: Додати до обраного
+Stay here: Залишитися
+Stay in touch: Залишайтеся на зв'язку
+Success!: Готово!
+Swap Panels Layout: Поміняти панелі місцями
+System Preferences -> Security & Privacy -> Accessibility: Системні налаштування -> Безпека та конфіденційність -> Спеціальні можливості
+System Settings -> Privacy & Security -> Accessibility: Системні налаштування -> Конфіденційність та безпека -> Спеціальні можливості
+Tab: Tab
+Thank you for reporting the error.: Дякуємо, що повідомили нам про помилку.
+Thank you for using Pro: Дякуємо, що обрали Pro
+Thank you!: Дякуємо!
+This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.: Цей дозвіл гарантує, що PasteBar зможе отримати доступ до буфера обміну та виконувати операції копіювання та вставки між додатками.
+Too long: Занадто довгий
+Too short: Занадто короткий
+Toolbar:
+  Blank Text Formatting: Форматування пустого тексту
+  Bold Formatting: Напівжирне форматування
+  Bold Text Formatting: Форматування напівжирного тексту
+  Copy and Paste Formatting: Форматування копіювання та вставки
+  Header Formatting: Форматування заголовка
+  Hightlight Text Formatting: Форматування виділеного тексту
+  Italic Formatting: Курсивне форматування
+  Masked Text Formatting: Форматування маскованого тексту
+  Remove Text Formatting: Видалити форматування тексту
+Trust and Play: Довіряти та відтворити
+Type:
+  App: Додаток
+  Auto Fill: Автозаповнення
+  AutoFill: AutoFill
+  Clip: Кліп
+  Code: Код
+  Code Snippet: Фрагмент коду
+  Command: Команда
+  Email: Email
+  Emoji: Емодзі
+  Empty: Порожній
+  Error: Помилка
+  File: Файл
+  File, Path or App: Файл, шлях або додаток
+  Folder: Папка
+  Form Auto Fill: Автозаповнення форми
+  Image: Зображення
+  Label: Назва
+  Link: Посилання
+  Link or Email: Посилання або email
+  Menu: Меню
+  Mp3: mp3
+  Parallels: Parallels
+  Path: Шлях
+  Plain Text: Простий текст
+  Request: Запит
+  Run Auto Fill: Запустити автозаповнення
+  Scraper: Скрапер
+  Secret: Секрет
+  Shell Command: Команда оболонки
+  Template: Шаблон
+  Template Fill: Заповнення шаблону
+  Text: Текст
+  Video: Відео
+  Web Request (HTTP): Веб-запит (HTTP)
+  Web Scraper / Parser: Веб-скрапер / парсер
+TypeMenu:
+  Clip Type: Тип кліпу
+  Code Snippet: Фрагмент коду
+  File, Path or App: Файл, шлях або додаток
+  Form Auto Fill: Автозаповнення форми
+  Image: Зображення
+  Link or Email: Посилання або email
+  Link or File, Path or App: Посилання або файл, шлях або додаток
+  Plain Text: Простий текст
+  Run, Execute: Запуск, виконання
+  Select Language: Вибрати мову
+  Shell Command: Команда оболонки
+  Template: Шаблон
+  Template Fill: Заповнення шаблону
+  Text Template: Текстовий шаблон
+  Web Request (HTTP): Веб-запит (HTTP)
+  Web Scraper / Parser: Веб-скрапер / парсер
+UnPin All: Відкріпити все
+UnPin Selected: Відкріпити вибране
+Unlock Application Screen: Розблокувати екран додатку
+Unlock Pro features: Розблокувати функції Pro
+Unlock Screen: Розблокувати екран
+Unlock all features: Розблокувати всі функції
+Unsaved label: Незбережена назва
+Update history list: Оновити список історії
+Updated: Оновлено
+Upgrade to Pro: Перейти на Pro
+Use Passcode: Використовувати код доступу
+Use Password: Використовувати пароль
+Using {{Clipboard}} field, allows you to copy text to the clipboard, and it will be inserted into the template: Використання поля <b>{{Clipboard}}</b> дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
+Verify: Перевірити
+Verify Current Password: Перевірити поточний пароль
+Verify Recovery Password: Перевірити пароль відновлення
+Version: Версія
+View: Перегляд
+View Edit: Редагування у збільшеному вигляді
+Views:
+  Paste Menu: Меню вставки
+We apologize but you found a bug. Please report this issue to us and try again: Просимо вибачення, але ви виявили помилку. Будь ласка, повідомте нам про цю проблему та спробуйте ще раз
+? We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
+: Ми не змогли підтвердити безпеку цього файлу. Не вдалося перевірити ID3-теги та цілісність файлу. MP3-файли можуть потенційно містити шкідливий код. Будь ласка, будьте обережні.
+Yes: Так
+Yes, activate: Так, активувати
+chars: символів
+contact us.: зв'яжіться з нами.
+found: знайдено
+if this error persists, try to restart the application or: Якщо ця помилка часто повторюється, спробуйте перезапустити додаток або
+lines: рядків
+menu items in: елементів меню в
+minutes: хвилини
+only: тільки
+second: секунда
+seconds: секунди
+show less: показати менше
+www.site: www.pastebar.app

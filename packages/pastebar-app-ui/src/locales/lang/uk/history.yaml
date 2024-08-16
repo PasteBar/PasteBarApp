@@ -1,0 +1,39 @@
+All History Settings: Всі налаштування історії буфера
+All done! History's been cleared.: Готово! Історію очищено.
+Auto Update on Capture: Автоматичне оновлення при захопленні
+Auto-Clear Settings: Налаштування автоочищення
+Capture History: Захоплення історії
+Clear: Очистити
+Clear All: Очистити все
+Clear All History: Очистити всю історію
+Clear History: Очистити історію
+Confirm Clear All History: Підтвердити очищення всієї історії
+Do you really want to remove ALL clipboard history items?: Ви дійсно хочете видалити ВСІ елементи історії буфера обміну?
+Do you want to remove all recent clipboard history older than {{olderThen}} {{durationType}}: Ви хочете видалити всю нещодавню історію буфера обміну за період {{olderThen}} {{durationType}}
+Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Ви хочете видалити історію буфера обміну старішу за {{olderThen}} {{durationType}}
+Enable Capture History: Увімкнути захоплення історії
+Filters:
+  App Filters: Фільтри додатків
+  Audio: Аудіо
+  Clear Filters: Очистити фільтри
+  Code: Код
+  Emoji: Емодзі
+  Image: Зображення
+  Language Filters: Фільтри мов
+  Languages: Мови
+  Languages Filter: Фільтр мов
+  Languages Filters: Фільтри мов
+  Link: Посилання
+  Pinned: Закріплені
+  Secret: Секретні
+  Select Filters: Вибрати фільтри
+  Source: Джерело
+  Starred: Обрані
+  Text: Текст
+  Video: Відео
+Hide pinned history: Приховати закріплену історію
+History Settings: Налаштування історії
+Paste Menu: Меню Вставки
+Select Filters: Вибрати фільтри
+View pinned history: Переглянути закріплену історію
+'{{isAll}} Clipboard History': '{{isAll}} Історія буфера обміну'
