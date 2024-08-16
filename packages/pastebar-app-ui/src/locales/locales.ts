@@ -7,6 +7,7 @@ import deTimeAgo from 'javascript-time-ago/locale/de'
 import enTimeAgo from 'javascript-time-ago/locale/en'
 import esTimeAgo from 'javascript-time-ago/locale/es'
 import frTimeAgo from 'javascript-time-ago/locale/fr'
+import itTimeAgo from 'javascript-time-ago/locale/it'
 import ruTimeAgo from 'javascript-time-ago/locale/ru'
 import ukTimeAgo from 'javascript-time-ago/locale/uk'
 import zhTimeAgo from 'javascript-time-ago/locale/zh'
@@ -25,6 +26,7 @@ TimeAgo.addLocale(frTimeAgo)
 TimeAgo.addLocale(ruTimeAgo)
 TimeAgo.addLocale(ukTimeAgo)
 TimeAgo.addLocale(zhTimeAgo)
+TimeAgo.addLocale(itTimeAgo)
 
 export const timeAgoCache = new Map()
 

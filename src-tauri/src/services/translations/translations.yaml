@@ -42,6 +42,17 @@ fr:
   unlock_pastebar: Déverrouiller PasteBar
   quit: Quitter
 
+it:
+  add_first_item_here: Aggiungi primo elemento
+  disable_history_capture: Disattiva cronologia
+  enable_history_capture: Attiva cronologia
+  clipboard_image_size: Dimensione Immagine negli Appunti
+  history_capture_is_disabled: Cattura cronologia disattivata
+  recent_history: Cronologia Recente
+  open_pastebar: Apri PasteBar
+  unlock_pastebar: Sblocca PasteBar
+  quit: Esci  
+
 uk:
   add_first_item_here: Додати сюди меню
   disable_history_capture: Вимкнути захоплення буфера
