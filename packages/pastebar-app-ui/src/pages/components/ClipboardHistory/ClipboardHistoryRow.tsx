@@ -16,6 +16,7 @@ import { formatLocale as format } from '~/locales/date-locales'
 import {
   hoveringHistoryRowId,
   isKeyAltPressed,
+  isKeyCtrlPressed,
   showHistoryDeleteConfirmationId,
 } from '~/store'
 import {
@@ -297,6 +298,9 @@ export function ClipboardHistoryRowComponent({
     }
   }, [clipboard?.isLink, hasLinkCard])
 
+  const showCopyPasteIndexNumber =
+    isKeyCtrlPressed.value && typeof index !== 'undefined' && index < 10
+
   const pinnedTopOffsetFirst = !isPinnedTopFirst ? 'top-[-10px]' : 'top-[5px]'
   const bgToolsPanel = `${
     !isPinnedTop && isOverPinned && !isNowItem
@@ -395,7 +399,11 @@ export function ClipboardHistoryRowComponent({
                                 }`
                 }`}
                 onClickCapture={e => {
-                  if (e.shiftKey) {
+                  if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    setSelectHistoryItem(clipboard.historyId)
+                  } else if (e.shiftKey) {
                     e.preventDefault()
                     e.stopPropagation()
                     window.getSelection()?.removeAllRanges()
@@ -427,8 +435,14 @@ export function ClipboardHistoryRowComponent({
                   }
                 }}
               >
-                <Box className={`${showSelectHistoryItems ? 'flex flex-row -ml-1' : ''}`}>
-                  {showSelectHistoryItems && !isDragPreview && (
+                <Box
+                  className={`${
+                    showSelectHistoryItems || showCopyPasteIndexNumber
+                      ? 'flex flex-row -ml-1'
+                      : ''
+                  }`}
+                >
+                  {showSelectHistoryItems && !isDragPreview ? (
                     <Box className="flex flex-row items-center pr-2 z-100">
                       <input
                         type="checkbox"
@@ -439,6 +453,14 @@ export function ClipboardHistoryRowComponent({
                         checked={isSelected}
                       />
                     </Box>
+                  ) : (
+                    showCopyPasteIndexNumber && (
+                      <Box className="flex flex-row items-center pr-2 z-100">
+                        <Badge className="font-mono text-[11px]" variant="outline">
+                          {index + 1}
+                        </Badge>
+                      </Box>
+                    )
                   )}
                   {clipboard.isImageData ? (
                     <Box className="text-ellipsis self-start text-xs w-full _select-text overflow-hidden cursor-pointer">

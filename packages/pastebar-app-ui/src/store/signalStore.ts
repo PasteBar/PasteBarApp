@@ -137,6 +137,7 @@ export const showInvalidTrackWarningAddSong: Signal<{
 
 // Keyboard Shortcuts Signals
 export const isKeyAltPressed: Signal<boolean> = signal(false)
+export const isKeyCtrlPressed: Signal<boolean> = signal(false)
 export const isEscPressed: Signal<boolean> = signal(false)
 
 // Application Update Signals
