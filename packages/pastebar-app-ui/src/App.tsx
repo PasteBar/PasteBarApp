@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { listen } from '@tauri-apps/api/event'
+import { register, unregisterAll } from '@tauri-apps/api/globalShortcut'
 import { type } from '@tauri-apps/api/os'
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow, LogicalSize, WebviewWindow } from '@tauri-apps/api/window'
@@ -418,7 +419,18 @@ function App() {
       }
     })
 
+    register('Control+Alt+p', async () => {
+      if (document.hasFocus()) {
+        await appWindow.hide()
+      } else {
+        await appWindow.show()
+        await appWindow.setFocus()
+      }
+    })
+
     return () => {
+      unregisterAll()
+
       listenToNavigateUnlisten.then(unlisten => {
         unlisten()
       })
