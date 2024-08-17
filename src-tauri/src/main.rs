@@ -696,6 +696,8 @@ async fn main() {
       db::init(app);
       let app_settings = get_all_settings(None).unwrap_or_default();
       cron_jobs::setup_cron_jobs();
+
+      #[cfg(target_os = "macos")]
       {
         let settings_map = app_settings.lock().unwrap();
         if let Some(setting) = settings_map.get("isHideMacOSDockIcon") {
