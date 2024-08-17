@@ -52,6 +52,9 @@ type Settings = {
   copyPasteDelay: number
   copyPasteSequencePinnedDelay: number
   copyPasteSequenceIsReversOrder: boolean
+  hotKeysShowHideMainAppWindow: string
+  hotKeysShowHideQuickPasteWindow: string
+  isHideMacOSDockIcon: boolean
   isAutoCloseOnCopyPaste: boolean
   isAutoPreviewLinkCardsEnabled: boolean
   isAutoGenerateLinkCardsEnabled: boolean
@@ -132,6 +135,9 @@ export interface SettingsStoreState {
   setScreenLockRecoveryPasswordMasked: (backupPasswordMasked: string | null) => void
   setIsAppLocked: (isLocked: boolean) => void
   setIsScreenLockPassCodeRequireOnStart: (isRequire: boolean) => void
+  setIsHideMacOSDockIcon: (isHideMacOSDockIcon: boolean) => void
+  setHotKeysShowHideMainAppWindow: (hotKeysShowHideMainAppWindow: string) => void
+  setHotKeysShowHideQuickPasteWindow: (hotKeysShowHideQuickPasteWindow: string) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -168,7 +174,10 @@ const initialState: SettingsStoreState & Settings = {
   isExclusionAppListEnabled: false,
   isAutoClearSettingsEnabled: false,
   isAutoMaskWordsListEnabled: false,
+  isHideMacOSDockIcon: false,
   isNotTourCompletedOrSkipped: () => false,
+  hotKeysShowHideMainAppWindow: '',
+  hotKeysShowHideQuickPasteWindow: '',
   autoMaskWordsList: '',
   isHistoryDetectLanguageEnabled: true,
   historyDetectLanguageMinLines: 3,
@@ -218,6 +227,9 @@ const initialState: SettingsStoreState & Settings = {
   setAutoClearSettingsDuration: () => {},
   setAutoClearSettingsDurationType: () => {},
   setIsHistoryDetectLanguageEnabled: () => {},
+  setIsHideMacOSDockIcon: () => {},
+  setHotKeysShowHideMainAppWindow: () => {},
+  setHotKeysShowHideQuickPasteWindow: () => {},
   setHistoryExclusionList: () => {},
   setIsHistoryAutoUpdateOnCaputureEnabled: () => {},
   addToHistoryExclusionAppList: () => {},
@@ -508,6 +520,21 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsFirstRun: (isFirstRun: boolean) => {
     return get().updateSetting('isFirstRun', isFirstRun)
+  },
+  setIsHideMacOSDockIcon: async (isHideMacOSDockIcon: boolean) => {
+    return get().updateSetting('isHideMacOSDockIcon', isHideMacOSDockIcon)
+  },
+  setHotKeysShowHideMainAppWindow: async (hotKeysShowHideMainAppWindow: string) => {
+    return get().updateSetting(
+      'hotKeysShowHideMainAppWindow',
+      hotKeysShowHideMainAppWindow
+    )
+  },
+  setHotKeysShowHideQuickPasteWindow: async (hotKeysShowHideQuickPasteWindow: string) => {
+    return get().updateSetting(
+      'hotKeysShowHideQuickPasteWindow',
+      hotKeysShowHideQuickPasteWindow
+    )
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

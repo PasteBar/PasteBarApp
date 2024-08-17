@@ -695,8 +695,19 @@ async fn main() {
     .setup(|app| {
       db::init(app);
       let app_settings = get_all_settings(None).unwrap_or_default();
-      app.manage(app_settings);
       cron_jobs::setup_cron_jobs();
+      {
+        let settings_map = app_settings.lock().unwrap();
+        if let Some(setting) = settings_map.get("isHideMacOSDockIcon") {
+          if let Some(value_bool) = &setting.value_bool {
+            if *value_bool {
+              app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+            }
+          }
+        }
+      }
+
+      app.manage(app_settings);
 
       let menu = Menu::new().add_submenu(Submenu::new(
         "PasteBar",

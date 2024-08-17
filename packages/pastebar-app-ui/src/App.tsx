@@ -111,6 +111,10 @@ function App() {
           appDataDir: import.meta.env.TAURI_DEBUG ? appDevDataDir : appDataDir,
           appLastUpdateVersion: settings.appLastUpdateVersion?.valueText,
           appLastUpdateDate: settings.appLastUpdateDate?.valueText,
+          isHideMacOSDockIcon: settings.isHideMacOSDockIcon?.valueBool,
+          hotKeysShowHideMainAppWindow: settings.hotKeysShowHideMainAppWindow?.valueText,
+          hotKeysShowHideQuickPasteWindow:
+            settings.hotKeysShowHideQuickPasteWindow?.valueText,
           isFirstRun: settings.isFirstRun?.valueBool,
           isFirstRunAfterUpdate: settings.isFirstRunAfterUpdate?.valueBool,
           isHistoryDetectLanguageEnabled:
@@ -202,6 +206,23 @@ function App() {
           settings.isScreenLockPassCodeRequireOnStart?.valueBool
         ) {
           isAppLocked.value = true
+        }
+
+        if (settings.hotKeysShowHideMainAppWindow?.valueText) {
+          try {
+            register(settings.hotKeysShowHideMainAppWindow?.valueText, async () => {
+              if (document.hasFocus()) {
+                await appWindow.hide()
+              } else {
+                await appWindow.show()
+                await appWindow.setFocus()
+              }
+            }).catch(e => {
+              console.error(e)
+            })
+          } catch (e) {
+            console.error(e)
+          }
         }
 
         if (
@@ -416,15 +437,6 @@ function App() {
     window.addEventListener('contextmenu', e => {
       if (!import.meta.env.TAURI_DEBUG) {
         e.preventDefault()
-      }
-    })
-
-    register('Control+Alt+p', async () => {
-      if (document.hasFocus()) {
-        await appWindow.hide()
-      } else {
-        await appWindow.show()
-        await appWindow.setFocus()
       }
     })
 

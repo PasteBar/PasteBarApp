@@ -23,6 +23,7 @@ import { Icons } from '~/components/icons'
 import SimpleBar from '~/components/libs/simplebar-react'
 import InputField from '~/components/molecules/input'
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -56,9 +57,15 @@ export default function UserPreferences() {
     setClipNotesHoverCardsDelayMS,
     isShowDisabledCollectionsOnNavBarMenu,
     setIsShowDisabledCollectionsOnNavBarMenu,
+    setIsHideMacOSDockIcon,
+    isHideMacOSDockIcon,
+    hotKeysShowHideMainAppWindow,
+    hotKeysShowHideQuickPasteWindow,
+    setHotKeysShowHideMainAppWindow,
+    setHotKeysShowHideQuickPasteWindow,
   } = useAtomValue(settingsStoreAtom)
 
-  const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels } =
+  const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
     useAtomValue(uiStoreAtom)
 
   const [isAutoStartEnabled, setIsAutoStartEnabled] = useState(false)
@@ -78,9 +85,76 @@ export default function UserPreferences() {
     })
   }, [])
 
-  const { returnRoute } = useAtomValue(uiStoreAtom)
-
   const isDark = themeDark()
+
+  const [mainAppHotkey, setMainAppHotkey] = useState('')
+  const [quickPasteHotkey, setQuickPasteHotkey] = useState('')
+
+  const [isEditingMainApp, setIsEditingMainApp] = useState(false)
+  const [isEditingQuickPaste, setIsEditingQuickPaste] = useState(false)
+
+  useEffect(() => {
+    if (hotKeysShowHideMainAppWindow !== mainAppHotkey) {
+      setMainAppHotkey(hotKeysShowHideMainAppWindow)
+    }
+    if (hotKeysShowHideQuickPasteWindow !== quickPasteHotkey) {
+      setQuickPasteHotkey(hotKeysShowHideQuickPasteWindow)
+    }
+  }, [hotKeysShowHideMainAppWindow, hotKeysShowHideQuickPasteWindow])
+
+  const handleKeyDown = (
+    event: KeyboardEvent | React.KeyboardEvent<HTMLInputElement>,
+    setter: (value: string) => void
+  ) => {
+    event.preventDefault()
+    const { ctrlKey, shiftKey, altKey, metaKey, key } = event
+
+    if (key === 'Escape' || key === 'Esc' || key === 'Backspace') {
+      setter('')
+      return
+    }
+
+    if (key === 'Enter') {
+      if (setter === setMainAppHotkey) {
+        setHotKeysShowHideMainAppWindow(mainAppHotkey)
+        setIsEditingMainApp(false)
+      } else {
+        setHotKeysShowHideQuickPasteWindow(quickPasteHotkey)
+        setIsEditingQuickPaste(false)
+      }
+      return
+    }
+
+    const pressedKeys = []
+    let hasModifier = false
+    let hasNonModifier = false
+
+    if (ctrlKey) {
+      pressedKeys.push('Ctrl')
+      hasModifier = true
+    }
+    if (shiftKey) {
+      pressedKeys.push('Shift')
+      hasModifier = true
+    }
+    if (altKey) {
+      pressedKeys.push('Alt')
+      hasModifier = true
+    }
+    if (metaKey) {
+      pressedKeys.push('Cmd')
+      hasModifier = true
+    }
+
+    if (!['Control', 'Shift', 'Alt', 'Meta'].includes(key)) {
+      pressedKeys.push(key.toUpperCase())
+      hasNonModifier = true
+    }
+
+    if (hasModifier && hasNonModifier) {
+      setter(pressedKeys.join('+'))
+    }
+  }
 
   function convertMsToSeconds(milliseconds: number) {
     const seconds = milliseconds / 1000
@@ -406,6 +480,175 @@ export default function UserPreferences() {
                     </CardContent>
                   </Card>
                 </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card>
+                    <CardHeader className="flex flex-col items-start justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full mb-3">
+                        {t('Global System OS Hotkeys', { ns: 'settings2' })}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground mb-4">
+                        {t(
+                          'Set system OS hotkeys to show/hide the main app window and quick paste window',
+                          { ns: 'settings2' }
+                        )}
+                      </Text>
+                      <Box className="mb-4">
+                        <InputField
+                          label={t('Show/Hide Main App Window', { ns: 'settings2' })}
+                          defaultValue={mainAppHotkey}
+                          autoFocus={isEditingMainApp}
+                          disabled={!isEditingMainApp}
+                          onKeyDown={e =>
+                            isEditingMainApp && handleKeyDown(e, setMainAppHotkey)
+                          }
+                          readOnly={!isEditingMainApp}
+                          placeholder={
+                            mainAppHotkey || isEditingMainApp
+                              ? t('Press keys', { ns: 'settings2' })
+                              : t('No keys set', { ns: 'settings2' })
+                          }
+                        />
+                        <Flex className="mt-2 gap-2 justify-start">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => {
+                              if (isEditingMainApp) {
+                                setHotKeysShowHideMainAppWindow(mainAppHotkey)
+                                setIsEditingMainApp(false)
+                                setTimeout(() => {
+                                  window.location.reload()
+                                }, 300)
+                              } else {
+                                if (isEditingQuickPaste) {
+                                  setQuickPasteHotkey(hotKeysShowHideQuickPasteWindow)
+                                  setIsEditingQuickPaste(false)
+                                }
+                                setIsEditingMainApp(true)
+                              }
+                            }}
+                          >
+                            {isEditingMainApp
+                              ? t('Done', { ns: 'common' })
+                              : !mainAppHotkey
+                                ? t('Set', { ns: 'settings2' })
+                                : t('Change', { ns: 'settings2' })}
+                          </Button>
+                          {isEditingMainApp && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setMainAppHotkey(hotKeysShowHideMainAppWindow)
+                                setIsEditingMainApp(false)
+                              }}
+                            >
+                              {t('Cancel', { ns: 'common' })}
+                            </Button>
+                          )}
+                        </Flex>
+                      </Box>
+                      <Box>
+                        <InputField
+                          label={t('Show/Hide Quick Paste Window', { ns: 'settings2' })}
+                          defaultValue={quickPasteHotkey}
+                          disabled={!isEditingQuickPaste}
+                          autoFocus={isEditingQuickPaste}
+                          onKeyDown={e =>
+                            isEditingQuickPaste && handleKeyDown(e, setQuickPasteHotkey)
+                          }
+                          readOnly={!isEditingQuickPaste}
+                          placeholder={
+                            quickPasteHotkey || isEditingQuickPaste
+                              ? t('Press keys', { ns: 'settings2' })
+                              : t('No keys set', { ns: 'settings2' })
+                          }
+                        />
+                        <Flex className="mt-2 gap-2 justify-start">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => {
+                              if (isEditingQuickPaste) {
+                                setHotKeysShowHideQuickPasteWindow(quickPasteHotkey)
+                                setIsEditingQuickPaste(false)
+                                setTimeout(() => {
+                                  window.location.reload()
+                                }, 300)
+                              } else {
+                                if (isEditingMainApp) {
+                                  setMainAppHotkey(hotKeysShowHideMainAppWindow)
+                                  setIsEditingMainApp(false)
+                                }
+                                setIsEditingQuickPaste(true)
+                              }
+                            }}
+                          >
+                            {isEditingQuickPaste
+                              ? t('Done', { ns: 'common' })
+                              : !quickPasteHotkey
+                                ? t('Set', { ns: 'settings2' })
+                                : t('Change', { ns: 'settings2' })}
+                          </Button>
+                          {isEditingQuickPaste && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setQuickPasteHotkey(hotKeysShowHideQuickPasteWindow)
+                                setIsEditingQuickPaste(false)
+                              }}
+                            >
+                              {t('Cancel', { ns: 'common' })}
+                            </Button>
+                          )}
+                        </Flex>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                {isMacOSX && (
+                  <Box className="animate-in fade-in max-w-xl mt-4">
+                    <Card
+                      className={`${
+                        !isHideMacOSDockIcon &&
+                        'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                      }`}
+                    >
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                        <CardTitle className="animate-in fade-in text-md font-medium w-full flex">
+                          {t('Hide the App Dock Icon', {
+                            ns: 'settings2',
+                          })}
+                          <Badge className="ml-2" variant="pro">
+                            {t('App restart required', {
+                              ns: 'settings2',
+                            })}
+                          </Badge>
+                        </CardTitle>
+                        <Switch
+                          checked={isHideMacOSDockIcon}
+                          className="ml-auto"
+                          onCheckedChange={() => {
+                            setIsHideMacOSDockIcon(!isHideMacOSDockIcon)
+                          }}
+                        />
+                      </CardHeader>
+                      <CardContent>
+                        <Text className="text-sm text-muted-foreground">
+                          {t(
+                            'Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.',
+                            { ns: 'settings2' }
+                          )}
+                        </Text>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                )}
 
                 <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card
