@@ -15,6 +15,7 @@ features = []
 winreg = "0.52.0"
 
 [dependencies]
+fns = "0"
 enigo = "0.1.2"
 keyring = "2.3.2"
 dotenv = "0.15.0"
@@ -43,7 +44,7 @@ tokio = { version = "1.28.2", features = ["full"] }
 #single-instance = "0.3.3"
 
 inputbot = { path = "libs/inputbot" }
-#tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+window-state = { path = "libs/window-state" }
 tauri-plugin-single-instance = { git = "https://github.com/kurdin/tauri-plugin-single-instance", branch = "dev" }
 tauri-plugin-deep-link = { path = "libs/deep-link", version = "0.1.2" }
 
