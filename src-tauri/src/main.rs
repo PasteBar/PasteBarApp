@@ -418,7 +418,7 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
       tauri::WindowEvent::Moved(_) => {
         // let now = Instant::now();
         // if now - last_save_time.get() >= StdDuration::from_secs(1) {
-        // app_handle.save_window_state(StateFlags::POSITION).unwrap();
+        app_handle.save_window_state(StateFlags::POSITION).unwrap();
         // last_save_time.set(now);
         // }
       }
