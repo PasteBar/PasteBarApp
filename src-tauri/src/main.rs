@@ -61,8 +61,9 @@ use commands::security_commands;
 use commands::shell_commands;
 use commands::tabs_commands;
 use commands::translations_commands;
-
 use db::AppConstants;
+use enigo::Enigo;
+use enigo::MouseControllable;
 use std::collections::HashMap;
 
 use serde::Serialize;
@@ -93,6 +94,13 @@ struct SettingUpdatePayload {
   value_bool: Option<bool>,
   value_string: Option<String>,
   value_number: Option<i32>,
+}
+
+#[tauri::command]
+fn get_mouse_location() -> String {
+  let enigo = Enigo::new();
+  let cursor_location: (i32, i32) = enigo.mouse_location();
+  format!("{};{}", cursor_location.0, cursor_location.1)
 }
 
 #[tauri::command]
@@ -959,6 +967,7 @@ async fn main() {
       autostart,
       is_autostart_enabled,
       open_history_window,
+      get_mouse_location,
       set_icon
     ])
     .plugin(clipboard::init())

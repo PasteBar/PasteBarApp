@@ -15,6 +15,7 @@ features = []
 winreg = "0.52.0"
 
 [dependencies]
+enigo = "0.1.2"
 keyring = "2.3.2"
 dotenv = "0.15.0"
 bcrypt = "0.15.1"

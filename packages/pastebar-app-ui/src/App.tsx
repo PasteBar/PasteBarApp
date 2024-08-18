@@ -4,7 +4,12 @@ import { listen } from '@tauri-apps/api/event'
 import { register, unregisterAll } from '@tauri-apps/api/globalShortcut'
 import { type } from '@tauri-apps/api/os'
 import { invoke } from '@tauri-apps/api/tauri'
-import { appWindow, LogicalSize, WebviewWindow } from '@tauri-apps/api/window'
+import {
+  appWindow,
+  availableMonitors,
+  LogicalSize,
+  WebviewWindow,
+} from '@tauri-apps/api/window'
 import { NavBar } from '~/layout/NavBar'
 import { useAtomValue } from 'jotai'
 import { useTranslation } from 'react-i18next'
@@ -216,6 +221,10 @@ function App() {
               } else {
                 await appWindow.show()
                 await appWindow.setFocus()
+                const mouseLocation = await invoke('get_mouse_location')
+                const monitors = await availableMonitors()
+                console.log('monitors', monitors)
+                console.log('mouseLocation', mouseLocation)
               }
             }).catch(e => {
               console.error(e)
