@@ -72,6 +72,7 @@ use tauri::SystemTray;
 use tauri::SystemTrayEvent;
 // use tauri_plugin_positioner::{Position, WindowExt};
 
+use fns::debounce;
 use inputbot::KeybdKey::*;
 use std::sync::Mutex;
 use std::time::Duration as StdDuration;
@@ -304,7 +305,7 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
     tauri::WindowUrl::App("history-index".into()),
   )
   .title("PasteBar History")
-  .inner_size(width, main_size.height as f64)
+  // .inner_size(width, main_size.height as f64)
   .max_inner_size(700.0, 2200.0)
   .min_inner_size(300.0, 400.0)
   .menu(menu)
@@ -320,31 +321,57 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
   history_window.position_traffic_lights(-10., -10.);
 
   {
-    let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+    let app_handle_clone = app_handle.clone();
+
+    let debounced_save = debounce(
+      move |_: ()| {
+        println!("Saving window state");
+        app_handle_clone
+          .save_window_state(StateFlags::POSITION | StateFlags::SIZE)
+          .unwrap_or_else(|e| eprintln!("Failed to save window state: {}", e));
+      },
+      StdDuration::from_secs(1),
+    );
 
     history_window.on_window_event(move |e| match e {
       tauri::WindowEvent::Destroyed => {
         app_handle
           .emit_all("window-events", "history-window-closed")
-          .unwrap();
+          .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
       }
-      tauri::WindowEvent::Moved(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::POSITION).unwrap();
-          last_save_time.set(now);
-        }
-      }
-      tauri::WindowEvent::Resized(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::SIZE).unwrap();
-          last_save_time.set(now);
-        }
+      tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {
+        debounced_save.call(());
       }
       _ => {}
     });
   }
+
+  // {
+  //   let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+
+  //   history_window.on_window_event(move |e| match e {
+  //     tauri::WindowEvent::Destroyed => {
+  //       app_handle
+  //         .emit_all("window-events", "history-window-closed")
+  //         .unwrap();
+  //     }
+  //     tauri::WindowEvent::Moved(_) => {
+  //       let now = Instant::now();
+  //       if now - last_save_time.get() >= StdDuration::from_secs(1) {
+  //         app_handle.save_window_state(StateFlags::POSITION).unwrap();
+  //         last_save_time.set(now);
+  //       }
+  //     }
+  //     tauri::WindowEvent::Resized(_) => {
+  //       let now = Instant::now();
+  //       if now - last_save_time.get() >= StdDuration::from_secs(1) {
+  //         app_handle.save_window_state(StateFlags::SIZE).unwrap();
+  //         last_save_time.set(now);
+  //       }
+  //     }
+  //     _ => {}
+  //   });
+  // }
 
   // history_window.hide().map_err(|e| e.to_string())?;
   history_window.show().map_err(|e| e.to_string())?;
@@ -381,12 +408,6 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
       .add_native_item(MenuItem::Paste),
   ));
 
-  let main_window = app_handle
-    .get_window("main")
-    .ok_or_else(|| "Failed to get main window".to_string())?;
-
-  let main_size = main_window.outer_size().map_err(|e| e.to_string())?;
-
   let mut window_builder = tauri::WindowBuilder::new(
     &app_handle,
     "history",
@@ -395,10 +416,8 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
   .title("PasteBar History")
   .decorations(false)
   .transparent(true)
-  // .set_height(main_size.height as f64)
-  // .inner_size(width, main_size.height as f64)
   // .max_inner_size(700.0, 2200.0)
-  // .min_inner_size(300.0, 400.0)
+  .min_inner_size(300.0, 400.0)
   .menu(menu)
   .visible(false);
 
@@ -407,34 +426,35 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
   let history_window = window_builder.build().map_err(|e| e.to_string())?;
 
   {
-    // let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+    let app_handle_clone = app_handle.clone();
+
+    let debounced_save = debounce(
+      move |_: ()| {
+        app_handle
+          .save_window_state(StateFlags::POSITION | StateFlags::SIZE)
+          .unwrap_or_else(|e| eprintln!("Failed to save window state: {}", e));
+      },
+      StdDuration::from_secs(1),
+    );
 
     history_window.on_window_event(move |e| match e {
       tauri::WindowEvent::Destroyed => {
-        app_handle
+        app_handle_clone
+          .save_window_state(StateFlags::POSITION | StateFlags::SIZE)
+          .unwrap_or_else(|e| eprintln!("Failed to save window state: {}", e));
+
+        app_handle_clone
           .emit_all("window-events", "history-window-closed")
-          .unwrap();
+          .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
       }
-      tauri::WindowEvent::Moved(_) => {
-        // let now = Instant::now();
-        // if now - last_save_time.get() >= StdDuration::from_secs(1) {
-        app_handle.save_window_state(StateFlags::POSITION).unwrap();
-        // last_save_time.set(now);
-        // }
-      }
-      tauri::WindowEvent::Resized(_) => {
-        // let now = Instant::now();
-        println!("Resized");
-        // if now - last_save_time.get() >= StdDuration::from_secs(1) {
-        app_handle.save_window_state(StateFlags::SIZE).unwrap();
-        // last_save_time.set(now);
-        // }
+      tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {
+        debounced_save.call(());
       }
       _ => {}
     });
   }
 
-  history_window.set_decorations(false);
+  let _ = history_window.set_decorations(false);
   history_window.show().map_err(|e| e.to_string())?;
   history_window.set_focus().map_err(|e| e.to_string())?;
 
@@ -680,7 +700,6 @@ async fn main() {
 
       match event.event() {
         tauri::WindowEvent::CloseRequested { api, .. } => {
-          println!("Close Requested");
           let _win = event.window();
           if _win.label() != "history" {
             _win.emit_all("window-events", "main-window-hide").unwrap();
@@ -768,7 +787,6 @@ async fn main() {
       }
 
       {
-        let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
         let app_handle = app.app_handle();
         let db_items_state_local = app.state();
         let db_recent_history_items_state = app.state();
@@ -802,23 +820,55 @@ async fn main() {
           }
         }
 
-        window.on_window_event(move |e| match e {
-          tauri::WindowEvent::Moved(_) => {
-            let now = Instant::now();
-            if now - last_save_time.get() >= StdDuration::from_secs(2) {
-              app_handle.save_window_state(StateFlags::POSITION).unwrap();
-              last_save_time.set(now);
+        {
+          let app_handle_clone = app_handle.clone();
+
+          let debounced_save_position = debounce(
+            move |_: ()| {
+              app_handle_clone
+                .save_window_state(StateFlags::POSITION)
+                .unwrap_or_else(|e| eprintln!("Failed to save window position: {}", e));
+            },
+            StdDuration::from_secs(1),
+          );
+
+          let debounced_save_size = debounce(
+            move |_: ()| {
+              app_handle
+                .save_window_state(StateFlags::SIZE)
+                .unwrap_or_else(|e| eprintln!("Failed to save window size: {}", e));
+            },
+            StdDuration::from_secs(1),
+          );
+
+          window.on_window_event(move |e| match e {
+            tauri::WindowEvent::Moved(_) => {
+              debounced_save_position.call(());
             }
-          }
-          tauri::WindowEvent::Resized(_) => {
-            let now = Instant::now();
-            if now - last_save_time.get() >= StdDuration::from_secs(2) {
-              app_handle.save_window_state(StateFlags::SIZE).unwrap();
-              last_save_time.set(now);
+            tauri::WindowEvent::Resized(_) => {
+              debounced_save_size.call(());
             }
-          }
-          _ => {}
-        });
+            _ => {}
+          });
+        }
+
+        // window.on_window_event(move |e| match e {
+        //   tauri::WindowEvent::Moved(_) => {
+        //     let now = Instant::now();
+        //     if now - last_save_time.get() >= StdDuration::from_secs(2) {
+        //       app_handle.save_window_state(StateFlags::POSITION).unwrap();
+        //       last_save_time.set(now);
+        //     }
+        //   }
+        //   tauri::WindowEvent::Resized(_) => {
+        //     let now = Instant::now();
+        //     if now - last_save_time.get() >= StdDuration::from_secs(2) {
+        //       app_handle.save_window_state(StateFlags::SIZE).unwrap();
+        //       last_save_time.set(now);
+        //     }
+        //   }
+        //   _ => {}
+        // });
       }
 
       if cfg!(debug_assertions) {
