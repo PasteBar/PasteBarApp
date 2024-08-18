@@ -76,6 +76,7 @@ active-win-pos-rs = "0.8"
 
 lang_detect = { path = "libs/lang_detect" }
 auto-launch = { path = "libs/auto-launch" }
+window-state = { path = "libs/window-state" }
 tao = { path = "libs/tao-0.16.7" }
 mid = { path = "libs/mid-hardware-id" }
 
@@ -84,6 +85,7 @@ tl = { version = "0.7.7" }
 tld = "2.33.0"
 url = "2.4.1"
 html-escape = "0.2.13"
+fns = "0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 macos-accessibility-client = { git = "https://github.com/kurdin/macos-accessibility-client", branch = "master", version = "0.0.1" } 
