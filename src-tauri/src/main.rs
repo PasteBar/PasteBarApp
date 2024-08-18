@@ -73,6 +73,7 @@ use tauri::SystemTray;
 use tauri::SystemTrayEvent;
 // use tauri_plugin_positioner::{Position, WindowExt};
 
+use fns::debounce;
 use inputbot::KeybdKey::*;
 use std::sync::Mutex;
 use std::time::Duration as StdDuration;
@@ -328,27 +329,27 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
   history_window.position_traffic_lights(-10., -10.);
 
   {
-    let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+    let app_handle_clone = app_handle.clone();
+
+    let debounced_save = debounce(
+      move |_: ()| {
+        println!("Saving window state");
+        app_handle_clone
+          .save_window_state(StateFlags::POSITION | StateFlags::SIZE)
+          .unwrap_or_else(|e| eprintln!("Failed to save window state: {}", e));
+      },
+      StdDuration::from_secs(1),
+    );
 
     history_window.on_window_event(move |e| match e {
       tauri::WindowEvent::Destroyed => {
+        app_handle.save_window_state(StateFlags::all()).unwrap();
         app_handle
           .emit_all("window-events", "history-window-closed")
-          .unwrap();
+          .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
       }
-      tauri::WindowEvent::Moved(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::POSITION).unwrap();
-          last_save_time.set(now);
-        }
-      }
-      tauri::WindowEvent::Resized(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::SIZE).unwrap();
-          last_save_time.set(now);
-        }
+      tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {
+        debounced_save.call(());
       }
       _ => {}
     });
@@ -413,27 +414,27 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
   let history_window = window_builder.build().map_err(|e| e.to_string())?;
 
   {
-    let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+    let app_handle_clone = app_handle.clone();
+
+    let debounced_save = debounce(
+      move |_: ()| {
+        println!("Saving window state");
+        app_handle_clone
+          .save_window_state(StateFlags::POSITION | StateFlags::SIZE)
+          .unwrap_or_else(|e| eprintln!("Failed to save window state: {}", e));
+      },
+      StdDuration::from_secs(1),
+    );
 
     history_window.on_window_event(move |e| match e {
       tauri::WindowEvent::Destroyed => {
+        app_handle.save_window_state(StateFlags::all()).unwrap();
         app_handle
           .emit_all("window-events", "history-window-closed")
-          .unwrap();
+          .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
       }
-      tauri::WindowEvent::Moved(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::POSITION).unwrap();
-          last_save_time.set(now);
-        }
-      }
-      tauri::WindowEvent::Resized(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::SIZE).unwrap();
-          last_save_time.set(now);
-        }
+      tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {
+        debounced_save.call(());
       }
       _ => {}
     });
@@ -733,7 +734,7 @@ async fn main() {
       let mut window_builder =
         tauri::WindowBuilder::new(app, "main", tauri::WindowUrl::App("index.html".into()))
           .inner_size(1100., 730.)
-          .min_inner_size(750., 600.)
+          .min_inner_size(720., 620.)
           // .decorations(false)
           // .title_bar_style(tauri::TitleBarStyle::Overlay)
           // .hidden_title(true)
@@ -807,23 +808,38 @@ async fn main() {
           }
         }
 
-        window.on_window_event(move |e| match e {
-          tauri::WindowEvent::Moved(_) => {
-            let now = Instant::now();
-            if now - last_save_time.get() >= StdDuration::from_secs(2) {
-              app_handle.save_window_state(StateFlags::POSITION).unwrap();
-              last_save_time.set(now);
+        {
+          let app_handle_clone = app_handle.clone();
+
+          let debounced_save_position = debounce(
+            move |_: ()| {
+              println!("Saving window state main window");
+              app_handle_clone
+                .save_window_state(StateFlags::POSITION)
+                .unwrap_or_else(|e| eprintln!("Failed to save window position: {}", e));
+            },
+            StdDuration::from_secs(1),
+          );
+
+          let debounced_save_size = debounce(
+            move |_: ()| {
+              app_handle
+                .save_window_state(StateFlags::SIZE)
+                .unwrap_or_else(|e| eprintln!("Failed to save window size: {}", e));
+            },
+            StdDuration::from_secs(1),
+          );
+
+          window.on_window_event(move |e| match e {
+            tauri::WindowEvent::Moved(_) => {
+              debounced_save_position.call(());
             }
-          }
-          tauri::WindowEvent::Resized(_) => {
-            let now = Instant::now();
-            if now - last_save_time.get() >= StdDuration::from_secs(2) {
-              app_handle.save_window_state(StateFlags::SIZE).unwrap();
-              last_save_time.set(now);
+            tauri::WindowEvent::Resized(_) => {
+              debounced_save_size.call(());
             }
-          }
-          _ => {}
-        });
+            _ => {}
+          });
+        }
       }
 
       if cfg!(debug_assertions) {
