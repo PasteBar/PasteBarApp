@@ -76,9 +76,9 @@ use inputbot::KeybdKey::*;
 use std::sync::Mutex;
 use std::time::Duration as StdDuration;
 use std::time::Instant;
-use tauri_plugin_window_state::AppHandleExt;
-use tauri_plugin_window_state::StateFlags;
 use tokio::sync::Mutex as TokioMutex;
+use window_state::AppHandleExt;
+use window_state::StateFlags;
 
 #[derive(Serialize)]
 struct AppReadyResponse<'a> {
@@ -357,6 +357,7 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
 #[cfg(target_os = "windows")]
 #[tauri::command]
 async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), String> {
+  println!("Opening history window");
   // check if the window is already open
   if app_handle.get_window("history").is_some() {
     // show if exist and return
@@ -394,9 +395,10 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
   .title("PasteBar History")
   .decorations(false)
   .transparent(true)
-  .inner_size(width, main_size.height as f64)
-  .max_inner_size(700.0, 2200.0)
-  .min_inner_size(300.0, 400.0)
+  // .set_height(main_size.height as f64)
+  // .inner_size(width, main_size.height as f64)
+  // .max_inner_size(700.0, 2200.0)
+  // .min_inner_size(300.0, 400.0)
   .menu(menu)
   .visible(false);
 
@@ -405,7 +407,7 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
   let history_window = window_builder.build().map_err(|e| e.to_string())?;
 
   {
-    let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+    // let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
 
     history_window.on_window_event(move |e| match e {
       tauri::WindowEvent::Destroyed => {
@@ -414,18 +416,19 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
           .unwrap();
       }
       tauri::WindowEvent::Moved(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::POSITION).unwrap();
-          last_save_time.set(now);
-        }
+        // let now = Instant::now();
+        // if now - last_save_time.get() >= StdDuration::from_secs(1) {
+        // app_handle.save_window_state(StateFlags::POSITION).unwrap();
+        // last_save_time.set(now);
+        // }
       }
       tauri::WindowEvent::Resized(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::SIZE).unwrap();
-          last_save_time.set(now);
-        }
+        // let now = Instant::now();
+        println!("Resized");
+        // if now - last_save_time.get() >= StdDuration::from_secs(1) {
+        app_handle.save_window_state(StateFlags::SIZE).unwrap();
+        // last_save_time.set(now);
+        // }
       }
       _ => {}
     });
@@ -962,7 +965,7 @@ async fn main() {
       set_icon
     ])
     .plugin(clipboard::init())
-    .plugin(tauri_plugin_window_state::Builder::default().build())
+    .plugin(window_state::Builder::default().build())
     .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
       debug_output(|| {
         println!("{}, {argv:?}, {cwd}", app.package_info().name);
