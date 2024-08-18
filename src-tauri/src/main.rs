@@ -78,9 +78,9 @@ use inputbot::KeybdKey::*;
 use std::sync::Mutex;
 use std::time::Duration as StdDuration;
 use std::time::Instant;
-use tauri_plugin_window_state::AppHandleExt;
-use tauri_plugin_window_state::StateFlags;
 use tokio::sync::Mutex as TokioMutex;
+use window_state::AppHandleExt;
+use window_state::StateFlags;
 
 #[derive(Serialize)]
 struct AppReadyResponse<'a> {
@@ -774,7 +774,6 @@ async fn main() {
       }
 
       {
-        let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
         let app_handle = app.app_handle();
         let db_items_state_local = app.state();
         let db_recent_history_items_state = app.state();
@@ -987,7 +986,7 @@ async fn main() {
       set_icon
     ])
     .plugin(clipboard::init())
-    .plugin(tauri_plugin_window_state::Builder::default().build())
+    .plugin(window_state::Builder::default().build())
     .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
       debug_output(|| {
         println!("{}, {argv:?}, {cwd}", app.package_info().name);

@@ -3929,7 +3929,6 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-deep-link",
  "tauri-plugin-single-instance",
- "tauri-plugin-window-state",
  "tempfile",
  "thiserror",
  "tl",
@@ -3939,6 +3938,7 @@ dependencies = [
  "tracing-subscriber",
  "url",
  "uuid",
+ "window-state",
  "winreg 0.52.0",
 ]
 
@@ -5651,20 +5651,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-plugin-window-state"
-version = "0.1.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#becacf9cd615d7b5a5c4e4ed14a1379388d2348f"
-dependencies = [
- "bincode",
- "bitflags 2.6.0",
- "log",
- "serde",
- "serde_json",
- "tauri",
- "thiserror",
-]
-
-[[package]]
 name = "tauri-runtime"
 version = "0.14.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6668,6 +6654,19 @@ name = "winapi-x86_64-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
+
+[[package]]
+name = "window-state"
+version = "0.1.1"
+dependencies = [
+ "bincode",
+ "bitflags 2.6.0",
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "thiserror",
+]
 
 [[package]]
 name = "windows"
