@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api'
-import { WebviewWindow } from '@tauri-apps/api/window'
+import { availableMonitors, WebviewWindow } from '@tauri-apps/api/window'
 import { atomWithStore } from 'jotai-zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
@@ -70,6 +70,7 @@ export interface UIStoreState {
   setIsHideMainWindow: (isHideMainWindow: boolean) => void
   setIsSplitPanelView: (isSplitPanelView: boolean) => void
   toggleIsSplitPanelView: () => void
+  toggleHistoryQuickPasteWindow: () => void
   increaseFontSize: () => void
   decreaseFontSize: () => void
   resetFontSize: () => void
@@ -105,6 +106,7 @@ const initialState: UIStoreState = {
   setIsHideMainWindow: () => {},
   setIsSplitPanelView: () => {},
   toggleIsSplitPanelView: () => {},
+  toggleHistoryQuickPasteWindow: () => {},
   setIsShowPinned: () => {},
   getDefaultPanelWidth: () => 320,
   setIsShowHistoryPinned: () => {},
@@ -132,8 +134,19 @@ export const uiStore = createStore<UIStoreState>()(
         set(() => ({
           isSplitPanelView,
         })),
+      toggleHistoryQuickPasteWindow: async () => {
+        try {
+          await invoke('open_quickpaste_window', {
+            width: get().panelSize,
+          })
+        } catch (e) {
+          console.error('Failed to open history window', e)
+        }
+      },
+
       toggleIsSplitPanelView: async () => {
         const historyWindow = WebviewWindow.getByLabel('history')
+
         if (get().isSplitPanelView) {
           set(() => ({
             isSplitPanelView: false,
@@ -155,7 +168,7 @@ export const uiStore = createStore<UIStoreState>()(
               setTimeout(() => {
                 history.show()
                 history.setFocus()
-              }, 300)
+              }, 600)
             }
           } catch (e) {
             console.error('Failed to open history window', e)
