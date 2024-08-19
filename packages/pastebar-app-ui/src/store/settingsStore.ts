@@ -63,6 +63,9 @@ type Settings = {
   isShowCollectionNameOnNavBar: boolean
   isShowDisabledCollectionsOnNavBarMenu: boolean
   isSkipAutoStartPrompt: boolean
+  isHideCollectionsOnNavBar: boolean
+  isShowNavBarItemsOnHoverOnly: boolean
+  isKeepMainWindowClosedOnRestartEnabled: boolean
   pasteSequenceEachSeparator: string
   userSelectedLanguage: string
   isFirstRun: boolean
@@ -138,6 +141,9 @@ export interface SettingsStoreState {
   setIsHideMacOSDockIcon: (isHideMacOSDockIcon: boolean) => void
   setHotKeysShowHideMainAppWindow: (hotKeysShowHideMainAppWindow: string) => void
   setHotKeysShowHideQuickPasteWindow: (hotKeysShowHideQuickPasteWindow: string) => void
+  setIsKeepMainWindowClosedOnRestartEnabled: (isEnabled: boolean) => void
+  setIsHideCollectionsOnNavBar: (isEnabled: boolean) => void
+  setIsShowNavBarItemsOnHoverOnly: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -170,6 +176,9 @@ const initialState: SettingsStoreState & Settings = {
   historyDetectLanguagesPrioritizedList: [],
   historyExclusionList: '',
   historyExclusionAppList: '',
+  isHideCollectionsOnNavBar: false,
+  isShowNavBarItemsOnHoverOnly: false,
+  isKeepMainWindowClosedOnRestartEnabled: false,
   isExclusionListEnabled: false,
   isExclusionAppListEnabled: false,
   isAutoClearSettingsEnabled: false,
@@ -260,6 +269,9 @@ const initialState: SettingsStoreState & Settings = {
   setIsClipNotesHoverCardsEnabled: () => {},
   setIsScreenLockPassCodeRequireOnStart: () => {},
   setIsFirstRunAfterUpdate: () => {},
+  setIsKeepMainWindowClosedOnRestartEnabled: () => {},
+  setIsHideCollectionsOnNavBar: () => {},
+  setIsShowNavBarItemsOnHoverOnly: () => {},
   initConstants: () => {},
   setAppDataDir: () => {},
   updateSetting: () => {},
@@ -529,6 +541,15 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       'hotKeysShowHideMainAppWindow',
       hotKeysShowHideMainAppWindow
     )
+  },
+  setIsKeepMainWindowClosedOnRestartEnabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isKeepMainWindowClosedOnRestartEnabled', isEnabled)
+  },
+  setIsHideCollectionsOnNavBar: async (isEnabled: boolean) => {
+    return get().updateSetting('isHideCollectionsOnNavBar', isEnabled)
+  },
+  setIsShowNavBarItemsOnHoverOnly: async (isEnabled: boolean) => {
+    return get().updateSetting('isShowNavBarItemsOnHoverOnly', isEnabled)
   },
   setHotKeysShowHideQuickPasteWindow: async (hotKeysShowHideQuickPasteWindow: string) => {
     return get().updateSetting(
