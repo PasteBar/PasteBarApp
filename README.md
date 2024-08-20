@@ -33,9 +33,10 @@ https://www.pastebar.app
 * **Rust**: Tauri Apps, Diesel ORM, Reqwest, Anyhow, Serde, Tokio.
 * **Javascript**: Typescript, React, React Query, Vite, TailwindCSS, Signals, Jotai, Zustand.
 
-# Build Local PastBar App
+# Build Local PasteBar App
 
 ```
+$ npm install
 $ npm run build
 ```
 
