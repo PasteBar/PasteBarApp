@@ -47,6 +47,10 @@ export default function UserPreferences() {
     setIsSkipAutoStartPrompt,
     isShowCollectionNameOnNavBar,
     setIsShowCollectionNameOnNavBar,
+    isHideCollectionsOnNavBar,
+    setIsHideCollectionsOnNavBar,
+    isShowNavBarItemsOnHoverOnly,
+    setIsShowNavBarItemsOnHoverOnly,
     isClipNotesHoverCardsEnabled,
     setIsClipNotesHoverCardsEnabled,
     clipNotesMaxHeight,
@@ -59,6 +63,8 @@ export default function UserPreferences() {
     setIsShowDisabledCollectionsOnNavBarMenu,
     setIsHideMacOSDockIcon,
     isHideMacOSDockIcon,
+    isKeepMainWindowClosedOnRestartEnabled,
+    setIsKeepMainWindowClosedOnRestartEnabled,
     hotKeysShowHideMainAppWindow,
     hotKeysShowHideQuickPasteWindow,
     setHotKeysShowHideMainAppWindow,
@@ -228,6 +234,40 @@ export default function UserPreferences() {
                           </Checkbox>
                         </Flex>
                       )}
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card
+                    className={`${
+                      !isKeepMainWindowClosedOnRestartEnabled &&
+                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Application Starts with Main Window Hidden', {
+                          ns: 'settings2',
+                        })}
+                      </CardTitle>
+                      <Switch
+                        checked={isKeepMainWindowClosedOnRestartEnabled}
+                        className="ml-auto"
+                        onCheckedChange={() => {
+                          setIsKeepMainWindowClosedOnRestartEnabled(
+                            !isKeepMainWindowClosedOnRestartEnabled
+                          )
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t(
+                          'Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.',
+                          { ns: 'settings2' }
+                        )}
+                      </Text>
                     </CardContent>
                   </Card>
                 </Box>
@@ -412,6 +452,67 @@ export default function UserPreferences() {
                           'Switch the layout position of panels in Clipboard History and Paste Menu views',
                           { ns: 'settings' }
                         )}
+                      </Text>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card
+                    className={`${
+                      !isShowNavBarItemsOnHoverOnly &&
+                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Show navbar elements on hover only', { ns: 'settings2' })}
+                      </CardTitle>
+                      <Switch
+                        checked={isShowNavBarItemsOnHoverOnly}
+                        className="ml-auto"
+                        onCheckedChange={() => {
+                          setIsShowNavBarItemsOnHoverOnly(!isShowNavBarItemsOnHoverOnly)
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t(
+                          'Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements',
+                          {
+                            ns: 'settings2',
+                          }
+                        )}
+                      </Text>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card
+                    className={`${
+                      !isHideCollectionsOnNavBar &&
+                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Hide collections menu on the navbar', { ns: 'settings2' })}
+                      </CardTitle>
+                      <Switch
+                        checked={isHideCollectionsOnNavBar}
+                        className="ml-auto"
+                        onCheckedChange={() => {
+                          setIsHideCollectionsOnNavBar(!isHideCollectionsOnNavBar)
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t('Hide collections menu dropdown on the navigation bar', {
+                          ns: 'settings2',
+                        })}
                       </Text>
                     </CardContent>
                   </Card>

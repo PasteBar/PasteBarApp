@@ -182,7 +182,18 @@ fn app_ready(app_handle: tauri::AppHandle) -> Result<String, String> {
     window.set_size(new_size).unwrap();
   }
 
-  window.show().unwrap();
+  let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
+
+  let hide_main_window_on_startup = app_settings
+    .lock()
+    .unwrap()
+    .get("isKeepMainWindowClosedOnRestartEnabled")
+    .map(|setting| setting.value_bool.unwrap_or(false))
+    .unwrap_or(false);
+
+  if !hide_main_window_on_startup {
+    window.show().unwrap();
+  }
 
   debug_output(|| {
     println!("app_ready on client");
@@ -192,7 +203,6 @@ fn app_ready(app_handle: tauri::AppHandle) -> Result<String, String> {
     .get()
     .ok_or("APP_CONSTANTS not initialized")?;
 
-  let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
   let mut is_permissions_trusted = true;
 
   #[cfg(target_os = "macos")]
@@ -208,6 +218,26 @@ fn app_ready(app_handle: tauri::AppHandle) -> Result<String, String> {
   let response = AppReadyResponse {
     constants: constants,
     permissionstrusted: is_permissions_trusted,
+    settings: &app_settings,
+  };
+
+  let serialized = serde_json::to_string(&response).map_err(|e| e.to_string())?;
+
+  Ok(serialized)
+}
+
+#[tauri::command]
+fn get_app_settings(app_handle: tauri::AppHandle) -> Result<String, String> {
+  println!("app_settings on client");
+  let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
+
+  let constants = db::APP_CONSTANTS
+    .get()
+    .ok_or("APP_CONSTANTS not initialized")?;
+
+  let response = AppReadyResponse {
+    constants: constants,
+    permissionstrusted: true,
     settings: &app_settings,
   };
 
@@ -277,7 +307,7 @@ fn set_icon(app_handle: tauri::AppHandle, name: &str, is_dark: bool) {
 
 #[cfg(target_os = "macos")]
 #[tauri::command]
-fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), String> {
+fn open_history_window(app_handle: tauri::AppHandle) -> Result<(), String> {
   // check if the window is already open
   if app_handle.get_window("history").is_some() {
     // show if exist and return
@@ -301,11 +331,11 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
       .add_native_item(MenuItem::Paste),
   ));
 
-  let main_window = app_handle
-    .get_window("main")
-    .ok_or_else(|| "Failed to get main window".to_string())?;
+  // let main_window = app_handle
+  //   .get_window("main")
+  //   .ok_or_else(|| "Failed to get main window".to_string())?;
 
-  let main_size = main_window.outer_size().map_err(|e| e.to_string())?;
+  // let main_size = main_window.outer_size().map_err(|e| e.to_string())?;
 
   let mut window_builder = tauri::WindowBuilder::new(
     &app_handle,
@@ -313,7 +343,7 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
     tauri::WindowUrl::App("history-index".into()),
   )
   .title("PasteBar History")
-  .inner_size(width, main_size.height as f64)
+  // .inner_size(width, main_size.height as f64)
   .max_inner_size(700.0, 2200.0)
   .min_inner_size(300.0, 400.0)
   .menu(menu)
@@ -364,7 +394,7 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
 // On Windows, the open new window command must be async
 #[cfg(target_os = "windows")]
 #[tauri::command]
-async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), String> {
+async fn open_history_window(app_handle: tauri::AppHandle) -> Result<(), String> {
   // check if the window is already open
   if app_handle.get_window("history").is_some() {
     // show if exist and return
@@ -388,12 +418,6 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
       .add_native_item(MenuItem::Paste),
   ));
 
-  let main_window = app_handle
-    .get_window("main")
-    .ok_or_else(|| "Failed to get main window".to_string())?;
-
-  let main_size = main_window.outer_size().map_err(|e| e.to_string())?;
-
   let mut window_builder = tauri::WindowBuilder::new(
     &app_handle,
     "history",
@@ -402,7 +426,6 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
   .title("PasteBar History")
   .decorations(false)
   .transparent(true)
-  .inner_size(width, main_size.height as f64)
   .max_inner_size(700.0, 2200.0)
   .min_inner_size(300.0, 400.0)
   .menu(menu)
@@ -446,12 +469,12 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
 }
 
 #[tauri::command]
-fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), String> {
+fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(bool), String> {
   // Check if the window is already open
   if let Some(window) = app_handle.get_window("quickpaste") {
     println!("QuickPaste window already open");
     window.close().map_err(|e| e.to_string())?;
-    return Ok(());
+    return Ok((false));
   }
 
   let window_width = 300.0;
@@ -552,7 +575,7 @@ fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), String> {
   // println!("Global window size: {}x{}", global_width, global_height);
   // println!("Window position: {}x{}", window_x, window_y);
 
-  Ok(())
+  Ok((true))
 }
 
 #[tokio::main]
@@ -949,11 +972,7 @@ async fn main() {
       }
 
       if cfg!(debug_assertions) {
-        window.show().unwrap();
-        #[cfg(debug_assertions)]
-        {
-          window.open_devtools();
-        }
+        window.open_devtools();
       } else {
         window.hide().unwrap();
       }
@@ -996,6 +1015,7 @@ async fn main() {
     })
     .invoke_handler(tauri::generate_handler![
       app_ready,
+      get_app_settings,
       update_setting,
       tabs_commands::delete_tab,
       tabs_commands::create_tab,

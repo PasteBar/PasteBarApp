@@ -95,6 +95,8 @@ export const isMenuNameEditing = signal(false)
 export const showMenuNameNotSavedError = signal(false)
 export const creatingMenuItemCurrentMenuId = signal(false)
 
+export const isNavBarHovering = signal(false)
+
 export function closeEdit() {
   showDeleteClipConfirmationId.value = null
   editBoardItemId.value = null
@@ -156,47 +158,49 @@ export const showUpdateInstalling = signal(false)
 export const showUpdateErrorPermissionDenied = signal(false)
 export const showRestartAfterUpdate = signal(false)
 
-effect(() => {
-  emit('signal-store-sync', {
-    signal: 'showLargeViewHistoryId',
-    value: showLargeViewHistoryId.value,
+if (!window.isQuickPasteWindow) {
+  effect(() => {
+    emit('signal-store-sync', {
+      signal: 'showLargeViewHistoryId',
+      value: showLargeViewHistoryId.value,
+    })
   })
-})
 
-effect(() => {
-  emit('signal-store-sync', {
-    signal: 'hasDashboardItemCreate',
-    value: hasDashboardItemCreate.value,
+  effect(() => {
+    emit('signal-store-sync', {
+      signal: 'hasDashboardItemCreate',
+      value: hasDashboardItemCreate.value,
+    })
   })
-})
 
-effect(() => {
-  emit('signal-store-sync', {
-    signal: 'createClipHistoryItemIds',
-    value: createClipHistoryItemIds.value,
+  effect(() => {
+    emit('signal-store-sync', {
+      signal: 'createClipHistoryItemIds',
+      value: createClipHistoryItemIds.value,
+    })
   })
-})
 
-effect(() => {
-  emit('signal-store-sync', {
-    signal: 'createMenuItemFromHistoryId',
-    value: createMenuItemFromHistoryId.value,
+  effect(() => {
+    emit('signal-store-sync', {
+      signal: 'createMenuItemFromHistoryId',
+      value: createMenuItemFromHistoryId.value,
+    })
   })
-})
 
-effect(() => {
-  emit('signal-store-sync', {
-    signal: 'isCreatingMenuItem',
-    value: isCreatingMenuItem.value,
+  effect(() => {
+    emit('signal-store-sync', {
+      signal: 'isCreatingMenuItem',
+      value: isCreatingMenuItem.value,
+    })
   })
-})
 
-effect(() => {
-  emit('signal-store-sync', {
-    signal: 'isAppLocked',
-    value: isAppLocked.value,
+  effect(() => {
+    emit('signal-store-sync', {
+      signal: 'isAppLocked',
+      value: isAppLocked.value,
+    })
   })
-})
+}
 
 export const listenToSignalStoreEvents = listen('signal-store-sync', async event => {
   const { payload } = event
@@ -222,7 +226,7 @@ export const listenToSignalStoreEvents = listen('signal-store-sync', async event
         })
         const isVisible = await appWindow.isVisible()
         if (!isVisible) {
-          appWindow.show()
+          // appWindow.show()
         }
       }
 
@@ -238,6 +242,7 @@ export const listenToSignalStoreEvents = listen('signal-store-sync', async event
       signal === 'createClipHistoryItemIds' &&
       !compareIdArrays(createClipHistoryItemIds.value, value as UniqueIdentifier[] | null)
     ) {
+      console.log('createClipHistoryItemIds.value', createClipHistoryItemIds.value)
       if (window.isMainWindow) {
         const isVisible = await appWindow.isVisible()
         if (!isVisible) {

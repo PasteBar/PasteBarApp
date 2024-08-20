@@ -54,9 +54,8 @@ import {
   hyperlinkText,
   hyperlinkTextWithPreview,
 } from '../helpers'
-import ClipboardHistoryRowContextMenu from './context-menu/ClipboardHistoryRowContextMenu'
 
-interface ClipboardHistoryRowProps {
+interface ClipboardHistoryQuickPasteRowProps {
   index?: number
   style?: CSSProperties
   isExpanded: boolean
@@ -119,7 +118,7 @@ interface ClipboardHistoryRowProps {
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export function ClipboardHistoryRowComponent({
+export function ClipboardHistoryQuickPasteRowComponent({
   index,
   style,
   clipboard,
@@ -168,7 +167,7 @@ export function ClipboardHistoryRowComponent({
   setRowHeight = () => {},
   setHistoryFilters = () => {},
   setAppFilters = () => {},
-}: ClipboardHistoryRowProps) {
+}: ClipboardHistoryQuickPasteRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
   const contextMenuButtonRef = useRef<HTMLDivElement>(null)
@@ -399,12 +398,7 @@ export function ClipboardHistoryRowComponent({
                                 }`
                 }`}
                 onClickCapture={e => {
-                  if (e.ctrlKey) {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    // to do easy select multiple items
-                    // setSelectHistoryItem(clipboard.historyId)
-                  } else if (e.shiftKey) {
+                  if (e.shiftKey) {
                     e.preventDefault()
                     e.stopPropagation()
                     window.getSelection()?.removeAllRanges()
@@ -984,19 +978,7 @@ export function ClipboardHistoryRowComponent({
                   )}
                 </Box>
               </Box>
-              {isSaved ? (
-                <Box
-                  className={`absolute z-50 w-full ${pinnedTopOffsetFirst} flex justify-center fade-in-animation`}
-                >
-                  <Badge
-                    variant="default"
-                    className="bg-sky-700 dark:bg-sky-800 dark:text-blue-200 pointer-events-none px-2 py-[1.5px] pr-4 mr-[-6px] text-[10px] uppercase font-semibold"
-                  >
-                    <ArrowDownToLine size={14} className="mr-1" />
-                    {t('Saved', { ns: 'common' })}
-                  </Badge>
-                </Box>
-              ) : isCopiedOrPasted && !pastingCountDown ? (
+              {isCopiedOrPasted && !pastingCountDown ? (
                 <Box
                   className={`absolute z-50 w-full ${pinnedTopOffsetFirst} flex justify-center ${
                     showCopyPasteIndexNumber ? '' : 'fade-in-animation'
@@ -1014,7 +996,7 @@ export function ClipboardHistoryRowComponent({
                         : ''}
                   </Badge>
                 </Box>
-              ) : !isLargeView ? (
+              ) : (
                 pastingCountDown &&
                 pastingCountDown > 0 && (
                   <Box
@@ -1031,62 +1013,13 @@ export function ClipboardHistoryRowComponent({
                     </Badge>
                   </Box>
                 )
-              ) : (
-                <Box
-                  className={`absolute z-50 w-full ${pinnedTopOffsetFirst} flex justify-center`}
-                >
-                  <Badge
-                    variant="default"
-                    className="px-3 dark:bg-slate-600 hover:bg-slate-500/100 pr-2.5"
-                  >
-                    <Text
-                      className="mr-1 bg-slate-500 dark:bg-slate-600 pointer-events-none dark:!text-slate-300"
-                      color="muted"
-                    >
-                      {t('In View', { ns: 'common' })}
-                    </Text>
-                    <X
-                      size={14}
-                      className="cursor-pointer  dark:text-slate-300"
-                      onClick={() => {
-                        setLargeViewItemId(null)
-                      }}
-                    />
-                  </Badge>
-                </Box>
               )}
             </Box>
           </ContextMenuTrigger>
-          <ClipboardHistoryRowContextMenu
-            historyId={clipboard.historyId}
-            copiedFromApp={clipboard.copiedFromApp}
-            isMasked={clipboard.isMasked}
-            setSavingItem={setSavingItem}
-            value={clipboard.value}
-            isImage={clipboard.isImage}
-            isMp3={isMp3}
-            isText={clipboard.isText}
-            isPinned={clipboard.isPinned}
-            isFavorite={clipboard.isFavorite}
-            isImageData={clipboard.isImageData}
-            detectedLanguage={clipboard.detectedLanguage}
-            setLargeViewItemId={setLargeViewItemId}
-            isLargeView={isLargeView}
-            arrLinks={clipboard.arrLinks}
-            hasLinkCard={hasLinkCard}
-            isSelected={isSelected}
-            invalidateClipboardHistoryQuery={invalidateClipboardHistoryQuery}
-            generateLinkMetaData={generateLinkMetaData}
-            removeLinkMetaData={removeLinkMetaData}
-            setSelectHistoryItem={setSelectHistoryItem}
-            onCopyPaste={onCopyPaste}
-            setHistoryFilters={setHistoryFilters}
-            setAppFilters={setAppFilters}
-          />
         </ContextMenu>
       </Box>
     </Box>
   )
 }
 
-export const ClipboardHistoryRow = ClipboardHistoryRowComponent
+export const ClipboardHistoryQuickPasteRow = ClipboardHistoryQuickPasteRowComponent

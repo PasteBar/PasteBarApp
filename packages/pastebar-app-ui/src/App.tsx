@@ -78,9 +78,7 @@ function App() {
   }, [isAppLocked.value])
 
   useEffect(() => {
-    const appReadyResponse = appReady()
-
-    appReadyResponse.then(res => {
+    appReady().then(res => {
       if (res === null) return
 
       try {
@@ -123,6 +121,8 @@ function App() {
           historyExclusionList: settings.historyExclusionList?.valueText,
           historyExclusionAppList: settings.historyExclusionAppList?.valueText,
           isExclusionListEnabled: settings.isExclusionListEnabled?.valueBool,
+          isKeepMainWindowClosedOnRestartEnabled:
+            settings.isKeepMainWindowClosedOnRestartEnabled?.valueBool,
           isExclusionAppListEnabled: settings.isExclusionAppListEnabled?.valueBool,
           isAutoMaskWordsListEnabled: settings.isAutoMaskWordsListEnabled?.valueBool,
           autoMaskWordsList: settings.autoMaskWordsList?.valueText,
@@ -173,6 +173,8 @@ function App() {
           isSearchNameOrLabelOnly: settings.isSearchNameOrLabelOnly?.valueBool,
           isSkipAutoStartPrompt: settings.isSkipAutoStartPrompt?.valueBool,
           isShowCollectionNameOnNavBar: settings.isShowCollectionNameOnNavBar?.valueBool,
+          isHideCollectionsOnNavBar: settings.isHideCollectionsOnNavBar?.valueBool,
+          isShowNavBarItemsOnHoverOnly: settings.isShowNavBarItemsOnHoverOnly?.valueBool,
           isShowDisabledCollectionsOnNavBarMenu:
             settings.isShowDisabledCollectionsOnNavBarMenu?.valueBool,
           userSelectedLanguage: settings.userSelectedLanguage?.valueText,
@@ -517,11 +519,14 @@ function App() {
   }, [uiState.fontSize])
 
   useEffect(() => {
-    if (uiState.isSplitPanelView && window.isMainWindow) {
+    if (uiState.isSplitPanelView && window.isMainWindow && settingsStore.isAppReady) {
       const openHistoryWindow = async () => {
-        invoke('open_history_window', { width: 0 }).then(() => {
+        invoke('open_history_window').then(() => {
           historyWindowOpening.value = false
           setTimeout(() => {
+            if (settingsStore.isKeepMainWindowClosedOnRestartEnabled) {
+              appWindow.hide()
+            }
             historyWindow?.setFocus()
           }, 300)
         })
@@ -535,7 +540,11 @@ function App() {
         historyWindow?.setFocus()
       }, 300)
     }
-  }, [uiState.isSplitPanelView])
+  }, [
+    uiState.isSplitPanelView,
+    settingsStore.isAppReady,
+    settingsStore.isKeepMainWindowClosedOnRestartEnabled,
+  ])
 
   return (
     <>

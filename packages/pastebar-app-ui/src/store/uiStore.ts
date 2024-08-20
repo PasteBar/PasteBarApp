@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api'
-import { availableMonitors, WebviewWindow } from '@tauri-apps/api/window'
+import { appWindow, availableMonitors, WebviewWindow } from '@tauri-apps/api/window'
 import { atomWithStore } from 'jotai-zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
@@ -135,13 +135,7 @@ export const uiStore = createStore<UIStoreState>()(
           isSplitPanelView,
         })),
       toggleHistoryQuickPasteWindow: async () => {
-        try {
-          await invoke('open_quickpaste_window', {
-            width: get().panelSize,
-          })
-        } catch (e) {
-          console.error('Failed to open history window', e)
-        }
+        await invoke('open_quickpaste_window')
       },
 
       toggleIsSplitPanelView: async () => {
@@ -158,9 +152,7 @@ export const uiStore = createStore<UIStoreState>()(
           }))
 
           try {
-            await invoke('open_history_window', {
-              width: get().panelSize,
-            })
+            await invoke('open_history_window')
 
             const history = WebviewWindow.getByLabel('history')
             if (history) {

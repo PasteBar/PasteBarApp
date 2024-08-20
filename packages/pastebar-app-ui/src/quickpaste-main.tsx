@@ -5,9 +5,8 @@ import { MAX_RETRIES, REACTQUERY_DEVTOOLS } from '~/constants'
 import { createRoot } from 'react-dom/client'
 import type { ErrorPayload } from 'vite'
 
-import App from './App'
+import { ThemeProvider } from '~/components/theme-provider'
 
-import 'react-complex-tree/lib/style-modern.css'
 import '~/components/libs/simplebar-react/simplebar.css'
 import './styles/overlayscrollbars.css'
 import './styles/globals.css'
@@ -16,6 +15,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 import { fallbackRender } from './error'
 import main from './pages'
+import QuickPasteApp from './QuickPasteApp'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,7 +34,9 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <h1>Hello QuickPaste Window</h1>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <QuickPasteApp />
+      </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>
 )
