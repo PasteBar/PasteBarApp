@@ -39,7 +39,11 @@ import ToolTip from '../atoms/tooltip'
 import { SimpleBarOptions } from '../libs/simplebar-react/simplebar-core'
 import { formatDurationDisplay, PlayerUI } from './PlayerUI'
 
-export const PlayerMenu = ({ isShowNavBarItems }: { isShowNavBarItems: boolean }) => {
+export const PlayerMenu = ({
+  isShowNavBarItems = true,
+}: {
+  isShowNavBarItems?: boolean
+}) => {
   const {
     currentSongIndex,
     setCurrentSongIndex,

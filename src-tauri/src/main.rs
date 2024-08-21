@@ -75,12 +75,74 @@ use tauri::SystemTrayEvent;
 
 use fns::debounce;
 use inputbot::KeybdKey::*;
+use std::sync::Arc;
 use std::sync::Mutex;
 use std::time::Duration as StdDuration;
 use std::time::Instant;
 use tokio::sync::Mutex as TokioMutex;
 use window_state::AppHandleExt;
 use window_state::StateFlags;
+
+#[cfg(target_os = "windows")]
+use windows::Win32::UI::WindowsAndMessaging::GetForegroundWindow;
+
+#[cfg(target_os = "windows")]
+struct PreviousWindowHandle(Arc<Mutex<Option<windows::Win32::Foundation::HWND>>>);
+
+#[cfg(target_os = "macos")]
+struct PreviousWindowHandle;
+
+#[cfg(target_os = "windows")]
+use windows::{
+  core::PCWSTR,
+  Win32::{
+    Foundation::{self as win32f, HINSTANCE, HWND, LPARAM, LRESULT, POINT, RECT, WPARAM},
+    Graphics::{
+      Dwm::{DwmEnableBlurBehindWindow, DWM_BB_BLURREGION, DWM_BB_ENABLE, DWM_BLURBEHIND},
+      Gdi::*,
+    },
+    System::{Com::*, LibraryLoader::*, Ole::*},
+    UI::{
+      Input::{Ime::*, KeyboardAndMouse::*, Touch::*},
+      Shell::*,
+      WindowsAndMessaging::{self as win32wm, *},
+    },
+  },
+};
+
+#[cfg(target_os = "macos")]
+use cocoa::{
+  appkit::{NSApplication, NSWindow},
+  base::{id, nil},
+  foundation::{NSAutoreleasePool, NSString},
+};
+
+#[cfg(target_os = "macos")]
+use objc::{msg_send, sel, sel_impl};
+
+#[cfg(target_os = "windows")]
+fn return_focus_to_previous_window() {
+  unsafe {
+    // let previous_window = GetForegroundWindow();
+    // // Your Windows-specific logic here...
+    // SetForegroundWindow(previous_window);
+    if let Ok(handle) = previous_window_handle_clone.0.lock() {
+      if let Some(hwnd) = *handle {
+        unsafe {
+          SetForegroundWindow(hwnd);
+        }
+      }
+    }
+  }
+}
+
+#[cfg(target_os = "macos")]
+fn return_focus_to_previous_window() {
+  unsafe {
+    let app = NSApplication::sharedApplication(nil);
+    let _: () = msg_send![app, hide: nil];
+  }
+}
 
 #[derive(Serialize)]
 struct AppReadyResponse<'a> {
@@ -95,6 +157,11 @@ struct SettingUpdatePayload {
   value_bool: Option<bool>,
   value_string: Option<String>,
   value_number: Option<i32>,
+}
+
+#[tauri::command]
+fn set_focus_to_previous_window() {
+  return_focus_to_previous_window();
 }
 
 #[tauri::command]
@@ -474,7 +541,17 @@ fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(bool), String
   if let Some(window) = app_handle.get_window("quickpaste") {
     println!("QuickPaste window already open");
     window.close().map_err(|e| e.to_string())?;
-    return Ok((false));
+    return Ok(false);
+  }
+
+  // Store the current foreground window
+  #[cfg(target_os = "windows")]
+  {
+    let previous_window_handle = PreviousWindowHandle(Arc::new(Mutex::new(None)));
+    let current_window = unsafe { GetForegroundWindow() };
+    if let Ok(mut handle) = previous_window_handle.0.lock() {
+      *handle = Some(current_window);
+    }
   }
 
   let window_width = 300.0;
@@ -563,9 +640,15 @@ fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(bool), String
   quickpaste_window.show().map_err(|e| e.to_string())?;
 
   quickpaste_window.clone().on_window_event(move |e| match e {
+    tauri::WindowEvent::Destroyed => {
+      return_focus_to_previous_window();
+    }
+
     tauri::WindowEvent::CloseRequested { api, .. } => {
       let _ = quickpaste_window.close().map_err(|e| e.to_string());
       api.prevent_close();
+
+      return_focus_to_previous_window();
     }
     _ => {}
   });
@@ -1111,6 +1194,7 @@ async fn main() {
       open_history_window,
       get_mouse_location,
       open_quickpaste_window,
+      set_focus_to_previous_window,
       set_icon
     ])
     .plugin(clipboard::init())

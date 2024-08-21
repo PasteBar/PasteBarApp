@@ -1,19 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { listen } from '@tauri-apps/api/event'
+import { invoke } from '@tauri-apps/api/tauri'
+import { appWindow } from '@tauri-apps/api/window'
+import { isKeyAltPressed, isKeyCtrlPressed } from '~/store'
 import { useAtomValue } from 'jotai'
-import {
-  ArrowDownFromLine,
-  ArrowUpToLine,
-  Clipboard,
-  ClipboardPaste,
-  LayoutList,
-  ListChecks,
-  ListFilter,
-  Pin,
-  Search,
-  X,
-} from 'lucide-react'
+import { ArrowDownFromLine, ArrowUpToLine, Search } from 'lucide-react'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { Prism } from 'prism-react-renderer'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -23,30 +15,8 @@ import InfiniteLoader from 'react-window-infinite-loader'
 
 import mergeRefs from '~/components/atoms/merge-refs'
 import ToolTip from '~/components/atoms/tooltip'
-import AutoSize from '~/components/libs/autosizer'
-import SimpleBar from '~/components/libs/simplebar-react'
 import type { SimpleBarOptions } from '~/components/libs/simplebar-react/simplebar-core'
-import {
-  Badge,
-  BadgeWithRef,
-  Box,
-  Button,
-  ButtonGhost,
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-  DropZone,
-  Flex,
-  Input,
-  Text,
-  UnPinAll,
-} from '~/components/ui'
+import { Box, ButtonGhost, Flex, Input, Text } from '~/components/ui'
 
 import { clipboardHistoryStoreAtom } from '~/store/clipboardHistoryStore'
 import { themeStoreAtom } from '~/store/themeStore'
@@ -69,25 +39,17 @@ import {
 import { useDebounce } from '~/hooks/use-debounce'
 import { useSignal } from '~/hooks/use-signal'
 
-import {
-  // ClipboardHistoryIconMenu,
-  // ClipboardHistoryLargeView,
-  // ClipboardHistoryListFilter,
-  ClipboardHistoryRow,
-  // TrashHistory,
-} from '../components/ClipboardHistory'
 import { ClipboardHistoryQuickPasteRow } from '../components/ClipboardHistory/ClipboardHistoryQuickPasteRow'
 
-// import { ClipboardHistoryWindowIcons } from '../components/ClipboardHistory/ClipboardHistoryWindowIcons'
-// import { Dashboard } from '../components/Dashboard'
-// import { ClipCardLargeView } from '../components/Dashboard/components/ClipCardLargeView'
-// import {
-//   coordinateGetter,
-//   getActiveIdFromPinned,
-// } from '../components/Dashboard/components/utils'
-// import { BOARD } from '../components/Dashboard/Dashboard'
-
-export const TRASH_ID = 'trash'
+const altKeys = ['Alt', 'Meta']
+const ctrlKeys = ['Control']
+const keyUp = ['ArrowUp', 'Up']
+const keyPageUp = ['PageUp']
+const keyPageDown = ['PageDown']
+const keyDown = ['ArrowDown', 'Down']
+const keyEnter = ['Enter']
+const keyEscape = ['Escape']
+const keyHome = ['Home']
 
 const loadPrismComponents = async () => {
   // @ts-expect-error - global Prism
@@ -130,25 +92,30 @@ const loadPrismComponents = async () => {
   Prism.languages['shell'] = Prism.languages['shell-session']
 }
 
+async function invokeCopyPasteHistoryItem(historyId: UniqueIdentifier) {
+  try {
+    await invoke('set_focus_to_previous_window')
+    await new Promise(resolve => setTimeout(resolve, 200))
+    invoke('copy_paste_history_item', { historyId, delay: 0 })
+    appWindow?.close()
+  } catch (error) {
+    console.error('Error copying history item:', error)
+  }
+}
+
 export default function ClipboardHistoryQuickPastePage() {
-  const [copiedItem, setCopiedItem, runSequenceCopy] = useCopyPasteHistoryItem({})
-  const [pastedItem, pastingCountDown, setPastedItem, runSequencePaste] =
-    usePasteHistoryItem({})
+  const [copiedItem, setCopiedItem] = useCopyPasteHistoryItem({})
+  const [pastedItem, pastingCountDown, setPastedItem] = usePasteHistoryItem({})
 
   const [savingItem, setSavingItem] = useState<UniqueIdentifier | null>(null)
-  const { updateItemValueByHistoryId } = useUpdateItemValueByHistoryId()
-  const { pinnedClipboardHistoryByIds } = usePinnedClipboardHistoryByIds()
-  const { unPinAllClipboardHistory } = useUnpinAllClipboardHistory()
   const { movePinnedClipboardHistoryUpDown } = useMovePinnedClipboardHistoryUpDown()
 
   const [historyFilters, setHistoryFilters] = useState<string[]>([])
   const [codeFilters, setCodeFilters] = useState<string[]>([])
   const [appFilters, setAppFilters] = useState<string[]>([])
 
-  const historyListSimpleBarRef = useRef<HTMLElement | null>(null)
-  const [isMenuDeleting, setIsMenuDeleting] = useState(false)
+  const historyListSimpleBarRef = useRef<HTMLDivElement | null>(null)
 
-  const scrollBarRef = useRef<SimpleBarOptions | null>(null)
   const [activeDragId, setActiveDragId] = useState<UniqueIdentifier | null>(null)
   const [brokenImageItems, setBrokenImageItems] = useState<UniqueIdentifier[]>([])
   const [dragOverTrashId, setDragOverTrashId] = useState<UniqueIdentifier | null>(null)
@@ -157,7 +124,6 @@ export default function ClipboardHistoryQuickPastePage() {
   const [dragOverClipId, setDragOverClipId] = useState<UniqueIdentifier | null>(null)
   const [expandedItems, setExpandedItems] = useState<UniqueIdentifier[]>([])
   const [wrappedTextItems, setWrappedTextItems] = useState<UniqueIdentifier[]>([])
-  const [selectedHistoryItems, setSelectedHistoryItems] = useState<UniqueIdentifier[]>([])
   const [showSelectHistoryItems, setShowSelectHistoryItems] = useState(false)
   const [isDragPinnedHistory, setIsDragPinnedHistory] = useState(false)
   const {
@@ -172,19 +138,6 @@ export default function ClipboardHistoryQuickPastePage() {
     setPanelSize,
     setReturnRoute,
   } = useAtomValue(uiStoreAtom)
-  // const {
-  //   isHistoryEnabled,
-  //   setIsHistoryEnabled,
-  //   isHistoryAutoUpdateOnCaputureEnabled,
-  //   isAutoPreviewLinkCardsEnabled,
-  //   isAutoGenerateLinkCardsEnabled,
-  //   historyDetectLanguagesEnabledList,
-  //   copyPasteSequencePinnedDelay,
-  //   setCopyPasteSequencePinnedDelay,
-  //   copyPasteSequenceIsReversOrder,
-  //   setCopyPasteSequenceIsReversOrder,
-  //   setIsHistoryAutoUpdateOnCaputureEnabled,
-  // } = useAtomValue(settingsStoreAtom)
 
   const { t } = useTranslation()
 
@@ -196,6 +149,7 @@ export default function ClipboardHistoryQuickPastePage() {
 
   const {
     setHistoryListSimpleBar,
+    scrollToTopHistoryList,
     updateClipboardHistory,
     deleteClipboardHistoryItem,
     deleteClipboardHistoryItems,
@@ -208,6 +162,8 @@ export default function ClipboardHistoryQuickPastePage() {
     removeLinkMetaData,
   } = useAtomValue(clipboardHistoryStoreAtom)
 
+  const keyboardIndexSelectedItem = useSignal<number>(0)
+
   const [isPrismLoaded, setPrismLoaded] = useState(false)
 
   const {
@@ -217,8 +173,6 @@ export default function ClipboardHistoryQuickPastePage() {
     invalidateClipboardHistoryQuery,
     fetchNextClipboardHistoryPage,
   } = useInfiniteClipboardHistory()
-
-  const { deleteClipboardHistoryByIds } = useDeleteClipboardHistoryByIds()
 
   const {
     clipboardHistory: allClipboardHistory,
@@ -239,14 +193,6 @@ export default function ClipboardHistoryQuickPastePage() {
     return debouncedSearchTerm.length > 1 || historyFilters.length > 0
   }, [debouncedSearchTerm, historyFilters])
 
-  const hasSelectedPinned = useMemo(
-    () =>
-      selectedHistoryItems.some(item => {
-        return pinnedClipboardHistory.some(pinnedItem => pinnedItem.historyId === item)
-      }),
-    [selectedHistoryItems, pinnedClipboardHistory]
-  )
-
   const pastedItemValue = useMemo(() => pastedItem, [pastedItem])
   const copiedItemValue = useMemo(() => copiedItem, [copiedItem])
 
@@ -258,6 +204,12 @@ export default function ClipboardHistoryQuickPastePage() {
     codeFilters,
     appFilters,
   })
+
+  const keyboardSelectedItemId = useMemo(() => {
+    return clipboardHistory.length > 0
+      ? clipboardHistory[keyboardIndexSelectedItem.value].historyId
+      : null
+  }, [keyboardIndexSelectedItem.value, clipboardHistory])
 
   const doRefetchFindClipboardHistory = useCallback(() => {
     if (hasSearchOrFilter) {
@@ -321,15 +273,6 @@ export default function ClipboardHistoryQuickPastePage() {
   }, [])
 
   useEffect(() => {
-    if (copiedItem && selectedHistoryItems.includes(copiedItem)) {
-      setSelectedHistoryItems(prev => prev.filter(item => item !== copiedItem))
-    }
-    if (pastedItem && selectedHistoryItems.includes(pastedItem)) {
-      setSelectedHistoryItems(prev => prev.filter(item => item !== pastedItem))
-    }
-  }, [copiedItem, pastedItem])
-
-  useEffect(() => {
     if (historyListSimpleBarRef) {
       setHistoryListSimpleBar(historyListSimpleBarRef)
     }
@@ -345,20 +288,6 @@ export default function ClipboardHistoryQuickPastePage() {
       refetchFindClipboardHistory()
     }
   }, [debouncedSearchTerm, historyFilters, codeFilters, appFilters])
-
-  useEffect(() => {
-    if (!scrollBarRef.current?.setDisableScroll || !historyListSimpleBarRef.current) {
-      return
-    }
-
-    if (activeDragId) {
-      scrollBarRef.current.setDisableScroll(true)
-      historyListSimpleBarRef.current.style.overflow = 'hidden'
-    } else {
-      scrollBarRef.current.setDisableScroll(false)
-      historyListSimpleBarRef.current.style.overflow = 'visible'
-    }
-  }, [activeDragId])
 
   const loadMoreClipBoardHistory = async () => {
     if (!isClipboardHistoryFetchingNextPage) {
@@ -412,8 +341,108 @@ export default function ClipboardHistoryQuickPastePage() {
     [setWrappedTextItems]
   )
 
-  const isMainWindow = window.isMainWindow
-  const isHistoryWindow = window.isHistoryWindow
+  function hasAltKey(event: KeyboardEvent) {
+    return altKeys.includes(event.key)
+  }
+
+  function hasCtrlKey(event: KeyboardEvent) {
+    return ctrlKeys.includes(event.key)
+  }
+
+  async function downHandler(event: KeyboardEvent) {
+    event.preventDefault()
+
+    if (hasAltKey(event)) {
+      isKeyAltPressed.value = true
+    }
+    if (hasCtrlKey(event)) {
+      isKeyCtrlPressed.value = true
+    }
+
+    if (keyHome.includes(event.key)) {
+      const prevSelectedItem = clipboardHistory[0]?.historyId
+      if (prevSelectedItem) {
+        keyboardIndexSelectedItem.value = 0
+        scrollToTopHistoryList()
+      }
+    }
+
+    if (keyUp.includes(event.key)) {
+      const prevSelectedItem =
+        clipboardHistory[keyboardIndexSelectedItem.value - 1]?.historyId
+      if (prevSelectedItem) {
+        keyboardIndexSelectedItem.value = keyboardIndexSelectedItem.value - 1
+      } else {
+        keyboardIndexSelectedItem.value = 0
+      }
+    }
+
+    if (keyDown.includes(event.key)) {
+      const nextSelectedItem =
+        clipboardHistory[keyboardIndexSelectedItem.value + 1]?.historyId
+
+      if (nextSelectedItem) {
+        keyboardIndexSelectedItem.value = keyboardIndexSelectedItem.value + 1
+      }
+    }
+
+    if (keyPageUp.includes(event.key)) {
+      const prevSelectedItem =
+        clipboardHistory[keyboardIndexSelectedItem.value - 5]?.historyId
+      if (prevSelectedItem) {
+        keyboardIndexSelectedItem.value = keyboardIndexSelectedItem.value - 5
+      } else {
+        keyboardIndexSelectedItem.value = 0
+      }
+    }
+
+    if (keyPageDown.includes(event.key)) {
+      const nextSelectedItem =
+        clipboardHistory[keyboardIndexSelectedItem.value + 5]?.historyId
+
+      if (nextSelectedItem) {
+        keyboardIndexSelectedItem.value = keyboardIndexSelectedItem.value + 5
+      } else {
+        keyboardIndexSelectedItem.value = clipboardHistory.length - 1
+      }
+    }
+
+    if (keyEnter.includes(event.key)) {
+      const selectedItemId = clipboardHistory[keyboardIndexSelectedItem.value]?.historyId
+      if (selectedItemId) {
+        invokeCopyPasteHistoryItem(selectedItemId)
+      }
+    }
+    if (keyEscape.includes(event.key)) {
+      appWindow?.close()
+    }
+  }
+
+  function upHandler(event: KeyboardEvent) {
+    if (hasAltKey(event)) {
+      isKeyAltPressed.value = false
+    }
+    if (hasCtrlKey(event)) {
+      isKeyCtrlPressed.value = false
+    }
+  }
+
+  function focusHandler() {
+    isKeyAltPressed.value = false
+    isKeyCtrlPressed.value = false
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', downHandler)
+    window.addEventListener('keyup', upHandler)
+    window.addEventListener('focus', focusHandler)
+
+    return () => {
+      window.removeEventListener('keydown', downHandler)
+      window.removeEventListener('keyup', upHandler)
+      window.removeEventListener('focus', focusHandler)
+    }
+  }, [clipboardHistory, keyboardIndexSelectedItem.value])
 
   return (
     <Box className="flex flex-col bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.8] pb-6 pt-4 px-3 pr-3">
@@ -482,7 +511,7 @@ export default function ClipboardHistoryQuickPastePage() {
             <Box
               className={`${
                 dragOverPinnedId ? '!bg-orange-100 dark:!bg-orange-500/40' : ''
-              } px-2 py-2 bg-orange-200/70 dark:bg-orange-900/60 mt-0 my-2 rounded-md relative`}
+              } px-2 py-2 pb-0 bg-orange-200/70 dark:bg-orange-900/60 mt-0 my-2 rounded-md relative`}
             >
               <OverlayScrollbarsComponent
                 defer
@@ -514,6 +543,15 @@ export default function ClipboardHistoryQuickPastePage() {
                           <Box key={historyId}>
                             <ClipboardHistoryQuickPasteRow
                               isPinnedTop
+                              setKeyboardSelected={id => {
+                                const index = clipboardHistory.findIndex(
+                                  item => item.historyId === id
+                                )
+                                if (index > -1) {
+                                  keyboardIndexSelectedItem.value = index
+                                }
+                              }}
+                              isKeyboardSelected={keyboardSelectedItemId === historyId}
                               hasClipboardHistoryURLErrors={clipboardHistoryIdsURLErrors.includes(
                                 historyId
                               )}
@@ -541,7 +579,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               }}
                               setSelectHistoryItem={() => {}}
                               onCopy={setCopiedItem}
-                              onCopyPaste={setPastedItem}
+                              onCopyPaste={invokeCopyPasteHistoryItem}
                               pastingCountDown={
                                 historyId === pastedItemValue
                                   ? pastingCountDown
@@ -552,7 +590,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               isSaved={historyId === savingItem}
                               setSavingItem={setSavingItem}
                               isDeleting={false}
-                              isSelected={selectedHistoryItems.includes(historyId)}
+                              isSelected={false}
                               setBrokenImageItem={setBrokenImageItem}
                               isBrokenImage={brokenImageItems.includes(historyId)}
                               showTimeAgo={false}
@@ -577,6 +615,46 @@ export default function ClipboardHistoryQuickPastePage() {
                       })}
                 </Box>
               </OverlayScrollbarsComponent>
+              {!isShowHistoryPinned ? (
+                <Flex className="justify-center">
+                  <ButtonGhost
+                    className={`hover:underline ${
+                      isShowHistoryPinned ? 'h-[30px]' : 'h-[26px]'
+                    } group !text-orange-500/80 dark:!text-orange-400/80 hover:!text-orange-400 hover:bg-transparent dark:hover:bg-transparent ${
+                      !isShowHistoryPinned ? 'pb-1' : ''
+                    }`}
+                    title={
+                      isShowHistoryPinned
+                        ? t('Hide pinned history', { ns: 'history' })
+                        : t('View pinned history', { ns: 'history' })
+                    }
+                    onClick={() => {
+                      setIsShowHistoryPinned(!isShowHistoryPinned)
+                    }}
+                  >
+                    <Text className="!font-medium text-xs !text-orange-500/80 dark:!text-orange-400/80 hover:!text-orange-400 mr-1">
+                      {pinnedClipboardHistory.length}{' '}
+                      {t('Pinned', {
+                        ns: 'common',
+                        count: pinnedClipboardHistory.length,
+                      })}
+                    </Text>
+                    {isShowHistoryPinned ? (
+                      <ArrowUpToLine
+                        size={13}
+                        className="group-hover:opacity-100 opacity-0"
+                      />
+                    ) : (
+                      <ArrowDownFromLine
+                        size={13}
+                        className="group-hover:opacity-100 opacity-0"
+                      />
+                    )}
+                  </ButtonGhost>
+                </Flex>
+              ) : (
+                <Box className="mb-2" />
+              )}
             </Box>
           )
         )}
@@ -602,7 +680,7 @@ export default function ClipboardHistoryQuickPastePage() {
                   <ButtonGhost
                     className="pointer-events-auto rounded-full bg-slate-300 dark:bg-slate-600 hover:bg-slate-200 hover:dark:bg-slate-700"
                     onClick={() => {
-                      // scrollToTopHistoryList(true)
+                      scrollToTopHistoryList(true)
                     }}
                   >
                     <Text className="text-mute text-xs text-center px-3">
@@ -631,7 +709,7 @@ export default function ClipboardHistoryQuickPastePage() {
                     itemSize={getRowHeight}
                     itemKey={index => clipboardHistory[index].historyId ?? 'id-${index}'}
                     onItemsRendered={e => {
-                      if (e.visibleStartIndex > 10) {
+                      if (e.visibleStartIndex > 20) {
                         const currentTopItem = clipboardHistory[e.visibleStartIndex]
                         if (currentTopItem?.timeAgo) {
                           if (currentTopItemTimeAgo !== currentTopItem.timeAgo) {
@@ -645,6 +723,7 @@ export default function ClipboardHistoryQuickPastePage() {
                       }
                       !debouncedSearchTerm && onItemsRendered(e)
                     }}
+                    outerRef={historyListSimpleBarRef}
                     ref={mergeRefs(listRef, ref)}
                   >
                     {({ index, style }) => {
@@ -672,7 +751,16 @@ export default function ClipboardHistoryQuickPastePage() {
                           setAppFilters={setAppFilters}
                           setSelectHistoryItem={() => {}}
                           onCopy={setCopiedItem}
-                          onCopyPaste={setPastedItem}
+                          onCopyPaste={invokeCopyPasteHistoryItem}
+                          isKeyboardSelected={keyboardSelectedItemId === historyId}
+                          setKeyboardSelected={id => {
+                            const index = clipboardHistory.findIndex(
+                              item => item.historyId === id
+                            )
+                            if (index > -1) {
+                              keyboardIndexSelectedItem.value = index
+                            }
+                          }}
                           pastingCountDown={
                             historyId === pastedItemValue ? pastingCountDown : undefined
                           }
@@ -682,13 +770,7 @@ export default function ClipboardHistoryQuickPastePage() {
                           setSavingItem={setSavingItem}
                           key={historyId}
                           isDeleting={false}
-                          isOverPinned={
-                            historyId === dragOverPinnedId ||
-                            (Boolean(dragOverPinnedId) &&
-                              Boolean(activeDragId) &&
-                              selectedHistoryItems.includes(historyId))
-                          }
-                          isSelected={selectedHistoryItems.includes(historyId)}
+                          isSelected={false}
                           setBrokenImageItem={setBrokenImageItem}
                           isBrokenImage={brokenImageItems.includes(historyId)}
                           showTimeAgo={showTimeAgo}
