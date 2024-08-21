@@ -518,6 +518,7 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), Stri
   let is_main_window_visible = main_window.is_visible().unwrap();
 
   if is_main_window_visible {
+    #[cfg(target_os = "macos")]
     main_window.hide().map_err(|e| e.to_string())?;
   }
 
@@ -611,14 +612,15 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), Stri
     quickpaste_window.on_window_event(move |e| match e {
       tauri::WindowEvent::Destroyed => {
         #[cfg(target_os = "macos")]
-        return_focus_to_previous_window();
-
-        if is_main_window_visible {
-          let _ = app_handle_clone
-            .get_window("main")
-            .unwrap()
-            .show()
-            .map_err(|e| e.to_string());
+        {
+          return_focus_to_previous_window();
+          if is_main_window_visible {
+            let _ = app_handle_clone
+              .get_window("main")
+              .unwrap()
+              .show()
+              .map_err(|e| e.to_string());
+          }
         }
 
         app_handle_clone
