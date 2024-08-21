@@ -13,6 +13,8 @@ import './styles/globals.css'
 
 import { ErrorBoundary } from 'react-error-boundary'
 
+import { TooltipProvider } from '~/components/ui/tooltip'
+
 import { fallbackRender } from './error'
 import main from './pages'
 import QuickPasteApp from './QuickPasteApp'
@@ -35,7 +37,9 @@ createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <QuickPasteApp />
+        <TooltipProvider>
+          <QuickPasteApp />
+        </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>

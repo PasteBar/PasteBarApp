@@ -609,7 +609,7 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
         !get().shouldSkipVersionCheck(manifest?.version, isManualCheck)
       ) {
         availableVersionNumber.value = manifest?.version ?? null
-        if (manifest?.body) {
+        if (manifest?.body && window['markdown']) {
           // @ts-expect-error
           window['markdown'].ready.then(markdown => {
             try {
