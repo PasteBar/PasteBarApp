@@ -514,6 +514,13 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), Stri
   let window_width = 300.0;
   let window_height = 400.0;
 
+  let main_window = app_handle.get_window("main").unwrap();
+  let is_main_window_visible = main_window.is_visible().unwrap();
+
+  if is_main_window_visible {
+    main_window.hide().map_err(|e| e.to_string())?;
+  }
+
   let window_builder = tauri::WindowBuilder::new(
     &app_handle,
     "quickpaste",
@@ -605,6 +612,15 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), Stri
       tauri::WindowEvent::Destroyed => {
         #[cfg(target_os = "macos")]
         return_focus_to_previous_window();
+
+        if is_main_window_visible {
+          let _ = app_handle_clone
+            .get_window("main")
+            .unwrap()
+            .show()
+            .map_err(|e| e.to_string());
+        }
+
         app_handle_clone
           .emit_all("window-events", "quickpaste-window-closed")
           .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
