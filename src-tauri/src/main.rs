@@ -11,9 +11,11 @@ use auto_launch::AutoLaunchBuilder;
 use dotenv::dotenv;
 use menu::DbRecentHistoryItems;
 use opener;
+// use schema::clipboard_history::history_id;
 use services::settings_service::insert_or_update_setting_by_name;
 use services::utils;
 use services::utils::debug_output;
+use std::cell::Cell;
 // use simple_cache::SimpleCache;
 use std::env::current_exe;
 use std::fs;
@@ -62,8 +64,7 @@ use commands::shell_commands;
 use commands::tabs_commands;
 use commands::translations_commands;
 use db::AppConstants;
-use enigo::Enigo;
-use enigo::MouseControllable;
+use mouse_position::mouse_position::Mouse;
 use std::collections::HashMap;
 
 use serde::Serialize;
@@ -75,6 +76,8 @@ use tauri::SystemTrayEvent;
 
 use fns::debounce;
 use inputbot::KeybdKey::*;
+use once_cell::sync::Lazy;
+use std::ptr;
 use std::sync::Arc;
 use std::sync::Mutex;
 use std::time::Duration as StdDuration;
@@ -83,32 +86,11 @@ use tokio::sync::Mutex as TokioMutex;
 use window_state::AppHandleExt;
 use window_state::StateFlags;
 
-#[cfg(target_os = "windows")]
-use windows::Win32::UI::WindowsAndMessaging::GetForegroundWindow;
-
-#[cfg(target_os = "windows")]
-struct PreviousWindowHandle(Arc<Mutex<Option<windows::Win32::Foundation::HWND>>>);
+#[cfg(target_os = "macos")]
+use objc::{msg_send, sel, sel_impl};
 
 #[cfg(target_os = "macos")]
 struct PreviousWindowHandle;
-
-#[cfg(target_os = "windows")]
-use windows::{
-  core::PCWSTR,
-  Win32::{
-    Foundation::{self as win32f, HINSTANCE, HWND, LPARAM, LRESULT, POINT, RECT, WPARAM},
-    Graphics::{
-      Dwm::{DwmEnableBlurBehindWindow, DWM_BB_BLURREGION, DWM_BB_ENABLE, DWM_BLURBEHIND},
-      Gdi::*,
-    },
-    System::{Com::*, LibraryLoader::*, Ole::*},
-    UI::{
-      Input::{Ime::*, KeyboardAndMouse::*, Touch::*},
-      Shell::*,
-      WindowsAndMessaging::{self as win32wm, *},
-    },
-  },
-};
 
 #[cfg(target_os = "macos")]
 use cocoa::{
@@ -116,25 +98,6 @@ use cocoa::{
   base::{id, nil},
   foundation::{NSAutoreleasePool, NSString},
 };
-
-#[cfg(target_os = "macos")]
-use objc::{msg_send, sel, sel_impl};
-
-#[cfg(target_os = "windows")]
-fn return_focus_to_previous_window() {
-  unsafe {
-    // let previous_window = GetForegroundWindow();
-    // // Your Windows-specific logic here...
-    // SetForegroundWindow(previous_window);
-    if let Ok(handle) = previous_window_handle_clone.0.lock() {
-      if let Some(hwnd) = *handle {
-        unsafe {
-          SetForegroundWindow(hwnd);
-        }
-      }
-    }
-  }
-}
 
 #[cfg(target_os = "macos")]
 fn return_focus_to_previous_window() {
@@ -160,15 +123,33 @@ struct SettingUpdatePayload {
 }
 
 #[tauri::command]
-fn set_focus_to_previous_window() {
-  return_focus_to_previous_window();
-}
+fn quickpaste_hide_paste_close(
+  app_handle: tauri::AppHandle,
+  history_id: String,
+) -> Result<(), String> {
+  // Get the quickpaste window
+  let window = app_handle
+    .get_window("quickpaste")
+    .ok_or_else(|| "Failed to get quickpaste window".to_string())?;
 
-#[tauri::command]
-fn get_mouse_location() -> String {
-  let enigo = Enigo::new();
-  let cursor_location: (i32, i32) = enigo.mouse_location();
-  format!("{};{}", cursor_location.0, cursor_location.1)
+  // Hide the window
+  window
+    .hide()
+    .map_err(|e| format!("Failed to hide window: {}", e))?;
+
+  // Return focus to the previous window
+  #[cfg(target_os = "macos")]
+  return_focus_to_previous_window();
+
+  // Copy and paste the history item
+  clipboard_commands::copy_paste_history_item(app_handle.clone(), history_id, 0);
+
+  // Close the window
+  window
+    .close()
+    .map_err(|e| format!("Failed to close window: {}", e))?;
+
+  Ok(())
 }
 
 #[tauri::command]
@@ -528,7 +509,7 @@ async fn open_history_window(app_handle: tauri::AppHandle) -> Result<(), String>
     });
   }
 
-  history_window.set_decorations(false);
+  let _ = history_window.set_decorations(false);
   history_window.show().map_err(|e| e.to_string())?;
   history_window.set_focus().map_err(|e| e.to_string())?;
 
@@ -536,37 +517,15 @@ async fn open_history_window(app_handle: tauri::AppHandle) -> Result<(), String>
 }
 
 #[tauri::command]
-fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(bool), String> {
-  // Check if the window is already open
+async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<bool, String> {
   if let Some(window) = app_handle.get_window("quickpaste") {
     println!("QuickPaste window already open");
     window.close().map_err(|e| e.to_string())?;
     return Ok(false);
   }
 
-  // Store the current foreground window
-  #[cfg(target_os = "windows")]
-  {
-    let previous_window_handle = PreviousWindowHandle(Arc::new(Mutex::new(None)));
-    let current_window = unsafe { GetForegroundWindow() };
-    if let Ok(mut handle) = previous_window_handle.0.lock() {
-      *handle = Some(current_window);
-    }
-  }
-
   let window_width = 300.0;
   let window_height = 400.0;
-
-  let menu = Menu::new().add_submenu(Submenu::new(
-    "PasteBar",
-    Menu::new()
-      .add_native_item(MenuItem::CloseWindow)
-      .add_native_item(MenuItem::Copy)
-      .add_native_item(MenuItem::SelectAll)
-      .add_native_item(MenuItem::Undo)
-      .add_native_item(MenuItem::Redo)
-      .add_native_item(MenuItem::Paste),
-  ));
 
   let window_builder = tauri::WindowBuilder::new(
     &app_handle,
@@ -581,14 +540,23 @@ fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(bool), String
   .min_inner_size(window_width, window_height)
   .minimizable(false)
   .inner_size(window_width, window_height)
-  .menu(menu)
   .visible(false);
 
   let quickpaste_window = window_builder.build().map_err(|e| e.to_string())?;
 
   // Get the cursor position using Enigo
-  let enigo = Enigo::new();
-  let (cursor_x, cursor_y) = enigo.mouse_location();
+  // let enigo = Enigo::new();
+  // let (cursor_x, cursor_y) = enigo.mouse_location();
+
+  let position = Mouse::get_mouse_position();
+
+  let (cursor_x, cursor_y) = match position {
+    Mouse::Position { x, y } => (x, y),
+    Mouse::Error => {
+      println!("Failed to get mouse position, using default (100, 100)");
+      (100, 100)
+    }
+  };
 
   // Get all monitors
   let monitors = quickpaste_window
@@ -602,6 +570,7 @@ fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(bool), String
 
   for monitor in &monitors {
     scale_factor = monitor.scale_factor(); // Use the scale factor of the primary monitor
+    println!("Monitor scale factor: {}", scale_factor);
     let monitor_size = monitor.size();
 
     println!(
@@ -616,18 +585,21 @@ fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(bool), String
     global_height = global_height.max(actual_height);
   }
 
+  let cursor_x_scale = (cursor_x as f64 / scale_factor).round() as i32;
+  let cursor_y_scale = (cursor_y as f64 / scale_factor).round() as i32;
+
   // Calculate the window position in logical coordinates
-  let window_x = if cursor_x + window_width as i32 + 50 > global_width {
-    println!("Cursor at edge x: {}", cursor_x);
-    cursor_x - window_width as i32 - 50 // Place to the left if not enough space on the right
+  let window_x = if cursor_x_scale + window_width as i32 + 50 > global_width {
+    println!("Cursor at edge x: {}", cursor_x_scale);
+    cursor_x_scale - window_width as i32 - 50 // Place to the left if not enough space on the right
   } else {
-    cursor_x + 50
+    cursor_x_scale + 50
   };
 
-  let window_y = if cursor_y + window_height as i32 > global_height {
-    cursor_y - window_height as i32 - 50
+  let window_y = if cursor_y_scale + window_height as i32 > global_height {
+    cursor_y_scale - window_height as i32 - 50
   } else {
-    cursor_y - 50
+    cursor_y_scale - 50
   };
 
   quickpaste_window
@@ -637,28 +609,40 @@ fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(bool), String
     })
     .map_err(|e| e.to_string())?;
 
+  {
+    let app_handle_clone = app_handle.clone();
+
+    quickpaste_window.on_window_event(move |e| match e {
+      tauri::WindowEvent::Destroyed => {
+        // return_focus_to_previous_window();
+        app_handle_clone
+          .emit_all("window-events", "quickpaste-window-closed")
+          .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
+      }
+      tauri::WindowEvent::CloseRequested { api, .. } => {
+        api.prevent_close();
+        if let Some(window) = app_handle_clone.get_window("quickpaste") {
+          let _ = window
+            .close()
+            .map_err(|e| eprintln!("Failed to close window: {}", e));
+        }
+        // return_focus_to_previous_window();
+      }
+      _ => {}
+    });
+  }
+
   quickpaste_window.show().map_err(|e| e.to_string())?;
+  quickpaste_window.set_focus().map_err(|e| e.to_string())?;
 
-  quickpaste_window.clone().on_window_event(move |e| match e {
-    tauri::WindowEvent::Destroyed => {
-      return_focus_to_previous_window();
-    }
+  println!(
+    "User cursor position: {}x{}",
+    cursor_x_scale, cursor_y_scale
+  );
+  println!("Global window size: {}x{}", global_width, global_height);
+  println!("Window position: {}x{}", window_x, window_y);
 
-    tauri::WindowEvent::CloseRequested { api, .. } => {
-      let _ = quickpaste_window.close().map_err(|e| e.to_string());
-      api.prevent_close();
-
-      return_focus_to_previous_window();
-    }
-    _ => {}
-  });
-  // quickpaste_window.set_focus().map_err(|e| e.to_string())?;
-
-  // println!("User cursor position: {}x{}", cursor_x, cursor_y);
-  // println!("Global window size: {}x{}", global_width, global_height);
-  // println!("Window position: {}x{}", window_x, window_y);
-
-  Ok((true))
+  Ok(true)
 }
 
 #[tokio::main]
@@ -1055,7 +1039,10 @@ async fn main() {
       }
 
       if cfg!(debug_assertions) {
-        window.open_devtools();
+        #[cfg(debug_assertions)]
+        {
+          window.open_devtools();
+        }
       } else {
         window.hide().unwrap();
       }
@@ -1192,9 +1179,8 @@ async fn main() {
       autostart,
       is_autostart_enabled,
       open_history_window,
-      get_mouse_location,
       open_quickpaste_window,
-      set_focus_to_previous_window,
+      quickpaste_hide_paste_close,
       set_icon
     ])
     .plugin(clipboard::init())

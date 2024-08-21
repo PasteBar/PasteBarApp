@@ -94,10 +94,7 @@ const loadPrismComponents = async () => {
 
 async function invokeCopyPasteHistoryItem(historyId: UniqueIdentifier) {
   try {
-    await invoke('set_focus_to_previous_window')
-    await new Promise(resolve => setTimeout(resolve, 200))
-    invoke('copy_paste_history_item', { historyId, delay: 0 })
-    appWindow?.close()
+    await invoke('quickpaste_hide_paste_close', { historyId })
   } catch (error) {
     console.error('Error copying history item:', error)
   }
@@ -578,7 +575,7 @@ export default function ClipboardHistoryQuickPastePage() {
                                 movePinnedClipboardHistoryUpDown(move)
                               }}
                               setSelectHistoryItem={() => {}}
-                              onCopy={setCopiedItem}
+                              onCopy={invokeCopyPasteHistoryItem}
                               onCopyPaste={invokeCopyPasteHistoryItem}
                               pastingCountDown={
                                 historyId === pastedItemValue
@@ -750,7 +747,7 @@ export default function ClipboardHistoryQuickPastePage() {
                           setHistoryFilters={setHistoryFilters}
                           setAppFilters={setAppFilters}
                           setSelectHistoryItem={() => {}}
-                          onCopy={setCopiedItem}
+                          onCopy={invokeCopyPasteHistoryItem}
                           onCopyPaste={invokeCopyPasteHistoryItem}
                           isKeyboardSelected={keyboardSelectedItemId === historyId}
                           setKeyboardSelected={id => {

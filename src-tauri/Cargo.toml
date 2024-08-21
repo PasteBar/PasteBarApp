@@ -11,12 +11,13 @@ rust-version = "1.75.0"
 version = "1.4"
 features = []
 
-[target.'cfg(windows)'.dependencies]
+[target.'cfg(target_os = "windows")'.dependencies]
+winapi = { version = "0.3", features = ["winuser", "windef"] }
 winreg = "0.52.0"
 
 [dependencies]
 fns = "0"
-enigo = "0.1.2"
+mouse_position = "0.1.4"
 keyring = "2.3.2"
 dotenv = "0.15.0"
 bcrypt = "0.15.1"

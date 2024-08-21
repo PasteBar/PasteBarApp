@@ -211,6 +211,10 @@ function App() {
         }
 
         if (settings.hotKeysShowHideMainAppWindow?.valueText) {
+          console.log(
+            'settings.hotKeysShowHideMainAppWindow?.valueText',
+            settings.hotKeysShowHideMainAppWindow?.valueText
+          )
           try {
             register(settings.hotKeysShowHideMainAppWindow?.valueText, async () => {
               if (document.hasFocus()) {
@@ -228,6 +232,10 @@ function App() {
         }
 
         if (settings.hotKeysShowHideQuickPasteWindow?.valueText) {
+          console.log(
+            'settings.hotKeysShowHideMainAppWindow?.valueText',
+            settings.hotKeysShowHideQuickPasteWindow?.valueText
+          )
           try {
             register(settings.hotKeysShowHideQuickPasteWindow?.valueText, async () => {
               await uiStore.toggleHistoryQuickPasteWindow()
