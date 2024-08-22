@@ -70,6 +70,7 @@ interface ClipboardHistoryQuickPasteRowProps {
   isPasted?: boolean
   isSaved?: boolean
   isLargeView?: boolean
+  isScrolling?: boolean
   isPinnedTop?: boolean
   isPinnedTopFirst?: boolean
   isDisabledPinnedMoveUp?: boolean
@@ -121,6 +122,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
   clipboard,
   isDark,
   searchTerm,
+  isScrolling = false,
   isPinnedTop = false,
   isPinnedTopFirst = false,
   isDisabledPinnedMoveUp = false,
@@ -216,13 +218,13 @@ export function ClipboardHistoryQuickPasteRowComponent({
   ])
 
   useEffect(() => {
-    if (isKeyboardSelected && rowKeyboardRef.current) {
+    if (isKeyboardSelected && rowKeyboardRef.current && !isScrolling) {
       rowKeyboardRef.current.focus()
       rowKeyboardRef.current.scrollIntoView({
         block: 'nearest',
       })
     }
-  }, [isKeyboardSelected, rowKeyboardRef.current])
+  }, [isKeyboardSelected, rowKeyboardRef.current, isScrolling])
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -378,7 +380,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
                 ? 'bg-teal-50 hover:border-slate-300 dark:bg-sky-900/40 dark:hover:border-slate-700 hover:bg-teal-50/90 hover:dark:bg-sky-950'
                 : isKeyboardSelected
                   ? `bg-blue-50 border-blue-300 dark:bg-blue-950/80 dark:border-blue-900/80 hover:border-blue-300/80 dark:hover:border-blue-800 hover:bg-blue-50/80 ${
-                      isPinnedTop ? '!border dark:!bg-amber-950' : ''
+                      isPinnedTop ? ' dark:!bg-amber-950' : ''
                     }`
                   : isDeleting && !isDragPreview
                     ? 'border-red-400 bg-red-50 dark:bg-red-950/80 dark:border-red-900/80 dark:hover:border-red-800'

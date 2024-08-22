@@ -5,6 +5,7 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 import { isKeyAltPressed, isKeyCtrlPressed } from '~/store'
 import { useAtomValue } from 'jotai'
+import { throttle } from 'lodash-es'
 import { ArrowDownFromLine, ArrowUpToLine, Search } from 'lucide-react'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { Prism } from 'prism-react-renderer'
@@ -125,6 +126,7 @@ export default function ClipboardHistoryQuickPastePage() {
   const [isDragPinnedHistory, setIsDragPinnedHistory] = useState(false)
   const {
     setIsScrolling,
+    isScrolling,
     isShowHistoryPinned,
     setIsShowHistoryPinned,
     isSwapPanels,
@@ -135,6 +137,8 @@ export default function ClipboardHistoryQuickPastePage() {
     setPanelSize,
     setReturnRoute,
   } = useAtomValue(uiStoreAtom)
+
+  console.log('isScrolling in main', isScrolling)
 
   const { t } = useTranslation()
 
@@ -185,6 +189,16 @@ export default function ClipboardHistoryQuickPastePage() {
   const searchHistoryInputRef = useRef<HTMLInputElement | null>(null)
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
+
+  const onScrollCallback = throttle(
+    () => {
+      if (!isScrolling) {
+        setIsScrolling(true)
+      }
+    },
+    300,
+    { leading: true }
+  )
 
   const hasSearchOrFilter = useMemo(() => {
     return debouncedSearchTerm.length > 1 || historyFilters.length > 0
@@ -270,10 +284,11 @@ export default function ClipboardHistoryQuickPastePage() {
   }, [])
 
   useEffect(() => {
-    if (historyListSimpleBarRef) {
+    if (historyListSimpleBarRef.current) {
       setHistoryListSimpleBar(historyListSimpleBarRef)
+      historyListSimpleBarRef.current.addEventListener('scroll', onScrollCallback)
     }
-  }, [historyListSimpleBarRef])
+  }, [historyListSimpleBarRef.current])
 
   useEffect(() => {
     if (
@@ -348,6 +363,9 @@ export default function ClipboardHistoryQuickPastePage() {
 
   async function downHandler(event: KeyboardEvent) {
     event.preventDefault()
+    if (isScrolling) {
+      setIsScrolling(false)
+    }
 
     if (hasAltKey(event)) {
       isKeyAltPressed.value = true
@@ -540,6 +558,7 @@ export default function ClipboardHistoryQuickPastePage() {
                           <Box key={historyId}>
                             <ClipboardHistoryQuickPasteRow
                               isPinnedTop
+                              isScrolling={isScrolling}
                               setKeyboardSelected={id => {
                                 const index = clipboardHistory.findIndex(
                                   item => item.historyId === id
@@ -735,6 +754,7 @@ export default function ClipboardHistoryQuickPastePage() {
                           addToGenerateLinkMetaDataInProgress={
                             addToGenerateLinkMetaDataInProgress
                           }
+                          isScrolling={isScrolling}
                           removeToGenerateLinkMetaDataInProgress={
                             removeToGenerateLinkMetaDataInProgress
                           }
