@@ -1,0 +1,23 @@
+App restart required: 需要重启应用
+Application Starts with Main Window Hidden: 应用启动时主窗口隐藏
+Change: 更改
+Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: 仅在鼠标悬停在导航栏上时显示导航栏项目，以最小化可见的UI元素
+Global System OS Hotkeys: 全局系统操作系统热键
+Hide Collections Navbar: 隐藏收藏导航栏
+Hide collections menu dropdown on the navigation bar: 在导航栏上隐藏收藏菜单下拉列表
+Hide collections menu on the navbar: 在导航栏上隐藏收藏菜单
+Hide the App Dock Icon: 隐藏应用程序Dock图标
+? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
+: 应用重启时保持主窗口隐藏。您可以使用菜单栏或任务栏菜单，或使用全局热键重新打开它。
+No keys set: 未设置按键
+Press keys: 按下按键
+? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
+: 从macOS Dock中移除PasteBar应用图标，同时保持应用在后台运行。应用仍可通过菜单栏图标访问。需要重启应用才能生效。
+Set: 设置
+Set system OS hotkeys to show/hide the main app window and quick paste window: 设置系统操作系统热键以显示/隐藏主应用窗口和快速粘贴窗口
+Show Navbar Items Hover: 悬停时显示导航栏项目
+Show collections menu on the navbar: 在导航栏上显示收藏菜单
+Show navbar elements on hover only: 仅在悬停时显示导航栏元素
+Show/Hide Main App Window: 显示/隐藏主应用窗口
+Show/Hide Quick Paste Window: 显示/隐藏快速粘贴窗口
+Quick Paste Window: 快速粘贴窗口

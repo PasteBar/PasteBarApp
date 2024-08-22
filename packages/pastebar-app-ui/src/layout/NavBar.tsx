@@ -812,7 +812,7 @@ export function NavBar() {
                 await toggleHistoryQuickPasteWindow()
               }}
             >
-              {t('Quick Paste Window', { ns: 'quickpaste' })}
+              {t('Quick Paste Window', { ns: 'settings2' })}
               <MenubarShortcut className="ml-2">
                 <Shortcut keys="CTRL+P" />
               </MenubarShortcut>

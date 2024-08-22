@@ -1,0 +1,23 @@
+App restart required: Потрібен перезапуск
+Application Starts with Main Window Hidden: Додаток запускається з прихованим головним вікном
+Change: Змінити
+Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Відображати елементи панелі навігації лише при наведенні миші для мінімізації видимих елементів інтерфейсу
+Global System OS Hotkeys: Глобальні гарячі клавіші операційної системи
+Hide Collections Navbar: Приховати панель колекцій
+Hide collections menu dropdown on the navigation bar: Приховати меню колекцій на панелі навігації
+Hide collections menu on the navbar: Приховати меню колекцій на панелі навігації
+Hide the App Dock Icon: Приховати значок додатку в Dock
+? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
+: Тримати головне вікно додатку прихованим при перезапуску. Ви можете відкрити його знову, використовуючи меню бар або панель завдань, або за допомогою глобальних гарячих клавіш.
+No keys set: Клавіші не встановлені
+Press keys: Натисніть клавіші
+? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
+: Видалити значок додатку PasteBar з Dock macOS, зберігаючи роботу додатку у фоновому режимі. Додаток залишається доступним через значок у рядку меню. Для застосування змін потрібен перезапуск додатку.
+Set: Встановити
+Set system OS hotkeys to show/hide the main app window and quick paste window: Встановити гарячі клавіші ОС для показу/приховування головного вікна додатку та вікна швидкої вставки
+Show Navbar Items Hover: Показувати елементи панелі навігації при наведенні
+Show collections menu on the navbar: Показати меню колекцій на панелі навігації
+Show navbar elements on hover only: Показувати елементи панелі навігації лише при наведенні
+Show/Hide Main App Window: Показати/Приховати головне вікно додатку
+Show/Hide Quick Paste Window: Показати/Приховати вікно швидкої вставки
+Quick Paste Window: Вікно швидкої вставки

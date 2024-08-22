@@ -2,8 +2,6 @@ App restart required: App restart required
 Application Starts with Main Window Hidden: Application Starts with Main Window Hidden
 Change: Change
 Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements
-Display navbar items only when the mouse hovers over the navigation bar, minimizing visible UI elements: Display navbar items only when the mouse hovers over the navigation bar, minimizing visible UI elements
-Display navigation bar elements only when the mouse hovers over them, minimizing visible UI elements: Display navigation bar elements only when the mouse hovers over them, minimizing visible UI elements
 Global System OS Hotkeys: Global System OS Hotkeys
 Hide Collections Navbar: Hide Collections Navbar
 Hide collections menu dropdown on the navigation bar: Hide collections menu dropdown on the navigation bar
@@ -22,3 +20,4 @@ Show collections menu on the navbar: Show collections menu on the navbar
 Show navbar elements on hover only: Show navbar elements on hover only
 Show/Hide Main App Window: Show/Hide Main App Window
 Show/Hide Quick Paste Window: Show/Hide Quick Paste Window
+Quick Paste Window: Quick Paste Window
