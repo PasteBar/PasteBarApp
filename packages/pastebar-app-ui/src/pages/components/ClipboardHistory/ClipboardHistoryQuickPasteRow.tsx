@@ -219,7 +219,6 @@ export function ClipboardHistoryQuickPasteRowComponent({
 
   useEffect(() => {
     if (isKeyboardSelected && rowKeyboardRef.current && !isScrolling) {
-      rowKeyboardRef.current.focus()
       rowKeyboardRef.current.scrollIntoView({
         block: 'center',
       })
@@ -747,82 +746,19 @@ export function ClipboardHistoryQuickPasteRowComponent({
               >
                 {isHovering || isSelected ? (
                   <div className={`flex ${bgToolsPanel}`} key="hover-panel">
-                    {isPinnedTop ? (
-                      <Flex className="text-xs text-muted-foreground rounded px-1">
+                    {clipboard.timeAgoShort && (
+                      <Box className="text-xs text-muted-foreground rounded px-1">
                         <ToolTip
-                          text={t('Move Up', { ns: 'common' })}
+                          text={format(clipboard.updatedAt, 'PPpp')}
                           delayDuration={2000}
                           isCompact
-                          isDisabled={isDragPreview || isDisabledPinnedMoveUp}
+                          isDisabled={isDragPreview}
                           side="bottom"
                           sideOffset={10}
                         >
-                          <Box
-                            className={`${
-                              isDisabledPinnedMoveUp
-                                ? 'cursor-default text-gray-300 dark:text-gray-800'
-                                : 'cursor-pointer text-slate-500'
-                            } px-1 flex items-center justify-center`}
-                          >
-                            <MoveUp
-                              size={14}
-                              onClick={() => {
-                                if (isDisabledPinnedMoveUp) {
-                                  return
-                                }
-                                onMovePinnedUpDown({
-                                  historyId: clipboard.historyId,
-                                  moveUp: true,
-                                })
-                              }}
-                            />
-                          </Box>
+                          {clipboard.timeAgoShort}
                         </ToolTip>
-                        <ToolTip
-                          text={t('Move Down', { ns: 'common' })}
-                          delayDuration={2000}
-                          isCompact
-                          isDisabled={isDragPreview || isDisabledPinnedMoveDown}
-                          side="bottom"
-                          sideOffset={10}
-                        >
-                          <Box
-                            className={`${
-                              isDisabledPinnedMoveDown
-                                ? 'cursor-default text-gray-300 dark:text-gray-800'
-                                : 'cursor-pointer text-slate-500'
-                            } px-1 flex items-center justify-center`}
-                          >
-                            <MoveDown
-                              size={14}
-                              onClick={() => {
-                                if (isDisabledPinnedMoveDown) {
-                                  return
-                                }
-                                onMovePinnedUpDown({
-                                  historyId: clipboard.historyId,
-                                  moveDown: true,
-                                })
-                              }}
-                            />
-                          </Box>
-                        </ToolTip>
-                      </Flex>
-                    ) : (
-                      clipboard.timeAgoShort && (
-                        <Box className="text-xs text-muted-foreground rounded px-1">
-                          <ToolTip
-                            text={format(clipboard.updatedAt, 'PPpp')}
-                            delayDuration={2000}
-                            isCompact
-                            isDisabled={isDragPreview}
-                            side="bottom"
-                            sideOffset={10}
-                          >
-                            {clipboard.timeAgoShort}
-                          </ToolTip>
-                        </Box>
-                      )
+                      </Box>
                     )}
                   </div>
                 ) : (
