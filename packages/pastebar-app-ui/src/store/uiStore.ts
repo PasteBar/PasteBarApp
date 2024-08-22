@@ -70,7 +70,7 @@ export interface UIStoreState {
   setIsHideMainWindow: (isHideMainWindow: boolean) => void
   setIsSplitPanelView: (isSplitPanelView: boolean) => void
   toggleIsSplitPanelView: () => void
-  toggleHistoryQuickPasteWindow: () => void
+  toggleHistoryQuickPasteWindow: (title: string) => void
   increaseFontSize: () => void
   decreaseFontSize: () => void
   resetFontSize: () => void
@@ -134,8 +134,8 @@ export const uiStore = createStore<UIStoreState>()(
         set(() => ({
           isSplitPanelView,
         })),
-      toggleHistoryQuickPasteWindow: async () => {
-        await invoke('open_quickpaste_window')
+      toggleHistoryQuickPasteWindow: async title => {
+        await invoke('open_quickpaste_window', { title })
       },
 
       toggleIsSplitPanelView: async () => {

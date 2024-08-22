@@ -274,7 +274,7 @@ export function NavBar() {
   })
 
   useHotkeys(['alt+p', 'ctrl+p', 'meta+p'], async () => {
-    await toggleHistoryQuickPasteWindow()
+    await toggleHistoryQuickPasteWindow(t('PasteBar Quick Paste', { ns: 'settings2' }))
   })
 
   useHotkeys('ctrl+w', () => {
@@ -809,7 +809,9 @@ export function NavBar() {
 
             <MenubarItem
               onClick={async () => {
-                await toggleHistoryQuickPasteWindow()
+                await toggleHistoryQuickPasteWindow(
+                  t('PasteBar Quick Paste', { ns: 'settings2' })
+                )
               }}
             >
               {t('Quick Paste Window', { ns: 'settings2' })}

@@ -505,7 +505,7 @@ async fn open_history_window(app_handle: tauri::AppHandle) -> Result<(), String>
 }
 
 #[tauri::command]
-async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), String> {
+async fn open_quickpaste_window(app_handle: tauri::AppHandle, title: String) -> Result<(), String> {
   if let Some(window) = app_handle.get_window("quickpaste") {
     window.close().map_err(|e| e.to_string())?;
     return Ok(());
@@ -527,7 +527,7 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), Stri
     "quickpaste",
     tauri::WindowUrl::App("quickpaste-index".into()),
   )
-  .title("PasteBar Quick Paste")
+  .title(title)
   .always_on_top(true)
   .maximizable(false)
   .resizable(true)

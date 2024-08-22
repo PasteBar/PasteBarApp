@@ -230,7 +230,9 @@ function App() {
         if (settings.hotKeysShowHideQuickPasteWindow?.valueText) {
           try {
             register(settings.hotKeysShowHideQuickPasteWindow?.valueText, async () => {
-              await uiStore.toggleHistoryQuickPasteWindow()
+              await uiStore.toggleHistoryQuickPasteWindow(
+                t('PasteBar Quick Paste', { ns: 'settings2' })
+              )
             }).catch(e => {
               console.error(e)
             })
