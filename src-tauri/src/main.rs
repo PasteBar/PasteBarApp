@@ -511,8 +511,8 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), Stri
     return Ok(());
   }
 
-  let window_width = 300.0;
-  let window_height = 400.0;
+  let window_width = 310.0;
+  let window_height = 420.0;
 
   let main_window = app_handle.get_window("main").unwrap();
   let is_main_window_visible = main_window.is_visible().unwrap();
@@ -530,7 +530,7 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle) -> Result<(), Stri
   .title("PasteBar Quick Paste")
   .always_on_top(true)
   .maximizable(false)
-  .resizable(false)
+  .resizable(true)
   .max_inner_size(500.0, 800.0)
   .min_inner_size(window_width, window_height)
   .minimizable(false)

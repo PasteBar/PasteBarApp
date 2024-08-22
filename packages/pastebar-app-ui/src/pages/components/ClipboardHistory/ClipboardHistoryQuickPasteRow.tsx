@@ -221,7 +221,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
     if (isKeyboardSelected && rowKeyboardRef.current && !isScrolling) {
       rowKeyboardRef.current.focus()
       rowKeyboardRef.current.scrollIntoView({
-        block: 'nearest',
+        block: 'center',
       })
     }
   }, [isKeyboardSelected, rowKeyboardRef.current, isScrolling])

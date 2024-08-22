@@ -13,9 +13,11 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { useTranslation } from 'react-i18next'
 import { VariableSizeList } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
+import useResizeObserver from 'use-resize-observer'
 
 import mergeRefs from '~/components/atoms/merge-refs'
 import ToolTip from '~/components/atoms/tooltip'
+import AutoSize from '~/components/libs/autosizer'
 import type { SimpleBarOptions } from '~/components/libs/simplebar-react/simplebar-core'
 import { Box, ButtonGhost, Flex, Input, Text } from '~/components/ui'
 
@@ -143,6 +145,8 @@ export default function ClipboardHistoryQuickPastePage() {
   const { t } = useTranslation()
 
   const { themeDark } = useAtomValue(themeStoreAtom)
+  const { ref: pinnedPanelRef, height: pinnedPanelHeight } = useResizeObserver()
+  const { ref: historyPanelRef, height: historyPanelHeight } = useResizeObserver()
 
   const { pinnedClipboardHistory } = useGetPinnedClipboardHistories()
 
@@ -459,8 +463,13 @@ export default function ClipboardHistoryQuickPastePage() {
     }
   }, [clipboardHistory, keyboardIndexSelectedItem.value])
 
+  console.log('historyPanelHeight', historyPanelHeight)
+
   return (
-    <Box className="flex flex-col bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.8] pb-6 pt-4 px-3 pr-3">
+    <Box
+      ref={historyPanelRef}
+      className="h-[100vh] flex flex-col bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.8] pb-6 pt-4 px-3 pr-3"
+    >
       <Box className="flex flex-col relative" id="side-panel_tour">
         {hasSearchOrFilter && (
           <Box
@@ -524,6 +533,7 @@ export default function ClipboardHistoryQuickPastePage() {
         ) : (
           pinnedClipboardHistory.length > 0 && (
             <Box
+              ref={pinnedPanelRef}
               className={`${
                 dragOverPinnedId ? '!bg-orange-100 dark:!bg-orange-500/40' : ''
               } px-2 py-2 pb-0 bg-orange-200/70 dark:bg-orange-900/60 mt-0 my-2 rounded-md relative`}
@@ -555,78 +565,74 @@ export default function ClipboardHistoryQuickPastePage() {
                       .map((item, index) => {
                         const historyId = item.historyId
                         return (
-                          <Box key={historyId}>
-                            <ClipboardHistoryQuickPasteRow
-                              isPinnedTop
-                              isScrolling={isScrolling}
-                              setKeyboardSelected={id => {
-                                const index = clipboardHistory.findIndex(
-                                  item => item.historyId === id
-                                )
-                                if (index > -1) {
-                                  keyboardIndexSelectedItem.value = index
-                                }
-                              }}
-                              isKeyboardSelected={keyboardSelectedItemId === historyId}
-                              hasClipboardHistoryURLErrors={clipboardHistoryIdsURLErrors.includes(
-                                historyId
-                              )}
-                              setHistoryFilters={setHistoryFilters}
-                              setAppFilters={setAppFilters}
-                              addToClipboardHistoryIdsURLErrors={
-                                addToClipboardHistoryIdsURLErrors
+                          <ClipboardHistoryQuickPasteRow
+                            isPinnedTop
+                            isScrolling={isScrolling}
+                            setKeyboardSelected={id => {
+                              const index = clipboardHistory.findIndex(
+                                item => item.historyId === id
+                              )
+                              if (index > -1) {
+                                keyboardIndexSelectedItem.value = index
                               }
-                              addToGenerateLinkMetaDataInProgress={
-                                addToGenerateLinkMetaDataInProgress
-                              }
-                              removeToGenerateLinkMetaDataInProgress={
-                                removeToGenerateLinkMetaDataInProgress
-                              }
-                              hasGenerateLinkMetaDataInProgress={clipboardHistoryGenerateLinkMetaDataInProgress.includes(
-                                historyId
-                              )}
-                              isPinnedTopFirst={index === 0}
-                              isDisabledPinnedMoveUp={index === 0}
-                              isDisabledPinnedMoveDown={
-                                index === pinnedClipboardHistory.length - 1
-                              }
-                              onMovePinnedUpDown={move => {
-                                movePinnedClipboardHistoryUpDown(move)
-                              }}
-                              setSelectHistoryItem={() => {}}
-                              onCopy={invokeCopyPasteHistoryItem}
-                              onCopyPaste={invokeCopyPasteHistoryItem}
-                              pastingCountDown={
-                                historyId === pastedItemValue
-                                  ? pastingCountDown
-                                  : undefined
-                              }
-                              isPasted={historyId === pastedItemValue}
-                              isCopied={historyId === copiedItemValue}
-                              isSaved={historyId === savingItem}
-                              setSavingItem={setSavingItem}
-                              isDeleting={false}
-                              isSelected={false}
-                              setBrokenImageItem={setBrokenImageItem}
-                              isBrokenImage={brokenImageItems.includes(historyId)}
-                              showTimeAgo={false}
-                              isExpanded={expandedItems.includes(historyId)}
-                              isWrapText={wrappedTextItems.includes(historyId)}
-                              searchTerm={hasSearchOrFilter ? debouncedSearchTerm : ''}
-                              showSelectHistoryItems={showSelectHistoryItems}
-                              invalidateClipboardHistoryQuery={() => {
-                                invalidateClipboardHistoryQuery()
-                                doRefetchFindClipboardHistory()
-                              }}
-                              setExpanded={setExpanded}
-                              setWrapText={setWrapText}
-                              isDark={isDark}
-                              setRowHeight={setRowHeight}
-                              clipboard={item}
-                              removeLinkMetaData={removeLinkMetaData}
-                              generateLinkMetaData={generateLinkMetaData}
-                            />
-                          </Box>
+                            }}
+                            isKeyboardSelected={keyboardSelectedItemId === historyId}
+                            hasClipboardHistoryURLErrors={clipboardHistoryIdsURLErrors.includes(
+                              historyId
+                            )}
+                            setHistoryFilters={setHistoryFilters}
+                            setAppFilters={setAppFilters}
+                            addToClipboardHistoryIdsURLErrors={
+                              addToClipboardHistoryIdsURLErrors
+                            }
+                            addToGenerateLinkMetaDataInProgress={
+                              addToGenerateLinkMetaDataInProgress
+                            }
+                            removeToGenerateLinkMetaDataInProgress={
+                              removeToGenerateLinkMetaDataInProgress
+                            }
+                            hasGenerateLinkMetaDataInProgress={clipboardHistoryGenerateLinkMetaDataInProgress.includes(
+                              historyId
+                            )}
+                            isPinnedTopFirst={index === 0}
+                            isDisabledPinnedMoveUp={index === 0}
+                            isDisabledPinnedMoveDown={
+                              index === pinnedClipboardHistory.length - 1
+                            }
+                            onMovePinnedUpDown={move => {
+                              movePinnedClipboardHistoryUpDown(move)
+                            }}
+                            setSelectHistoryItem={() => {}}
+                            onCopy={invokeCopyPasteHistoryItem}
+                            onCopyPaste={invokeCopyPasteHistoryItem}
+                            pastingCountDown={
+                              historyId === pastedItemValue ? pastingCountDown : undefined
+                            }
+                            isPasted={historyId === pastedItemValue}
+                            isCopied={historyId === copiedItemValue}
+                            isSaved={historyId === savingItem}
+                            setSavingItem={setSavingItem}
+                            isDeleting={false}
+                            isSelected={false}
+                            setBrokenImageItem={setBrokenImageItem}
+                            isBrokenImage={brokenImageItems.includes(historyId)}
+                            showTimeAgo={false}
+                            isExpanded={expandedItems.includes(historyId)}
+                            isWrapText={wrappedTextItems.includes(historyId)}
+                            searchTerm={hasSearchOrFilter ? debouncedSearchTerm : ''}
+                            showSelectHistoryItems={showSelectHistoryItems}
+                            invalidateClipboardHistoryQuery={() => {
+                              invalidateClipboardHistoryQuery()
+                              doRefetchFindClipboardHistory()
+                            }}
+                            setExpanded={setExpanded}
+                            setWrapText={setWrapText}
+                            isDark={isDark}
+                            setRowHeight={setRowHeight}
+                            clipboard={item}
+                            removeLinkMetaData={removeLinkMetaData}
+                            generateLinkMetaData={generateLinkMetaData}
+                          />
                         )
                       })}
                 </Box>
@@ -675,158 +681,174 @@ export default function ClipboardHistoryQuickPastePage() {
           )
         )}
 
-        {clipboardHistory.length > 0 || hasSearchOrFilter ? (
-          <div className="relative h-full" id="quick-paste-history-list">
-            {currentTopItemTimeAgo && (
-              <Box
-                className={`${
-                  newClipboardHistoryCount > 0 ? 'top-9' : 'top-1'
-                } absolute z-100 animate-in fade-in fade-out duration-300 flex justify-center w-full ml-[-5px] pointer-events-none`}
-              >
-                <ToolTip
-                  text={t('Scroll to Top', { ns: 'common' })}
-                  isDisabled={Boolean(activeDragId)}
-                  className="animate-in fade-in fade-out duration-300"
-                  isCompact
-                  delayDuration={2000}
-                  side="bottom"
-                  asChild
-                  sideOffset={10}
+        <Box>
+          {clipboardHistory.length > 0 || hasSearchOrFilter ? (
+            <div className="relative" id="quick-paste-history-list">
+              {currentTopItemTimeAgo && (
+                <Box
+                  className={`${
+                    newClipboardHistoryCount > 0 ? 'top-9' : 'top-1'
+                  } absolute z-100 animate-in fade-in fade-out duration-300 flex justify-center w-full ml-[-5px] pointer-events-none`}
                 >
-                  <ButtonGhost
-                    className="pointer-events-auto rounded-full bg-slate-300 dark:bg-slate-600 hover:bg-slate-200 hover:dark:bg-slate-700"
-                    onClick={() => {
-                      scrollToTopHistoryList(true)
-                    }}
+                  <ToolTip
+                    text={t('Scroll to Top', { ns: 'common' })}
+                    isDisabled={Boolean(activeDragId)}
+                    className="animate-in fade-in fade-out duration-300"
+                    isCompact
+                    delayDuration={2000}
+                    side="bottom"
+                    asChild
+                    sideOffset={10}
                   >
-                    <Text className="text-mute text-xs text-center px-3">
-                      {currentTopItemTimeAgo}
-                    </Text>
-                  </ButtonGhost>
-                </ToolTip>
-              </Box>
-            )}
+                    <ButtonGhost
+                      className="pointer-events-auto rounded-full bg-slate-300 dark:bg-slate-600 hover:bg-slate-200 hover:dark:bg-slate-700"
+                      onClick={() => {
+                        scrollToTopHistoryList(true)
+                      }}
+                    >
+                      <Text className="text-mute text-xs text-center px-3">
+                        {currentTopItemTimeAgo}
+                      </Text>
+                    </ButtonGhost>
+                  </ToolTip>
+                </Box>
+              )}
 
-            <InfiniteLoader
-              isItemLoaded={index =>
-                index < clipboardHistory.length && !!clipboardHistory[index]
-              }
-              threshold={10}
-              itemCount={clipboardHistory.length + 1}
-              loadMoreItems={loadMoreClipBoardHistory}
-            >
-              {({ onItemsRendered, ref }) => {
-                return (
-                  <VariableSizeList
-                    overscanCount={10}
-                    height={400 - (hasSearchOrFilter ? 60 : 85)}
-                    itemCount={clipboardHistory.length}
-                    width="100%"
-                    itemSize={getRowHeight}
-                    itemKey={index => clipboardHistory[index].historyId ?? 'id-${index}'}
-                    onItemsRendered={e => {
-                      if (e.visibleStartIndex > 20) {
-                        const currentTopItem = clipboardHistory[e.visibleStartIndex]
-                        if (currentTopItem?.timeAgo) {
-                          if (currentTopItemTimeAgo !== currentTopItem.timeAgo) {
-                            setCurrentTopItemTimeAgo(currentTopItem.timeAgo)
+              <InfiniteLoader
+                isItemLoaded={index =>
+                  index < clipboardHistory.length && !!clipboardHistory[index]
+                }
+                threshold={10}
+                itemCount={clipboardHistory.length + 1}
+                loadMoreItems={loadMoreClipBoardHistory}
+              >
+                {({ onItemsRendered, ref }) => {
+                  return (
+                    <VariableSizeList
+                      overscanCount={10}
+                      style={{ overflowX: 'hidden' }}
+                      height={
+                        historyPanelHeight
+                          ? historyPanelHeight -
+                            (hasSearchOrFilter
+                              ? 115
+                              : pinnedClipboardHistory.length === 0
+                                ? 0
+                                : pinnedPanelHeight
+                                  ? pinnedPanelHeight
+                                  : 0)
+                          : 400
+                      }
+                      itemCount={clipboardHistory.length}
+                      width="100%"
+                      itemSize={getRowHeight}
+                      itemKey={index =>
+                        clipboardHistory[index].historyId ?? 'id-${index}'
+                      }
+                      onItemsRendered={e => {
+                        if (e.visibleStartIndex > 20) {
+                          const currentTopItem = clipboardHistory[e.visibleStartIndex]
+                          if (currentTopItem?.timeAgo) {
+                            if (currentTopItemTimeAgo !== currentTopItem.timeAgo) {
+                              setCurrentTopItemTimeAgo(currentTopItem.timeAgo)
+                            }
+                          } else {
+                            setCurrentTopItemTimeAgo('')
                           }
-                        } else {
+                        } else if (currentTopItemTimeAgo) {
                           setCurrentTopItemTimeAgo('')
                         }
-                      } else if (currentTopItemTimeAgo) {
-                        setCurrentTopItemTimeAgo('')
-                      }
-                      !debouncedSearchTerm && onItemsRendered(e)
-                    }}
-                    outerRef={historyListSimpleBarRef}
-                    ref={mergeRefs(listRef, ref)}
-                  >
-                    {({ index, style }) => {
-                      const clipboard = clipboardHistory[index]
-                      const { historyId, showTimeAgo, timeAgo } = clipboard
+                        !debouncedSearchTerm && onItemsRendered(e)
+                      }}
+                      outerRef={historyListSimpleBarRef}
+                      ref={mergeRefs(listRef, ref)}
+                    >
+                      {({ index, style }) => {
+                        const clipboard = clipboardHistory[index]
+                        const { historyId, showTimeAgo, timeAgo } = clipboard
 
-                      return (
-                        <ClipboardHistoryQuickPasteRow
-                          hasClipboardHistoryURLErrors={clipboardHistoryIdsURLErrors.includes(
-                            historyId
-                          )}
-                          addToGenerateLinkMetaDataInProgress={
-                            addToGenerateLinkMetaDataInProgress
-                          }
-                          isScrolling={isScrolling}
-                          removeToGenerateLinkMetaDataInProgress={
-                            removeToGenerateLinkMetaDataInProgress
-                          }
-                          addToClipboardHistoryIdsURLErrors={
-                            addToClipboardHistoryIdsURLErrors
-                          }
-                          hasGenerateLinkMetaDataInProgress={clipboardHistoryGenerateLinkMetaDataInProgress.includes(
-                            historyId
-                          )}
-                          setHistoryFilters={setHistoryFilters}
-                          setAppFilters={setAppFilters}
-                          setSelectHistoryItem={() => {}}
-                          onCopy={invokeCopyPasteHistoryItem}
-                          onCopyPaste={invokeCopyPasteHistoryItem}
-                          isKeyboardSelected={keyboardSelectedItemId === historyId}
-                          setKeyboardSelected={id => {
-                            const index = clipboardHistory.findIndex(
-                              item => item.historyId === id
-                            )
-                            if (index > -1) {
-                              keyboardIndexSelectedItem.value = index
+                        return (
+                          <ClipboardHistoryQuickPasteRow
+                            hasClipboardHistoryURLErrors={clipboardHistoryIdsURLErrors.includes(
+                              historyId
+                            )}
+                            addToGenerateLinkMetaDataInProgress={
+                              addToGenerateLinkMetaDataInProgress
                             }
-                          }}
-                          pastingCountDown={
-                            historyId === pastedItemValue ? pastingCountDown : undefined
-                          }
-                          isPasted={historyId === pastedItemValue}
-                          isCopied={historyId === copiedItemValue}
-                          isSaved={historyId === savingItem}
-                          setSavingItem={setSavingItem}
-                          key={historyId}
-                          isDeleting={false}
-                          isSelected={false}
-                          setBrokenImageItem={setBrokenImageItem}
-                          isBrokenImage={brokenImageItems.includes(historyId)}
-                          showTimeAgo={showTimeAgo}
-                          timeAgo={timeAgo}
-                          isExpanded={expandedItems.includes(historyId)}
-                          isWrapText={wrappedTextItems.includes(historyId)}
-                          searchTerm={hasSearchOrFilter ? debouncedSearchTerm : ''}
-                          showSelectHistoryItems={showSelectHistoryItems}
-                          invalidateClipboardHistoryQuery={() => {
-                            invalidateClipboardHistoryQuery()
-                            doRefetchFindClipboardHistory()
-                          }}
-                          setExpanded={setExpanded}
-                          setWrapText={setWrapText}
-                          isDark={isDark}
-                          setRowHeight={setRowHeight}
-                          clipboard={clipboard}
-                          removeLinkMetaData={removeLinkMetaData}
-                          generateLinkMetaData={generateLinkMetaData}
-                          index={index}
-                          style={style}
-                        />
-                      )
-                    }}
-                  </VariableSizeList>
-                )
-              }}
-            </InfiniteLoader>
-          </div>
-        ) : (
-          !isClipboardInfiniteHistoryLoading &&
-          infiniteClipboardHistory?.pages?.flat().length === 0 && (
-            <Flex className="flex items-center flex-col gap-3 justify-center">
-              <Text className="animate-in fade-in duration-600 text-slate-300 text-xs bg-slate-100 rounded-full px-3 dark:text-slate-600 dark:bg-slate-900">
-                {t('No Clipboard History', { ns: 'dashboard' })}
-              </Text>
-            </Flex>
-          )
-        )}
+                            isScrolling={isScrolling}
+                            removeToGenerateLinkMetaDataInProgress={
+                              removeToGenerateLinkMetaDataInProgress
+                            }
+                            addToClipboardHistoryIdsURLErrors={
+                              addToClipboardHistoryIdsURLErrors
+                            }
+                            hasGenerateLinkMetaDataInProgress={clipboardHistoryGenerateLinkMetaDataInProgress.includes(
+                              historyId
+                            )}
+                            setHistoryFilters={setHistoryFilters}
+                            setAppFilters={setAppFilters}
+                            setSelectHistoryItem={() => {}}
+                            onCopy={invokeCopyPasteHistoryItem}
+                            onCopyPaste={invokeCopyPasteHistoryItem}
+                            isKeyboardSelected={keyboardSelectedItemId === historyId}
+                            setKeyboardSelected={id => {
+                              const index = clipboardHistory.findIndex(
+                                item => item.historyId === id
+                              )
+                              if (index > -1) {
+                                keyboardIndexSelectedItem.value = index
+                              }
+                            }}
+                            pastingCountDown={
+                              historyId === pastedItemValue ? pastingCountDown : undefined
+                            }
+                            isPasted={historyId === pastedItemValue}
+                            isCopied={historyId === copiedItemValue}
+                            isSaved={historyId === savingItem}
+                            setSavingItem={setSavingItem}
+                            key={historyId}
+                            isDeleting={false}
+                            isSelected={false}
+                            setBrokenImageItem={setBrokenImageItem}
+                            isBrokenImage={brokenImageItems.includes(historyId)}
+                            showTimeAgo={showTimeAgo}
+                            timeAgo={timeAgo}
+                            isExpanded={expandedItems.includes(historyId)}
+                            isWrapText={wrappedTextItems.includes(historyId)}
+                            searchTerm={hasSearchOrFilter ? debouncedSearchTerm : ''}
+                            showSelectHistoryItems={showSelectHistoryItems}
+                            invalidateClipboardHistoryQuery={() => {
+                              invalidateClipboardHistoryQuery()
+                              doRefetchFindClipboardHistory()
+                            }}
+                            setExpanded={setExpanded}
+                            setWrapText={setWrapText}
+                            isDark={isDark}
+                            setRowHeight={setRowHeight}
+                            clipboard={clipboard}
+                            removeLinkMetaData={removeLinkMetaData}
+                            generateLinkMetaData={generateLinkMetaData}
+                            index={index}
+                            style={style}
+                          />
+                        )
+                      }}
+                    </VariableSizeList>
+                  )
+                }}
+              </InfiniteLoader>
+            </div>
+          ) : (
+            !isClipboardInfiniteHistoryLoading &&
+            infiniteClipboardHistory?.pages?.flat().length === 0 && (
+              <Flex className="flex items-center flex-col gap-3 justify-center">
+                <Text className="animate-in fade-in duration-600 text-slate-300 text-xs bg-slate-100 rounded-full px-3 dark:text-slate-600 dark:bg-slate-900">
+                  {t('No Clipboard History', { ns: 'dashboard' })}
+                </Text>
+              </Flex>
+            )
+          )}
+        </Box>
       </Box>
     </Box>
   )
