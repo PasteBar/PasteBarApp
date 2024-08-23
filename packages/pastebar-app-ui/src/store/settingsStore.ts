@@ -52,6 +52,9 @@ type Settings = {
   copyPasteDelay: number
   copyPasteSequencePinnedDelay: number
   copyPasteSequenceIsReversOrder: boolean
+  hotKeysShowHideMainAppWindow: string
+  hotKeysShowHideQuickPasteWindow: string
+  isHideMacOSDockIcon: boolean
   isAutoCloseOnCopyPaste: boolean
   isAutoPreviewLinkCardsEnabled: boolean
   isAutoGenerateLinkCardsEnabled: boolean
@@ -60,6 +63,9 @@ type Settings = {
   isShowCollectionNameOnNavBar: boolean
   isShowDisabledCollectionsOnNavBarMenu: boolean
   isSkipAutoStartPrompt: boolean
+  isHideCollectionsOnNavBar: boolean
+  isShowNavBarItemsOnHoverOnly: boolean
+  isKeepMainWindowClosedOnRestartEnabled: boolean
   pasteSequenceEachSeparator: string
   userSelectedLanguage: string
   isFirstRun: boolean
@@ -132,6 +138,12 @@ export interface SettingsStoreState {
   setScreenLockRecoveryPasswordMasked: (backupPasswordMasked: string | null) => void
   setIsAppLocked: (isLocked: boolean) => void
   setIsScreenLockPassCodeRequireOnStart: (isRequire: boolean) => void
+  setIsHideMacOSDockIcon: (isHideMacOSDockIcon: boolean) => void
+  setHotKeysShowHideMainAppWindow: (hotKeysShowHideMainAppWindow: string) => void
+  setHotKeysShowHideQuickPasteWindow: (hotKeysShowHideQuickPasteWindow: string) => void
+  setIsKeepMainWindowClosedOnRestartEnabled: (isEnabled: boolean) => void
+  setIsHideCollectionsOnNavBar: (isEnabled: boolean) => void
+  setIsShowNavBarItemsOnHoverOnly: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -164,11 +176,17 @@ const initialState: SettingsStoreState & Settings = {
   historyDetectLanguagesPrioritizedList: [],
   historyExclusionList: '',
   historyExclusionAppList: '',
+  isHideCollectionsOnNavBar: false,
+  isShowNavBarItemsOnHoverOnly: false,
+  isKeepMainWindowClosedOnRestartEnabled: false,
   isExclusionListEnabled: false,
   isExclusionAppListEnabled: false,
   isAutoClearSettingsEnabled: false,
   isAutoMaskWordsListEnabled: false,
+  isHideMacOSDockIcon: false,
   isNotTourCompletedOrSkipped: () => false,
+  hotKeysShowHideMainAppWindow: '',
+  hotKeysShowHideQuickPasteWindow: '',
   autoMaskWordsList: '',
   isHistoryDetectLanguageEnabled: true,
   historyDetectLanguageMinLines: 3,
@@ -218,6 +236,9 @@ const initialState: SettingsStoreState & Settings = {
   setAutoClearSettingsDuration: () => {},
   setAutoClearSettingsDurationType: () => {},
   setIsHistoryDetectLanguageEnabled: () => {},
+  setIsHideMacOSDockIcon: () => {},
+  setHotKeysShowHideMainAppWindow: () => {},
+  setHotKeysShowHideQuickPasteWindow: () => {},
   setHistoryExclusionList: () => {},
   setIsHistoryAutoUpdateOnCaputureEnabled: () => {},
   addToHistoryExclusionAppList: () => {},
@@ -248,6 +269,9 @@ const initialState: SettingsStoreState & Settings = {
   setIsClipNotesHoverCardsEnabled: () => {},
   setIsScreenLockPassCodeRequireOnStart: () => {},
   setIsFirstRunAfterUpdate: () => {},
+  setIsKeepMainWindowClosedOnRestartEnabled: () => {},
+  setIsHideCollectionsOnNavBar: () => {},
+  setIsShowNavBarItemsOnHoverOnly: () => {},
   initConstants: () => {},
   setAppDataDir: () => {},
   updateSetting: () => {},
@@ -509,6 +533,30 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   setIsFirstRun: (isFirstRun: boolean) => {
     return get().updateSetting('isFirstRun', isFirstRun)
   },
+  setIsHideMacOSDockIcon: async (isHideMacOSDockIcon: boolean) => {
+    return get().updateSetting('isHideMacOSDockIcon', isHideMacOSDockIcon)
+  },
+  setHotKeysShowHideMainAppWindow: async (hotKeysShowHideMainAppWindow: string) => {
+    return get().updateSetting(
+      'hotKeysShowHideMainAppWindow',
+      hotKeysShowHideMainAppWindow
+    )
+  },
+  setIsKeepMainWindowClosedOnRestartEnabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isKeepMainWindowClosedOnRestartEnabled', isEnabled)
+  },
+  setIsHideCollectionsOnNavBar: async (isEnabled: boolean) => {
+    return get().updateSetting('isHideCollectionsOnNavBar', isEnabled)
+  },
+  setIsShowNavBarItemsOnHoverOnly: async (isEnabled: boolean) => {
+    return get().updateSetting('isShowNavBarItemsOnHoverOnly', isEnabled)
+  },
+  setHotKeysShowHideQuickPasteWindow: async (hotKeysShowHideQuickPasteWindow: string) => {
+    return get().updateSetting(
+      'hotKeysShowHideQuickPasteWindow',
+      hotKeysShowHideQuickPasteWindow
+    )
+  },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()
     return (
@@ -561,7 +609,7 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
         !get().shouldSkipVersionCheck(manifest?.version, isManualCheck)
       ) {
         availableVersionNumber.value = manifest?.version ?? null
-        if (manifest?.body) {
+        if (manifest?.body && window['markdown']) {
           // @ts-expect-error
           window['markdown'].ready.then(markdown => {
             try {

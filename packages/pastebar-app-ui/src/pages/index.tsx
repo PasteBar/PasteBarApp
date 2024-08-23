@@ -22,6 +22,7 @@ export default [
   { path: 'menu', element: <PasteMenuPage />, index: true },
   { path: 'history', element: <ClipboardHistoryPage /> },
   { path: 'history-index', element: <ClipboardHistoryPage /> },
+  { path: 'quickpaste-index', element: <ClipboardHistoryPage /> },
   {
     path: 'app-settings',
     element: <AppSettingsPage />,

@@ -70,6 +70,12 @@ input[type='number']::-webkit-inner-spin-button {
   background: transparent;
 }
 
+#quick-paste-history-list > ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+
 .dark ::-webkit-scrollbar-thumb {
   border-radius: 0.75rem;
   @apply bg-slate-500;
@@ -78,6 +84,11 @@ input[type='number']::-webkit-inner-spin-button {
 ::-webkit-scrollbar-thumb {
   border-radius: 0.75rem;
   @apply bg-slate-300;
+}
+
+#quick-paste-history-list ::-webkit-scrollbar-thumb {
+  border-radius: 0.75rem;
+  @apply bg-gray-400;
 }
 
 textarea::-webkit-scrollbar {

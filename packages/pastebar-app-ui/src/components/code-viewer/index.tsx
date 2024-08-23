@@ -52,9 +52,9 @@ export const CodeViewer: FC<CodeViewerProps> = ({
   const mdHTML = useSignal('')
 
   useEffect(() => {
-    if (language === 'markdown') {
+    if (language === 'markdown' && window['markdown']) {
       // @ts-expect-error unknown type markdown
-      window['markdown'].ready.then(markdown => {
+      window['markdown']?.ready.then(markdown => {
         try {
           const html = markdown.parse(value)
           mdHTML.value = DOMPurify.sanitize(html as string, {

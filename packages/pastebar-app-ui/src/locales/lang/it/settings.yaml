@@ -1,0 +1,178 @@
+"<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.": È stato impostato un codice di accesso di <strong>{{screenLockPassCodeLength}}</strong> cifre.
+Activation Success: Attivazione Riuscita
+? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
+: Aggiungi una stella al testo copiato quando lo copi due volte in 1 secondo. Questo ti permette di aggiungere rapidamente testo o link copiati ai tuoi preferiti e trovarli facilmente nella cronologia degli appunti.
+Add an unlimited number of tabs within each collection for better organization and easy access.: Aggiungi un numero illimitato di schede all\'interno di ogni collezione per una migliore organizzazione e un facile accesso.
+Advanced settings: Impostazioni avanzate
+Already Active: Già Attivo
+Application Auto Start: Avvio Automatico dell'Applicazione
+Application Color Theme: Tema Colore dell'Applicazione
+Application UI Color Theme: Tema Colore dell'Interfaccia Utente
+Application UI Fonts Scale: Scala dei Caratteri dell'Interfaccia Utente
+Application UI Language: Lingua dell'Interfaccia Utente
+Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Le applicazioni elencate di seguito non avranno la loro azione di copia negli appunti catturata nella cronologia degli appunti. Non sensibile alle maiuscole/minuscole.
+Auto Disable History Capture when Screen Unlocked: Disabilita Automaticamente la Cattura della Cronologia quando lo Schermo è Sbloccato
+Auto Lock Application Screen on User Inactivity: Blocco Automatico dello Schermo dell'Applicazione in caso di Inattività dell'Utente
+Auto Lock Screen on User Inactivity: Blocco Automatico dello Schermo in caso di Inattività dell'Utente
+Auto Lock the Screen on User Inactivity: Blocca Automaticamente lo Schermo in caso di Inattività dell'Utente
+Auto Masking Words List: Lista di Parole per la Mascheratura Automatica
+Auto update on capture: Aggiornamento automatico alla cattura
+Auto-Clear Settings: Impostazioni di Pulizia Automatica
+Auto-Generate Link Card Preview: Genera Automaticamente l'Anteprima della Scheda Link
+Auto-Preview Link on Hover: Anteprima Automatica del Link al Passaggio del Mouse
+Auto-Star on Double Copy: Stella Automatica al Doppio Copia
+Auto-Update on Capture: Aggiornamento Automatico alla Cattura
+Auto-delete clipboard history after: Elimina automaticamente la cronologia degli appunti dopo
+? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
+: Crea automaticamente l'anteprima della scheda link nella cronologia degli appunti. Questo permette di visualizzare rapidamente i dettagli del sito web senza aprire o incollare il link.
+Back: Indietro
+Capture History: Cattura Cronologia
+Change the application UI font size scale: Cambia la scala della dimensione dei caratteri dell'interfaccia utente
+Change the application UI language: Cambia la lingua dell'interfaccia utente
+Change the application user interface color theme: Cambia il tema colore dell'interfaccia utente
+Change the application user interface font size scale: Cambia la scala della dimensione dei caratteri dell'interfaccia utente
+Change the application user interface language: Cambia la lingua dell'interfaccia utente
+Clip Notes Popup Maximum Dimensions: Dimensioni Massime del Popup delle Note dei Clip
+Clipboard History Settings: Impostazioni della Cronologia degli Appunti
+'Complete details:': 'Dettagli completi:'
+Configure settings to automatically delete clipboard history items after a specified duration.: Configura le impostazioni per eliminare automaticamente gli elementi della cronologia degli appunti dopo una durata specificata.
+Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Crea una scheda di anteprima al passaggio del mouse sul link nella cronologia degli appunti. Questo ti permette di visualizzare l'anteprima del link prima di aprirlo o incollarlo.
+Create an unlimited number of collections to organize your clips and menus.: Crea un numero illimitato di collezioni per organizzare i tuoi clip e menu.
+Custom: Personalizzato
+Custom themes: Temi personalizzati
+Decrease UI Font Size: Diminuisci Dimensione Carattere UI
+? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
+: Mostra l'interruttore di cattura della cronologia degli appunti sulla schermata di blocco dell'applicazione. Questo ti permette di controllare le impostazioni di cattura della cronologia direttamente dalla schermata di blocco.
+Display disabled collections name on the navigation bar collections menu: Mostra il nome delle collezioni disabilitate nel menu delle collezioni della barra di navigazione
+Display disabled collections name on the navigation bar under collections menu: Mostra il nome delle collezioni disabilitate nella barra di navigazione sotto il menu delle collezioni
+Display full name of selected collection on the navigation bar: Mostra il nome completo della collezione selezionata nella barra di navigazione
+Drag and drop to prioritize languages for detection. The higher a language is in the list, the higher its detection priority.: Trascina e rilascia per dare priorità alle lingue per il rilevamento. Più in alto è una lingua nella lista, più alta è la sua priorità di rilevamento.
+Email: Email
+Email is not valid: L'email non è valida
+'Email:': 'Email:'
+Emails do not match: Le email non corrispondono
+Enable Auto Start: Abilita Avvio Automatico
+Enable Clip Title Hover Show with Delay: Abilita Visualizzazione del Titolo del Clip al Passaggio del Mouse con Ritardo
+Enable application auto start on system boot: Abilita l'avvio automatico dell'applicazione all'avvio del sistema
+Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: Abilita il blocco automatico dello schermo dell'applicazione dopo un certo periodo di inattività, per prevenire l'accesso non autorizzato ai tuoi dati.
+Enable auto lock the application screen when user not active: Abilita il blocco automatico dello schermo dell'applicazione quando l'utente non è attivo
+Enable auto update on capture: Abilita l'aggiornamento automatico alla cattura
+Enable history capture: Abilita la cattura della cronologia
+Enable programming language detection: Abilita il rilevamento del linguaggio di programmazione
+Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: Abilita il requisito di sblocco dello schermo all'avvio dell'app per una maggiore sicurezza, proteggendo i dati da accessi non autorizzati.
+Enhance security by automatically locking the application screen after a set period of user inactivity.: Migliora la sicurezza bloccando automaticamente lo schermo dell'applicazione dopo un periodo impostato di inattività dell'utente.
+Enter Passcode length: Inserisci la lunghezza del codice di accesso
+Enter recovery password to reset passcode.: Inserisci la password di recupero per reimpostare il codice di accesso.
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Inserisci il tuo codice di accesso di <strong>{{screenLockPassCodeLength}} cifre</strong>
+Entered Passcode is invalid: Il codice di accesso inserito non è valido
+Excluded Apps List: Lista delle App Escluse
+Execute Web Requests: Esegui Richieste Web
+Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: Esegui comandi terminale o shell direttamente dal clip di PasteBar e copia i risultati negli appunti.
+'Expires:': 'Scade:'
+Forgot Passcode ? Enter your recovery password to reset the passcode.: Hai dimenticato il codice di accesso? Inserisci la tua password di recupero per reimpostare il codice di accesso.
+Forgot passcode ?: Hai dimenticato il codice di accesso?
+Forgot?: Dimenticato?
+Forgot? Reset using Password: Dimenticato? Reimposta usando la Password
+Get priority email support from us to resolve any issues or questions you may have about PasteBar.: Ottieni supporto email prioritario da noi per risolvere qualsiasi problema o domanda che potresti avere su PasteBar.
+'Hint: {{screenLockRecoveryPasswordMasked}}': 'Suggerimento: {{screenLockRecoveryPasswordMasked}}'
+Incorrect passcode.: Codice di accesso errato.
+Increase UI Font Size: Aumenta Dimensione Carattere UI
+Issued: Emesso
+Large: Grande
+List each application name or window identifier on a new line.: Elenca ogni nome di applicazione o identificatore di finestra su una nuova riga.
+List each word or sentence on a new line.: Elenca ogni parola o frase su una nuova riga.
+Lock Screen Clipboard History Capture Control: Controllo della Cattura della Cronologia degli Appunti nella Schermata di Blocco
+Lock Screen PassCode: Codice di Accesso Schermata di Blocco
+Lock Screen Passcode: Codice di Accesso Schermata di Blocco
+Manage Collections: Gestisci Collezioni
+Maximum 10 digits: Massimo 10 cifre
+Maximum devices: Dispositivi massimi
+Medium: Medio
+Minimal 4 digits: Minimo 4 cifre
+Minimize Window: Minimizza Finestra
+Minimum number of lines to trigger detection: Numero minimo di righe per attivare il rilevamento
+Name: Nome
+Open Security Settings: Apri Impostazioni di Sicurezza
+Passcode digits remaining: Cifre rimanenti del codice di accesso
+Passcode is locked.: Il codice di accesso è bloccato.
+Passcode is not set: Il codice di accesso non è impostato
+Passcode is not valid: Il codice di accesso non è valido
+Passcode length: Lunghezza del codice di accesso
+Passcode mismatch: I codici di accesso non corrispondono
+Passcode reset is locked.: Il reset del codice di accesso è bloccato.
+Passcode successfully verified: Codice di accesso verificato con successo
+Passcode verification error: Errore di verifica del codice di accesso
+Passcode verification is locked.: La verifica del codice di accesso è bloccata.
+Password is incorrect.: La password non è corretta.
+Password is incorrect. <br/>{{screenLockRecoveryPasswordMasked}}: La password non è corretta. <br/>{{screenLockRecoveryPasswordMasked}}
+'Password is incorrect. Hint: {{screenLockRecoveryPasswordMasked}}': 'La password non è corretta. Suggerimento: {{screenLockRecoveryPasswordMasked}}'
+'Password is incorrect. Masked password is: {{screenLockRecoveryPasswordMasked}}': 'La password non è corretta. La password mascherata è: {{screenLockRecoveryPasswordMasked}}'
+Password is incorrect. {{screenLockRecoveryPasswordMasked}}: La password non è corretta. {{screenLockRecoveryPasswordMasked}}
+Passwords do not match: Le password non corrispondono
+PasteBar Settings: Impostazioni PasteBar
+Pin Window: Fissa Finestra
+Pin on Top Window: Fissa in Cima alla Finestra
+Please set up a Passcode and recovery password in Security Settings to enable Screen Lock and ensure better security.: Imposta un codice di accesso e una password di recupero nelle Impostazioni di Sicurezza per abilitare il Blocco Schermo e garantire una migliore sicurezza.
+Please try again: Per favore riprova
+Preview current popup size on hover.: Anteprima della dimensione attuale del popup al passaggio del mouse.
+Prioritize Language Detection: Dai Priorità al Rilevamento della Lingua
+Priority support: Supporto prioritario
+Programming Language Detection: Rilevamento del Linguaggio di Programmazione
+Programming Language Selection: Selezione del Linguaggio di Programmazione
+Protect your data by requiring screen unlock authentication whenever the application starts.: Proteggi i tuoi dati richiedendo l'autenticazione di sblocco dello schermo ogni volta che l'applicazione si avvia.
+Recovery Password for Lock Screen Passcode: Password di Recupero per il Codice di Accesso della Schermata di Blocco
+Recovery password is set.: La password di recupero è impostata.
+Refresh Application UI: Aggiorna l'Interfaccia Utente dell'Applicazione
+Refresh UI: Aggiorna UI
+Require Screen Unlock at Application Start: Richiedi Sblocco Schermo all'Avvio dell'Applicazione
+? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
+: Richiedi lo sblocco dello schermo all'avvio dell'applicazione per migliorare la sicurezza. Questa impostazione garantisce che solo gli utenti autorizzati possano accedere all'applicazione, proteggendo i tuoi dati da accessi non autorizzati fin dall'inizio.
+Reset Font Size: Reimposta Dimensione Carattere
+Run Terminal or Shell Commands: Esegui Comandi Terminale o Shell
+Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Estrai e analizza siti web o risposte API utilizzando strumenti di web scraping integrati e copia i dati estratti negli appunti.
+? 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
+: 'Estrai e analizza siti web o risposte API utilizzando strumenti di web scraping integrati e copia i dati estratti negli appunti.                                '
+Security: Sicurezza
+Security Settings: Impostazioni di Sicurezza
+Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Invia richieste HTTP a API o servizi web e copia i dati di risposta negli appunti.
+Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Le parole o frasi sensibili elencate di seguito verranno automaticamente mascherate se trovate nel testo copiato. Non sensibile alle maiuscole/minuscole.
+Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Imposta un codice di accesso per sbloccare lo schermo bloccato e proteggere i tuoi dati da accessi non autorizzati.
+? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
+: Imposta una password di recupero per reimpostare facilmente il codice di accesso della schermata di blocco se dimenticato. La tua password sarà memorizzata in modo sicuro nell'archivio del sistema operativo del tuo dispositivo.
+Settings: Impostazioni
+Show Clipboard History Capture Control on Lock Screen: Mostra il Controllo di Cattura della Cronologia degli Appunti sulla Schermata di Blocco
+Show Disable History Capture When Screen Locked: Mostra Disabilita Cattura Cronologia Quando lo Schermo è Bloccato
+Show Disabled Collections: Mostra Collezioni Disabilitate
+? Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
+: Mostra l'interruttore di cattura della cronologia degli appunti quando lo schermo dell'applicazione è bloccato. Questo ti permette di controllare le impostazioni di cattura della cronologia dalla schermata di blocco dell'applicazione.
+Show collection name on the navbar: Mostra il nome della collezione sulla barra di navigazione
+Show disabled collections on the navbar list: Mostra le collezioni disabilitate nella lista della barra di navigazione
+Skip auto start prompt on app launch: Salta il prompt di avvio automatico all'avvio dell'app
+Small: Piccolo
+Stop Words List: Lista delle Parole da Escludere
+Swap Panels Layout: Scambia Layout dei Pannelli
+Switch the layout position of panels in Clipboard History and Paste Menu views: Cambia la posizione del layout dei pannelli nelle viste Cronologia Appunti e Menu Incolla
+Thank you again for using PasteBar.: Grazie ancora per utilizzare PasteBar.
+Thank you for testing! 🙌: Grazie per il test! 🙌
+? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
+: Questa opzione ti permette di controllare la visualizzazione e la tempistica delle note al passaggio del mouse sui clip. Puoi scegliere di mostrare le note istantaneamente o con un ritardo per prevenire popup indesiderati.
+? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
+: Questa opzione ti permette di personalizzare la larghezza e l'altezza massima del popup che mostra le note dei clip, assicurando che si adatti comodamente alla dimensione desiderata.
+To downgrade your current version, please visit: Per tornare a una versione precedente, visita
+'To downgrade, please visit: ': 'Per tornare a una versione precedente, visita: '
+To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: Per garantire la migliore precisione di rilevamento, seleziona fino a 7 lingue. Limitare le scelte migliora la precisione.
+Today: Oggi
+Tomorrow: Domani
+Try after <strong>{{resetPassCodeNextDelay}}</strong> seconds: Riprova dopo <strong>{{resetPassCodeNextDelay}}</strong> secondi
+Try again after <strong>{{resetPassCodeNextDelay}}</strong> seconds: Riprova dopo <strong>{{resetPassCodeNextDelay}}</strong> secondi
+UI Language: Lingua dell'Interfaccia Utente
+UnPin Window: Sblocca Finestra
+Unlimited Collections: Collezioni Illimitate
+Unlimited Tabs per Collection: Schede Illimitate per Collezione
+Unlimited paste history: Cronologia degli appunti illimitata
+Use Password: Usa Password
+User Preferences: Preferenze Utente
+Web Scraping and Parsing: Web Scraping e Parsing
+Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Le parole o frasi elencate di seguito non verranno catturate nella cronologia degli appunti se trovate nel testo copiato. Non sensibile alle maiuscole/minuscole.
+passcode reset: reset del codice di accesso
+password reset: reset della password

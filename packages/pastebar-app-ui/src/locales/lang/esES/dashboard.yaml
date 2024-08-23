@@ -1,0 +1,268 @@
+API Key: Clave API
+Add: Añadir
+Add Auth: Añadir Autenticación
+Add Clipboard Value: Añadir Valor del Portapapeles
+Add Custom: Añadir Personalizado
+Add Custom Field: Añadir Campo Personalizado
+Add Delay Time: Añadir Tiempo de Retraso
+Add First Board: Añadir Primer Tablero
+Add Form Field: Añadir Campo de Formulario
+Add Header: Añadir Encabezado
+Add Key Press: Añadir Pulsación de Tecla
+Add Key Press After Paste: Añadir Pulsación Después de Pegar
+Add Link Card: Añadir Tarjeta de Enlace
+Add Open URL: Añadir Abrir URL
+Add Output Template: Añadir Plantilla de Salida
+Add Regex Match Group Filter: Añadir Filtro de Grupo de Coincidencia Regex
+Add Request Header: Añadir Encabezado de Solicitud
+Add Response Filter: Añadir Filtro de Respuesta
+Add Scraping Rule: Añadir Regla de Extracción
+Add Section: Añadir Sección
+Add Tab: Añadir Pestaña
+Add Template Field: Añadir Campo de Plantilla
+Add a Tab: Añadir una Pestaña
+Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Añadir campo <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> a la plantilla
+Add field <b>{{<b>{{name}}</b>}}</b> into the template: Añadir campo <b>{{<b>{{name}}</b>}}</b> a la plantilla
+Add image: Añadir imagen
+Add note: Añadir nota
+Add to Board: Añadir al Tablero
+Add {{type}}: Añadir {{type}}
+All field labels must be unique to ensure they are correctly used within the template.: Todas las etiquetas de campo deben ser únicas para su uso correcto en la plantilla.
+Are you sure you want to delete <strong>{{boardName}}</strong> board?: ¿Seguro que quieres eliminar el tablero <strong>{{boardName}}</strong>?
+Are you sure you want to delete <strong>{{tabName}}</strong> tab?: ¿Seguro que quieres eliminar la pestaña <strong>{{tabName}}</strong>?
+Are you sure you want to delete?: ¿Seguro que quieres eliminar?
+Are you sure you want to remove image from the clip?: ¿Seguro que quieres eliminar la imagen del clip?
+Auth: Autenticación
+Auto update is Off: Actualización automática desactivada
+Basic Auth: Autenticación Básica
+Basic Password: Contraseña Básica
+Basic Username: Usuario Básico
+Bearer Token: Token Bearer
+Board Layout Height: Altura del Diseño del Tablero
+Board Layout Split: División del Diseño del Tablero
+Board Menu: Menú del Tablero
+Board is Not Empty: El Tablero no está Vacío
+Boards: Tableros
+Border Width: Ancho del Borde
+CSS Selector: Selector CSS
+Cancel: Cancelar
+Change Layout: Cambiar Diseño
+Change color: Cambiar color
+Clear: Limpiar
+Clear All Fields: Limpiar Todos los Campos
+Click To Add: Clic para Añadir
+Clip Menu: Menú de Clip
+Clip Options: Opciones de Clip
+Clipboard: Portapapeles
+Clips:
+  App: App
+  Clip Menu: Menú de Clip
+  Clips: Clips
+  Link: Enlace
+Close Edit: Cerrar Edición
+Command:
+  error: error
+  output: salida
+Command error: Error de comando
+Common Fields: Campos Comunes
+Confirm Clear All Fields: Confirmar Limpiar Todos los Campos
+Confirm to remove Auth: Confirmar eliminar Autenticación
+Confirm to remove filters: Confirmar eliminar filtros
+Confirm to remove headers: Confirmar eliminar encabezados
+Copy Clip: Copiar Clip
+Create Board: Crear Tablero
+Create Tab: Crear Pestaña
+Create tab: Crear pestaña
+Dashboard: Panel
+Delay: Retraso
+Delete Board: Eliminar Tablero
+Delete Clip: Eliminar Clip
+Delete Tab: Eliminar Pestaña
+Delete board: Eliminar tablero
+Delete field: Eliminar campo
+Delete tab: Eliminar pestaña
+Detect Template Fields: Detectar Campos de Plantilla
+Detect for Template Fields: Detectar Campos de Plantilla
+Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Se ha encontrado el campo deshabilitado <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> en la plantilla
+Done Create Clip: Clip Creado
+Done Edit: Edición Completada
+Done Edit Tabs: Edición de Pestañas Completada
+Done Organize: Organización Completada
+Drag & Drop Path: Ruta de Arrastrar y Soltar
+Drop To Add: Soltar para Añadir
+Drop image file here, or use a separate window for drag and drop.: Suelta el archivo de imagen aquí o usa una ventana separada para arrastrar y soltar.
+Drop to Pin: Soltar para Fijar
+Edit Note: Editar Nota
+Edit Template: Editar Plantilla
+Edit subtitle: Editar subtítulo
+Edit tab name: Editar nombre de pestaña
+Enable / Disable: Habilitar / Deshabilitar
+Enable / Disable URL Open: Habilitar / Deshabilitar Abrir URL
+Enter Label: Introducir Etiqueta
+Enter URL: Introducir URL
+Enter board subtitle or description: Introducir subtítulo o descripción del tablero
+Enter board title: Introducir título del tablero
+Enter clip name: Introducir nombre del clip
+Enter clip note: Introducir nota del clip
+Enter code: Introducir código
+Enter credit card number: Introducir número de tarjeta de crédito
+Enter default value: Introducir valor predeterminado
+Enter field value: Introducir valor del campo
+Enter full path to file, folder or application: Ingresar ruta completa al archivo, carpeta o aplicación
+Enter regex for output filer: Ingresar regex para filtro de salida
+Enter request url: Ingresar URL de solicitud
+Enter secret value: Ingresar valor secreto
+Enter section label: Ingresar etiqueta de sección
+Enter select option: Ingresar opción de selección
+Enter tab name: Ingresar nombre de pestaña
+Enter template or drag from history: Ingresar plantilla o arrastrar del historial
+Enter template value: Ingresar valor de plantilla
+Enter value or drag from history: Ingresar valor o arrastrar del historial
+Enter web link or email: Ingresar enlace web o correo
+Errors:
+  No fields found in the template.: No se encontraron campos en la plantilla.
+  Please fix output template or confirm to save as is.: Corrige la plantilla de salida o confirma guardar como está.
+  Please fix template fields or confirm to save as is.: Corrige los campos de la plantilla o confirma guardar como están.
+  Please fix the problem or confirm to save as is.: Corrige el problema o confirma guardar como está.
+  Please verify your link for any errors, or confirm to save as is.: Verifica errores en tu enlace o confirma guardar como está.
+  Please verify your path for any errors, or confirm to save as is.: Verifica errores en tu ruta o confirma guardar como está.
+  Your command runs with errors, confirm you want to save as is.: Tu comando se ejecuta con errores, confirma si quieres guardar así.
+  Your request runs with errors, confirm you want to save as is.: Tu solicitud se ejecuta con errores, confirma si quieres guardar así.
+FILTERED_TYPES:
+  Dot Path: Ruta de Puntos
+  JSON Path: Ruta JSON
+  RegEx: RegEx
+  RegEx Replace: Reemplazo RegEx
+  Remove Quotes: Eliminar Comillas
+Field: Campo
+Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Se ha encontrado el campo <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> en la plantilla
+Field Options: Opciones de Campo
+Fields Value: Valor de Campos
+File, folder or app path does not exist: La ruta del archivo, carpeta o aplicación no existe
+File, folder or app path is valid: La ruta del archivo, carpeta o aplicación es válida
+File, folder or app path might not be valid: La ruta del archivo, carpeta o aplicación podría no ser válida
+Fill Template: Rellenar Plantilla
+Filter Type: Tipo de Filtro
+Filter's Value: Valor del Filtro
+Find in Clip: Buscar en Clip
+Find in clip: Buscar en clip
+Find in history: Buscar en historial
+Form Fields: Campos de Formulario
+General Fields: Campos Generales
+HTML: HTML
+Headers: Encabezados
+Hide Label: Ocultar Etiqueta
+History capture is off: Captura de historial desactivada
+Key Press: Pulsación de Tecla
+Key Press After: Pulsación Después
+Key Press After Paste: Pulsación Después de Pegar
+'Key Press After Paste: {{keyPress}}': 'Pulsación Después de Pegar: {{keyPress}}'
+Label Left: Etiqueta Izquierda
+Label Top: Etiqueta Arriba
+Label on Left: Etiqueta a la Izquierda
+Labels: Etiquetas
+Last run: Última ejecución
+Last update: Última actualización
+Layout Max Width: Ancho Máximo del Diseño
+Mask to hide clipboard value in preview: Máscara para ocultar valor del portapapeles en vista previa
+Move Clip: Mover Clip
+Moved Clips Panel: Panel de Clips Movidos
+Name: Nombre
+New Board: Nuevo Tablero
+New Clip: Nuevo Clip
+No Boards: Sin Tableros
+No Clipboard History: Sin Historial de Portapapeles
+No Tabs or Boards: Sin Pestañas o Tableros
+Number of columns: Número de columnas
+Open: Abrir
+Open URL Disable / Enable: Deshabilitar / Habilitar Abrir URL
+Output Template: Plantilla de Salida
+Panel for moved or copied items from other tabs: Panel para elementos movidos o copiados de otras pestañas
+Please confirm to save as is.: Confirma para guardar como está.
+Press: Presionar
+RETURN_POSITION_TYPES:
+  First Only: Solo Primero
+  Last Only: Solo Último
+RULES_TYPES:
+  CSS Selector: Selector CSS
+  RegEx Find: Buscar RegEx
+  RegEx Group Match: Coincidencia de Grupo RegEx
+  RegEx Match: Coincidencia RegEx
+  RegEx Replace: Reemplazo RegEx
+RegEx Find: Buscar RegEx
+RegEx Match: Coincidencia RegEx
+RegEx Match Group: Grupo de Coincidencia RegEx
+RegEx Replace: Reemplazo RegEx
+Regex Match Group Filter: Filtro de Grupo de Coincidencia Regex
+Remove Open URL: Eliminar Abrir URL
+Remove headers: Eliminar encabezados
+Remove image: Eliminar imagen
+Rename: Renombrar
+Reset to Defaults: Restablecer a Predeterminados
+Response Filters: Filtros de Respuesta
+Result: Resultado
+SEPARATOR_TYPES:
+  Comma (,): Coma (,)
+  New Line (\n): Nueva Línea (\n)
+  Pipe (|): Barra Vertical (|)
+  Semicolon (;): Punto y Coma (;)
+  Space (' '): Espacio (' ')
+  Tab (\t): Tabulación (\t)
+Save as Defaults: Guardar como Predeterminados
+Scan for Template Fields: Escanear Campos de Plantilla
+Select Color: Seleccionar Color
+Select Default Option: Seleccionar Opción Predeterminada
+Select Option: Seleccionar Opción
+Select Options: Seleccionar Opciones
+Show Label: Mostrar Etiqueta
+Special Field: Campo Especial
+Subtitle: Subtítulo
+Tab: Pestaña
+Tab is Not Empty: La Pestaña no está Vacía
+Tabs Menu: Menú de Pestañas
+Template: Plantilla
+Template Edit: Editar Plantilla
+Template Fields: Campos de Plantilla
+Template should have⠀<b>{{output}}</b>⠀placeholder.: La plantilla debe tener el marcador⠀<b>{{output}}</b>.
+Test Request: Probar Solicitud
+Test Run: Prueba de Ejecución
+Text: Texto
+This action cannot be undone.: Esta acción no se puede deshacer.
+This field allows to insert text from clipboard: Este campo permite insertar texto del portapapeles
+Too long: Muy largo
+Too short: Muy corto
+Turn On auto update: Activar actualización automática
+Turn on history capture: Activar captura de historial
+Type:
+  Command: Comando
+  Request: Solicitud
+  Scraper: Extractor
+URL: URL
+Unsaved name: Nombre no guardado
+Unsaved note: Nota no guardada
+Unsaved subtitle: Subtítulo no guardado
+Unsaved title: Título no guardado
+Update Link Card: Actualizar Tarjeta de Enlace
+Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.: Usa dobles llaves para {{nombre del campo}}. Usa {{clipboard}} para añadir el valor actual del portapapeles.
+Value: Valor
+Values: Valores
+Vertical Split: División Vertical
+We need to open a new window where you can drag & drop file, path or application.: Necesitamos abrir una nueva ventana donde puedas arrastrar y soltar archivo, ruta o aplicación.
+Web Link or Email might not be valid: El enlace web o correo podría no ser válido
+Web or Email link is valid: El enlace web o correo es válido
+Website URL: URL del Sitio Web
+Website URL is valid: La URL del sitio web es válida
+Website URL might not be valid: La URL del sitio web podría no ser válida
+Wrap output using {{output}} placeholder: Envolver salida usando el marcador {{output}}
+You have no rules added: No tienes reglas añadidas
+You'll need to clear this board of all clips and subboards before it can be deleted.: Debes limpiar este tablero de todos los clips y subtableros antes de poder eliminarlo.
+You'll need to clear this tab of all boards before it can be deleted.: Debes limpiar esta pestaña de todos los tableros antes de poder eliminarla.
+filled template: plantilla rellenada
+new clips: nuevos clips
+template: plantilla
+'{{count}} fields found in template but missing from fields definition._one': '{{count}} campo encontrado en la plantilla pero falta en la definición de campos.'
+'{{count}} fields found in template but missing from fields definition._other': '{{count}} campos encontrados en la plantilla pero faltan en la definición de campos.'
+'{{count}} fields not found in the template._one': '{{count}} campo no encontrado en la plantilla.'
+'{{count}} fields not found in the template._other': '{{count}} campos no encontrados en la plantilla.'
+'{{type}} Field': 'Campo {{type}}'
+'{{type}} field': 'campo {{type}}'

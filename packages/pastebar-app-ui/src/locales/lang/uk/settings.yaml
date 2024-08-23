@@ -1,0 +1,162 @@
+<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.: Встановлено <strong>{{screenLockPassCodeLength}}</strong>-значний код доступу.
+Activation Success: Успішна активація
+? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
+: Додавайте до вибраного, коли копіюєте текст двічі протягом 1 секунди. Це дозволяє швидко додавати скопійований текст або посилання до вибраного та легко знаходити їх в історії буфера обміну.
+Add an unlimited number of tabs within each collection for better organization and easy access.: Додавайте необмежену кількість вкладок у кожну колекцію для кращої організації та легкого доступу.
+Advanced settings: Додаткові налаштування
+Already Active: Вже активний
+Application Auto Start: Автозапуск додатку
+Application Color Theme: Колірна тема додатку
+Application UI Color Theme: Колірна тема інтерфейсу додатку
+Application UI Fonts Scale: Масштаб шрифтів інтерфейсу додатку
+Application UI Language: Мова інтерфейсу додатку
+Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Додатки, перелічені нижче, не будуть фіксувати дії копіювання в історію буфера обміну. Регістр не враховується.
+Auto Disable History Capture when Screen Unlocked: Автоматично вимикати захоплення історії при розблокуванні екрану
+Auto Lock Screen on User Inactivity: Автоматичне блокування екрану при бездіяльності користувача
+Auto Lock the Screen on User Inactivity: Автоматичне блокування екрану при бездіяльності користувача
+Auto Masking Words List: Список слів для автоматичного маскування
+Auto update on capture: Автоматичне оновлення при захопленні
+Auto-Clear Settings: Налаштування автоочищення
+Auto-Generate Link Card Preview: Автоматичне створення картки посилання
+Auto-Preview Link on Hover: Автоматичний попередній перегляд посилання при наведенні
+Auto-Star on Double Copy: Автоматичне додавання до вибраного при подвійному копіюванні
+Auto-Update on Capture: Автоматичне оновлення при захопленні
+Auto-delete clipboard history after: Автоматичне видалення історії буфера обміну після
+? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
+: Автоматично створювати попередній перегляд посилань в історії буфера обміну. Це дозволяє швидко переглядати деталі веб-сайтів без відкриття або вставки посилання.
+? Automatically create link preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
+: Автоматично створювати попередній перегляд посилань в історії буфера обміну. Це дозволяє швидко переглядати деталі веб-сайтів без відкриття або вставки посилання.
+Back: Назад
+Capture History: Захоплення історії буфера
+Change the application UI font size scale: Змінити масштаб розміру шрифту інтерфейсу додатку
+Change the application UI language: Змінити мову інтерфейсу додатку
+Change the application user interface color theme: Змінити колірну тему інтерфейсу додатку
+Change the application user interface font size scale: Змінити масштаб розміру шрифту інтерфейсу додатку
+Change the application user interface language: Змінити мову інтерфейсу додатку
+Clip Notes Popup Maximum Dimensions: Максимальні розміри спливаючого вікна нотаток до кліпів
+Clipboard History Settings: Налаштування історії буфера обміну
+'Complete details:': 'Повні деталі:'
+Configure settings to automatically delete clipboard history items after a specified duration.: Налаштуйте параметри для автоматичного видалення елементів історії буфера обміну після вказаного часу.
+Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Створюйте картку попереднього перегляду при наведенні на посилання в історії буфера обміну. Це дозволяє переглядати посилання перед відкриттям або вставкою.
+Create an unlimited number of collections to organize your clips and menus.: Створюйте необмежену кількість колекцій для організації ваших кліпів та меню.
+Custom: Інший
+Custom themes: Користувацькі теми
+Decrease UI Font Size: Зменшити шрифт інтерфейсу
+? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
+: Відображати перемикач захоплення історії буфера обміну на заблокованому екрані додатку. Це дозволяє керувати налаштуваннями захоплення історії безпосередньо з екрану блокування.
+Display disabled collections name on the navigation bar collections menu: Відображати назви вимкнених колекцій у меню колекцій на панелі навігації
+Display disabled collections name on the navigation bar under collections menu: Відображати назви вимкнених колекцій у меню колекцій на панелі навігації
+Display full name of selected collection on the navigation bar: Відображати повну назву вибраної колекції на панелі навігації
+Drag and drop to prioritize languages for detection. The higher a language is in the list, the higher its detection priority.: Використовуйте перетягування, щоб розставити мови за пріоритетом для виявлення. Чим вище мова у списку, тим вищий її пріоритет.
+Email: Email
+Email is not valid: Email недійсний
+'Email:': 'Email:'
+Emails do not match: Адреси електронної пошти не співпадають
+Enable Auto Start: Увімкнути автозапуск
+Enable Clip Title Hover Show with Delay: Увімкнути затримку показу нотатки при наведенні на ім'я кліпу
+Enable application auto start on system boot: Увімкнути автозапуск додатку при завантаженні системи
+Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: Увімкнути автоматичне блокування екрану додатку після певного періоду бездіяльності, щоб запобігти несанкціонованому доступу до ваших даних.
+Enable auto update on capture: Увімкнути автоматичне оновлення при захопленні
+Enable history capture: Увімкнути захоплення історії буфера
+Enable programming language detection: Увімкнути визначення мови програмування
+Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: Увімкнути вимогу розблокування екрану при запуску додатку для підвищення безпеки, захисту даних від несанкціонованого доступу.
+Enhance security by automatically locking the application screen after a set period of user inactivity.: Підвищення безпеки шляхом автоматичного блокування екрану додатку після встановленого періоду бездіяльності користувача.
+Enter Passcode length: Введіть довжину коду доступу
+Enter recovery password to reset passcode.: Введіть пароль відновлення для скидання коду доступу.
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Введіть ваш <strong>{{screenLockPassCodeLength}}-значний</strong> код доступу
+Entered Passcode is invalid: Введений код доступу недійсний
+Excluded Apps List: Список Виключених Додатків
+Execute Web Requests: Виконувати веб-запити
+Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: Виконуйте термінальні або shell-команди безпосередньо з кліпу PasteBar та копіюйте результати до буфера обміну.
+'Expires:': 'Закінчується:'
+Forgot Passcode ? Enter your recovery password to reset the passcode.: Забули код доступу? Введіть пароль відновлення для скидання коду доступу.
+Forgot passcode ?: Забули код доступу?
+Forgot?: Забули?
+Get priority email support from us to resolve any issues or questions you may have about PasteBar.: Отримайте пріоритетну підтримку електронною поштою для вирішення будь-яких проблем або питань, які у вас можуть виникнути під час роботи з PasteBar.
+'Hint: {{screenLockRecoveryPasswordMasked}}': 'Підказка: {{screenLockRecoveryPasswordMasked}}'
+Incorrect passcode.: Неправильний код доступу.
+Increase UI Font Size: Збільшити шрифт інтерфейсу
+Issued: Видана
+Large: Великий
+List each application name or window identifier on a new line.: Кожна назва додатку або ідентифікатор вікна на новому рядку.
+List each word or sentence on a new line.: Кожне слово або речення списку має бути на новому рядку.
+Lock Screen Clipboard History Capture Control: Керування захопленням історії буфера обміну на екрані блокування
+Lock Screen Passcode: Код доступу екрану блокування
+Manage Collections: Керування колекціями
+Maximum 10 digits: Максимум 10 цифр
+Maximum devices: Максимум пристроїв
+Medium: Середній
+Minimal 4 digits: Мінімум 4 цифри
+Minimum number of lines to trigger detection: Мінімальна кількість рядків для спрацьовування визначення
+Name: Ім'я
+Open Security Settings: Відкрити налаштування безпеки
+Passcode digits remaining: Залишилося цифр коду доступу
+Passcode is not set: Код доступу не встановлено
+Passcode is not valid: Код доступу недійсний
+Passcode length: Довжина коду доступу
+Passcode mismatch: Невідповідність коду
+Passcode successfully verified: Код доступу успішно перевірено
+Password is incorrect.: Неправильний пароль.
+Password is incorrect. <br/>{{screenLockRecoveryPasswordMasked}}: Пароль неправильний. <br/>{{screenLockRecoveryPasswordMasked}}
+'Password is incorrect. Hint: {{screenLockRecoveryPasswordMasked}}': 'Пароль неправильний. Підказка: {{screenLockRecoveryPasswordMasked}}'
+'Password is incorrect. Masked password is: {{screenLockRecoveryPasswordMasked}}': 'Пароль неправильний. Замаскований пароль: {{screenLockRecoveryPasswordMasked}}'
+Password is incorrect. {{screenLockRecoveryPasswordMasked}}: Пароль неправильний. {{screenLockRecoveryPasswordMasked}}
+Passwords do not match: Паролі не співпадають
+PasteBar Settings: Налаштування PasteBar
+Please set up a Passcode and recovery password in Security Settings to enable Screen Lock and ensure better security.: Будь ласка, встановіть код доступу та пароль для відновлення в налаштуваннях безпеки, щоб увімкнути блокування екрану та забезпечити кращий захист.
+Please try again: Будь ласка, спробуйте ще раз
+Preview current popup size on hover.: Перегляд поточного розміру вікна нотатки при наведенні.
+Prioritize Language Detection: Пріоритет виявлення мов
+Priority support: Пріоритетна підтримка
+Programming Language Detection: Визначення мови програмування
+Programming Language Selection: Вибір мови програмування
+Protect your data by requiring screen unlock authentication whenever the application starts.: Захистіть ваші дані, вимагаючи аутентифікацію розблокування екрану при кожному запуску додатку.
+Recovery Password for Lock Screen Passcode: Пароль відновлення для коду доступу екрану блокування
+Recovery password is set.: Пароль відновлення встановлено.
+Refresh Application UI: Оновити інтерфейс
+Refresh UI: Оновити інтерфейс
+Require Screen Unlock at Application Start: Вимагати розблокування екрану при запуску додатку
+? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
+: Вимагати розблокування екрану при запуску додатку для підвищення безпеки. Це налаштування гарантує, що тільки авторизовані користувачі можуть отримати доступ до додатку, захищаючи ваші дані від несанкціонованого доступу з самого початку.
+Reset Font Size: Скинути розмір шрифту
+Run Terminal or Shell Commands: Виконувати термінальні або shell-команди
+Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Вилучайте та аналізуйте веб-сайти або відповіді API за допомогою вбудованих інструментів веб-скрейпінгу та копіюйте вилучені дані до буфера обміну.
+Security: Безпека
+Security Settings: Налаштування безпеки
+Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Відправляйте HTTP-запити до веб-API або сервісів та копіюйте дані відповіді до буфера обміну.
+Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Конфіденційні слова або речення, перелічені нижче, будуть автоматично маскуватися, якщо вони будуть знайдені в скопійованому тексті. Без урахування регістру.
+Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Встановіть код доступу для розблокування заблокованого екрану та захисту ваших даних від несанкціонованого доступу.
+? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
+: Встановіть пароль відновлення, щоб легко скинути код доступу екрану блокування, якщо ви його забули. Ваш пароль буде надійно зберігатися в сховищі ОС вашого пристрою.
+Settings: Налаштування
+Show Clipboard History Capture Control on Lock Screen: Показувати керування захопленням історії буфера обміну на екрані блокування
+Show Disabled Collections: Показувати вимкнені колекції
+Show collection name on the navbar: Показувати назву колекції на панелі навігації
+Show disabled collections on the navbar list: Показувати вимкнені колекції у списку на панелі навігації
+Skip auto start prompt on app launch: Пропустити запит автозапуску при запуску додатку
+Small: Малий
+Stop Words List: Список стоп-слів
+Swap Panels Layout: Поміняти панелі місцями
+Switch the layout position of panels in Clipboard History and Paste Menu views: Перемкнути положення панелей у представленнях історії буфера обміну та меню вставки
+Thank you again for using PasteBar.: Дякуємо Вам ще раз за використання PasteBar.
+Thank you for testing! 🙌: Дякуємо за тестування! 🙌
+? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
+: Це налаштування дозволяє керувати відображенням та часом затримки спливаючих нотаток при наведенні на ім'я кліпу. Виберіть швидкий показ нотаток або з затримкою.
+? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
+: Це налаштування дає можливість задати максимальні розміри спливаючого вікна з нотатками до кліпів, щоб воно краще відповідало вашим вимогам.
+'To downgrade, please visit: ': 'Щоб знайти попередні версії, відвідайте наступну сторінку: '
+To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: Для забезпечення найкращої точності визначення, будь ласка, виберіть до 7 мов. Обмеження вибору підвищує точність.
+Today: Сьогодні
+Tomorrow: Завтра
+Try after <strong>{{resetPassCodeNextDelay}}</strong> seconds: Повторіть через <strong>{{resetPassCodeNextDelay}}</strong> секунд
+Try again after <strong>{{resetPassCodeNextDelay}}</strong> seconds: Спробуйте знову через <strong>{{resetPassCodeNextDelay}}</strong> секунд
+UI Language: Мова інтерфейсу
+Unlimited Collections: Необмежена кількість колекцій
+Unlimited Tabs per Collection: Необмежена кількість вкладок на колекцію
+Unlimited paste history: Необмежена історія вставки
+Use Password: Використовувати пароль
+User Preferences: Користувацькі налаштування
+Web Scraping and Parsing: Веб-скрейпінг та аналіз
+Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Слова або речення, перелічені нижче, не будуть захоплюватися в історію буфера обміну, якщо вони будуть знайдені в скопійованому тексті. Без урахування регістру.
+passcode reset: скидання коду доступу
+password reset: скидання пароля

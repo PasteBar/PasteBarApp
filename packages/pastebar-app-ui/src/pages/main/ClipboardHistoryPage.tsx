@@ -46,6 +46,7 @@ import {
 } from 'lucide-react'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { Prism } from 'prism-react-renderer'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { VariableSizeList } from 'react-window'
@@ -312,6 +313,34 @@ export default function ClipboardHistoryPage() {
       refetchFindClipboardHistory()
     }
   }, [hasSearchOrFilter, isHistoryAutoUpdateOnCaputureEnabled])
+
+  useHotkeys(
+    [...Array(10).keys()].map(i => `ctrl+${i.toString()}`),
+    e => {
+      const index = e.key === '0' ? 9 : Number(e.key) - 1
+      const itemId = clipboardHistory[Number(index)]?.historyId
+
+      if (!itemId) {
+        return
+      }
+
+      setCopiedItem(itemId)
+    }
+  )
+
+  useHotkeys(
+    [...Array(10).keys()].map(i => `ctrl+${isWindows ? 'alt' : 'meta'}+${i.toString()}`),
+    e => {
+      const index = e.key === '0' ? 9 : Number(e.key) - 1
+      const itemId = clipboardHistory[Number(index)]?.historyId
+
+      if (!itemId) {
+        return
+      }
+
+      setPastedItem(itemId)
+    }
+  )
 
   useEffect(() => {
     const listenToClipboardUnlisten = listen(
@@ -1555,6 +1584,7 @@ export default function ClipboardHistoryPage() {
                                               isLargeView={
                                                 historyId === showLargeViewHistoryId.value
                                               }
+                                              isWindows={isWindows}
                                               isAutoGenerateLinkCardsEnabled={
                                                 isAutoGenerateLinkCardsEnabled
                                               }
@@ -1671,6 +1701,7 @@ export default function ClipboardHistoryPage() {
                           {activeDragId ? (
                             <ClipboardHistoryRow
                               index={1}
+                              isWindows={isWindows}
                               isAutoGenerateLinkCardsEnabled={false}
                               isWrapText={wrappedTextItems.includes(activeDragId)}
                               isExpanded={expandedItems.includes(activeDragId)}

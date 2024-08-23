@@ -50,6 +50,7 @@ const ToolTipNotes = ({
   const noteHTML = useSignal('')
 
   React.useEffect(() => {
+    if (!window['markdown']) return
     // @ts-expect-error unknown type markdown
     window['markdown'].ready.then(markdown => {
       try {

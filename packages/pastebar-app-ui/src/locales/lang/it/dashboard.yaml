@@ -1,0 +1,287 @@
+API Key: Chiave API
+Add: Aggiungi
+Add Auth: Aggiungi Autenticazione
+Add Clipboard Value: Aggiungi Valore dagli Appunti
+Add Custom: Aggiungi Personalizzato
+Add Custom Field: Aggiungi Campo Personalizzato
+Add Delay Time: Aggiungi Tempo di Ritardo
+Add First Board: Aggiungi Prima Bacheca
+Add Form Field: Aggiungi Campo Modulo
+Add Header: Aggiungi Intestazione
+Add Key Press: Aggiungi Pressione Tasto
+Add Key Press After Paste: Aggiungi Pressione Tasto Dopo Incolla
+Add Link Card: Aggiungi Scheda Link
+Add Open URL: Aggiungi Apri URL
+Add Output Template: Aggiungi Modello di Output
+Add Regex Match Group Filter: Aggiungi Filtro Gruppo di Corrispondenza Regex
+Add Request Header: Aggiungi Intestazione Richiesta
+Add Response Filter: Aggiungi Filtro Risposta
+Add Scraping Rule: Aggiungi Regola di Scraping
+Add Section: Aggiungi Sezione
+Add Tab: Aggiungi Scheda
+Add Template Field: Aggiungi Campo Modello
+Add a Tab: Aggiungi una Scheda
+Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Aggiungi il campo <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> al modello
+Add field <b>{{<b>{{name}}</b>}}</b> into the template: Aggiungi il campo <b>{{<b>{{name}}</b>}}</b> al modello
+Add image: Aggiungi immagine
+Add note: Aggiungi nota
+Add to Board: Aggiungi alla Bacheca
+Add {{type}}: Aggiungi {{type}}
+All (No Limit): Tutto (Nessun Limite)
+All field labels must be unique to ensure they are correctly used within the template.: Tutte le etichette dei campi devono essere uniche per garantire che siano utilizzate correttamente all'interno del modello.
+Are you sure you want to delete <strong>{{boardName}}</strong> board?: Sei sicuro di voler eliminare la bacheca <strong>{{boardName}}</strong>?
+Are you sure you want to delete <strong>{{tabName}}</strong> tab?: Sei sicuro di voler eliminare la scheda <strong>{{tabName}}</strong>?
+Are you sure you want to delete?: Sei sicuro di voler eliminare?
+Are you sure you want to remove image from the clip?: Sei sicuro di voler rimuovere l'immagine dal clip?
+Auth: Autenticazione
+Auto update is Off: L'aggiornamento automatico è Disattivato
+Basic Auth: Autenticazione di Base
+Basic Password: Password di Base
+Basic Username: Nome Utente di Base
+Bearer Token: Token Bearer
+Board Layout Height: Altezza Layout Bacheca
+Board Layout Split: Divisione Layout Bacheca
+Board Menu: Menu Bacheca
+Board is Not Empty: La Bacheca non è Vuota
+Boards: Bacheche
+Border Width: Larghezza Bordo
+CSS Selector: Selettore CSS
+Cancel: Annulla
+Change Layout: Cambia Layout
+Change color: Cambia colore
+Clear: Cancella
+Clear All Fields: Cancella Tutti i Campi
+Click To Add: Clicca Per Aggiungere
+Clip Menu: Menu Clip
+Clip Options: Opzioni Clip
+Clipboard: Appunti
+Clips:
+  App: App
+  Clip Menu: Menu Clip
+  Clips: Clip
+  Link: Link
+Close Edit: Chiudi Modifica
+Command:
+  error: errore
+  output: output
+Command error: Errore di comando
+Common Fields: Campi Comuni
+Confirm Clear All Fields: Conferma Cancellazione di Tutti i Campi
+Confirm to remove Auth: Conferma per rimuovere l'Autenticazione
+Confirm to remove filters: Conferma per rimuovere i filtri
+Confirm to remove headers: Conferma per rimuovere le intestazioni
+Confirm to remove rules: Conferma per rimuovere le regole
+Copy Clip: Copia Clip
+Create Board: Crea Bacheca
+Create Tab: Crea Scheda
+Create tab: Crea scheda
+Dashboard: Dashboard
+Delay: Ritardo
+Delete Board: Elimina Bacheca
+Delete Clip: Elimina Clip
+Delete Tab: Elimina Scheda
+Delete board: Elimina bacheca
+Delete field: Elimina campo
+Delete tab: Elimina scheda
+Detect Template Fields: Rileva Campi del Modello
+Detect for Template Fields: Rileva Campi del Modello
+Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Il campo disabilitato <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> è stato trovato nel modello
+Done Create Clip: Creazione Clip Completata
+Done Edit: Modifica Completata
+Done Edit Tabs: Modifica Schede Completata
+Done Organize: Organizzazione Completata
+Drag & Drop Path: Percorso Trascina e Rilascia
+Drop To Add: Rilascia Per Aggiungere
+Drop image file here, or use a separate window for drag and drop.: Rilascia il file immagine qui, o usa una finestra separata per il trascinamento.
+Drop to Pin: Rilascia per Appuntare
+Edit Note: Modifica Nota
+Edit Template: Modifica Modello
+Edit subtitle: Modifica sottotitolo
+Edit tab name: Modifica nome scheda
+Enable / Disable: Abilita / Disabilita
+Enable / Disable URL Open: Abilita / Disabilita Apertura URL
+Enter Label: Inserisci Etichetta
+Enter URL: Inserisci URL
+Enter board subtitle or description: Inserisci sottotitolo o descrizione della bacheca
+Enter board title: Inserisci titolo della bacheca
+Enter clip name: Inserisci nome del clip
+Enter clip note: Inserisci nota del clip
+Enter code: Inserisci codice
+Enter credit card number: Inserisci numero della carta di credito
+Enter default value: Inserisci valore predefinito
+Enter field value: Inserisci valore del campo
+Enter full path to file, folder or application: Inserisci percorso completo del file, cartella o applicazione
+Enter regex for output filer: Inserisci regex per il filtro di output
+Enter request url: Inserisci URL della richiesta
+Enter secret value: Inserisci valore segreto
+Enter section label: Inserisci etichetta della sezione
+Enter select option: Inserisci opzione di selezione
+Enter tab name: Inserisci nome della scheda
+Enter template or drag from history: Inserisci modello o trascina dalla cronologia
+Enter template value: Inserisci valore del modello
+Enter value or drag from history: Inserisci valore o trascina dalla cronologia
+Enter web link or email: Inserisci link web o email
+Errors:
+  No fields found in the template.: Nessun campo trovato nel modello.
+  Please fix output template or confirm to save as is.: Per favore correggi il modello di output o conferma per salvare così com'è.
+  Please fix template fields or confirm to save as is.: Per favore correggi i campi del modello o conferma per salvare così come sono.
+  Please fix the problem or confirm to save as is.: Per favore correggi il problema o conferma per salvare così com'è.
+  Please verify your link for any errors, or confirm to save as is.: Per favore verifica eventuali errori nel tuo link, o conferma per salvare così com'è.
+  Please verify your path for any errors, or confirm to save as is.: Per favore verifica eventuali errori nel tuo percorso, o conferma per salvare così com'è.
+  Your command runs with errors, confirm you want to save as is.: Il tuo comando viene eseguito con errori, conferma che vuoi salvarlo così com'è.
+  Your request runs with errors, confirm you want to save as is.: La tua richiesta viene eseguita con errori, conferma che vuoi salvarla così com'è.
+FILTERED_TYPES:
+  Dot Path: Percorso a Punti
+  JSON Path: Percorso JSON
+  RegEx: Espressione Regolare
+  RegEx Replace: Sostituzione con Espressione Regolare
+  Remove Quotes: Rimuovi Virgolette
+Field: Campo
+Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Il campo <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> è stato trovato nel modello
+Field Options: Opzioni Campo
+Fields Value: Valore Campi
+File, folder or app path does not exist: Il percorso del file, cartella o app non esiste
+File, folder or app path is valid: Il percorso del file, cartella o app è valido
+File, folder or app path might not be valid: Il percorso del file, cartella o app potrebbe non essere valido
+Fill Template: Compila Modello
+Filter Type: Tipo di Filtro
+Filter's Value: Valore del Filtro
+Find in Clip: Trova nel Clip
+Find in clip: Trova nel clip
+Find in history: Trova nella cronologia
+First Only: Solo il Primo
+Form Fields: Campi del Modulo
+General Fields: Campi Generali
+HTML: HTML
+Headers: Intestazioni
+Hide Label: Nascondi Etichetta
+History capture is off: La cattura della cronologia è disattivata
+Key Press: Pressione Tasto
+Key Press After: Pressione Tasto Dopo
+Key Press After Paste: Pressione Tasto Dopo Incolla
+'Key Press After Paste: {{keyPress}}': 'Pressione Tasto Dopo Incolla: {{keyPress}}'
+Label Left: Etichetta a Sinistra
+Label Top: Etichetta in Alto
+Label on Left: Etichetta a Sinistra
+Labels: Etichette
+Last run: Ultima esecuzione
+Last update: Ultimo aggiornamento
+Layout Max Width: Larghezza Massima Layout
+Limit: Limite
+Markdown: Markdown
+Mask to hide clipboard value in preview: Maschera per nascondere il valore degli appunti in anteprima
+Move Clip: Sposta Clip
+Moved Clips Panel: Pannello Clip Spostati
+Name: Nome
+New Board: Nuova Bacheca
+New Clip: Nuovo Clip
+No Boards: Nessuna Bacheca
+No Clipboard History: Nessuna Cronologia Appunti
+No Tabs or Boards: Nessuna Scheda o Bacheca
+Number of columns: Numero di colonne
+Open: Apri
+Open URL Disable / Enable: Disabilita / Abilita Apertura URL
+Output Template: Modello di Output
+Panel for moved or copied items from other tabs: Pannello per elementi spostati o copiati da altre schede
+Please confirm to save as is.: Per favore conferma per salvare così com'è.
+RETURN_POSITION_TYPES:
+  First Only: Solo il Primo
+  Last Only: Solo l'Ultimo
+RULES_TYPES:
+  CSS Selector: Selettore CSS
+  RegEx Find: Trova Espressione Regolare
+  RegEx Group Match: Corrispondenza Gruppo Espressione Regolare
+  RegEx Match: Corrispondenza Espressione Regolare
+  RegEx Replace: Sostituisci Espressione Regolare
+RegEx Find: Trova Espressione Regolare
+RegEx Match: Corrispondenza Espressione Regolare
+RegEx Match Group: Gruppo Corrispondenza Espressione Regolare
+RegEx Replace: Sostituisci Espressione Regolare
+Regex Match Group Filter: Filtro Gruppo Corrispondenza Espressione Regolare
+Remove: Rimuovi
+Remove Open URL: Rimuovi Apertura URL
+Remove headers: Rimuovi intestazioni
+Remove image: Rimuovi immagine
+Rename: Rinomina
+Reset to Defaults: Ripristina Valori Predefiniti
+Response Filters: Filtri Risposta
+Result: Risultato
+Return Count Limit: Limite Conteggio Risultati
+Return Result As: Restituisci Risultato Come
+Return Type: Tipo di Restituzione
+ReturnSeparator:
+  Comma: Virgola
+  New Line: Nuova Linea
+  Pipe: Barra Verticale
+  Semicolon: Punto e Virgola
+  Space: Spazio
+  Tab: Tabulazione
+ReturnType:
+  Array: Array
+  Text: Testo
+SEPARATOR_TYPES:
+  Comma (,): Virgola (,)
+  New Line (\n): Nuova Linea (\n)
+  Pipe (|): Barra Verticale (|)
+  Semicolon (;): Punto e Virgola (;)
+  Space (' '): Spazio (' ')
+  Tab (\t): Tabulazione (\t)
+Save as Defaults: Salva come Predefiniti
+Scan for Template Fields: Scansiona Campi del Modello
+Scrapping Rules: Regole di Scraping
+Select Color: Seleziona Colore
+Select Default Option: Seleziona Opzione Predefinita
+Select Option: Seleziona Opzione
+Select Options: Seleziona Opzioni
+Show Label: Mostra Etichetta
+Special Field: Campo Speciale
+Subtitle: Sottotitolo
+Tab: Scheda
+Tab is Not Empty: La Scheda non è Vuota
+Tabs Menu: Menu Schede
+Template: Modello
+Template Edit: Modifica Modello
+Template Fields: Campi del Modello
+Template should have⠀<b>{{output}}</b>⠀placeholder.: Il modello dovrebbe avere il segnaposto⠀<b>{{output}}</b>⠀.
+Test Request: Testa Richiesta
+Test Run: Esegui Test
+Text: Testo
+Text Separator: Separatore di Testo
+This action cannot be undone.: Questa azione non può essere annullata.
+This field allows to insert text from clipboard: Questo campo permette di inserire testo dagli appunti
+Too long: Troppo lungo
+Too short: Troppo corto
+Turn On auto update: Attiva aggiornamento automatico
+Turn on history capture: Attiva cattura cronologia
+Type:
+  Command: Comando
+  Request: Richiesta
+  Scraper: Scraper
+URL: URL
+Unsaved name: Nome non salvato
+Unsaved subtitle: Sottotitolo non salvato
+Unsaved title: Titolo non salvato
+Update Link Card: Aggiorna Scheda Link
+Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.: Usa doppie parentesi graffe per {{field name}}. Usa {{clipboard}} per aggiungere il valore corrente degli appunti.
+Value: Valore
+Values: Valori
+Vertical Split: Divisione Verticale
+We need to open a new window where you can drag & drop file, path or application.: Dobbiamo aprire una nuova finestra dove puoi trascinare e rilasciare file, percorso o applicazione.
+Web Link or Email might not be valid: Il Link Web o l'Email potrebbero non essere validi
+Web or Email link is valid: Il Link Web o l'Email sono validi
+Website URL: URL del Sito Web
+Website URL is valid: L'URL del Sito Web è valido
+Website URL might not be valid: L'URL del Sito Web potrebbe non essere valido
+Wrap output using {{output}} placeholder: Racchiudi l'output usando il segnaposto {{output}}
+You have no rules added: Non hai aggiunto nessuna regola
+You'll need to clear this board of all clips and subboards before it can be deleted.: Dovrai cancellare tutti i clip e le sottobacheche da questa bacheca prima che possa essere eliminata.
+You'll need to clear this tab of all boards before it can be deleted.: Dovrai cancellare tutte le bacheche da questa scheda prima che possa essere eliminata.
+filled template: modello compilato
+new clips: nuovi clip
+template: modello
+'{{count}} fields found in template but missing from fields definition._one': '{{count}} campo trovato nel modello ma mancante nella definizione dei campi.'
+'{{count}} fields found in template but missing from fields definition._other': '{{count}} campi trovati nel modello ma mancanti nella definizione dei campi.'
+'{{count}} fields not found in the template._one': '{{count}} campo non trovato nel modello.'
+'{{count}} fields not found in the template._other': '{{count}} campi non trovati nel modello.'
+'{{type}} Field': 'Campo {{type}}'
+'{{type}} field': 'campo {{type}}'

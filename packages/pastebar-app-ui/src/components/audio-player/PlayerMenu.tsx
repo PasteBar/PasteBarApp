@@ -39,7 +39,11 @@ import ToolTip from '../atoms/tooltip'
 import { SimpleBarOptions } from '../libs/simplebar-react/simplebar-core'
 import { formatDurationDisplay, PlayerUI } from './PlayerUI'
 
-export const PlayerMenu = () => {
+export const PlayerMenu = ({
+  isShowNavBarItems = true,
+}: {
+  isShowNavBarItems?: boolean
+}) => {
   const {
     currentSongIndex,
     setCurrentSongIndex,
@@ -48,7 +52,6 @@ export const PlayerMenu = () => {
     playSong,
     clearPlayerSongs,
     isPlaying,
-    togglePlayPause,
     removeSong,
     currentProgress,
   } = useAtomValue(playerStoreAtom)
@@ -86,7 +89,7 @@ export const PlayerMenu = () => {
   return (
     <MenubarMenu>
       <MenubarTrigger
-        className="font-normal px-2.5"
+        className={`font-normal px-2.5 ${isShowNavBarItems ? 'opacity-1' : 'opacity-0'}`}
         onMouseOver={() => {
           if (confirmClear) {
             setConfirmClear(false)

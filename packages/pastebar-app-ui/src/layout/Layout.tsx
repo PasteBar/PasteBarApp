@@ -12,6 +12,7 @@ import {
   isAppLocked,
   isCreatingMenuItem,
   isKeyAltPressed,
+  isNavBarHovering,
   onBoardingTourSingleElements,
   openAboutPasteBarModal,
   openActionConfirmModal,
@@ -622,6 +623,8 @@ export const Component = () => {
   const { isMacOSX, isWindows, isSplitPanelView } = useAtomValue(uiStoreAtom)
   const { playerSongs } = useAtomValue(playerStoreAtom)
 
+  const { isShowNavBarItemsOnHoverOnly } = useAtomValue(settingsStoreAtom)
+
   const { pathname } = useLocation()
 
   const hasSplitViewLayout = pathname.startsWith('/history') && isSplitPanelView
@@ -636,6 +639,11 @@ export const Component = () => {
     >
       <div
         data-tauri-drag-region
+        onClick={() => {
+          if (isNavBarHovering.value && isShowNavBarItemsOnHoverOnly) {
+            isNavBarHovering.value = false
+          }
+        }}
         className={`${
           isMacOSX ? `h-calc(100vh-40px) ${!hasSplitViewLayout ? 'p-[14px]' : ''}` : ''
         } ${

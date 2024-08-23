@@ -1,7 +1,5 @@
 import { invoke } from '@tauri-apps/api'
 import { settingsStore } from '~/store'
-import dayjs from 'dayjs'
-import localeData from 'dayjs/plugin/localeData'
 import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import TimeAgo from 'javascript-time-ago'
@@ -9,8 +7,10 @@ import deTimeAgo from 'javascript-time-ago/locale/de'
 import enTimeAgo from 'javascript-time-ago/locale/en'
 import esTimeAgo from 'javascript-time-ago/locale/es'
 import frTimeAgo from 'javascript-time-ago/locale/fr'
+import itTimeAgo from 'javascript-time-ago/locale/it'
 import ruTimeAgo from 'javascript-time-ago/locale/ru'
 import ukTimeAgo from 'javascript-time-ago/locale/uk'
+import zhTimeAgo from 'javascript-time-ago/locale/zh'
 import { initReactI18next } from 'react-i18next'
 // @ts-expect-error - Vite plugin
 // eslint-disable-next-line import/no-unresolved
@@ -19,16 +19,22 @@ import resources from 'virtual:i18next-loader'
 import { DEFAULT_LOCALE, LANGUAGES } from './languges'
 import { missingKeys, saveMissingKeysDevOnly } from './translation-utils'
 
-dayjs.extend(localeData)
-
 TimeAgo.addDefaultLocale(enTimeAgo)
 TimeAgo.addLocale(deTimeAgo)
 TimeAgo.addLocale(esTimeAgo)
 TimeAgo.addLocale(frTimeAgo)
 TimeAgo.addLocale(ruTimeAgo)
 TimeAgo.addLocale(ukTimeAgo)
+TimeAgo.addLocale(zhTimeAgo)
+TimeAgo.addLocale(itTimeAgo)
 
 export const timeAgoCache = new Map()
+
+// Define a mapping for non-dash language codes to the correct dash format
+const langCodeMapping: { [key: string]: string } = {
+  zhCN: 'zh-CN',
+  esES: 'es-ES',
+}
 
 const timeAgoInstancesCache = {
   en: new TimeAgo(DEFAULT_LOCALE),
@@ -139,8 +145,6 @@ i18n
         console.log(err)
       }
       window.__locale__ = i18n.language
-      // await import(`dayjs/locale/${i18n.language === 'en-US' ? 'en' : i18n.language}.js`)
-      // dayjs.locale(i18n.language)
     }
   )
 
@@ -151,26 +155,17 @@ i18n.on('languageChanged', async function (lng) {
   invoke('build_system_menu')
   // eslint-disable-next-line sonarjs/no-empty-collection
   timeAgoCache.clear()
-
-  // await import(`dayjs/locale/${lng}.js`)
-  // dayjs.locale(lng)
 })
 
 export const timeAgoInstance = () => {
-  const lang = i18n.language === 'en' ? 'en' : i18n.language
+  let lang =
+    langCodeMapping[i18n.language === 'en' ? 'en' : i18n.language] ||
+    (i18n.language === 'en' ? 'en' : i18n.language)
 
-  if (timeAgoInstancesCache[lang as keyof typeof timeAgoInstancesCache]) {
-    return timeAgoInstancesCache[lang as keyof typeof timeAgoInstancesCache]
+  if (!timeAgoInstancesCache[lang as keyof typeof timeAgoInstancesCache]) {
+    timeAgoInstancesCache[lang as keyof typeof timeAgoInstancesCache] = new TimeAgo(lang)
   }
-  timeAgoInstancesCache[i18n.language as keyof typeof timeAgoInstancesCache] =
-    new TimeAgo(i18n.language)
-  return timeAgoInstancesCache[i18n.language as keyof typeof timeAgoInstancesCache]
-}
-
-export const dateLocales: {
-  [key: string]: () => Promise<ILocale>
-} = {
-  en: () => import('dayjs/locale/en'),
+  return timeAgoInstancesCache[lang as keyof typeof timeAgoInstancesCache]
 }
 
 export default i18n

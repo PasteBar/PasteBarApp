@@ -11,9 +11,11 @@ use auto_launch::AutoLaunchBuilder;
 use dotenv::dotenv;
 use menu::DbRecentHistoryItems;
 use opener;
+// use schema::clipboard_history::history_id;
 use services::settings_service::insert_or_update_setting_by_name;
 use services::utils;
 use services::utils::debug_output;
+use tokio::time::sleep;
 // use simple_cache::SimpleCache;
 use std::env::current_exe;
 use std::fs;
@@ -61,8 +63,8 @@ use commands::security_commands;
 use commands::shell_commands;
 use commands::tabs_commands;
 use commands::translations_commands;
-
 use db::AppConstants;
+use mouse_position::mouse_position::Mouse;
 use std::collections::HashMap;
 
 use serde::Serialize;
@@ -72,13 +74,31 @@ use tauri::SystemTray;
 use tauri::SystemTrayEvent;
 // use tauri_plugin_positioner::{Position, WindowExt};
 
+use fns::debounce;
 use inputbot::KeybdKey::*;
+use once_cell::sync::Lazy;
+use std::ptr;
+use std::sync::Arc;
 use std::sync::Mutex;
 use std::time::Duration as StdDuration;
 use std::time::Instant;
-use tauri_plugin_window_state::AppHandleExt;
-use tauri_plugin_window_state::StateFlags;
 use tokio::sync::Mutex as TokioMutex;
+use window_state::AppHandleExt;
+use window_state::StateFlags;
+
+#[cfg(target_os = "macos")]
+use objc::{msg_send, sel, sel_impl};
+
+#[cfg(target_os = "macos")]
+use cocoa::{appkit::NSApplication, base::nil};
+
+#[cfg(target_os = "macos")]
+fn return_focus_to_previous_window() {
+  unsafe {
+    let app = NSApplication::sharedApplication(nil);
+    let _: () = msg_send![app, hide: nil];
+  }
+}
 
 #[derive(Serialize)]
 struct AppReadyResponse<'a> {
@@ -93,6 +113,38 @@ struct SettingUpdatePayload {
   value_bool: Option<bool>,
   value_string: Option<String>,
   value_number: Option<i32>,
+}
+
+#[tauri::command]
+async fn quickpaste_hide_paste_close(
+  app_handle: tauri::AppHandle,
+  history_id: String,
+) -> Result<(), String> {
+  // Get the quickpaste window
+  let window = app_handle
+    .get_window("quickpaste")
+    .ok_or_else(|| "Failed to get quickpaste window".to_string())?;
+
+  // Hide the window
+  window
+    .hide()
+    .map_err(|e| format!("Failed to hide window: {}", e))?;
+
+  // Return focus to the previous window
+  #[cfg(target_os = "macos")]
+  return_focus_to_previous_window();
+
+  sleep(StdDuration::from_millis(200)).await;
+
+  // Copy and paste the history item
+  clipboard_commands::copy_paste_history_item(app_handle.clone(), history_id, 0);
+
+  // Close the window
+  window
+    .close()
+    .map_err(|e| format!("Failed to close window: {}", e))?;
+
+  Ok(())
 }
 
 #[tauri::command]
@@ -173,7 +225,18 @@ fn app_ready(app_handle: tauri::AppHandle) -> Result<String, String> {
     window.set_size(new_size).unwrap();
   }
 
-  window.show().unwrap();
+  let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
+
+  let hide_main_window_on_startup = app_settings
+    .lock()
+    .unwrap()
+    .get("isKeepMainWindowClosedOnRestartEnabled")
+    .map(|setting| setting.value_bool.unwrap_or(false))
+    .unwrap_or(false);
+
+  if !hide_main_window_on_startup {
+    window.show().unwrap();
+  }
 
   debug_output(|| {
     println!("app_ready on client");
@@ -183,7 +246,6 @@ fn app_ready(app_handle: tauri::AppHandle) -> Result<String, String> {
     .get()
     .ok_or("APP_CONSTANTS not initialized")?;
 
-  let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
   let mut is_permissions_trusted = true;
 
   #[cfg(target_os = "macos")]
@@ -199,6 +261,26 @@ fn app_ready(app_handle: tauri::AppHandle) -> Result<String, String> {
   let response = AppReadyResponse {
     constants: constants,
     permissionstrusted: is_permissions_trusted,
+    settings: &app_settings,
+  };
+
+  let serialized = serde_json::to_string(&response).map_err(|e| e.to_string())?;
+
+  Ok(serialized)
+}
+
+#[tauri::command]
+fn get_app_settings(app_handle: tauri::AppHandle) -> Result<String, String> {
+  println!("app_settings on client");
+  let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
+
+  let constants = db::APP_CONSTANTS
+    .get()
+    .ok_or("APP_CONSTANTS not initialized")?;
+
+  let response = AppReadyResponse {
+    constants: constants,
+    permissionstrusted: true,
     settings: &app_settings,
   };
 
@@ -268,7 +350,7 @@ fn set_icon(app_handle: tauri::AppHandle, name: &str, is_dark: bool) {
 
 #[cfg(target_os = "macos")]
 #[tauri::command]
-fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), String> {
+fn open_history_window(app_handle: tauri::AppHandle) -> Result<(), String> {
   // check if the window is already open
   if app_handle.get_window("history").is_some() {
     // show if exist and return
@@ -292,19 +374,12 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
       .add_native_item(MenuItem::Paste),
   ));
 
-  let main_window = app_handle
-    .get_window("main")
-    .ok_or_else(|| "Failed to get main window".to_string())?;
-
-  let main_size = main_window.outer_size().map_err(|e| e.to_string())?;
-
   let mut window_builder = tauri::WindowBuilder::new(
     &app_handle,
     "history",
     tauri::WindowUrl::App("history-index".into()),
   )
   .title("PasteBar History")
-  .inner_size(width, main_size.height as f64)
   .max_inner_size(700.0, 2200.0)
   .min_inner_size(300.0, 400.0)
   .menu(menu)
@@ -320,27 +395,26 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
   history_window.position_traffic_lights(-10., -10.);
 
   {
-    let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+    let app_handle_clone = app_handle.clone();
+
+    let debounced_save = debounce(
+      move |_: ()| {
+        app_handle_clone
+          .save_window_state(StateFlags::POSITION | StateFlags::SIZE)
+          .unwrap_or_else(|e| eprintln!("Failed to save window state: {}", e));
+      },
+      StdDuration::from_secs(1),
+    );
 
     history_window.on_window_event(move |e| match e {
       tauri::WindowEvent::Destroyed => {
+        app_handle.save_window_state(StateFlags::all()).unwrap();
         app_handle
           .emit_all("window-events", "history-window-closed")
-          .unwrap();
+          .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
       }
-      tauri::WindowEvent::Moved(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::POSITION).unwrap();
-          last_save_time.set(now);
-        }
-      }
-      tauri::WindowEvent::Resized(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::SIZE).unwrap();
-          last_save_time.set(now);
-        }
+      tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {
+        debounced_save.call(());
       }
       _ => {}
     });
@@ -356,7 +430,7 @@ fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), S
 // On Windows, the open new window command must be async
 #[cfg(target_os = "windows")]
 #[tauri::command]
-async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result<(), String> {
+async fn open_history_window(app_handle: tauri::AppHandle) -> Result<(), String> {
   // check if the window is already open
   if app_handle.get_window("history").is_some() {
     // show if exist and return
@@ -380,12 +454,6 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
       .add_native_item(MenuItem::Paste),
   ));
 
-  let main_window = app_handle
-    .get_window("main")
-    .ok_or_else(|| "Failed to get main window".to_string())?;
-
-  let main_size = main_window.outer_size().map_err(|e| e.to_string())?;
-
   let mut window_builder = tauri::WindowBuilder::new(
     &app_handle,
     "history",
@@ -394,7 +462,6 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
   .title("PasteBar History")
   .decorations(false)
   .transparent(true)
-  .inner_size(width, main_size.height as f64)
   .max_inner_size(700.0, 2200.0)
   .min_inner_size(300.0, 400.0)
   .menu(menu)
@@ -405,38 +472,188 @@ async fn open_history_window(app_handle: tauri::AppHandle, width: f64) -> Result
   let history_window = window_builder.build().map_err(|e| e.to_string())?;
 
   {
-    let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
+    let app_handle_clone = app_handle.clone();
+
+    let debounced_save = debounce(
+      move |_: ()| {
+        app_handle_clone
+          .save_window_state(StateFlags::POSITION | StateFlags::SIZE)
+          .unwrap_or_else(|e| eprintln!("Failed to save window state: {}", e));
+      },
+      StdDuration::from_secs(1),
+    );
 
     history_window.on_window_event(move |e| match e {
       tauri::WindowEvent::Destroyed => {
+        app_handle.save_window_state(StateFlags::all()).unwrap();
         app_handle
           .emit_all("window-events", "history-window-closed")
-          .unwrap();
+          .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
       }
-      tauri::WindowEvent::Moved(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::POSITION).unwrap();
-          last_save_time.set(now);
-        }
-      }
-      tauri::WindowEvent::Resized(_) => {
-        let now = Instant::now();
-        if now - last_save_time.get() >= StdDuration::from_secs(1) {
-          app_handle.save_window_state(StateFlags::SIZE).unwrap();
-          last_save_time.set(now);
-        }
+      tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {
+        debounced_save.call(());
       }
       _ => {}
     });
   }
 
-  history_window.set_decorations(false);
+  let _ = history_window.set_decorations(false);
   history_window.show().map_err(|e| e.to_string())?;
   history_window.set_focus().map_err(|e| e.to_string())?;
 
   Ok(())
 }
+
+#[tauri::command]
+async fn open_quickpaste_window(app_handle: tauri::AppHandle, title: String) -> Result<(), String> {
+  if let Some(window) = app_handle.get_window("quickpaste") {
+    window.close().map_err(|e| e.to_string())?;
+    return Ok(());
+  }
+
+  let window_width = 310.0;
+  let window_height = 420.0;
+
+  let main_window = app_handle.get_window("main").unwrap();
+  let is_main_window_visible = main_window.is_visible().unwrap();
+
+  if is_main_window_visible {
+    #[cfg(target_os = "macos")]
+    main_window.hide().map_err(|e| e.to_string())?;
+  }
+
+  let window_builder = tauri::WindowBuilder::new(
+    &app_handle,
+    "quickpaste",
+    tauri::WindowUrl::App("quickpaste-index".into()),
+  )
+  .title(title)
+  .always_on_top(true)
+  .maximizable(false)
+  .resizable(true)
+  .max_inner_size(500.0, 800.0)
+  .min_inner_size(window_width, window_height)
+  .minimizable(false)
+  .inner_size(window_width, window_height)
+  .visible(false);
+
+  let quickpaste_window = window_builder.build().map_err(|e| e.to_string())?;
+
+  let position = Mouse::get_mouse_position();
+
+  let (cursor_x, cursor_y) = match position {
+    Mouse::Position { x, y } => (x, y),
+    Mouse::Error => {
+      println!("Failed to get mouse position, using default (100, 100)");
+      (100, 100)
+    }
+  };
+
+  // Get all monitors
+  let monitors = quickpaste_window
+    .available_monitors()
+    .map_err(|e| e.to_string())?;
+
+  // Calculate global screen size
+  let mut global_width = 0;
+  let mut global_height = 0;
+  let mut scale_factor = 1.0;
+
+  for monitor in &monitors {
+    scale_factor = monitor.scale_factor(); // Use the scale factor of the primary monitor
+    println!("Monitor scale factor: {}", scale_factor);
+    let monitor_size = monitor.size();
+
+    println!(
+      "Monitor size: {}x{}",
+      monitor_size.width, monitor_size.height
+    );
+
+    let actual_width = (monitor_size.width as f64 / scale_factor).round() as i32;
+    let actual_height = (monitor_size.height as f64 / scale_factor).round() as i32;
+
+    global_width += actual_width;
+    global_height = global_height.max(actual_height);
+  }
+
+  #[cfg(target_os = "macos")]
+  let cursor_x_scale = (cursor_x as f64).round() as i32;
+  #[cfg(target_os = "macos")]
+  let cursor_y_scale = (cursor_y as f64).round() as i32;
+
+  #[cfg(target_os = "windows")]
+  let cursor_x_scale = (cursor_x as f64 / scale_factor).round() as i32;
+  #[cfg(target_os = "windows")]
+  let cursor_y_scale = (cursor_y as f64 / scale_factor).round() as i32;
+
+  // Calculate the window position in logical coordinates
+  let window_x = if cursor_x_scale + window_width as i32 + 50 > global_width {
+    cursor_x_scale - window_width as i32 - 50 // Place to the left if not enough space on the right
+  } else {
+    cursor_x_scale + 50
+  };
+
+  let window_y = if cursor_y_scale + window_height as i32 > global_height {
+    cursor_y_scale - window_height as i32 - 50
+  } else {
+    cursor_y_scale - 50
+  };
+
+  quickpaste_window
+    .set_position(tauri::LogicalPosition {
+      x: window_x,
+      y: window_y,
+    })
+    .map_err(|e| e.to_string())?;
+
+  {
+    let app_handle_clone = app_handle.clone();
+
+    quickpaste_window.on_window_event(move |e| match e {
+      tauri::WindowEvent::Destroyed => {
+        #[cfg(target_os = "macos")]
+        {
+          return_focus_to_previous_window();
+          if is_main_window_visible {
+            let _ = app_handle_clone
+              .get_window("main")
+              .unwrap()
+              .show()
+              .map_err(|e| e.to_string());
+          }
+        }
+
+        app_handle_clone
+          .emit_all("window-events", "quickpaste-window-closed")
+          .unwrap_or_else(|e| eprintln!("Failed to emit window closed event: {}", e));
+      }
+      tauri::WindowEvent::CloseRequested { api, .. } => {
+        api.prevent_close();
+        if let Some(window) = app_handle_clone.get_window("quickpaste") {
+          let _ = window
+            .close()
+            .map_err(|e| eprintln!("Failed to close window: {}", e));
+        }
+        #[cfg(target_os = "macos")]
+        return_focus_to_previous_window();
+      }
+      _ => {}
+    });
+  }
+
+  quickpaste_window.show().map_err(|e| e.to_string())?;
+  quickpaste_window.set_focus().map_err(|e| e.to_string())?;
+
+  // println!(
+  //   "User cursor position: {}x{}",
+  //   cursor_x_scale, cursor_y_scale
+  // );
+  // println!("Global window size: {}x{}", global_width, global_height);
+  // println!("Window position: {}x{}", window_x, window_y);
+
+  Ok(())
+}
+
 #[tokio::main]
 async fn main() {
   dotenv().ok();
@@ -677,7 +894,6 @@ async fn main() {
 
       match event.event() {
         tauri::WindowEvent::CloseRequested { api, .. } => {
-          println!("Close Requested");
           let _win = event.window();
           if _win.label() != "history" {
             _win.emit_all("window-events", "main-window-hide").unwrap();
@@ -695,8 +911,21 @@ async fn main() {
     .setup(|app| {
       db::init(app);
       let app_settings = get_all_settings(None).unwrap_or_default();
-      app.manage(app_settings);
       cron_jobs::setup_cron_jobs();
+
+      #[cfg(target_os = "macos")]
+      {
+        let settings_map = app_settings.lock().unwrap();
+        if let Some(setting) = settings_map.get("isHideMacOSDockIcon") {
+          if let Some(value_bool) = &setting.value_bool {
+            if *value_bool {
+              app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+            }
+          }
+        }
+      }
+
+      app.manage(app_settings);
 
       let menu = Menu::new().add_submenu(Submenu::new(
         "PasteBar",
@@ -712,7 +941,7 @@ async fn main() {
       let mut window_builder =
         tauri::WindowBuilder::new(app, "main", tauri::WindowUrl::App("index.html".into()))
           .inner_size(1100., 730.)
-          .min_inner_size(750., 600.)
+          .min_inner_size(720., 620.)
           // .decorations(false)
           // .title_bar_style(tauri::TitleBarStyle::Overlay)
           // .hidden_title(true)
@@ -752,7 +981,6 @@ async fn main() {
       }
 
       {
-        let last_save_time = std::cell::Cell::new(Instant::now() - StdDuration::from_secs(1));
         let app_handle = app.app_handle();
         let db_items_state_local = app.state();
         let db_recent_history_items_state = app.state();
@@ -764,7 +992,6 @@ async fn main() {
           let settings_map = app_settings_local.lock().unwrap();
           if let Some(setting) = settings_map.get("userSelectedLanguage") {
             if let Some(value_text) = &setting.value_text {
-              println!("Setting user language to: {}", value_text);
               Translations::set_user_language(&value_text);
             }
           }
@@ -786,27 +1013,41 @@ async fn main() {
           }
         }
 
-        window.on_window_event(move |e| match e {
-          tauri::WindowEvent::Moved(_) => {
-            let now = Instant::now();
-            if now - last_save_time.get() >= StdDuration::from_secs(2) {
-              app_handle.save_window_state(StateFlags::POSITION).unwrap();
-              last_save_time.set(now);
+        {
+          let app_handle_clone = app_handle.clone();
+
+          let debounced_save_position = debounce(
+            move |_: ()| {
+              println!("Saving window state main window");
+              app_handle_clone
+                .save_window_state(StateFlags::POSITION)
+                .unwrap_or_else(|e| eprintln!("Failed to save window position: {}", e));
+            },
+            StdDuration::from_secs(1),
+          );
+
+          let debounced_save_size = debounce(
+            move |_: ()| {
+              app_handle
+                .save_window_state(StateFlags::SIZE)
+                .unwrap_or_else(|e| eprintln!("Failed to save window size: {}", e));
+            },
+            StdDuration::from_secs(1),
+          );
+
+          window.on_window_event(move |e| match e {
+            tauri::WindowEvent::Moved(_) => {
+              debounced_save_position.call(());
             }
-          }
-          tauri::WindowEvent::Resized(_) => {
-            let now = Instant::now();
-            if now - last_save_time.get() >= StdDuration::from_secs(2) {
-              app_handle.save_window_state(StateFlags::SIZE).unwrap();
-              last_save_time.set(now);
+            tauri::WindowEvent::Resized(_) => {
+              debounced_save_size.call(());
             }
-          }
-          _ => {}
-        });
+            _ => {}
+          });
+        }
       }
 
       if cfg!(debug_assertions) {
-        window.show().unwrap();
         #[cfg(debug_assertions)]
         {
           window.open_devtools();
@@ -853,6 +1094,7 @@ async fn main() {
     })
     .invoke_handler(tauri::generate_handler![
       app_ready,
+      get_app_settings,
       update_setting,
       tabs_commands::delete_tab,
       tabs_commands::create_tab,
@@ -946,10 +1188,12 @@ async fn main() {
       autostart,
       is_autostart_enabled,
       open_history_window,
+      open_quickpaste_window,
+      quickpaste_hide_paste_close,
       set_icon
     ])
     .plugin(clipboard::init())
-    .plugin(tauri_plugin_window_state::Builder::default().build())
+    .plugin(window_state::Builder::default().build())
     .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
       debug_output(|| {
         println!("{}, {argv:?}, {cwd}", app.package_info().name);

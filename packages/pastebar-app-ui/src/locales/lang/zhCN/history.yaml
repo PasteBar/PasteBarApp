@@ -1,0 +1,40 @@
+All History Settings: 所有历史设置
+All done! History's been cleared.: 完成！历史已清除。
+Auto Update on Capture: 捕获时自动更新
+Auto-Clear Settings: 自动清除设置
+Capture History: 捕获历史
+Clear: 清除
+Clear All: 清除全部
+Clear All History: 清除所有历史
+Clear History: 清除历史
+Confirm Clear All History: 确认清除所有历史
+Do you really want to remove ALL clipboard history items?: 确定要删除所有剪贴板历史记录吗？
+"Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}": 您想删除早于 {{olderThen}} {{durationType}} 的剪贴板历史项目吗
+Enable Capture History: 启用捕获历史
+Filters:
+  App Filters: 应用筛选器
+  Audio: 音频
+  Clear Filters: 清除筛选器
+  Code: 代码
+  Emoji: 表情符号
+  Image: 图片
+  Language Filters: 语言筛选器
+  Languages: 语言
+  Languages Filter: 语言筛选器
+  Languages Filters: 语言筛选器
+  Link: 链接
+  Pinned: 已固定
+  Secret: 密钥
+  Select Filters: 选择筛选器
+  Source: 来源
+  Source Application: 来源应用
+  Source Filters: 来源筛选器
+  Starred: 已星标
+  Text: 文本
+  Video: 视频
+Hide pinned history: 隐藏固定历史
+History Settings: 历史设置
+Paste Menu: 粘贴菜单
+Select Filters: 选择筛选器
+View pinned history: 查看固定历史
+'{{isAll}} Clipboard History': '{{isAll}} 剪贴板历史'

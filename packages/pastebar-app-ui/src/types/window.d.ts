@@ -6,6 +6,7 @@ declare global {
     markdown: unknown
     isMainWindow: boolean
     isHistoryWindow: boolean
+    isQuickPasteWindow: boolean
     highlighter: unknown
     plausible: (
       event: string,

@@ -1,0 +1,288 @@
+API Key: API ключ
+Add: Додати
+Add Auth: Додати авторизацію
+Add Clipboard Value: Додати значення буфера обміну
+Add Custom: Додати користувацьке
+Add Custom Field: Додати користувацьке поле
+Add Delay Time: Додати час затримки
+Add First Board: Додати першу дошку
+Add Form Field: Додати поле форми
+Add Header: Додати заголовок
+Add Key Press: Додати натискання клавіші
+Add Key Press After Paste: Додати натискання клавіш після вставки
+Add Link Card: Додати картку посилання
+Add Open URL: Додати відкриття URL
+Add Output Template: Додати шаблон виводу
+Add Regex Match Group Filter: Додати фільтр групи відповідності регулярному виразу
+Add Request Header: Додати заголовок запиту
+Add Response Filter: Додати фільтр відповіді
+Add Scraping Rule: Додати правило скрапінгу
+Add Section: Додати розділ
+Add Tab: Додати вкладку
+Add Template Field: Додати поле шаблону
+Add a Tab: Додати вкладку
+Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Додати поле <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> в шаблон
+Add field <b>{{<b>{{name}}</b>}}</b> into the template: Додати поле <b>{{<b>{{name}}</b>}}</b> в шаблон
+Add image: Додати зображення
+Add note: Додати примітку
+Add to Board: Додати на дошку
+Add {{type}}: Додати {{type}}
+All (No Limit): Все (Без обмежень)
+All field labels must be unique to ensure they are correctly used within the template.: Всі назви полів мають бути унікальними, щоб забезпечити їх правильне використання в шаблоні.
+Are you sure you want to delete <strong>{{boardName}}</strong> board?: Ви впевнені, що хочете видалити дошку <strong>{{boardName}}</strong>?
+Are you sure you want to delete <strong>{{tabName}}</strong> tab?: Ви впевнені, що хочете видалити вкладку <strong>{{tabName}}</strong>?
+Are you sure you want to delete?: Ви впевнені, що хочете видалити?
+Are you sure you want to remove image from the clip?: Ви впевнені, що хочете видалити зображення з кліпу?
+Auth: Авторизація
+Auto update is Off: Автооновлення вимкнено
+Basic Auth: Базова авторизація
+Basic Password: Базовий пароль
+Basic Username: Базове ім'я користувача
+Bearer Token: Токен доступу
+Board Layout Height: Висота макету дошки
+Board Layout Split: Розділення макету дошки
+Board Menu: Меню дошки
+Board is Not Empty: Дошка не порожня
+Boards: Дошки
+Border Width: Розмір межі
+CSS Selector: CSS-селектор
+Cancel: Скасувати
+Change Layout: Змінити макет
+Change color: Змінити колір
+Clear: Очистити
+Clear All Fields: Очистити всі поля
+Click To Add: Натисніть, щоб додати
+Clip Menu: Меню кліпу
+Clip Options: Параметри кліпу
+Clipboard: Буфер обміну
+Clips:
+  App: Додаток
+  Clip Menu: Меню кліпу
+  Clips: Кліпи
+  Link: Посилання
+Close Edit: Закрити редагування
+Command:
+  error: помилка
+  output: вивід
+Command error: Помилка команди
+Common Fields: Загальні поля
+Confirm Clear All Fields: Підтвердіть очищення всіх полів
+Confirm to remove Auth: Підтвердити видалення авторизації
+Confirm to remove filters: Підтвердити видалення фільтрів
+Confirm to remove headers: Підтвердити видалення заголовків
+Confirm to remove rules: Підтвердити видалення правил
+Copy Clip: Копіювати кліп
+Create Board: Створити дошку
+Create Tab: Створити вкладку
+Create tab: Створити вкладку
+Dashboard: Панель керування
+Delay: Затримка
+Delete Board: Видалити дошку
+Delete Clip: Видалити кліп
+Delete Tab: Видалити вкладку
+Delete board: Видалити дошку
+Delete field: Видалити поле
+Delete tab: Видалити вкладку
+Detect Template Fields: Виявити поля шаблону
+Detect for Template Fields: Виявити поля шаблону
+Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Вимкнене поле <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> знайдено в шаблоні
+Done Create Clip: Завершити
+Done Edit: Завершити
+Done Edit Tabs: Завершити
+Done Organize: Завершити
+Drag & Drop Path: Перетягніть шлях
+Drop To Add: Перетягніть, щоб додати
+Drop image file here, or use a separate window for drag and drop.: Перетягніть файл зображення сюди або використовуйте окреме вікно для перетягування.
+Drop to Pin: Перетягніть, щоб закріпити
+Edit Note: Редагувати примітку
+Edit Template: Редагувати шаблон
+Edit subtitle: Редагувати підзаголовок
+Edit tab name: Редагувати назву вкладки
+Enable / Disable: Увімкнути / Вимкнути
+Enable / Disable URL Open: Увімкнути / Вимкнути відкриття URL
+Enter Label: Введіть мітку
+Enter URL: Введіть URL
+Enter board subtitle or description: Введіть підзаголовок або опис дошки
+Enter board title: Введіть назву дошки
+Enter clip name: Введіть назву кліпу
+Enter clip note: Введіть примітку до кліпу
+Enter code: Введіть код
+Enter credit card number: Введіть номер кредитної картки
+Enter default value: Введіть значення за замовчуванням
+Enter field value: Введіть значення поля
+Enter full path to file, folder or application: Введіть повний шлях до файлу, папки або додатку
+Enter regex for output filer: Введіть регулярний вираз для фільтра виводу
+Enter request url: Введіть URL запиту
+Enter secret value: Введіть секретне значення
+Enter section label: Введіть мітку розділу
+Enter select option: Введіть варіант вибору
+Enter tab name: Введіть назву вкладки
+Enter template or drag from history: Введіть шаблон або перетягніть з історії
+Enter template value: Введіть значення шаблону
+Enter value or drag from history: Введіть значення або перетягніть з історії
+Enter web link or email: Введіть веб-посилання або адресу електронної пошти
+Errors:
+  No fields found in the template.: У шаблоні не знайдено полів.
+  Please fix output template or confirm to save as is.: Виправте шаблон виводу або підтвердіть збереження як є.
+  Please fix template fields or confirm to save as is.: Виправте поля шаблону або підтвердіть збереження як є.
+  Please fix the problem or confirm to save as is.: Виправте проблему або підтвердіть збереження як є.
+  Please verify your link for any errors, or confirm to save as is.: Перевірте посилання на наявність помилок або підтвердіть збереження як є.
+  Please verify your path for any errors, or confirm to save as is.: Перевірте шлях на наявність помилок або підтвердіть збереження як є.
+  Your command runs with errors, confirm you want to save as is.: Ваша команда виконується з помилками, підтвердіть, що ви хочете зберегти як є.
+  Your request runs with errors, confirm you want to save as is.: Ваш запит виконується з помилками, підтвердіть, що ви хочете зберегти як є.
+FILTERED_TYPES:
+  Dot Path: Точковий шлях
+  JSON Path: JSON шлях
+  RegEx: Регулярний вираз
+  RegEx Replace: Заміна регулярного виразу
+  Remove Quotes: Видалити лапки
+Field: Поле
+Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Поле <b>&#123;&#123;<b>{{name}}<b>&#123;&#123;<b> знайдено в шаблоні
+Field Options: Параметри поля
+Fields Value: Значення полів
+File, folder or app path does not exist: Шлях до файлу, папки або додатку не існує
+File, folder or app path is valid: Шлях до файлу, папки або додатку дійсний
+File, folder or app path might not be valid: Шлях до файлу, папки або додатку може бути недійсним
+Fill Template: Заповнити шаблон
+Filter Type: Тип фільтра
+Filter's Value: Значення фільтра
+Find in Clip: Знайти в кліпі
+Find in clip: Знайти в кліпі
+Find in history: Знайти в історії
+First Only: Тільки перший
+Form Fields: Поля форми
+General Fields: Загальні поля
+HTML: HTML
+Headers: Заголовки
+Hide Label: Приховати мітку
+History capture is off: Запис історії вимкнено
+Key Press: Натискання клавіш
+Key Press After: Натискання клавіш після
+Key Press After Paste: Натискання клавіш після вставки
+'Key Press After Paste: {{keyPress}}': 'Натискання клавіш після вставки: {{keyPress}}'
+Label Left: Мітка зліва
+Label Top: Мітка зверху
+Label on Left: Мітка зліва
+Labels: Поля
+Last run: Останній запуск
+Last update: Останнє оновлення
+Layout Max Width: Максимальна ширина макету
+Limit: Обмеження
+Markdown: Markdown
+Mask to hide clipboard value in preview: Маска для приховування значення буфера обміну в попередньому перегляді
+Move Clip: Перемістити кліп
+Moved Clips Panel: Панель переміщених кліпів
+Name: Ім'я
+New Board: Нова дошка
+New Clip: Новий кліп
+No Boards: Немає дошок
+No Clipboard History: Немає історії буфера обміну
+No Tabs or Boards: Немає вкладок або дошок
+Number of columns: Кількість стовпців
+Open: Відкрити
+Open URL Disable / Enable: Відкрити URL Вимкнути / Увімкнути
+Output Template: Шаблон виводу
+Panel for moved or copied items from other tabs: Панель для переміщених або скопійованих елементів з інших вкладок.
+Please confirm to save as is.: Будь ласка, підтвердіть збереження як є.
+Press: Натиснути
+RETURN_POSITION_TYPES:
+  First Only: Тільки перший
+  Last Only: Тільки останній
+RULES_TYPES:
+  CSS Selector: CSS-селектор
+  RegEx Find: Пошук регулярного виразу
+  RegEx Group Match: Відповідність групи регулярного виразу
+  RegEx Match: Відповідність регулярного виразу
+  RegEx Replace: Заміна регулярного виразу
+RegEx Find: Пошук регулярного виразу
+RegEx Match: Відповідність регулярного виразу
+RegEx Match Group: Група відповідності регулярного виразу
+RegEx Replace: Заміна регулярного виразу
+Regex Match Group Filter: Фільтр групи відповідності регулярному виразу
+Remove: Видалити
+Remove Open URL: Видалити відкриття URL
+Remove headers: Видалити заголовки
+Remove image: Видалити зображення
+Rename: Перейменувати
+Reset to Defaults: Скинути до значень за замовчуванням
+Response Filters: Фільтри відповіді
+Result: Результат
+Return Count Limit: Обмеження кількості повернень
+Return Result As: Повернути результат як
+Return Type: Тип повернення
+ReturnSeparator:
+  Comma: Кома
+  New Line: Новий рядок
+  Pipe: Вертикальна риска
+  Semicolon: Крапка з комою
+  Space: Пробіл
+  Tab: Табуляція
+ReturnType:
+  Array: Масив
+  Text: Текст
+SEPARATOR_TYPES:
+  Comma (,): Кома (,)
+  New Line (\n): Новий рядок (\n)
+  Pipe (|): Вертикальна риска (|)
+  Semicolon (;): Крапка з комою (;)
+  Space (' '): Пробіл (' ')
+  Tab (\t): Табуляція (\t)
+Save as Defaults: Зберегти як значення за замовчуванням
+Scan for Template Fields: Сканувати поля шаблону
+Scrapping Rules: Правила скрапінгу
+Select Color: Вибрати колір
+Select Default Option: Вибрати варіант за замовчуванням
+Select Option: Вибрати варіант
+Select Options: Вибрати варіанти
+Show Label: Показати мітку
+Special Field: Спеціальне поле
+Subtitle: Підзаголовок
+Tab: Вкладка
+Tab is Not Empty: Вкладка не порожня
+Tabs Menu: Меню вкладок
+Template: Шаблон
+Template Edit: Редагування шаблону
+Template Fields: Поля шаблону
+Template should have⠀<b>{{output}}</b>⠀placeholder.: Шаблон повинен містити заповнювач⠀<b>{{output}}</b>⠀.
+Test Request: Тестовий запит
+Test Run: Тестовий запуск
+Text: Текст
+Text Separator: Розділювач тексту
+This action cannot be undone.: Ця дія не може бути скасована.
+This field allows to insert text from clipboard: Це поле дозволяє вставляти текст з буфера обміну
+Too long: Занадто довгий
+Too short: Занадто короткий
+Turn On auto update: Увімкнути автооновлення
+Turn on history capture: Увімкнути запис історії
+Type:
+  Command: Команда
+  Request: Запит
+  Scraper: Скрапер
+URL: URL
+Unsaved name: Незбережене ім'я
+Unsaved subtitle: Незбережений підзаголовок
+Unsaved title: Незбережена назва
+Update Link Card: Оновити картку посилання
+Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.: Використовуйте подвійні фігурні дужки для {{field name}}. Використовуйте {{clipboard}} для додавання поточного значення буфера обміну.
+Value: Значення
+Values: Значення
+Vertical Split: Вертикальний розподіл
+We need to open a new window where you can drag & drop file, path or application.: Нам потрібно відкрити нове вікно, де ви можете перетягнути файл, шлях або додаток.
+Web Link or Email might not be valid: Веб-посилання або адреса електронної пошти можуть бути недійсними
+Web or Email link is valid: Веб-посилання або адреса електронної пошти дійсні
+Website URL: URL веб-сайту
+Website URL is valid: URL веб-сайту дійсний
+Website URL might not be valid: URL веб-сайту може бути недійсним
+Wrap output using {{output}} placeholder: Обгорнути вивід, використовуючи заповнювач {{output}}
+You have no rules added: У вас немає доданих правил
+You'll need to clear this board of all clips and subboards before it can be deleted.: Вам потрібно очистити цю дошку від усіх кліпів та піддошок, перш ніж її можна буде видалити.
+You'll need to clear this tab of all boards before it can be deleted.: Вам потрібно очистити цю вкладку від усіх дошок, перш ніж її можна буде видалити.
+filled template: заповнений шаблон
+new clips: нові кліпи
+template: шаблон
+'{{count}} fields found in template but missing from fields definition._one': '{{count}} поле знайдено в шаблоні, але відсутнє у визначенні полів.'
+'{{count}} fields found in template but missing from fields definition._other': '{{count}} полів знайдено в шаблоні, але відсутні у визначенні полів.'
+'{{count}} fields not found in the template._one': '{{count}} поле не знайдено в шаблоні.'
+'{{count}} fields not found in the template._other': '{{count}} полів не знайдено в шаблоні.'
+'{{type}} Field': Поле {{type}}
+'{{type}} field': поле {{type}}

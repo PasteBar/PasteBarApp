@@ -1598,6 +1598,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "fns"
+version = "0.0.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9d318f82a68feac152dab48e8a6f1eb665a915ea6a0c76e4ad5ed137f80c368"
+dependencies = [
+ "log",
+]
+
+[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3241,6 +3250,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "mouse_position"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "824feb0675ad2ffda7b1da534f394c5779fb39d123b5f376a221d50fad54b3c2"
+dependencies = [
+ "core-graphics 0.22.3",
+ "winapi",
+ "x11-dl",
+]
+
+[[package]]
 name = "nanoid"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3867,6 +3887,7 @@ dependencies = [
  "diesel_migrations",
  "dirs 5.0.1",
  "dotenv",
+ "fns",
  "html-escape",
  "http-cache-mokadeser",
  "http-cache-reqwest",
@@ -3886,6 +3907,7 @@ dependencies = [
  "mid",
  "mime",
  "mime_guess",
+ "mouse_position",
  "nanoid",
  "objc",
  "once_cell",
@@ -3905,7 +3927,6 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-deep-link",
  "tauri-plugin-single-instance",
- "tauri-plugin-window-state",
  "tempfile",
  "thiserror",
  "tl",
@@ -3915,6 +3936,8 @@ dependencies = [
  "tracing-subscriber",
  "url",
  "uuid",
+ "winapi",
+ "window-state",
  "winreg 0.52.0",
 ]
 
@@ -5627,20 +5650,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-plugin-window-state"
-version = "0.1.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#becacf9cd615d7b5a5c4e4ed14a1379388d2348f"
-dependencies = [
- "bincode",
- "bitflags 2.6.0",
- "log",
- "serde",
- "serde_json",
- "tauri",
- "thiserror",
-]
-
-[[package]]
 name = "tauri-runtime"
 version = "0.14.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6644,6 +6653,19 @@ name = "winapi-x86_64-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
+
+[[package]]
+name = "window-state"
+version = "0.1.1"
+dependencies = [
+ "bincode",
+ "bitflags 2.6.0",
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "thiserror",
+]
 
 [[package]]
 name = "windows"
