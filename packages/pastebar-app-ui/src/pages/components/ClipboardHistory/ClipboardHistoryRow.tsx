@@ -60,6 +60,7 @@ interface ClipboardHistoryRowProps {
   index?: number
   style?: CSSProperties
   isExpanded: boolean
+  isWindows?: boolean
   isWrapText: boolean
   isSelected?: boolean
   isDeleting?: boolean
@@ -124,6 +125,7 @@ export function ClipboardHistoryRowComponent({
   style,
   clipboard,
   isDark,
+  isWindows,
   searchTerm,
   isPinnedTop = false,
   isPinnedTopFirst = false,
@@ -399,11 +401,11 @@ export function ClipboardHistoryRowComponent({
                                 }`
                 }`}
                 onClickCapture={e => {
-                  if (e.ctrlKey) {
+                  if ((isWindows && e.ctrlKey) || (e.metaKey && !isWindows)) {
+                    setSelectHistoryItem(clipboard.historyId)
+                  } else if (e.ctrlKey || e.metaKey) {
                     e.preventDefault()
                     e.stopPropagation()
-                    // to do easy select multiple items
-                    // setSelectHistoryItem(clipboard.historyId)
                   } else if (e.shiftKey) {
                     e.preventDefault()
                     e.stopPropagation()

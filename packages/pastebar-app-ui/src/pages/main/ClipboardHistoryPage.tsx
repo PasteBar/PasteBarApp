@@ -1584,6 +1584,7 @@ export default function ClipboardHistoryPage() {
                                               isLargeView={
                                                 historyId === showLargeViewHistoryId.value
                                               }
+                                              isWindows={isWindows}
                                               isAutoGenerateLinkCardsEnabled={
                                                 isAutoGenerateLinkCardsEnabled
                                               }
@@ -1700,6 +1701,7 @@ export default function ClipboardHistoryPage() {
                           {activeDragId ? (
                             <ClipboardHistoryRow
                               index={1}
+                              isWindows={isWindows}
                               isAutoGenerateLinkCardsEnabled={false}
                               isWrapText={wrappedTextItems.includes(activeDragId)}
                               isExpanded={expandedItems.includes(activeDragId)}
