@@ -15,7 +15,8 @@
 - Added "The app starts with main window hidden" option
 - Added "Show navbar elements on hover only" option
 - Added "Hide collections name on the navbar" option
-- Added PasteBar Quick Paste window with keyboard navigation, Enter or Ctrl + [number] to paste, Ctrl + F to search
+- Added quick copy/paste access to first 10 history items using keyboard, press Ctrl + [number] (copy) or Ctrl + Alt (Cmd) + [number]
+- Added PasteBar Quick Paste window with keyboard navigation and global hotkeys, Enter or Ctrl + [number] to paste, Ctrl + F to search
 - Added Ctrl + click or Cmd + click to multi select/deselect history items
 - Fixed a bug where the contact form used an invalid link on Windows (#125)
 - Fixed a bug causing a markdown undefined error on window
