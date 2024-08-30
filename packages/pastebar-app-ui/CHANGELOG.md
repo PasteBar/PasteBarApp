@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.6.1
+
+### Patch Changes
+
+- cf24d8f: Fix: Autogenerate link settings not working in Quick Paste Window
+
 ## 0.6.0
 
 ### Minor Changes
