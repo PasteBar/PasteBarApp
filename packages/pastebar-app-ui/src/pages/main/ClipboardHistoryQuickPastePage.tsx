@@ -3,7 +3,7 @@ import { UniqueIdentifier } from '@dnd-kit/core'
 import { listen } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
-import { isKeyAltPressed, isKeyCtrlPressed } from '~/store'
+import { isKeyAltPressed, isKeyCtrlPressed, settingsStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
 import { throttle } from 'lodash-es'
 import { ArrowDownFromLine, ArrowUpToLine, Search } from 'lucide-react'
@@ -101,6 +101,9 @@ export default function ClipboardHistoryQuickPastePage() {
   const [savingItem, setSavingItem] = useState<UniqueIdentifier | null>(null)
   const isShowSearch = useSignal(false)
   const { movePinnedClipboardHistoryUpDown } = useMovePinnedClipboardHistoryUpDown()
+
+  const { isAutoPreviewLinkCardsEnabled, isAutoGenerateLinkCardsEnabled } =
+    useAtomValue(settingsStoreAtom)
 
   const [historyFilters, setHistoryFilters] = useState<string[]>([])
   const [codeFilters, setCodeFilters] = useState<string[]>([])
@@ -651,6 +654,10 @@ export default function ClipboardHistoryQuickPastePage() {
                               addToClipboardHistoryIdsURLErrors={
                                 addToClipboardHistoryIdsURLErrors
                               }
+                              isLinkCardPreviewEnabled={isAutoPreviewLinkCardsEnabled}
+                              isAutoGenerateLinkCardsEnabled={
+                                isAutoGenerateLinkCardsEnabled
+                              }
                               addToGenerateLinkMetaDataInProgress={
                                 addToGenerateLinkMetaDataInProgress
                               }
@@ -833,6 +840,10 @@ export default function ClipboardHistoryQuickPastePage() {
                               )}
                               addToGenerateLinkMetaDataInProgress={
                                 addToGenerateLinkMetaDataInProgress
+                              }
+                              isLinkCardPreviewEnabled={isAutoPreviewLinkCardsEnabled}
+                              isAutoGenerateLinkCardsEnabled={
+                                isAutoGenerateLinkCardsEnabled
                               }
                               isScrolling={isScrolling}
                               removeToGenerateLinkMetaDataInProgress={
