@@ -10,7 +10,7 @@ use crate::services::link_metadata_service::{
   delete_link_metadata_by_item_id, insert_or_update_link_metadata, AudioInfo,
 };
 
-use crate::services::utils::{decode_html_entities, ensure_url_prefix};
+use crate::services::utils::{debug_output, decode_html_entities, ensure_url_prefix};
 use linkify::{LinkFinder, LinkKind};
 
 use nanoid::nanoid;
@@ -248,6 +248,9 @@ pub async fn fetch_link_metadata(
   item_id: Option<String>,
   is_preview_only: Option<bool>,
 ) -> Result<LinkMetadata, String> {
+  debug_output(|| {
+    println!("Fetching metadata for URL: {}", url);
+  });
   if url.is_empty() {
     return Err("URL is empty".to_string());
   }
