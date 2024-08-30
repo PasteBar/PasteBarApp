@@ -54,6 +54,7 @@ interface ClipboardHistoryQuickPasteRowProps {
   index?: number
   style?: CSSProperties
   isExpanded: boolean
+  isWindows?: boolean
   isWrapText: boolean
   isSelected?: boolean
   isDeleting?: boolean
@@ -125,6 +126,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
   isScrolling = false,
   isPinnedTop = false,
   isPinnedTopFirst = false,
+  isWindows,
   isDisabledPinnedMoveUp = false,
   isDisabledPinnedMoveDown = false,
   isExpanded = false,
@@ -306,7 +308,9 @@ export function ClipboardHistoryQuickPasteRowComponent({
   }, [clipboard?.isLink, hasLinkCard])
 
   const showCopyPasteIndexNumber =
-    isKeyCtrlPressed.value && typeof index !== 'undefined' && index < 10
+    (isKeyCtrlPressed.value || (isKeyAltPressed.value && !isWindows)) &&
+    typeof index !== 'undefined' &&
+    index < 10
 
   const pinnedTopOffsetFirst = !isPinnedTopFirst ? 'top-[-10px]' : 'top-[5px]'
   const bgToolsPanel = `${

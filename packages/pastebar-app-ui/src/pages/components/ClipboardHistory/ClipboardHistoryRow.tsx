@@ -301,7 +301,9 @@ export function ClipboardHistoryRowComponent({
   }, [clipboard?.isLink, hasLinkCard])
 
   const showCopyPasteIndexNumber =
-    isKeyCtrlPressed.value && typeof index !== 'undefined' && index < 10
+    (isKeyCtrlPressed.value || (isKeyAltPressed.value && !isWindows)) &&
+    typeof index !== 'undefined' &&
+    index < 10
 
   const pinnedTopOffsetFirst = !isPinnedTopFirst ? 'top-[-10px]' : 'top-[5px]'
   const bgToolsPanel = `${
