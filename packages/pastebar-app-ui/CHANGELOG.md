@@ -1,5 +1,11 @@
 # pastebar-app
 
+## 0.6.2
+
+### Patch Changes
+
+- fb264f6: Update to shortcut for quick copy paste ctrl + number added cmd key press on mac
+
 ## 0.6.1
 
 ### Patch Changes
