@@ -246,6 +246,28 @@ export default function ClipboardHistoryQuickPastePage() {
       }
 
       invokeCopyPasteHistoryItem(itemId)
+    },
+    {
+      enableOnFormTags: ['input'],
+    }
+  )
+
+  useHotkeys(
+    [...Array(10).keys()].map(i => `meta+${i.toString()}`),
+    e => {
+      e.preventDefault()
+      const index = e.key === '0' ? 9 : Number(e.key) - 1
+      const itemId = clipboardHistory[Number(index)]?.historyId
+
+      if (!itemId) {
+        return
+      }
+
+      invokeCopyPasteHistoryItem(itemId)
+    },
+    {
+      enabled: !isWindows,
+      enableOnFormTags: ['input'],
     }
   )
 
@@ -682,6 +704,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               setSavingItem={setSavingItem}
                               isDeleting={false}
                               isSelected={false}
+                              isWindows={isWindows}
                               setBrokenImageItem={setBrokenImageItem}
                               isBrokenImage={brokenImageItems.includes(historyId)}
                               showTimeAgo={false}
@@ -855,6 +878,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               hasGenerateLinkMetaDataInProgress={clipboardHistoryGenerateLinkMetaDataInProgress.includes(
                                 historyId
                               )}
+                              isWindows={isWindows}
                               setHistoryFilters={setHistoryFilters}
                               setAppFilters={setAppFilters}
                               setSelectHistoryItem={() => {}}

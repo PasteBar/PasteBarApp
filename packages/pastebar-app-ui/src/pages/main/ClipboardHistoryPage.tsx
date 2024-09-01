@@ -317,6 +317,7 @@ export default function ClipboardHistoryPage() {
   useHotkeys(
     [...Array(10).keys()].map(i => `ctrl+${i.toString()}`),
     e => {
+      e.preventDefault()
       const index = e.key === '0' ? 9 : Number(e.key) - 1
       const itemId = clipboardHistory[Number(index)]?.historyId
 
@@ -325,12 +326,35 @@ export default function ClipboardHistoryPage() {
       }
 
       setCopiedItem(itemId)
+    },
+    {
+      enableOnFormTags: ['input'],
+    }
+  )
+
+  useHotkeys(
+    [...Array(10).keys()].map(i => `meta+${i.toString()}`),
+    e => {
+      e.preventDefault()
+      const index = e.key === '0' ? 9 : Number(e.key) - 1
+      const itemId = clipboardHistory[Number(index)]?.historyId
+
+      if (!itemId) {
+        return
+      }
+
+      setCopiedItem(itemId)
+    },
+    {
+      enabled: !isWindows,
+      enableOnFormTags: ['input'],
     }
   )
 
   useHotkeys(
     [...Array(10).keys()].map(i => `ctrl+${isWindows ? 'alt' : 'meta'}+${i.toString()}`),
     e => {
+      e.preventDefault()
       const index = e.key === '0' ? 9 : Number(e.key) - 1
       const itemId = clipboardHistory[Number(index)]?.historyId
 
@@ -339,6 +363,9 @@ export default function ClipboardHistoryPage() {
       }
 
       setPastedItem(itemId)
+    },
+    {
+      enableOnFormTags: ['input'],
     }
   )
 
