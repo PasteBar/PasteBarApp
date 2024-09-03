@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api'
@@ -16,9 +17,12 @@ import {
   ArrowDownToLine,
   CheckSquare,
   ClipboardPaste,
+  ClipboardX,
   EqualNot,
   Expand,
+  Filter,
   GalleryVertical,
+  ListFilter,
   MenuSquare,
   MinusSquare,
   PanelTop,
@@ -64,6 +68,7 @@ interface ClipboardHistoryRowContextMenuProps {
   arrLinks: string[]
   isImage: boolean
   isText: boolean
+  copiedFromApp: string | null
   isMasked: boolean
   isImageData: boolean
   isMp3: boolean | undefined
@@ -83,11 +88,14 @@ interface ClipboardHistoryRowContextMenuProps {
   removeLinkMetaData?: (historyId: UniqueIdentifier) => Promise<void>
   setSelectHistoryItem: (id: UniqueIdentifier) => void
   onCopyPaste: (id: UniqueIdentifier, delay?: number) => void
+  setHistoryFilters?: Dispatch<SetStateAction<string[]>>
+  setAppFilters?: Dispatch<SetStateAction<string[]>>
 }
 
 export default function ClipboardHistoryRowContextMenu({
   historyId,
   value,
+  copiedFromApp,
   arrLinks,
   isImage,
   isText,
@@ -101,6 +109,8 @@ export default function ClipboardHistoryRowContextMenu({
   invalidateClipboardHistoryQuery = () => {},
   generateLinkMetaData = () => Promise.resolve(),
   removeLinkMetaData = () => Promise.resolve(),
+  setHistoryFilters = () => {},
+  setAppFilters = () => {},
   isSelected,
   hasLinkCard,
   setSavingItem,
@@ -110,8 +120,13 @@ export default function ClipboardHistoryRowContextMenu({
 }: ClipboardHistoryRowContextMenuProps) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const { copyPasteDelay, setCopyPasteDelay, historyDetectLanguagesEnabledList } =
-    useAtomValue(settingsStoreAtom)
+  const {
+    copyPasteDelay,
+    setCopyPasteDelay,
+    historyDetectLanguagesEnabledList,
+    setIsExclusionAppListEnabled,
+    addToHistoryExclusionAppList,
+  } = useAtomValue(settingsStoreAtom)
 
   const { deleteClipboardHistoryItem } = useAtomValue(clipboardHistoryStoreAtom)
 
@@ -353,6 +368,37 @@ export default function ClipboardHistoryRowContextMenu({
             </ContextMenuItem>
           </ContextMenuSubContent>
         </ContextMenuSub>
+
+        {copiedFromApp && (
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>{copiedFromApp} ...</ContextMenuSubTrigger>
+            <ContextMenuSubContent>
+              <ContextMenuItem
+                onClick={() => {
+                  setAppFilters([copiedFromApp])
+                  setHistoryFilters(['source'])
+                }}
+              >
+                {t('AddTo:::Add to Filter by Source', { ns: 'contextMenus' })}
+                <div className="ml-auto pl-2">
+                  <ListFilter size={15} />
+                </div>
+              </ContextMenuItem>
+              <ContextMenuItem
+                onClick={() => {
+                  addToHistoryExclusionAppList(copiedFromApp)
+                  setIsExclusionAppListEnabled(true)
+                  deleteClipboardHistoryByIds({ historyIds: [historyId] })
+                }}
+              >
+                {t('AddTo:::Add to Exclude and Delete', { ns: 'contextMenus' })}
+                <div className="ml-auto pl-2">
+                  <ClipboardX size={15} />
+                </div>
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+        )}
 
         <ContextMenuSeparator />
         {(arrLinks?.length > 0 && !detectedLanguage) ||

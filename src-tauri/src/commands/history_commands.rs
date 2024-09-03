@@ -55,16 +55,26 @@ pub fn find_clipboard_histories_by_value_or_filters(
   query: String,
   filters: Vec<String>,
   code_filters: Vec<String>,
+  app_filters: Vec<String>,
   app_settings: tauri::State<Mutex<HashMap<String, Setting>>>,
 ) -> Vec<ClipboardHistoryWithMetaData> {
   history_service::find_clipboard_histories_by_value_or_filter(
     &query,
     &filters,
     &code_filters,
+    &app_filters,
     100,
     app_settings,
   )
   .unwrap_or_else(|_| Vec::new())
+}
+
+#[tauri::command]
+pub async fn get_history_items_source_apps() -> Result<Vec<Option<String>>, String> {
+  match history_service::get_source_apps_list() {
+    Ok(apps) => Ok(apps),
+    Err(e) => Err(format!("Error fetching source apps: {}", e)),
+  }
 }
 
 #[tauri::command]
@@ -74,16 +84,13 @@ pub fn search_clipboard_histories_by_value_or_filters(
   app_settings: tauri::State<Mutex<HashMap<String, Setting>>>,
 ) -> Vec<ClipboardHistoryWithMetaData> {
   let code_filters = Vec::new();
-
-  println!(
-    "search_clipboard_histories_by_value_or_filters: query: {}, filters: {:?}",
-    query, filters
-  );
+  let app_filters = Vec::new();
 
   history_service::find_clipboard_histories_by_value_or_filter(
     &query,
     &filters,
     &code_filters,
+    &app_filters,
     300,
     app_settings,
   )

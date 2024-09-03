@@ -10,4 +10,8 @@ export function appReady() {
   return invoke()<null>('app_ready')
 }
 
+export function appSettings() {
+  return invoke()<null>('get_app_settings')
+}
+
 export type Content = { body: string }

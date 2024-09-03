@@ -1,16 +1,24 @@
 import { useEffect } from 'react'
-import { isKeyAltPressed } from '~/store'
+import { isKeyAltPressed, isKeyCtrlPressed } from '~/store'
 
-export default function useKeyPressAlt() {
-  const targetKey = ['Alt', 'Meta']
+export default function useKeyPressAltCtrl() {
+  const altKeys = ['Alt', 'Meta']
+  const ctrlKeys = ['Control']
 
   function hasAltKey(event: KeyboardEvent) {
-    return targetKey.includes(event.key)
+    return altKeys.includes(event.key)
+  }
+
+  function hasCtrlKey(event: KeyboardEvent) {
+    return ctrlKeys.includes(event.key)
   }
 
   function downHandler(event: KeyboardEvent) {
     if (hasAltKey(event)) {
       isKeyAltPressed.value = true
+    }
+    if (hasCtrlKey(event)) {
+      isKeyCtrlPressed.value = true
     }
   }
 
@@ -18,10 +26,14 @@ export default function useKeyPressAlt() {
     if (hasAltKey(event)) {
       isKeyAltPressed.value = false
     }
+    if (hasCtrlKey(event)) {
+      isKeyCtrlPressed.value = false
+    }
   }
 
   function focusHandler() {
     isKeyAltPressed.value = false
+    isKeyCtrlPressed.value = false
   }
 
   useEffect(() => {
@@ -36,5 +48,5 @@ export default function useKeyPressAlt() {
     }
   }, [])
 
-  return isKeyAltPressed
+  return { isKeyAltPressed, isKeyCtrlPressed }
 }

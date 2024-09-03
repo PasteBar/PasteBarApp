@@ -1,0 +1,351 @@
+' No': ' 否'
+' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': ' 此权限确保 PasteBar 可以访问剪贴板并在应用程序间执行复制和粘贴操作。'
+About PasteBar: 关于 PasteBar
+Action Menu: 操作菜单
+"Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template": 添加 <b>{{Clipboard}}</b> 字段到模板。这允许您复制文本到剪贴板，并将其插入到模板中。
+Add Clip: 添加剪辑
+Add First Option: 添加首个选项
+Add Link Card: 添加链接卡片
+Add Menu: 添加菜单
+Add Option: 添加选项
+Add PasteBar to Accessibility: 将 PasteBar 添加到辅助功能
+Add To Player: 添加到播放器
+Add to: 添加到
+Add to Clips: 添加到剪辑
+Add to Clips or Menu: 添加到剪辑或菜单
+Add to Menu: 添加到菜单
+Add to clip or menu: 添加到剪辑或菜单
+Add to template fields: 添加到模板字段
+Added: 已添加
+Adding this file to the player is not recommended unless you trust the source.: 除非您信任来源，否则不建议将此文件添加到播放器。
+Allow PasteBar to Copy and Paste from Clipboard: 允许 PasteBar 从剪贴板复制和粘贴
+Are you sure you want to delete?: 确定要删除吗？
+Are you sure?: 确定吗？
+Attach History Window: 附加历史窗口
+Back: 返回
+"Build on {{buildDate}}": 构建于 {{buildDate}}
+Cancel: 取消
+Cancel Reset: 取消重置
+Check: 检查
+Check / Done: 检查/完成
+Check and Close: 检查并关闭
+Check and Done: 检查并完成
+Clear History: 清除历史
+Clear Tracks: 清除轨道
+Clear found results and filters: 清除搜索结果和筛选器
+Click to Confirm: 点击确认
+Clip: 剪辑
+Clip Boards: 剪辑板
+Clipboard: 剪贴板
+Clipboard History: 剪贴板历史
+Clipboard History Only: 仅剪贴板历史
+Clipboard History Settings: 剪贴板历史设置
+Close: 关闭
+Close Edit: 关闭编辑
+Close Expand Edit: 关闭扩展编辑
+Close Find: 关闭查找
+Close History Window: 关闭历史窗口
+Close modal and continue in browser: 关闭模态框并在浏览器中继续
+Confirm: 确认
+Confirm  action: 确认操作
+Confirm Delete: 确认删除
+Confirm Email: 确认电子邮件
+Confirm Passcode: 确认密码
+Confirm Password: 确认密码
+Confirm Remove: 确认移除
+Confirm Your Passcode: 确认您的密码
+Confirm passcode reset: 确认密码重置
+Confirm password reset: 确认密码重置
+Confirm password reset action: 确认密码重置操作
+Confirm your action: 确认您的操作
+"Confirm {{action}}": 确认 {{action}}
+Contact Form: 联系表单
+Copied: 已复制
+Copy: 复制
+Copy & Paste: 复制和粘贴
+Copy and Paste: 复制和粘贴
+'Copy of ': '复制 '
+Copy to Clipboard: 复制到剪贴板
+Create: 创建
+Created: 已创建
+Delay Next: 延迟下一个
+Delete: 删除
+Deselect All: 取消全选
+Deselect pinned: 取消固定
+Digits Only Passcode: 仅数字密码
+Disabled: 已禁用
+Done: 完成
+Done Adding: 添加完成
+Done Edit: 编辑完成
+Done Reorder: 重新排序完成
+Download mp3: 下载 mp3
+Drag: 拖动
+Drag to Move: 拖动以移动
+Drop To Add: 拖动以添加
+Drop Zone: 拖放区域
+Edit: 编辑
+Edit Label: 编辑标签
+'Email: {{email}}': '邮箱：{{email}}'
+Emoji: 表情符号
+Empty: 空
+Empty Select: 空选择
+Enable / Disable: 启用/禁用
+Enable PasteBar in Accessibility Settings: 在辅助功能设置中启用 PasteBar
+Enabled: 已启用
+Enter Current Passcode: 输入当前密码
+Enter Digits Only Passcode: 输入仅数字密码
+Enter Email: 输入电子邮件
+Enter Passcode: 输入密码
+Enter Password: 输入密码
+Enter Recovery Password: 输入恢复密码
+Enter passcode or password to unlock: 输入密码或密码以解锁
+Errors:
+  Error loading link: 加载链接错误
+  Cant save to file: 无法保存到文件
+  "Something went wrong! {{err}} Please try again.": 出错了！{{err}} 请重试。
+Expand Edit: 展开编辑
+"Expires on {{proExpiresOn}}": 于 {{proExpiresOn}} 过期
+"? Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template": 在模板中找到字段 <b>{{Clipboard}}</b>。这允许您将文本复制到剪贴板，然后将其插入模板中。
+Field is not found in the template: 在模板中未找到字段
+Find Clip: 查找剪辑
+Find History: 查找历史
+Found in template but missing from fields definition: 在模板中找到但字段定义中缺失
+Got it: 明白了
+Hide Muli Select: 隐藏多选
+Hide Pinned Board: 隐藏固定面板
+History: 历史
+Image: 图片
+"Image Scale {{ImageScale}}x": 图片缩放 {{ImageScale}}x
+Image size: 图片大小
+Image size in pixels: 图片大小（像素）
+In View: 查看中
+In View Edit: 查看中编辑
+Inactive: 非活动
+Large View: 大视图
+Large View Edit: 大视图编辑
+Later: 稍后
+Light: 浅色
+Lines Wrap: 换行
+Make Active: 设为活动
+Make Disabled: 设为禁用
+Make Enabled: 设为启用
+Make Inactive: 设为非活动
+Manage: 管理
+Maximum height: 最大高度
+Maximum width: 最大宽度
+Menu: 菜单
+Move Down: 向下移动
+Move Up: 向上移动
+Multi Select: 多选
+'Name: {{name}}': '名称：{{name}}'
+Next Delay: 下一个延迟
+Next Track: 下一曲目
+No: 否
+No Key Press: 无按键
+No Wrap: 不换行
+Not Now: 暂不
+Not found in the template: 在模板中未找到
+Nothing found: 未找到任何内容
+Number of lines: 行数
+Ok, but later: 好的，稍后
+Open: 打开
+Open Accessibility: 打开辅助功能
+Open History Window: 打开历史窗口
+Open Window: 打开窗口
+Open contact form in browser: 在浏览器中打开联系表单
+Open payment in browser: 在浏览器中打开支付
+Options: 选项
+Password: 密码
+Paste Delay: 粘贴延迟
+Paste Menu: 粘贴菜单
+"Paste in {{pastingCountDown}}...": 将在 {{pastingCountDown}} 后粘贴...
+PasteBar: PasteBar
+PasteBar Application Error: PasteBar 应用程序错误
+PasteBar History: PasteBar 历史
+PasteBar application now can access the clipboard and perform copy and paste operations across applications.: PasteBar 应用程序现在可以访问剪贴板并在应用程序间执行复制和粘贴操作。
+PasteBar was successfuly added to Accessibility settings: PasteBar 已成功添加到辅助功能设置
+Pasted: 已粘贴
+Path: 路径
+Pause: 暂停
+Pause Playing: 暂停播放
+? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+: '权限检查失败：PasteBar 未成功添加到辅助功能设置。请授予所需权限，然后再次点击完成。'
+Pin Selected: 固定所选
+Pinned: 已固定
+Play: 播放
+Please add PasteBar to the list of apps in: 请将 PasteBar 添加到以下应用列表中
+Please confirm your action!: 请确认您的操作！
+Press: 按下
+Press ESC key to close: 按 ESC 键关闭
+Previous Track: 上一曲目
+Pro: 专业版
+Quit: 退出
+Rebuild Menu: 重建菜单
+Recent History: 最近历史
+Recovery Password: 恢复密码
+Remove: 移除
+Remove Link Card: 移除链接卡片
+Remove Selected Star: 移除所选星标
+Remove all fields from template: 从模板中移除所有字段
+Remove all tracks: 移除所有曲目
+Remove current track: 移除当前曲目
+Remove from Player: 从播放器中移除
+Remove from template: 从模板中移除
+Rename: 重命名
+Renew: 续期
+Reorder pinned: 重新排序固定项
+Repeat 1: 单曲循环
+Repeat all: 全部循环
+Repeat off: 关闭循环
+Report and Try Again: 报告并重试
+Reset: 重置
+Reset Passcode: 重置密码
+Reset Password: 重置密码
+Reset with Passcode: 使用密码重置
+Restart: 重启
+Reverse Order: 反向排序
+Run and Copy Response: 运行并复制响应
+Run and Paste Response: 运行并粘贴响应
+Running: 正在运行
+Save: 保存
+Save It!: 保存它！
+Saved: 已保存
+Scroll to Top: 滚动到顶部
+Second: 秒
+Seconds: 秒
+'Security Alert: MP3 Verification Failed': '安全警告：MP3 验证失败'
+Select: 选择
+Select Default Option: 选择默认选项
+Select Language: 选择语言
+Select default: 选择默认
+Select is empty: 选择为空
+Select option: 选择选项
+Select pinned: 选择固定项
+Separate History Window: 分离历史窗口
+Sequence Copy: 序列复制
+Sequence Copy Paste: 序列复制粘贴
+Sequence Delay Next: 序列延迟下一个
+Sequence Next Delay: 序列下一个延迟
+Sequence Paste: 序列粘贴
+Sequence Reverse Order: 序列反向排序
+Set: 设置
+Set Password: 设置密码
+Show Large View: 显示大视图
+Show all: 显示全部
+Source: 来源
+Split History Window: 分割历史窗口
+Star: 星标
+Star Selected: 星标所选
+Stay here: 留在这里
+Stay in touch: 保持联系
+Success!: 成功！
+Swap Panels Layout: 交换面板布局
+System Settings -> Privacy & Security -> Accessibility: 系统设置 -> 隐私与安全 -> 辅助功能
+Thank you for reporting the error.: 感谢您报告错误。
+Thank you for using Pro: 感谢您使用专业版
+Thank you!: 谢谢！
+This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.: 此权限确保 PasteBar 可以访问剪贴板并在应用程序间执行复制和粘贴操作。
+Too long: 太长
+Too short: 太短
+Toolbar:
+  Blank Text Formatting: 空白文本格式
+  Bold Formatting: 粗体格式
+  Bold Text Formatting: 粗体文本格式
+  Copy and Paste Formatting: 复制和粘贴格式
+  Header Formatting: 标题格式
+  Hightlight Text Formatting: 高亮文本格式
+  Italic Formatting: 斜体格式
+  Masked Text Formatting: 遮蔽文本格式
+  Remove Text Formatting: 移除文本格式
+Trust and Play: 信任并播放
+Type:
+  App: 应用
+  Auto Fill: 自动填充
+  AutoFill: 自动填充
+  Clip: 剪辑
+  Code: 代码
+  Code Snippet: 代码片段
+  Command: 命令
+  Email: 电子邮件
+  Emoji: 表情符号
+  Empty: 空
+  Error: 错误
+  File: 文件
+  File, Path or App: 文件、路径或应用
+  Form Auto Fill: 表单自动填充
+  Image: 图片
+  Label: 标签
+  Link: 链接
+  Link or Email: 链接或电子邮件
+  Menu: 菜单
+  Mp3: MP3
+  Path: 路径
+  Plain Text: 纯文本
+  Request: 请求
+  Run Auto Fill: 运行自动填充
+  Scraper: 抓取器
+  Secret: 密钥
+  Shell Command: Shell 命令
+  Submenu: 子菜单
+  Template: 模板
+  Template Fill: 模板填充
+  Text: 文本
+  Video: 视频
+  Web Request (HTTP): Web 请求 (HTTP)
+  Web Scraper / Parser: Web 抓取器/解析器
+TypeMenu:
+  Clip Type: 剪辑类型
+  Code Snippet: 代码片段
+  File, Path or App: 文件、路径或应用
+  Form Auto Fill: 表单自动填充
+  Image: 图片
+  Link or Email: 链接或电子邮件
+  Link or File, Path or App: 链接或文件、路径或应用
+  Plain Text: 纯文本
+  Run, Execute: 运行、执行
+  Select Language: 选择语言
+  Shell Command: Shell 命令
+  Template: 模板
+  Template Fill: 模板填充
+  Text Template: 文本模板
+  Web Request (HTTP): Web 请求 (HTTP)
+  Web Scraper / Parser: Web 抓取器/解析器
+UnPin All: 取消固定全部
+UnPin Selected: 取消固定所选
+Unlock Application Screen: 解锁应用程序屏幕
+Unlock Pro features: 解锁专业版功能
+Unlock Screen: 解锁屏幕
+Unlock all features: 解锁所有功能
+Unsaved label: 未保存的标签
+Update Error: 更新错误
+Update history list: 更新历史列表
+Updated: 已更新
+Upgrade to Pro: 升级到专业版
+Use Passcode: 使用密码
+Use Password: 使用密码
+"Using <b>{{Clipboard}}</b> field, allows you to copy text to the clipboard, and it will be inserted into the template": 使用 <b>{{Clipboard}}</b> 字段，允许您将文本复制到剪贴板，然后将其插入模板中
+Verify: 验证
+Verify Current Password: 验证当前密码
+Verify Recovery Password: 验证恢复密码
+Version: 版本
+View: 查看
+View Edit: 编辑视图
+Views:
+  Paste Menu: 粘贴菜单
+We apologize but you found a bug. Please report this issue to us and try again: 我们很抱歉，但您发现了一个错误。请向我们报告此问题，然后重试
+? We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
+: 我们无法确认此文件的安全性。ID3 标签验证和完整性检查失败。MP3 文件可能包含恶意软件。请谨慎。
+Yes: 是
+Yes, activate: 是，激活
+chars: 字符
+contact us.: 联系我们。
+found: 找到
+if this error persists, try to restart the application or: 如果此错误持续出现，请尝试重启应用程序或
+lines: 行
+menu items in: 菜单项在
+minutes: 分钟
+only: 仅
+second: 秒
+seconds: 秒
+show less: 显示更少
+www.site: www.pastebar.app

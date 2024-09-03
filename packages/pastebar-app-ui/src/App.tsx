@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { listen } from '@tauri-apps/api/event'
+import { register, unregisterAll } from '@tauri-apps/api/globalShortcut'
 import { type } from '@tauri-apps/api/os'
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow, LogicalSize, WebviewWindow } from '@tauri-apps/api/window'
@@ -77,9 +78,7 @@ function App() {
   }, [isAppLocked.value])
 
   useEffect(() => {
-    const appReadyResponse = appReady()
-
-    appReadyResponse.then(res => {
+    appReady().then(res => {
       if (res === null) return
 
       try {
@@ -110,13 +109,21 @@ function App() {
           appDataDir: import.meta.env.TAURI_DEBUG ? appDevDataDir : appDataDir,
           appLastUpdateVersion: settings.appLastUpdateVersion?.valueText,
           appLastUpdateDate: settings.appLastUpdateDate?.valueText,
+          isHideMacOSDockIcon: settings.isHideMacOSDockIcon?.valueBool,
+          hotKeysShowHideMainAppWindow: settings.hotKeysShowHideMainAppWindow?.valueText,
+          hotKeysShowHideQuickPasteWindow:
+            settings.hotKeysShowHideQuickPasteWindow?.valueText,
           isFirstRun: settings.isFirstRun?.valueBool,
           isFirstRunAfterUpdate: settings.isFirstRunAfterUpdate?.valueBool,
           isHistoryDetectLanguageEnabled:
             settings.isHistoryDetectLanguageEnabled?.valueBool,
           historyDetectLanguageMinLines: settings.historyDetectLanguageMinLines?.valueInt,
           historyExclusionList: settings.historyExclusionList?.valueText,
+          historyExclusionAppList: settings.historyExclusionAppList?.valueText,
           isExclusionListEnabled: settings.isExclusionListEnabled?.valueBool,
+          isKeepMainWindowClosedOnRestartEnabled:
+            settings.isKeepMainWindowClosedOnRestartEnabled?.valueBool,
+          isExclusionAppListEnabled: settings.isExclusionAppListEnabled?.valueBool,
           isAutoMaskWordsListEnabled: settings.isAutoMaskWordsListEnabled?.valueBool,
           autoMaskWordsList: settings.autoMaskWordsList?.valueText,
           historyDetectLanguagesPrioritizedList:
@@ -166,6 +173,8 @@ function App() {
           isSearchNameOrLabelOnly: settings.isSearchNameOrLabelOnly?.valueBool,
           isSkipAutoStartPrompt: settings.isSkipAutoStartPrompt?.valueBool,
           isShowCollectionNameOnNavBar: settings.isShowCollectionNameOnNavBar?.valueBool,
+          isHideCollectionsOnNavBar: settings.isHideCollectionsOnNavBar?.valueBool,
+          isShowNavBarItemsOnHoverOnly: settings.isShowNavBarItemsOnHoverOnly?.valueBool,
           isShowDisabledCollectionsOnNavBarMenu:
             settings.isShowDisabledCollectionsOnNavBarMenu?.valueBool,
           userSelectedLanguage: settings.userSelectedLanguage?.valueText,
@@ -199,6 +208,37 @@ function App() {
           settings.isScreenLockPassCodeRequireOnStart?.valueBool
         ) {
           isAppLocked.value = true
+        }
+
+        if (settings.hotKeysShowHideMainAppWindow?.valueText) {
+          try {
+            register(settings.hotKeysShowHideMainAppWindow?.valueText, async () => {
+              if (document.hasFocus()) {
+                await appWindow.hide()
+              } else {
+                await appWindow.show()
+                await appWindow.setFocus()
+              }
+            }).catch(e => {
+              console.error(e)
+            })
+          } catch (e) {
+            console.error(e)
+          }
+        }
+
+        if (settings.hotKeysShowHideQuickPasteWindow?.valueText) {
+          try {
+            register(settings.hotKeysShowHideQuickPasteWindow?.valueText, async () => {
+              await uiStore.toggleHistoryQuickPasteWindow(
+                t('PasteBar Quick Paste', { ns: 'settings2' })
+              )
+            }).catch(e => {
+              console.error(e)
+            })
+          } catch (e) {
+            console.error(e)
+          }
         }
 
         if (
@@ -417,6 +457,10 @@ function App() {
     })
 
     return () => {
+      if (window.isMainWindow) {
+        unregisterAll()
+      }
+
       listenToNavigateUnlisten.then(unlisten => {
         unlisten()
       })
@@ -477,11 +521,14 @@ function App() {
   }, [uiState.fontSize])
 
   useEffect(() => {
-    if (uiState.isSplitPanelView && window.isMainWindow) {
+    if (uiState.isSplitPanelView && window.isMainWindow && settingsStore.isAppReady) {
       const openHistoryWindow = async () => {
-        invoke('open_history_window', { width: 0 }).then(() => {
+        invoke('open_history_window').then(() => {
           historyWindowOpening.value = false
           setTimeout(() => {
+            if (settingsStore.isKeepMainWindowClosedOnRestartEnabled) {
+              appWindow.hide()
+            }
             historyWindow?.setFocus()
           }, 300)
         })
@@ -495,7 +542,11 @@ function App() {
         historyWindow?.setFocus()
       }, 300)
     }
-  }, [uiState.isSplitPanelView])
+  }, [
+    uiState.isSplitPanelView,
+    settingsStore.isAppReady,
+    settingsStore.isKeepMainWindowClosedOnRestartEnabled,
+  ])
 
   return (
     <>

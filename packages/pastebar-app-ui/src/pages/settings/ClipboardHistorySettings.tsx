@@ -86,10 +86,14 @@ export default function ClipboardHistorySettings() {
     isHistoryAutoUpdateOnCaputureEnabled,
     setIsHistoryAutoUpdateOnCaputureEnabled,
     setIsExclusionListEnabled,
+    setIsExclusionAppListEnabled,
     historyExclusionList,
+    historyExclusionAppList,
     autoMaskWordsList,
     isExclusionListEnabled,
+    isExclusionAppListEnabled,
     setHistoryExclusionList,
+    setHistoryExclusionAppList,
     setAutoMaskWordsList,
     isAutoMaskWordsListEnabled,
     isAutoPreviewLinkCardsEnabled,
@@ -121,11 +125,13 @@ export default function ClipboardHistorySettings() {
   const { t } = useTranslation()
 
   const [exclusionListValue, setExclusionListValue] = useState('')
+  const [exclusionAppListValue, setExclusionAppListValue] = useState('')
   const [autoMaskListValue, setAutoMaskListValue] = useState('')
   const [isAutoMaskWordsTextAreaInFocus, setIsAutoMaskWordsTextAreaInFocus] =
     useState(false)
 
   const debouncedExclusionListValue = useDebounce(exclusionListValue, 300)
+  const debouncedExclusionAppListValue = useDebounce(exclusionAppListValue, 300)
   const debouncedAutoMaskListValue = useDebounce(autoMaskListValue, 300)
 
   const [prioritizedLanguages, setPrioritizedLanguages] = useState<string[]>([])
@@ -149,6 +155,14 @@ export default function ClipboardHistorySettings() {
 
   useEffect(() => {
     if (isAppReady) {
+      setHistoryExclusionAppList(
+        trimAndRemoveExtraNewlines(debouncedExclusionAppListValue)
+      )
+    }
+  }, [debouncedExclusionAppListValue, isAppReady])
+
+  useEffect(() => {
+    if (isAppReady) {
       setAutoMaskWordsList(trimAndRemoveExtraNewlines(debouncedAutoMaskListValue))
     }
   }, [debouncedAutoMaskListValue, isAppReady])
@@ -156,6 +170,7 @@ export default function ClipboardHistorySettings() {
   useEffect(() => {
     if (isAppReady) {
       setExclusionListValue(historyExclusionList)
+      setExclusionAppListValue(historyExclusionAppList)
       setAutoMaskListValue(autoMaskWordsList)
     }
   }, [isAppReady])
@@ -373,6 +388,60 @@ export default function ClipboardHistorySettings() {
                     <Box className="max-w-xl animate-in fade-in mt-4">
                       <Card
                         className={`${
+                          !isExclusionAppListEnabled &&
+                          'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                        }`}
+                      >
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                          <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                            {t('Excluded Apps List', { ns: 'settings' })}
+                          </CardTitle>
+                          <Switch
+                            checked={isExclusionAppListEnabled}
+                            className="ml-auto"
+                            onCheckedChange={() => {
+                              setIsExclusionAppListEnabled(!isExclusionAppListEnabled)
+                            }}
+                          />
+                        </CardHeader>
+                        <CardContent>
+                          <Text className="text-sm text-muted-foreground mb-2">
+                            {t(
+                              'Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.',
+                              { ns: 'settings' }
+                            )}
+                          </Text>
+
+                          <TextArea
+                            className="text-sm"
+                            isDisabled={!isExclusionAppListEnabled}
+                            label={t(
+                              'List each application name or window identifier on a new line.',
+                              {
+                                ns: 'settings',
+                              }
+                            )}
+                            placeholder={undefined}
+                            rows={5}
+                            maxRows={15}
+                            enableEmoji={false}
+                            onBlur={() => {
+                              setHistoryExclusionAppList(
+                                trimAndRemoveExtraNewlines(exclusionAppListValue)
+                              )
+                            }}
+                            onChange={e => {
+                              setExclusionAppListValue(e.target.value)
+                            }}
+                            value={exclusionAppListValue}
+                          />
+                        </CardContent>
+                      </Card>
+                    </Box>
+
+                    <Box className="max-w-xl animate-in fade-in mt-4">
+                      <Card
+                        className={`${
                           !isExclusionListEnabled &&
                           'opacity-80 bg-gray-100 dark:bg-gray-900/80'
                         }`}
@@ -420,6 +489,7 @@ export default function ClipboardHistorySettings() {
                         </CardContent>
                       </Card>
                     </Box>
+
                     <Box className="max-w-xl animate-in fade-in mt-4">
                       <Card
                         className={`${

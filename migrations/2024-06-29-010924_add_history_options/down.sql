@@ -1,4 +1,3 @@
--- Rollback for clipboard_history table
 CREATE TABLE clipboard_history_new (
     history_id VARCHAR(50) PRIMARY KEY NOT NULL,
     title VARCHAR(255),

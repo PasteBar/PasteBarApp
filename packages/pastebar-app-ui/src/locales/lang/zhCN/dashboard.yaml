@@ -1,0 +1,268 @@
+API Key: API 密钥
+Add: 添加
+Add Auth: 添加认证
+Add Clipboard Value: 添加剪贴板值
+Add Custom: 添加自定义
+Add Custom Field: 添加自定义字段
+Add Delay Time: 添加延迟时间
+Add First Board: 添加首个面板
+Add Form Field: 添加表单字段
+Add Header: 添加标头
+Add Key Press: 添加按键
+Add Key Press After Paste: 粘贴后添加按键
+Add Link Card: 添加链接卡片
+Add Open URL: 添加打开 URL
+Add Output Template: 添加输出模板
+Add Regex Match Group Filter: 添加正则表达式分组筛选器
+Add Request Header: 添加请求标头
+Add Response Filter: 添加响应筛选
+Add Scraping Rule: 添加抓取规则
+Add Section: 添加部分
+Add Tab: 添加标签
+Add Template Field: 添加模板字段
+Add a Tab: 添加一个标签
+"Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template": '将字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> 添加到模板中'
+"Add field <b>{{<b>{{name}}</b>}}</b> into the template": 将字段 <b>{{<b>{{name}}</b>}}</b> 添加到模板中
+Add image: 添加图片
+Add note: 添加注释
+Add to Board: 添加到面板
+"Add {{type}}": 添加 {{type}}
+All field labels must be unique to ensure they are correctly used within the template.: 所有字段标签必须唯一，以确保在模板中正确使用。
+"Are you sure you want to delete <strong>{{boardName}}</strong> board?": 确定要删除 <strong>{{boardName}}</strong> 面板吗？
+"Are you sure you want to delete <strong>{{tabName}}</strong> tab?": 确定要删除 <strong>{{tabName}}</strong> 标签吗？
+Are you sure you want to delete?: 确定要删除吗？
+Are you sure you want to remove image from the clip?: 确定要从剪辑中移除图片吗？
+Auth: 认证
+Auto update is Off: 自动更新已关闭
+Basic Auth: 基本认证
+Basic Password: 基本密码
+Basic Username: 基本用户名
+Bearer Token: Bearer Token
+Board Layout Height: 面板布局高度
+Board Layout Split: 面板布局分割
+Board Menu: 面板菜单
+Board is Not Empty: 面板不为空
+Boards: 面板
+Border Width: 边框宽度
+CSS Selector: CSS 选择器
+Cancel: 取消
+Change Layout: 更改布局
+Change color: 更改颜色
+Clear: 清除
+Clear All Fields: 清除所有字段
+Click To Add: 点击添加
+Clip Menu: 剪辑菜单
+Clip Options: 剪辑选项
+Clipboard: 剪贴板
+Clips:
+  App: 应用
+  Clip Menu: 剪辑菜单
+  Clips: 剪辑
+  Link: 链接
+Close Edit: 关闭编辑
+Command:
+  error: 错误
+  output: 输出
+Command error: 命令错误
+Common Fields: 公共字段
+Confirm Clear All Fields: 确认清除所有字段
+Confirm to remove Auth: 确认移除认证
+Confirm to remove filters: 确认移除筛选器
+Confirm to remove headers: 确认移除标头
+Copy Clip: 复制剪辑
+Create Board: 创建面板
+Create Tab: 创建标签
+Create tab: 创建标签
+Dashboard: 仪表板
+Delay: 延迟
+Delete Board: 删除面板
+Delete Clip: 删除剪辑
+Delete Tab: 删除标签
+Delete board: 删除面板
+Delete field: 删除字段
+Delete tab: 删除标签
+Detect Template Fields: 检测模板字段
+Detect for Template Fields: 检测模板字段
+"Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template": '在模板中找到禁用字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b>'
+Done Create Clip: 完成创建剪辑
+Done Edit: 完成编辑
+Done Edit Tabs: 完成编辑标签
+Done Organize: 完成整理
+Drag & Drop Path: 拖放路径
+Drop To Add: 拖放以添加
+Drop image file here, or use a separate window for drag and drop.: 将图片文件拖放到此处，或使用单独的窗口进行拖放。
+Drop to Pin: 拖放以固定
+Edit Note: 编辑注释
+Edit Template: 编辑模板
+Edit subtitle: 编辑副标题
+Edit tab name: 编辑标签名称
+Enable / Disable: 启用/禁用
+Enable / Disable URL Open: 启用/禁用 URL 打开
+Enter Label: 输入标签
+Enter URL: 输入 URL
+Enter board subtitle or description: 输入面板副标题或描述
+Enter board title: 输入面板标题
+Enter clip name: 输入剪辑名称
+Enter clip note: 输入剪辑注释
+Enter code: 输入代码
+Enter credit card number: 输入信用卡号码
+Enter default value: 输入默认值
+Enter field value: 输入字段值
+Enter full path to file, folder or application: 输入文件、文件夹或应用程序的完整路径
+Enter regex for output filer: 输入输出筛选器的表达式
+Enter request url: 输入请求 URL
+Enter secret value: 输入密钥值
+Enter section label: 输入部分标签
+Enter select option: 输入选择选项
+Enter tab name: 输入标签名称
+Enter template or drag from history: 输入模板或从历史记录中拖动
+Enter template value: 输入模板值
+Enter value or drag from history: 输入值或从历史记录中拖动
+Enter web link or email: 输入网页链接或电子邮件
+Errors:
+  No fields found in the template.: 模板中未找到字段。
+  Please fix output template or confirm to save as is.: 请修复输出模板或确认按原样保存。
+  Please fix template fields or confirm to save as is.: 请修复模板字段或确认按原样保存。
+  Please fix the problem or confirm to save as is.: 请修复问题或确认按原样保存。
+  Please verify your link for any errors, or confirm to save as is.: 请检查链接是否有错误，或确认按原样保存。
+  Please verify your path for any errors, or confirm to save as is.: 请检查路径是否有错误，或确认按原样保存。
+  Your command runs with errors, confirm you want to save as is.: 您的命令运行出错，确认是否要按原样保存。
+  Your request runs with errors, confirm you want to save as is.: 您的请求运行出错，确认是否要按原样保存。
+FILTERED_TYPES:
+  Dot Path: 点路径
+  JSON Path: JSON 路径
+  RegEx: 正则表达式
+  RegEx Replace: 正则表达式替换
+  Remove Quotes: 移除引号
+Field: 字段
+"Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template": '在模板中找到字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b>'
+Field Options: 字段选项
+Fields Value: 字段值
+File, folder or app path does not exist: 文件、文件夹或应用程序路径不存在
+File, folder or app path is valid: 文件、文件夹或应用程序路径有效
+File, folder or app path might not be valid: 文件、文件夹或应用程序路径可能无效
+Fill Template: 填充模板
+Filter Type: 筛选类型
+Filter's Value: 筛选值
+Find in Clip: 在剪辑中查找
+Find in clip: 在剪辑中查找
+Find in history: 在历史记录中查找
+Form Fields: 表单字段
+General Fields: 常规字段
+HTML: HTML
+Headers: 标头
+Hide Label: 隐藏标签
+History capture is off: 历史记录捕获已关闭
+Key Press: 按键
+Key Press After: 之后按键
+Key Press After Paste: 粘贴后按键
+'Key Press After Paste: {{keyPress}}': '粘贴后按键：{{keyPress}}'
+Label Left: 标签左对齐
+Label Top: 标签顶对齐
+Label on Left: 标签在左侧
+Labels: 标签
+Last run: 上次运行
+Last update: 上次更新
+Layout Max Width: 布局最大宽度
+Mask to hide clipboard value in preview: 在预览中隐藏剪贴板值的掩码
+Move Clip: 移动剪辑
+Moved Clips Panel: 已移动剪辑面板
+Name: 名称
+New Board: 新面板
+New Clip: 新剪辑
+No Boards: 无面板
+No Clipboard History: 无剪贴板历史
+No Tabs or Boards: 无标签或面板
+Number of columns: 列数
+Open: 打开
+Open URL Disable / Enable: 打开 URL 禁用/启用
+Output Template: 输出模板
+Panel for moved or copied items from other tabs: 从其他标签移动或复制的项目面板
+Please confirm to save as is.: 请确认按原样保存。
+Press: 按下
+RETURN_POSITION_TYPES:
+  First Only: 仅第一个
+  Last Only: 仅最后一个
+RULES_TYPES:
+  CSS Selector: CSS 选择器
+  RegEx Find: 正则表达式查找
+  RegEx Group Match: 正则表达式组匹配
+  RegEx Match: 正则表达式匹配
+  RegEx Replace: 正则表达式替换
+RegEx Find: 正则表达式查找
+RegEx Match: 正则表达式匹配
+RegEx Match Group: 正则表达式匹配组
+RegEx Replace: 正则表达式替换
+Regex Match Group Filter: 正则表达式匹配组筛选
+Remove Open URL: 移除打开 URL
+Remove headers: 移除标头
+Remove image: 移除图片
+Rename: 重命名
+Reset to Defaults: 重置为默认值
+Response Filters: 响应筛选器
+Result: 结果
+SEPARATOR_TYPES:
+  Comma (,): 逗号 (,)
+  New Line (\n): 换行 (\n)
+  Pipe (|): 竖线 (|)
+  Semicolon (;): 分号 (;)
+  Space (' '): 空格 (' ')
+  Tab (\t): 制表符 (\t)
+Save as Defaults: 保存为默认值
+Scan for Template Fields: 扫描模板字段
+Select Color: 选择颜色
+Select Default Option: 选择默认选项
+Select Option: 选择选项
+Select Options: 选择选项
+Show Label: 显示标签
+Special Field: 特殊字段
+Subtitle: 副标题
+Tab: 标签
+Tab is Not Empty: 标签不为空
+Tabs Menu: 标签菜单
+Template: 模板
+Template Edit: 模板编辑
+Template Fields: 模板字段
+"Template should have⠀<b>{{output}}</b>⠀placeholder.": 模板应包含⠀<b>{{output}}</b>⠀占位符。
+Test Request: 测试请求
+Test Run: 测试运行
+Text: 文本
+This action cannot be undone.: 此操作无法撤销。
+This field allows to insert text from clipboard: 此字段允许从剪贴板插入文本
+Too long: 太长
+Too short: 太短
+Turn On auto update: 开启自动更新
+Turn on history capture: 开启历史记录捕获
+Type:
+  Command: 命令
+  Request: 请求
+  Scraper: 抓取器
+URL: URL
+Unsaved name: 未保存的名称
+Unsaved note: 未保存的注释
+Unsaved subtitle: 未保存的副标题
+Unsaved title: 未保存的标题
+Update Link Card: 更新链接卡片
+"Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.": 使用双大括号表示 {{字段名}}。使用 {{clipboard}} 添加当前剪贴板值。
+Value: 值
+Values: 值
+Vertical Split: 垂直分割
+We need to open a new window where you can drag & drop file, path or application.: 我们需要打开一个新窗口，您可以在其中拖放文件、路径或应用程序。
+Web Link or Email might not be valid: 网页链接或电子邮件可能无效
+Web or Email link is valid: 网页或电子邮件链接有效
+Website URL: 网站 URL
+Website URL is valid: 网站 URL 有效
+Website URL might not be valid: 网站 URL 可能无效
+"Wrap output using {{output}} placeholder": 使用 {{output}} 占位符包装输出
+You have no rules added: 您没有添加规则
+You'll need to clear this board of all clips and subboards before it can be deleted.: 在删除此面板之前，您需要清除其中的所有剪辑和子面板。
+You'll need to clear this tab of all boards before it can be deleted.: 在删除此标签之前，您需要清除其中的所有面板。
+filled template: 已填充的模板
+new clips: 新剪辑
+template: 模板
+'{{count}} fields found in template but missing from fields definition._one': '在模板中找到 {{count}} 个字段，但在字段定义中缺失。'
+'{{count}} fields found in template but missing from fields definition._other': '在模板中找到 {{count}} 个字段，但在字段定义中缺失。'
+'{{count}} fields not found in the template._one': '在模板中未找到 {{count}} 个字段。'
+'{{count}} fields not found in the template._other': '在模板中未找到 {{count}} 个字段。'
+'{{type}} Field': '{{type}} 字段'
+'{{type}} field': '{{type}} 字段'

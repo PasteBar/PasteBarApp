@@ -235,10 +235,12 @@ export function useFindClipboardHistory({
   query = '',
   filters = [],
   codeFilters = [],
+  appFilters = [],
 }: {
   query?: string
   filters?: string[]
   codeFilters?: string[]
+  appFilters?: string[]
 }) {
   const queryClient = useQueryClient()
   const {
@@ -253,6 +255,7 @@ export function useFindClipboardHistory({
       query,
       filters,
       codeFilters,
+      appFilters,
       useQueryOptions: {
         enabled: false,
         refetchOnWindowFocus: false,

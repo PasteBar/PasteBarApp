@@ -1,5 +1,47 @@
 # pastebar-app
 
+## 0.6.2
+
+### Patch Changes
+
+- fb264f6: Update to shortcut for quick copy paste ctrl + number added cmd key press on mac
+
+## 0.6.1
+
+### Patch Changes
+
+- cf24d8f: Fix: Autogenerate link settings not working in Quick Paste Window
+
+## 0.6.0
+
+### Minor Changes
+
+- 78957f4: Added support for zhCN Simplified Chinese language translation (thanks to @katelya77)
+  Added support for UK Ukrainian language with auto-generated translation (seeking help to improve)
+  Added support for esES Spanish language with auto-generated translation (seeking help to improve)
+  Added support for IT Italian language with auto-generated translation (seeking help to improve)
+  Added data-fn locale for each language
+  Added global hotkeys for show/hide the main app window option
+  Added global hotkeys for show/hide Quick Paste window near user's current cursor position
+  Added hide the app dock icon (macOS) option
+  Added "The app starts with main window hidden" option
+  Added "Show navbar elements on hover only" option
+  Added "Hide collections name on the navbar" option
+  Added PasteBar Quick Paste window with keyboard navigation, Enter or Ctrl + [number] to paste, Ctrl + F to search
+  Added Ctrl + click or Cmd + click to multi select/deselect history items
+  Fixed a bug where the contact form used an invalid link on Windows (#125)
+  Fixed a bug causing a markdown undefined error on window
+
+## 0.5.2
+
+### Patch Changes
+
+- 84d2007: Added excluded apps list in clipboard settings
+  Added copied item source app hover indicator on history item
+  Added "Exclude Source App and Delete" option in history item context menu
+  Added "Add to Filter by Source App" option in history item context menu
+  Added new source app filter in history filters
+
 ## 0.5.1
 
 ### Patch Changes

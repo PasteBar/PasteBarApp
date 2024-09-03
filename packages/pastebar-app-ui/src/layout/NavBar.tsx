@@ -13,6 +13,7 @@ import {
   collectionsStoreAtom,
   isAppLocked,
   isCreatingMenuItem,
+  isNavBarHovering,
   onBoardingTourSingleElements,
   openAboutPasteBarModal,
   openContactUsFormModal,
@@ -89,6 +90,7 @@ import { Badge, Box, Button, Flex, Shortcut, Text } from '~/components/ui'
 
 import { useSelectCollectionById } from '~/hooks/queries/use-collections'
 import { useDeleteItemById } from '~/hooks/queries/use-items'
+import { useSignal } from '~/hooks/use-signal'
 
 import { PlayerMenu } from '../components/audio-player/PlayerMenu'
 import Logo from './Logo'
@@ -168,6 +170,8 @@ export function NavBar() {
     isShowCollectionNameOnNavBar,
     isShowDisabledCollectionsOnNavBarMenu,
     setIsShowCollectionNameOnNavBar,
+    setIsHideCollectionsOnNavBar,
+    setIsShowNavBarItemsOnHoverOnly,
     copyPasteDelay,
     setCopyPasteDelay,
     setIsHistoryEnabled,
@@ -184,6 +188,8 @@ export function NavBar() {
     setIsHistoryAutoUpdateOnCaputureEnabled,
     isHistoryAutoUpdateOnCaputureEnabled,
     setIsShowDisabledCollectionsOnNavBarMenu,
+    isShowNavBarItemsOnHoverOnly,
+    isHideCollectionsOnNavBar,
   } = useAtomValue(settingsStoreAtom)
 
   const { deleteClipboardHistoryItem } = useAtomValue(clipboardHistoryStoreAtom)
@@ -198,6 +204,7 @@ export function NavBar() {
     isSplitPanelView,
     setIsHideMainWindow,
     toggleIsSplitPanelView,
+    toggleHistoryQuickPasteWindow,
     isWindows,
     setIsShowPinned,
     isSwapPanels,
@@ -264,6 +271,10 @@ export function NavBar() {
 
   useHotkeys(['alt+n', 'ctrl+n', 'meta+n'], async () => {
     await toggleIsSplitPanelView()
+  })
+
+  useHotkeys(['alt+p', 'ctrl+p', 'meta+p'], async () => {
+    await toggleHistoryQuickPasteWindow(t('PasteBar Quick Paste', { ns: 'settings2' }))
   })
 
   useHotkeys('ctrl+w', () => {
@@ -406,6 +417,8 @@ export function NavBar() {
     showUpdateErrorDownloadError.value,
   ])
 
+  const isShowNavBarItems = isShowNavBarItemsOnHoverOnly ? isNavBarHovering.value : true
+
   useEffect(() => {
     if (showInvalidTrackWarningAddSong.value) {
       const invalidTrackWarning = toast({
@@ -486,11 +499,26 @@ export function NavBar() {
     <div
       data-tauri-drag-region
       className="h-[41px] absolute top-0 left-0 w-full"
+      onMouseEnter={() => {
+        if (isShowNavBarItemsOnHoverOnly) {
+          isNavBarHovering.value = true
+        }
+      }}
+      onMouseLeave={() => {
+        if (isShowNavBarItemsOnHoverOnly) {
+          isNavBarHovering.value = false
+        }
+      }}
+      onClick={() => {
+        if (isShowNavBarItemsOnHoverOnly) {
+          isNavBarHovering.value = true
+        }
+      }}
       id="navbar-panel_tour"
     >
       <Menubar
         data-tauri-drag-region
-        className="border-0 !h-full border-b border-slate-200/50 dark:border-slate-500/50 rounded-b-none bg-gray-50 pl-3 hover:bg-white dark:hover:bg-gray-950 active:cursor-move active:bg-white transform duration-300 dark:bg-gray-900 dark:text-slate-300"
+        className={`border-0 !h-full border-b border-slate-200/50 dark:border-slate-500/50 rounded-b-none bg-gray-50 pl-3 hover:bg-white dark:hover:bg-gray-950 active:cursor-move active:bg-white transform duration-300 dark:bg-gray-900 dark:text-slate-300`}
       >
         <div className="inline-flex h-fit w-fit items-center text-cyan-500 relative">
           <div
@@ -723,7 +751,12 @@ export function NavBar() {
         </MenubarMenu>
 
         <MenubarMenu>
-          <MenubarTrigger className="font-normal px-2.5" id="navbar-view_tour">
+          <MenubarTrigger
+            className={`font-normal px-2.5 whitespace-nowrap ${
+              isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+            }`}
+            id="navbar-view_tour"
+          >
             {t('View', { ns: 'navbar' })}
           </MenubarTrigger>
           <MenubarContent>
@@ -771,6 +804,19 @@ export function NavBar() {
                 : t('Split History Window', { ns: 'common' })}
               <MenubarShortcut className="ml-2">
                 <Shortcut keys="CTRL+N" />
+              </MenubarShortcut>
+            </MenubarItem>
+
+            <MenubarItem
+              onClick={async () => {
+                await toggleHistoryQuickPasteWindow(
+                  t('PasteBar Quick Paste', { ns: 'settings2' })
+                )
+              }}
+            >
+              {t('Quick Paste Window', { ns: 'settings2' })}
+              <MenubarShortcut className="ml-2">
+                <Shortcut keys="CTRL+P" />
               </MenubarShortcut>
             </MenubarItem>
 
@@ -939,6 +985,25 @@ export function NavBar() {
                     <Shortcut keys="CTRL+P" />
                   </MenubarShortcut>
                 </MenubarCheckboxItem>
+
+                <MenubarCheckboxItem
+                  checked={isShowNavBarItemsOnHoverOnly}
+                  onClick={() => {
+                    setIsShowNavBarItemsOnHoverOnly(!isShowNavBarItemsOnHoverOnly)
+                  }}
+                >
+                  {t('Show Navbar Items Hover', { ns: 'settings2' })}
+                </MenubarCheckboxItem>
+
+                <MenubarCheckboxItem
+                  checked={isHideCollectionsOnNavBar}
+                  onClick={() => {
+                    setIsHideCollectionsOnNavBar(!isHideCollectionsOnNavBar)
+                  }}
+                >
+                  {t('Hide Collections Navbar', { ns: 'settings2' })}
+                </MenubarCheckboxItem>
+
                 <MenubarCheckboxItem
                   checked={isShowCollectionNameOnNavBar}
                   onClick={() => {
@@ -1042,10 +1107,12 @@ export function NavBar() {
           </MenubarContent>
         </MenubarMenu>
 
-        {collections.length > 0 && (
+        {collections.length > 0 && !isHideCollectionsOnNavBar && (
           <MenubarMenu>
             <MenubarTrigger
-              className="font-normal min-w-fit px-2.5"
+              className={`font-normal min-w-fit px-2.5 ${
+                isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+              }`}
               id="navbar-collections_tour"
             >
               <Flex className="flex justify-start items-center whitespace-nowrap overflow-hidden">
@@ -1132,7 +1199,9 @@ export function NavBar() {
 
         <div
           data-tauri-drag-region
-          className="inline-flex h-full w-full items-center justify-center"
+          className={`inline-flex h-full w-full items-center justify-center ${
+            isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+          }`}
         >
           {!isSplitPanelView ? (
             <Button
@@ -1207,13 +1276,16 @@ export function NavBar() {
                     showUpdateErrorPermissionDenied.value = false
                   }
                 }}
-                className={
-                  showUpdateError.value
-                    ? 'bg-red-100/70 dark:bg-red-900/70'
-                    : showRestartAfterUpdate.value
-                      ? 'bg-amber-100/70 dark:bg-amber-900/70'
-                      : 'bg-teal-100/70 dark:bg-teal-900/70'
-                }
+                className={`
+                  ${isShowNavBarItems ? 'opacity-100' : 'opacity-0'}
+                  ${
+                    showUpdateError.value
+                      ? 'bg-red-100/70 dark:bg-red-900/70'
+                      : showRestartAfterUpdate.value
+                        ? 'bg-amber-100/70 dark:bg-amber-900/70'
+                        : 'bg-teal-100/70 dark:bg-teal-900/70'
+                  }
+                `}
               >
                 <ToolTip
                   text={t('Version {{newVersion}} is available', {
@@ -1366,9 +1438,16 @@ export function NavBar() {
             </MenubarMenu>
           ) : (
             <>
-              {playerSongs.length > 0 && <PlayerMenu />}
+              {playerSongs.length > 0 && (
+                <PlayerMenu isShowNavBarItems={isShowNavBarItems} />
+              )}
               <MenubarMenu>
-                <MenubarTrigger className="font-normal px-2.5" id="navbar-help_tour">
+                <MenubarTrigger
+                  className={`font-normal px-2.5 whitespace-nowrap ${
+                    isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+                  }`}
+                  id="navbar-help_tour"
+                >
                   {t('Help', { ns: 'help' })}
                 </MenubarTrigger>
                 <MenubarContent>
@@ -1773,7 +1852,9 @@ export function NavBar() {
             onClick={minimizeWindow}
             title={t('Window:::Minimize Window', { ns: 'navbar' })}
             variant="ghost"
-            className="h-8 focus:outline-none"
+            className={`h-8 focus:outline-none ${
+              isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+            }`}
           >
             <Icons.minimize className="h-3 w-3" />
           </Button>
@@ -1781,7 +1862,9 @@ export function NavBar() {
             onClick={maximizeWindow}
             title={t('Window:::Maximize Window', { ns: 'navbar' })}
             variant="ghost"
-            className="h-8 focus:outline-none"
+            className={`h-8 focus:outline-none ${
+              isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+            }`}
           >
             <Maximize className="h-4 w-4" />
           </Button>

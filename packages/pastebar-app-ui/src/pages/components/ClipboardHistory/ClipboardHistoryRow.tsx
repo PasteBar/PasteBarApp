@@ -1,15 +1,24 @@
-import { CSSProperties, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import {
+  CSSProperties,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { UniqueIdentifier, useDraggable } from '@dnd-kit/core'
 import NoWrapIcon from '~/assets/icons/nowrap'
 import WrapIcon from '~/assets/icons/wrap'
 import { MINUTE_IN_MS } from '~/constants'
 import { isEmailNotUrl } from '~/libs/utils'
+import { formatLocale as format } from '~/locales/date-locales'
 import {
   hoveringHistoryRowId,
   isKeyAltPressed,
+  isKeyCtrlPressed,
   showHistoryDeleteConfirmationId,
 } from '~/store'
-import format from 'date-fns/format'
 import {
   ArrowDownToLine,
   Check,
@@ -51,6 +60,7 @@ interface ClipboardHistoryRowProps {
   index?: number
   style?: CSSProperties
   isExpanded: boolean
+  isWindows?: boolean
   isWrapText: boolean
   isSelected?: boolean
   isDeleting?: boolean
@@ -105,6 +115,8 @@ interface ClipboardHistoryRowProps {
   clipboard?: ClipboardHistoryItem
   isDark: boolean
   setRowHeight?: (index: number, height: number) => void
+  setHistoryFilters?: Dispatch<SetStateAction<string[]>>
+  setAppFilters?: Dispatch<SetStateAction<string[]>>
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -113,6 +125,7 @@ export function ClipboardHistoryRowComponent({
   style,
   clipboard,
   isDark,
+  isWindows,
   searchTerm,
   isPinnedTop = false,
   isPinnedTopFirst = false,
@@ -155,6 +168,8 @@ export function ClipboardHistoryRowComponent({
   setSelectHistoryItem = () => {},
   isDragPreview = false,
   setRowHeight = () => {},
+  setHistoryFilters = () => {},
+  setAppFilters = () => {},
 }: ClipboardHistoryRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
@@ -285,6 +300,11 @@ export function ClipboardHistoryRowComponent({
     }
   }, [clipboard?.isLink, hasLinkCard])
 
+  const showCopyPasteIndexNumber =
+    (isKeyCtrlPressed.value || (isKeyAltPressed.value && !isWindows)) &&
+    typeof index !== 'undefined' &&
+    index < 10
+
   const pinnedTopOffsetFirst = !isPinnedTopFirst ? 'top-[-10px]' : 'top-[5px]'
   const bgToolsPanel = `${
     !isPinnedTop && isOverPinned && !isNowItem
@@ -320,6 +340,11 @@ export function ClipboardHistoryRowComponent({
                 : undefined,
       }}
       ref={isDragPreview && !(isHovering || isSelected) ? null : setNodeRef}
+      title={
+        clipboard?.copiedFromApp && isHovering
+          ? `${t('Source')}: ${clipboard?.copiedFromApp}`
+          : ''
+      }
       {...(isSelected || isHovering ? listeners : {})}
     >
       <Box ref={rowRef}>
@@ -378,7 +403,12 @@ export function ClipboardHistoryRowComponent({
                                 }`
                 }`}
                 onClickCapture={e => {
-                  if (e.shiftKey) {
+                  if ((isWindows && e.ctrlKey) || (e.metaKey && !isWindows)) {
+                    setSelectHistoryItem(clipboard.historyId)
+                  } else if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  } else if (e.shiftKey) {
                     e.preventDefault()
                     e.stopPropagation()
                     window.getSelection()?.removeAllRanges()
@@ -410,8 +440,14 @@ export function ClipboardHistoryRowComponent({
                   }
                 }}
               >
-                <Box className={`${showSelectHistoryItems ? 'flex flex-row -ml-1' : ''}`}>
-                  {showSelectHistoryItems && !isDragPreview && (
+                <Box
+                  className={`${
+                    showSelectHistoryItems || showCopyPasteIndexNumber
+                      ? 'flex flex-row -ml-1'
+                      : ''
+                  }`}
+                >
+                  {showSelectHistoryItems && !isDragPreview ? (
                     <Box className="flex flex-row items-center pr-2 z-100">
                       <input
                         type="checkbox"
@@ -422,6 +458,17 @@ export function ClipboardHistoryRowComponent({
                         checked={isSelected}
                       />
                     </Box>
+                  ) : (
+                    showCopyPasteIndexNumber && (
+                      <Box className="flex flex-row items-center pr-2 z-100">
+                        <Badge
+                          className="font-mono bg-slate-200 dark:bg-slate-700 !py-0"
+                          variant="outline"
+                        >
+                          {index === 9 ? 0 : index + 1}
+                        </Badge>
+                      </Box>
+                    )
                   )}
                   {clipboard.isImageData ? (
                     <Box className="text-ellipsis self-start text-xs w-full _select-text overflow-hidden cursor-pointer">
@@ -955,7 +1002,9 @@ export function ClipboardHistoryRowComponent({
                 </Box>
               ) : isCopiedOrPasted && !pastingCountDown ? (
                 <Box
-                  className={`absolute z-50 w-full ${pinnedTopOffsetFirst} flex justify-center fade-in-animation`}
+                  className={`absolute z-50 w-full ${pinnedTopOffsetFirst} flex justify-center ${
+                    showCopyPasteIndexNumber ? '' : 'fade-in-animation'
+                  }`}
                 >
                   <Badge
                     variant="default"
@@ -1014,6 +1063,7 @@ export function ClipboardHistoryRowComponent({
           </ContextMenuTrigger>
           <ClipboardHistoryRowContextMenu
             historyId={clipboard.historyId}
+            copiedFromApp={clipboard.copiedFromApp}
             isMasked={clipboard.isMasked}
             setSavingItem={setSavingItem}
             value={clipboard.value}
@@ -1034,6 +1084,8 @@ export function ClipboardHistoryRowComponent({
             removeLinkMetaData={removeLinkMetaData}
             setSelectHistoryItem={setSelectHistoryItem}
             onCopyPaste={onCopyPaste}
+            setHistoryFilters={setHistoryFilters}
+            setAppFilters={setAppFilters}
           />
         </ContextMenu>
       </Box>

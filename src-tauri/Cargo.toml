@@ -11,10 +11,13 @@ rust-version = "1.75.0"
 version = "1.4"
 features = []
 
-[target.'cfg(windows)'.dependencies]
+[target.'cfg(target_os = "windows")'.dependencies]
+winapi = { version = "0.3", features = ["winuser", "windef"] }
 winreg = "0.52.0"
 
 [dependencies]
+fns = "0"
+mouse_position = "0.1.4"
 keyring = "2.3.2"
 dotenv = "0.15.0"
 bcrypt = "0.15.1"
@@ -37,12 +40,12 @@ reqwest = "0.11.12"
 nanoid = "0.4.0"
 anyhow = "1.0.66"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.7", features = [ "api-all", "system-tray", "icon-png", "clipboard", "updater", "reqwest-client"] }
+tauri = { version = "1.7.1", features = [ "api-all", "system-tray", "icon-png", "clipboard", "updater", "reqwest-client"] }
 tokio = { version = "1.28.2", features = ["full"] } 
 #single-instance = "0.3.3"
 
 inputbot = { path = "libs/inputbot" }
-tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+window-state = { path = "libs/window-state" }
 tauri-plugin-single-instance = { git = "https://github.com/kurdin/tauri-plugin-single-instance", branch = "dev" }
 tauri-plugin-deep-link = { path = "libs/deep-link", version = "0.1.2" }
 
@@ -70,10 +73,11 @@ clipboard-master = "3.1.3"
 img_hash = "3.2.0"
 sha-1 = "0.10.1"
 regex = "1.9.3"
+active-win-pos-rs = "0.8"
 
 lang_detect = { path = "libs/lang_detect" }
 auto-launch = { path = "libs/auto-launch" }
-# tao = { path = "libs/tao-0.16.7" }
+tao = { path = "libs/tao-0.16.7" }
 mid = { path = "libs/mid-hardware-id" }
 
 linkify = "0.10.0"
@@ -99,8 +103,8 @@ default = ["custom-protocol"]
 system-tray = ["tauri/system-tray"]
 custom-protocol = ["tauri/custom-protocol"]
 
-# [patch.crates-io]
-# tao = { path = "libs/tao-0.16.7" }
+[patch.crates-io]
+tao = { path = "libs/tao-0.16.7" }
 
 [profile.release]
 # panic = "abort" # Strip expensive panic clean-up logic

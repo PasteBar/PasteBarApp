@@ -5,6 +5,7 @@ import createFilteredFlatBoardTree from '~/libs/create-filtered-flat-board-tree'
 import createMenuTree from '~/libs/create-menu-tree'
 import {
   collectionsStoreAtom,
+  isNavBarHovering,
   recentSearchTerm,
   settingsStoreAtom,
   uiStoreAtom,
@@ -292,6 +293,7 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
               }}
               ref={mergeRefs(searchHistoryInputRef)}
               onFocus={() => {
+                isNavBarHovering.value = true
                 setShowSearchModal(true)
               }}
               iconLeft={<Search className="h-4 w-4" />}

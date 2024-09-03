@@ -21,6 +21,7 @@ export type ClipboardHistoryItem = {
     noLinkCard: boolean
   } | null
   historyOptions: string | null
+  copiedFromApp: string | null
 
   title: string | null
   value: string | null

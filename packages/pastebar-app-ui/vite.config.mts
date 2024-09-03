@@ -74,6 +74,7 @@ export default async () => {
         input: {
           main: path.resolve(__dirname, 'index.html'),
           history: path.resolve(__dirname, 'history-index.html'),
+          quickpaste: path.resolve(__dirname, 'quickpaste-index.html'),
         },
       },
     },

@@ -1,0 +1,40 @@
+All History Settings: Todos los Ajustes del Historial
+All done! History's been cleared.: ¡Listo! El historial ha sido borrado.
+Auto Update on Capture: Actualización Automática al Capturar
+Auto-Clear Settings: Ajustes de Borrado Automático
+Capture History: Capturar Historial
+Clear: Borrar
+Clear All: Borrar Todo
+Clear All History: Borrar Todo el Historial
+Clear History: Borrar Historial
+Confirm Clear All History: Confirmar Borrar Todo el Historial
+Do you really want to remove ALL clipboard history items?: ¿Realmente quieres eliminar TODOS los elementos del historial?
+Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: ¿Quieres eliminar los elementos del historial más antiguos que {{olderThen}} {{durationType}}?
+Enable Capture History: Habilitar Captura de Historial
+Filters:
+  App Filters: Filtros de App
+  Audio: Audio
+  Clear Filters: Borrar Filtros
+  Code: Código
+  Emoji: Emoji
+  Image: Imagen
+  Language Filters: Filtros de Idioma
+  Languages: Idiomas
+  Languages Filter: Filtro de Idiomas
+  Languages Filters: Filtros de Idiomas
+  Link: Enlace
+  Pinned: Fijados
+  Secret: Secreto
+  Select Filters: Seleccionar Filtros
+  Source: Fuente
+  Source Application: Aplicación Fuente
+  Source Filters: Filtros de Fuente
+  Starred: Destacados
+  Text: Texto
+  Video: Video
+Hide pinned history: Ocultar historial fijado
+History Settings: Ajustes del Historial
+Paste Menu: Menú de Pegado
+Select Filters: Seleccionar Filtros
+View pinned history: Ver historial fijado
+'{{isAll}} Clipboard History': 'Historial del Portapapeles {{isAll}}'

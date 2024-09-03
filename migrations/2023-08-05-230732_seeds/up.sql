@@ -64,6 +64,9 @@ INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('isExclusionListEnabled', NULL, false, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
+VALUES ('isExclusionAppListEnabled', NULL, false, NULL);
+
+INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('historyExclusionList', '', NULL, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
@@ -71,6 +74,15 @@ VALUES ('isAutoMaskWordsListEnabled', NULL, false, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('isAutoPreviewLinkCardsEnabled', NULL, true, NULL);
+
+INSERT INTO settings (name, value_text, value_bool, value_int)
+VALUES ('isHideMacOSDockIcon', NULL, false, NULL);
+
+INSERT INTO settings (name, value_text, value_bool, value_int)
+VALUES ('hotKeysShowHideMainAppWindow', '', NULL, NULL);
+
+INSERT INTO settings (name, value_text, value_bool, value_int)
+VALUES ('hotKeysShowHideQuickPasteWindow', '', NULL, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('isAutoFavoriteOnDoubleCopyEnabled', NULL, true, NULL);

@@ -17,6 +17,8 @@ use tauri::{
   Manager, Runtime,
 };
 
+use active_win_pos_rs::get_active_window;
+
 use crate::cron_jobs;
 use crate::models::Setting;
 use crate::services::history_service;
@@ -93,6 +95,11 @@ where
       .and_then(|s| s.value_bool)
       .unwrap_or(true);
 
+    let copied_from_app = match get_active_window() {
+      Ok(active_window) => Some(active_window.app_name),
+      Err(()) => None,
+    };
+
     if let Ok(mut text) = clipboard_text {
       text = text.trim().to_string();
 
@@ -113,6 +120,27 @@ where
                   .iter()
                   .any(|item| line.to_lowercase().contains(&item.to_lowercase()))
               });
+            }
+          }
+        }
+
+        if !is_excluded {
+          if let Some(setting) = settings_map.get("isExclusionAppListEnabled") {
+            if let Some(value_bool) = setting.value_bool {
+              if value_bool {
+                if let Some(app_name) = &copied_from_app {
+                  let exclusion_app_list: Vec<String> = settings_map
+                    .get("historyExclusionAppList")
+                    .and_then(|s| s.value_text.as_ref())
+                    .map_or(Vec::new(), |exclusion_list_text| {
+                      exclusion_list_text.lines().map(String::from).collect()
+                    });
+
+                  is_excluded |= exclusion_app_list
+                    .iter()
+                    .any(|item| item.to_lowercase() == app_name.to_lowercase());
+                }
+              }
             }
           }
         }
@@ -174,14 +202,39 @@ where
             text,
             detect_options,
             should_auto_star_on_double_copy,
+            copied_from_app,
           ));
         }
       }
     } else if let Ok(image_binary) = clipboard_manager.get_image_binary() {
-      do_refresh_clipboard = Some(history_service::add_clipboard_history_from_image(
-        image_binary,
-        should_auto_star_on_double_copy,
-      ));
+      let mut is_app_excluded = false;
+
+      if let Some(setting) = settings_map.get("isExclusionAppListEnabled") {
+        if let Some(value_bool) = setting.value_bool {
+          if value_bool {
+            if let Some(app_name) = &copied_from_app {
+              let exclusion_app_list: Vec<String> = settings_map
+                .get("historyExclusionAppList")
+                .and_then(|s| s.value_text.as_ref())
+                .map_or(Vec::new(), |exclusion_list_text| {
+                  exclusion_list_text.lines().map(String::from).collect()
+                });
+
+              is_app_excluded |= exclusion_app_list
+                .iter()
+                .any(|item| item.to_lowercase() == app_name.to_lowercase());
+            }
+          }
+        }
+      }
+
+      if !is_app_excluded {
+        do_refresh_clipboard = Some(history_service::add_clipboard_history_from_image(
+          image_binary,
+          should_auto_star_on_double_copy,
+          copied_from_app,
+        ));
+      }
     }
 
     if let Some(refresh_value) = &do_refresh_clipboard {

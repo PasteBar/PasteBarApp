@@ -35,6 +35,7 @@ diesel::table! {
         created_date -> Timestamp,
         updated_date -> Timestamp,
         history_options -> Nullable<Text>,
+        copied_from_app -> Nullable<Text>,
     }
 }
 
