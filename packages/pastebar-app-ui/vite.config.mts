@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import react from "@vitejs/plugin-react";
-import { defineConfig } from 'vite'
+import { defineConfig, PluginOption } from 'vite'
 import * as dotenv from 'dotenv'
 import dynamicImport from 'vite-plugin-dynamic-import'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
@@ -11,10 +11,14 @@ import i18nextLoader from './src/lib/i18n-vite-loaded/loader'
 
 dotenv.config()
 
+const ReactCompilerConfig = {
+  runtimeModule: 'react-compiler-runtime',
+  target: '19', // '17' | '18' | '19'
+}
+
 let pastebarAppPackage
 const pastebarUIVersion = require('./package.json').version
 
-const ReactCompilerConfig = { runtimeModule: 'react-compiler-runtime' };
 
 async function loadPasteBarAppPackage() {
   try {
@@ -92,16 +96,16 @@ export default async () => {
       react({
         babel: {
           plugins: [
-            ["module:@preact/signals-react-transform"],
+            "module:@preact/signals-react-transform",
             ["babel-plugin-react-compiler", ReactCompilerConfig],
           ],
         },
-      }),
-      dynamicImport(),
+      }) as PluginOption,
+      dynamicImport() as any,
       i18nextLoader({
         paths: ['./src/locales/lang'],
         namespaceResolution: 'basename',
-      }),
+      }) as PluginOption,
       viteStaticCopy({
         targets: [
           {
