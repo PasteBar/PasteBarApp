@@ -98,6 +98,7 @@ textarea::-webkit-scrollbar {
 }
 
 .flags {
+  overflow: hidden;
   font-family: 'Country Flags';
 }
 

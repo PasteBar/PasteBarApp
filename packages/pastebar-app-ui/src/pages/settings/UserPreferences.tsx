@@ -189,6 +189,7 @@ export default function UserPreferences() {
                 </Link>
               </Box>
               <Spacer h={3} />
+
               <SimpleBar style={{ maxHeight: height - 85 }} autoHide={true}>
                 <Box className="animate-in fade-in max-w-xl">
                   <Card
@@ -241,8 +242,9 @@ export default function UserPreferences() {
                 <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card
                     className={`${
-                      !isKeepMainWindowClosedOnRestartEnabled &&
-                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                      !isKeepMainWindowClosedOnRestartEnabled
+                        ? 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                        : ''
                     }`}
                   >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
@@ -413,7 +415,7 @@ export default function UserPreferences() {
                               onClick={() => {
                                 i18n.changeLanguage(code)
                               }}
-                              className={`text-sm border-0 font-normal bg-slate-50 dark:bg-slate-950 ${
+                              className={`text-sm font-normal bg-slate-50 dark:bg-slate-950 ${
                                 i18n.language === code
                                   ? 'bg-slate-300 font-semibold dark:bg-slate-600 text-dark dark:text-slate-200 hover:dark:bg-slate-600 hover:bg-slate-300'
                                   : ''
@@ -460,8 +462,9 @@ export default function UserPreferences() {
                 <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card
                     className={`${
-                      !isShowNavBarItemsOnHoverOnly &&
-                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                      !isShowNavBarItemsOnHoverOnly
+                        ? 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                        : ''
                     }`}
                   >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
