@@ -81,7 +81,18 @@ zhCN:
   enable_history_capture: 启用历史记录捕获
   clipboard_image_size: 剪贴板图像大小
   history_capture_is_disabled: 剪贴板历史记录捕获已禁用
-  recent_history: 最近历史记录
+  recent_history: 最近的历史记录
   open_pastebar: 打开 PasteBar
   unlock_pastebar: 解锁 PasteBar
   quit: 退出
+
+tr:
+  add_first_item_here: İlk Öğeyi Buraya Ekle
+  disable_history_capture: Geçmiş Yakalamayı Devre Dışı Bırak
+  enable_history_capture: Geçmiş Yakalamayı Etkinleştir
+  clipboard_image_size: Pano Resim Boyutu
+  history_capture_is_disabled: Geçmiş Yakalama Devre Dışı
+  recent_history: Son Geçmiş
+  open_pastebar: PasteBar'ı Aç
+  unlock_pastebar: PasteBar'ı Kilit Aç
+  quit: Çıkış

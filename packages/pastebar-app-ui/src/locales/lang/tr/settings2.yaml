@@ -1,0 +1,24 @@
+App restart required: Uygulamanın yeniden başlatılması gerekiyor
+Application Starts with Main Window Hidden: Uygulama Ana Pencere Gizli Olarak Başlıyor
+Change: Değiştir
+Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Görünür kullanıcı arayüzü öğelerini en aza indirmek için gezinme çubuğu öğelerini yalnızca fare gezinme çubuğunun üzerindeyken görüntüleyin
+Global System OS Hotkeys: Genel Işletim Sistemi Kısayolları
+Hide Collections Navbar: Koleksiyonlar Navigasyon Çubuğunu Gizle
+Hide collections menu dropdown on the navigation bar: Gezinme çubuğundaki koleksiyonlar menüsü açılır menüsünü gizle
+Hide collections menu on the navbar: Gezinme çubuğundaki koleksiyonlar menüsünü gizle
+Hide the App Dock Icon: Uygulama Dock Simgesini Gizle
+? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
+: Uygulama yeniden başlatıldığında ana uygulama penceresini gizli tutun. Menü çubuğunu veya görev çubuğu menüsünü kullanarak veya genel kısayol tuşlarını kullanarak yeniden açabilirsiniz.
+No keys set: Anahtar ayarlanmadı
+PasteBar Quick Paste: PasteBar Çabuk Yapıştır
+Press keys: Tuşlara basın
+Quick Paste Window: Hızlı Yapıştır Penceresi
+? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
+: Uygulamayı arka planda çalıştırmaya devam ederken macOS Dock'tan PasteBar uygulama simgesini kaldırın. Uygulama menü çubuğu simgesi aracılığıyla erişilebilir olmaya devam eder. Etkili olması için uygulamanın yeniden başlatılması gerekir.
+Set: Set
+Set system OS hotkeys to show/hide the main app window and quick paste window: Ana uygulama penceresini ve hızlı yapıştırma penceresini gösterm/gizle için sistem işletim sistemi kısayol tuşlarını ayarlayın
+Show Navbar Items Hover: Navbar Öğelerini Göster
+Show collections menu on the navbar: Gezinme çubuğunda koleksiyonlar menüsünü göster.
+Show navbar elements on hover only: Navigasyon çubuğu öğelerini yalnızca üzerine gelindiğinde göster.
+Show/Hide Main App Window: Ana Uygulama Penceresini Göster/Gizle
+Show/Hide Quick Paste Window: Hızlı Yapıştır Penceresini Göster/Gizle

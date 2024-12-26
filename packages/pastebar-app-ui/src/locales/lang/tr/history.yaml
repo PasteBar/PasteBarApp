@@ -1,0 +1,40 @@
+All History Settings: Tüm Geçmiş Ayarları
+All done! History's been cleared.: Tamamdır! Geçmiş temizlendi.
+Auto Update on Capture: Otomatik güncelleme yakalandı
+Auto-Clear Settings: Otomatik Temizleme Ayarları
+Capture History: Yakalama Geçmişi
+Clear: Temizle
+Clear All: Hepsini temizle
+Clear All History: Tüm Geçmişi Temizle
+Clear History: Geçmişi Temizle
+Confirm Clear All History: Tüm Geçmişi Temizle'yi Onayla
+Do you really want to remove ALL clipboard history items?: Gerçekten TÜM pano geçmişi öğelerini kaldırmak istiyormusunuz?
+Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Şu tarihten önceki pano geçmişi öğelerini kaldırmak ister misiniz? {{olderThen}} {{durationType}}
+Enable Capture History: Yakalama Geçmişini Etkinleştir
+Filters:
+  App Filters: Uygulama Filtreleri
+  Audio: Ses
+  Clear Filters: Filtreleri Temizle
+  Code: Kod
+  Emoji: Emoji
+  Image: Resim
+  Language Filters: Dil Filtreleri
+  Languages: Diller
+  Languages Filter: Diller Filtresi
+  Languages Filters: Diller Filtreleri
+  Link: Bağlantı
+  Pinned: Sabitlendi
+  Secret: Gizli
+  Select Filters: Filtreleri Seçin
+  Source: Kaynak
+  Source Application: Kaynak Uygulaması
+  Source Filters: Kaynak Filtreleri
+  Starred: Favorilenmiş
+  Text: Metin
+  Video: Video
+Hide pinned history: Sabitlenmiş geçmişi gizle
+History Settings: Geçmiş Ayarları
+Paste Menu: Yapıştır Menüsü
+Select Filters: Filtreleri Seçin
+View pinned history: Sabitlenmiş geçmişi görüntüle
+'{{isAll}} Clipboard History': '{{isAll}} Pano Geçmişi'

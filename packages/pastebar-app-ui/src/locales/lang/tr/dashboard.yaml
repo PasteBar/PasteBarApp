@@ -1,0 +1,267 @@
+API Key: API Anahtar
+Add: Ekle
+Add Auth: Yetkilendirme Ekle
+Add Clipboard Value: Panoya Değer Ekle
+Add Custom: Özel Ekle
+Add Custom Field: Özel Alan Ekle
+Add Delay Time: Gecikme Süresi Ekle
+Add First Board: Ilk Panoyu Ekle
+Add Form Field: Form Alanı Ekle
+Add Header: Başlık Ekle
+Add Key Press: Tuşa Basma Ekle
+Add Key Press After Paste: Yapıştırdıktan Sonra Tuşa Basma Ekle
+Add Link Card: Bağlantı Kartı Ekle
+Add Open URL: Açık URL'yi ekle
+Add Output Template: Çıktı Şablonu Ekle
+Add Regex Match Group Filter: Regex Eşleşme Grubu Filtresi Ekle
+Add Request Header: İstek Başlığı Ekle
+Add Response Filter: Yanıt Filtresi Ekle
+Add Scraping Rule: Ayrıştırıcı Kuralı Ekle
+Add Section: Bölüm Ekle
+Add Tab: Sekme Ekle
+Add Template Field: Şablon Alanı Ekle
+Add a Tab: Bir Sekme Ekle
+Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Şablona <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> alan ekle
+Add field <b>{{<b>{{name}}</b>}}</b> into the template: Şablona <b>{{<b>{{name}}</b>}}</b> alan ekle
+Add image: Resim Ekle
+Add note: Not Ekle
+Add to Board: Panoya Ekle
+Add {{type}}: Ekle {{type}}
+All field labels must be unique to ensure they are correctly used within the template.: Şablonda doğru şekilde kullanılabilmesi için tüm alan etiketlerinin benzersiz olması gerekir.
+Are you sure you want to delete <strong>{{boardName}}</strong> board?: Bu panoyu silmek istediğinizden eminmisiniz? <strong>{{boardName}}</strong>
+Are you sure you want to delete <strong>{{tabName}}</strong> tab?:  Bu sekmeyi silmek istediğinizden eminmisiniz? <strong>{{tabName}}</strong>
+Are you sure you want to delete?: Silmek istediğinizden eminmisiniz?
+Are you sure you want to remove image from the clip?: Klipten resmi kaldırmak istediğinizden eminmisiniz?
+Auth: Yetkilendirme
+Auto update is Off: Otomatik güncelleme kapalı
+Basic Auth: Temel Kimlik Doğrulama
+Basic Password: Temel Şifre
+Basic Username: Temel Kullanıcı Adı
+Bearer Token: Taşıyıcı Jeton
+Board Layout Height: Pano Düzeni Yüksekliği    
+Board Layout Split: Pano Düzeni Bölünmesi
+Board Menu: Pano Menü
+Board is Not Empty: Pano Boş Değil
+Boards: Panolar
+Border Width: Sınır Genişliği
+CSS Selector: CSS Seçici
+Cancel: Iptal
+Change Layout: Düzeni Değiştir
+Change color: Renk değiştir
+Clear: Temizle
+Clear All Fields: Tüm Alanları Temizle
+Click To Add: Eklemek İçin Tıklayın
+Clip Menu: Klip Menüsü
+Clip Options: Klip Seçenekleri
+Clipboard: Pano
+Clips:
+  App: Uygulama
+  Clip Menu: Klip Menü
+  Clips: Klipler
+  Link: Bağlantı
+Close Edit: Düzenlemeyi kapat
+Command:
+  error: hata
+  output: çıktı
+Command error: Komut hatası
+Common Fields: Ortak Alanlar
+Confirm Clear All Fields: Tüm Alanları Temizle'yi Onayla
+Confirm to remove Auth: Yetkilendirmeyi kaldırmayı onaylayın
+Confirm to remove filters: Filtreleri kaldırmayı onaylayın
+Confirm to remove headers: Başlıkları kaldırmayı onaylayın
+Copy Clip: Kopyala Klip
+Create Board: Pano Oluştur
+Create Tab: Sekme Oluştur
+Create tab: Sekme oluştur
+Dashboard: Gösterge Paneli
+Delay: Gecikme
+Delete Board: Panoyu Sil
+Delete Clip: Klibi Sil
+Delete Tab: Sekmeyi Sil
+Delete board: Panoyu sil
+Delete field: Alanı sil
+Delete tab: Sekmeyi sil
+Detect Template Fields: Şablon Alanlarını Algıla
+Detect for Template Fields: Şablon Alanları için Algılama
+Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Etkisiz Alanlar <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> şablonda bulundu
+Done Create Clip: Klip Oluşturma Tamamlandı
+Done Edit: Düzenleme Tamamlandı
+Done Edit Tabs: Düzenleme Sekmeleri Tamamlandı
+Done Organize: Organize etme Tamamlandı
+Drag & Drop Path: Sürükle & Bırak Yolu
+Drop To Add: Eklemek İçin Bırak
+Drop image file here, or use a separate window for drag and drop.: Resim dosyasını buraya bırakın veya sürükleyip bırakmak için ayrı bir pencere kullanın.
+Drop to Pin: Sabitlemeye bırak
+Edit Note: Notu düzenle
+Edit Template: Edit Template
+Edit subtitle: Altyazıyı düzenle
+Edit tab name: Sekme adını düzenle
+Enable / Disable: Etkili / Etkisiz
+Enable / Disable URL Open: Etkili / URL açmayı etkisiz bırak
+Enter Label: Etiketi Girin
+Enter URL: URL'yi girin
+Enter board subtitle or description: Panonun alt başlığını veya açıklamasını girin
+Enter board title: Panonun başlığını girin
+Enter clip name: Klip adını girin
+Enter clip note: Klip notunu girin
+Enter code: Kodu girin
+Enter credit card number: Kredi kartı numarasını girin
+Enter default value: Varsayılan değeri girin
+Enter field value: Alan değerini girin
+Enter full path to file, folder or application: Dosya, klasör veya uygulamanın tam yolunu girin
+Enter regex for output filer: Çıktı dosyası için regex girin
+Enter request url: İstek URL'sini girin
+Enter secret value: Gizli değeri girin
+Enter section label: Bölüm etiketini girin
+Enter select option: Seçili seçeneği girin
+Enter tab name: Sekme adını girin
+Enter template or drag from history: Şablonu girin veya geçmişten sürükleyin
+Enter template value: Şablon değerini girin
+Enter value or drag from history: Değer girin veya geçmişten sürükleyin
+Enter web link or email: Web bağlantısını veya e-postayı girin
+Errors:
+  No fields found in the template.: Şablonda hiçbir alan bulunamadı.
+  Please fix output template or confirm to save as is.: Lütfen çıktı şablonunu düzeltin veya olduğu gibi kaydetmeyi onaylayın.
+  Please fix template fields or confirm to save as is.: Lütfen şablon alanlarını düzeltin veya olduğu gibi kaydetmeyi onaylayın.
+  Please fix the problem or confirm to save as is.: Lütfen sorunu düzeltin veya olduğu gibi kaydetmeyi onaylayın.
+  Please verify your link for any errors, or confirm to save as is.: Lütfen bağlantınızda herhangi bir hata olup olmadığını kontrol edin veya olduğu gibi kaydetmeyi onaylayın.
+  Please verify your path for any errors, or confirm to save as is.: Lütfen yolunuzu herhangi bir hataya karşı kontrol edin veya olduğu gibi kaydetmeyi onaylayın.
+  Your command runs with errors, confirm you want to save as is.: Komutunuz hatalarla çalışıyor, olduğu gibi kaydetmek istediğinizi onaylayın.
+  Your request runs with errors, confirm you want to save as is.: İsteğiniz hatalarla çalışıyor, olduğu gibi kaydetmek istediğinizi onaylayın.
+FILTERED_TYPES:
+  Dot Path: Nokta Yolu
+  JSON Path: JSON Yolu
+  RegEx: RegEx
+  RegEx Replace: RegEx Değiştir
+  Remove Quotes: Remove Alıntılar
+Field: Alan
+Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Alan <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> şablonda bulundu
+Field Options: Alan Seçenekleri
+Fields Value: Alan Değeri
+File, folder or app path does not exist: Dosya, klasör veya uygulama yolu mevcut değil
+File, folder or app path is valid: Dosya, klasör veya uygulama yolu geçerli
+File, folder or app path might not be valid: Dosya, klasör veya uygulama yolu geçerli olmayabilir
+Fill Template: Şablonu Doldur
+Filter Type: Filtre Türü
+Filter's Value: Filtrenin Değeri
+Find in Clip: Klipte Bul
+Find in clip: Klipte Bul
+Find in history: Geçmişte bul
+Form Fields: Form Alanları
+General Fields: Genel Alanlar
+Headers: Başlıklar
+Hide Label: Etiketi Gizle
+History capture is off: Geçmiş yakalama kapalı
+Key Press: Tuşa Basma
+Key Press After: Tuşa Bastıktan Sonra
+Key Press After Paste: Yapıştırdıktan Sonra Tuşa Basma
+'Key Press After Paste: {{keyPress}}': 'Yapıştırdıktan Sonra Tuşa Bas: {{keyPress}}'
+Label Left: Etiket Sol
+Label Top: Etiket Yukarı
+Label on Left: Soldaki Etiket
+Labels: Etiketler
+Last run: Son çalıştırma
+Last update: Son güncelleme
+Layout Max Width: Düzenle Maksimum Genişlik
+Mask to hide clipboard value in preview: Önizlemede pano değerini gizlemek için maskele
+Move Clip: Klibi Taşı
+Moved Clips Panel: Taşınan Klipler Paneli
+Name: Ad
+New Board: Yeni Pano
+New Clip: Yeni Klip
+No Boards: Panolar boş
+No Clipboard History: Panoda Geçmiş Yok
+No Tabs or Boards: Sekme veya Pano Yok
+Number of columns: Sütun sayısı
+Open: Aç
+Open URL Disable / Enable: URL açma etkisiz / Etkili
+Output Template: Çıktı Şablonu
+Panel for moved or copied items from other tabs: Diğer sekmelerden taşınan veya kopyalanan öğeler için panel
+Please confirm to save as is.: Lütfen olduğu gibi kaydetmeyi onaylayın.
+Press: Bas
+RETURN_POSITION_TYPES:
+  First Only: Sadece Ilk
+  Last Only: Sadece Son
+RULES_TYPES:
+  CSS Selector: CSS Seçici
+  RegEx Find: RegEx Bul
+  RegEx Group Match: RegEx Grub Eşleşmesi
+  RegEx Match: RegEx Eşleşmesi
+  RegEx Replace: RegEx Değiştir
+RegEx Find: RegEx Bul
+RegEx Match: RegEx Eşleşmesi
+RegEx Match Group: RegEx Grub Eşleşmesi
+RegEx Replace: RegEx Değiştir
+Regex Match Group Filter: Regex Grub Eşleşme Filtresi
+Remove Open URL: URL açmayi kaldır
+Remove headers: Başlıkları kaldır
+Remove image: Resimi kaldır
+Rename: Yeniden adlandır
+Reset to Defaults: Varsayılanlara Sıfırla
+Response Filters: Yanıt Filtreleri
+Result: Sonuç
+SEPARATOR_TYPES:
+  Comma (,): Virgül (,)
+  New Line (\n): Yeni satır (\n)
+  Pipe (|): Boru (|)
+  Semicolon (;): Noktalı virgül (;)
+  Space (' '): Boşluk (' ')
+  Tab (\t): Sekme (\t)
+Save as Defaults: Varsayılan Olarak Kaydet
+Scan for Template Fields: Şablon Alanlarını Tara
+Select Color: Renk Seçin
+Select Default Option: Varsayılan Seçeneği Seç
+Select Option: Seçenek Seçin
+Select Options: Seçenekleri Seçin
+Show Label: Etiketi Göster
+Special Field: Özel Alan
+Subtitle: Altyazı
+Tab: Sekme
+Tab is Not Empty: Sekme boş değil
+Tabs Menu: Sekmeler menüsü
+Template: Şablon
+Template Edit: Şablon Düzenleme
+Template Fields: Şablon Alanları
+Template should have⠀<b>{{output}}</b>⠀placeholder.: Şablonun şu şekilde olması gerekir:⠀<b>{{output}}</b>yertutucu.
+Test Request: Test Talebi
+Test Run: Test Çalışması
+Text: Metin
+This action cannot be undone.: Bu eylem geri alınamaz.
+This field allows to insert text from clipboard: Bu alan panodan metin eklemeye olanak tanır
+Too long: Çok uzun
+Too short: Çok kısa
+Turn On auto update: Otomatik güncellemeyi aç
+Turn on history capture: Geçmiş yakalamayı aç
+Type:
+  Command: Komut
+  Request: Istek
+  Scraper: Ayrıştırıcı
+URL: URL
+Unsaved name: Kaydedilmemiş isim
+Unsaved note: Kaydedilmemiş not
+Unsaved subtitle: Kaydedilmemiş altyazı
+Unsaved title: Kaydedilmemiş başlık
+Update Link Card: Bağlantı Kartını Güncelle
+Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.: Süslü parantezleri kullanın {{field name}}. Mevcut pano değerini eklemek için {{clipboard}} öğesini kullanın.
+Value: Değer
+Values: Değerler
+Vertical Split: Dikey Bölme
+We need to open a new window where you can drag & drop file, path or application.: Dosyayı, yolu veya uygulamayı sürükleyip bırakabileceğiniz yeni bir pencere açmamız gerekiyor.
+Web Link or Email might not be valid: Web Bağlantısı veya E-posta geçerli olmayabilir
+Web or Email link is valid: Web veya E-posta bağlantısı geçerli
+Website URL: Web sitesi URL'si
+Website URL is valid: Web sitesi URL'si geçerli
+Website URL might not be valid: Web sitesi URL'si geçerli olmayabilir
+Wrap output using {{output}} placeholder: Çıktıyı {{output}} yertutucusunu kullanarak sarın
+You have no rules added: Hiçbir kural eklemediniz
+You'll need to clear this board of all clips and subboards before it can be deleted.: Silinebilmesi için öncelikle bu panodaki tüm klipleri ve alt panoları temizlemeniz gerekiyor.
+You'll need to clear this tab of all boards before it can be deleted.: Silinebilmesi için öncelikle bu sekmedeki tüm panoları temizlemeniz gerekir.
+filled template: doldurulmuş şablon
+new clips: yeni klipler
+template: şablon
+'{{count}} fields found in template but missing from fields definition._one': '{{count}} şablonda bulunan ancak alan tanımında bulunmayan alanlar.'
+'{{count}} fields found in template but missing from fields definition._other': '{{count}} şablonda bulunan ancak alan tanımında bulunmayan alanlar.'
+'{{count}} fields not found in the template._one': '{{count}} şablonda alanlar bulunamadı.'
+'{{count}} fields not found in the template._other': '{{count}} şablonda alanlar bulunamadı.'
+'{{type}} Field': '{{type}} Alan'
+'{{type}} field': '{{type}} alan'

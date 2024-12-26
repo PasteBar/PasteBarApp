@@ -1,0 +1,353 @@
+' No': ' Non'
+' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': Cette autorisation permet à PasteBar d'accéder au presse-papiers et d'effectuer des opérations de copier-coller entre les applications.
+About PasteBar: À propos de PasteBar
+Action Menu: Menu d'action
+? Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Ajouter le champ <b>{{Clipboard}}</b> au modèle. Cela vous permet de copier du texte dans le presse-papiers, et il sera inséré dans le modèle
+Add Clip: Ajouter un clip
+Add First Option: Ajouter la première option
+Add Link Card: Ajouter une carte de lien
+Add Menu: Ajouter un menu
+Add Option: Ajouter une option
+Add PasteBar to Accessibility: Ajouter PasteBar à l'accessibilité
+Add To Player: Ajouter au lecteur
+Add to: Ajouter à
+Add to Clips: Ajouter aux clips
+Add to Clips or Menu: Ajouter aux clips ou au menu
+Add to Menu: Ajouter au menu
+Add to clip or menu: Ajouter au clip ou au menu
+Add to template fields: Ajouter aux champs du modèle
+Added: Ajouté
+Adding this file to the player is not recommended unless you trust the source.: L'ajout de ce fichier au lecteur n'est pas recommandé à moins que vous ne fassiez confiance à la source.
+Allow PasteBar to Copy and Paste from Clipboard: Autoriser PasteBar à copier et coller depuis le presse-papiers
+Are you sure you want to delete?: Êtes-vous sûr de vouloir supprimer ?
+Are you sure?: Êtes-vous sûr ?
+Attach History Window: Attacher la fenêtre d'historique
+Back: Retour
+Build on {{buildDate}}: Construit le {{buildDate}}
+Cancel: Annuler
+Cancel Reset: Annuler la réinitialisation
+Check: Vérifier
+Check / Done: Vérifier / Terminé
+Check and Close: Vérifier et fermer
+Check and Done: Vérifier et terminer
+Clear History: Effacer l'historique
+Clear Tracks: Effacer les pistes
+Clear found results and filters: Effacer les résultats trouvés et les filtres
+Click to Confirm: Cliquer pour confirmer
+Clip: Clip
+Clip Boards: Tableaux de clips
+Clipboard: Presse-papiers
+Clipboard History: Historique du presse-papiers
+Clipboard History Only: Historique du presse-papiers uniquement
+Clipboard History Settings: Paramètres de l'historique du presse-papiers
+Close: Fermer
+Close Edit: Fermer l'édition
+Close Expand Edit: Fermer l'édition étendue
+Close Find: Fermer la recherche
+Close History Window: Fermer la fenêtre d'historique
+Close modal and continue in browser: Fermer la fenêtre modale et continuer dans le navigateur
+Confirm: Confirmer
+Confirm  action: Confirmer l'action
+Confirm Delete: Confirmer la suppression
+Confirm Email: Confirmer l'e-mail
+Confirm Passcode: Confirmer le code d'accès
+Confirm Password: Confirmer le mot de passe
+Confirm Remove: Confirmer la suppression
+Confirm Your Passcode: Confirmer votre code d'accès
+Confirm passcode reset: Confirmer la réinitialisation du code d'accès
+Confirm password reset: Confirmer la réinitialisation du mot de passe
+Confirm password reset action: Confirmer l'action de réinitialisation du mot de passe
+Confirm your action: Confirmer votre action
+Confirm {{action}}: Confirmer {{action}}
+Contact Form: Formulaire de contact
+Copied: Copié
+Copy: Copier
+Copy & Paste: Copier & Coller
+Copy and Paste: Copier et coller
+'Copy of ': 'Copie de '
+Copy to Clipboard: Copier dans le presse-papiers
+Create: Créer
+Created: Créé
+Delay Next: Retarder le suivant
+Delete: Supprimer
+Deselect All: Tout désélectionner
+Deselect pinned: Désélectionner les épinglés
+Digits Only Passcode: Code d'accès à chiffres uniquement
+Disabled: Désactivé
+Done: Terminé
+Done Adding: Ajout terminé
+Done Edit: Édition terminée
+Done Reorder: Réorganisation terminée
+Download mp3: Télécharger mp3
+Drag: Faire glisser
+Drag to Move: Faire glisser pour déplacer
+Drop To Add: Déposer pour ajouter
+Drop Zone: Zone de dépôt
+Edit: Éditer
+Edit Label: Éditer l'étiquette
+'Email: {{email}}': 'E-mail : {{email}}'
+Emoji: Emoji
+Empty: Vide
+Empty Select: Sélection vide
+Enable / Disable: Activer / Désactiver
+Enable PasteBar in Accessibility Settings: Activer PasteBar dans les paramètres d'accessibilité
+Enabled: Activé
+Enter Current Passcode: Entrer le code d'accès actuel
+Enter Digits Only Passcode: Entrer un code d'accès à chiffres uniquement
+Enter Email: Entrer l'e-mail
+Enter Passcode: Entrer le code d'accès
+Enter Password: Entrer le mot de passe
+Enter Recovery Password: Entrer le mot de passe de récupération
+Enter passcode or password to unlock: Entrer le code d'accès ou le mot de passe pour déverrouiller
+Errors:
+  Error loading link: Erreur lors du chargement du lien
+  Cant save to file: Impossible d'enregistrer dans le fichier
+  Something went wrong! {{err}} Please try again.: Quelque chose s'est mal passé ! {{err}} Veuillez réessayer.
+Expand Edit: Étendre l'édition
+Expires on {{proExpiresOn}}: Expire le {{proExpiresOn}}
+? Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Le champ <b>{{Clipboard}}</b> a été trouvé dans le modèle. Cela vous permet de copier du texte dans le presse-papiers, et il sera inséré dans le modèle
+Field is not found in the template: Le champ n'est pas trouvé dans le modèle
+Find Clip: Trouver un clip
+Find History: Trouver dans l'historique
+Found in template but missing from fields definition: Trouvé dans le modèle mais manquant dans la définition des champs
+Got it: Compris
+Hide Muli Select: Masquer la sélection multiple
+Hide Pinned Board: Masquer le tableau épinglé
+History: Historique
+Image: Image
+Image Scale {{ImageScale}}x: Échelle de l'image {{ImageScale}}x
+Image size: Taille de l'image
+Image size in pixels: Taille de l'image en pixels
+In View: En vue
+In View Edit: Édition en vue
+Inactive: Inactif
+Large View: Vue large
+Large View Edit: Édition en vue large
+Later: Plus tard
+Light: Clair
+Lines Wrap: Retour à la ligne
+Make Active: Rendre actif
+Make Disabled: Rendre inactif
+Make Enabled: Rendre actif
+Make Inactive: Rendre inactif
+Manage: Gérer
+Maximum height: Hauteur maximale
+Maximum width: Largeur maximale
+Menu: Menu
+Move Down: Déplacer vers le bas
+Move Up: Déplacer vers le haut
+Multi Select: Sélection multiple
+'Name: {{name}}': 'Nom : {{name}}'
+Next Delay: Délai suivant
+Next Track: Piste suivante
+No: Non
+No Key Press: Aucune touche pressée
+No Wrap: Pas de retour à la ligne
+Not Now: Pas maintenant
+Not found in the template: Non trouvé dans le modèle
+Nothing found: Rien trouvé
+Number of lines: Nombre de lignes
+Ok, but later: D'accord, mais plus tard
+Open: Ouvrir
+Open Accessibility: Ouvrir l'accessibilité
+Open History Window: Ouvrir la fenêtre d'historique
+Open Window: Ouvrir la fenêtre
+Open contact form in browser: Ouvrir le formulaire de contact dans le navigateur
+Open payment in browser: Ouvrir le paiement dans le navigateur
+Options: Options
+Password: Mot de passe
+Paste Delay: Délai de collage
+Paste Menu: Menu de collage
+Paste in {{pastingCountDown}}...: Coller dans {{pastingCountDown}}...
+PasteBar: PasteBar
+PasteBar Application Error: Erreur d'application PasteBar
+PasteBar History: Historique PasteBar
+PasteBar application now can access the clipboard and perform copy and paste operations across applications.: L'application PasteBar peut maintenant accéder au presse-papiers et effectuer des opérations de copier-coller entre les applications.
+PasteBar was successfuly added to Accessibility settings: PasteBar a été ajouté avec succès aux paramètres d'accessibilité
+Pasted: Collé
+Path: Chemin
+Pause: Pause
+Pause Playing: Mettre en pause la lecture
+? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+: 'Vérification des autorisations échouée : PasteBar n`a pas été ajouté avec succès aux paramètres d`accessibilité. Veuillez accorder les autorisations requises et cliquer à nouveau sur Terminé.'
+Pin Selected: Épingle sélectionné
+Pinned: Épinglé
+Play: Lire
+Please add PasteBar to the list of apps in: Veuillez ajouter PasteBar à la liste des applications dans
+Please confirm your action!: Veuillez confirmer votre action !
+Press: Appuyer
+Press ESC key to close: Appuyez sur la touche ESC pour fermer
+Previous Track: Piste précédente
+Pro: Pro
+Quit: Quitter
+Rebuild Menu: Reconstruire le menu
+Recent History: Historique récent
+Recovery Password: Mot de passe de récupération
+Remove: Supprimer
+Remove Link Card: Supprimer la carte de lien
+Remove Selected Star: Supprimer l'étoile sélectionnée
+Remove all fields from template: Supprimer tous les champs du modèle
+Remove all tracks: Supprimer toutes les pistes
+Remove current track: Supprimer la piste actuelle
+Remove from Player: Supprimer du lecteur
+Remove from template: Supprimer du modèle
+Rename: Renommer
+Renew: Renouveler
+Reorder pinned: Réorganiser les épinglés
+Repeat 1: Répéter 1
+Repeat all: Répéter tout
+Repeat off: Répétition désactivée
+Report and Try Again: Signaler et réessayer
+Reset: Réinitialiser
+Reset Passcode: Réinitialiser le code d'accès
+Reset Password: Réinitialiser le mot de passe
+Reset with Passcode: Réinitialiser avec le code d'accès
+Restart: Redémarrer
+Reverse Order: Ordre inverse
+Run and Copy Response: Exécuter et copier la réponse
+Run and Paste Response: Exécuter et coller la réponse
+Running: En cours d'exécution
+Save: Enregistrer
+Save It!: Enregistrez-le !
+Saved: Enregistré
+Scroll to Top: Faire défiler vers le haut
+Second: Seconde
+Seconds: Secondes
+'Security Alert: MP3 Verification Failed': 'Alerte de sécurité : Échec de la vérification MP3'
+Select: Sélectionner
+Select Default Option: Sélectionner l'option par défaut
+Select Language: Sélectionner la langue
+Select default: Sélectionner par défaut
+Select is empty: La sélection est vide
+Select option: Sélectionner une option
+Select pinned: Sélectionner les épinglés
+Separate History Window: Fenêtre d'historique séparée
+Sequence Copy: Copie séquentielle
+Sequence Copy Paste: Copier-coller séquentiel
+Sequence Delay Next: Délai séquentiel suivant
+Sequence Next Delay: Délai suivant séquentiel
+Sequence Paste: Collage séquentiel
+Sequence Reverse Order: Ordre inverse séquentiel
+Set: Définir
+Set Password: Définir le mot de passe
+Show Large View: Afficher la vue large
+Show all: Afficher tout
+Source: Source
+Split History Window: Diviser la fenêtre d'historique
+Star: Étoile
+Star Selected: Étoile sélectionnée
+Stay here: Rester ici
+Stay in touch: Rester en contact
+Success!: Succès !
+Swap Panels Layout: Échanger la disposition des panneaux
+System Settings -> Privacy & Security -> Accessibility: Paramètres système -> Confidentialité et sécurité -> Accessibilité
+Thank you for reporting the error.: Merci d'avoir signalé l'erreur.
+Thank you for using Pro: Merci d'utiliser la version Pro
+Thank you!: Merci !
+This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.: Cette autorisation permet à PasteBar d'accéder au presse-papiers et d'effectuer des opérations de copier-coller entre les applications.
+Too long: Trop long
+Too short: Trop court
+Toolbar:
+  Blank Text Formatting: Formatage de texte vide
+  Bold Formatting: Formatage en gras
+  Bold Text Formatting: Formatage de texte en gras
+  Copy and Paste Formatting: Formatage copier-coller
+  Header Formatting: Formatage d'en-tête
+  Hightlight Text Formatting: Formatage de texte surligné
+  Italic Formatting: Formatage en italique
+  Masked Text Formatting: Formatage de texte masqué
+  Remove Text Formatting: Supprimer le formatage du texte
+Trust and Play: Faire confiance et lire
+Type:
+  App: Application
+  Auto Fill: Remplissage automatique
+  AutoFill: Remplissage automatique
+  Clip: Clip
+  Code: Code
+  Code Snippet: Extrait de code
+  Command: Commande
+  Email: E-mail
+  Emoji: Emoji
+  Empty: Vide
+  Error: Erreur
+  File: Fichier
+  File, Path or App: Fichier, Chemin ou Application
+  Form Auto Fill: Remplissage automatique de formulaire
+  Image: Image
+  Label: Étiquette
+  Link: Lien
+  Link or Email: Lien ou E-mail
+  Menu: Menu
+  Mp3: mp3
+  Path: Chemin
+  Plain Text: Texte brut
+  Request: Requête
+  Run Auto Fill: Exécuter le remplissage automatique
+  Scraper: Extracteur
+  Secret: Secret
+  Shell Command: Commande Shell
+  Submenu: Sous-menu
+  Template: Modèle
+  Template Fill: Remplissage de modèle
+  Text: Texte
+  Video: Vidéo
+  Web Request (HTTP): Requête Web (HTTP)
+  Web Scraper / Parser: Extracteur / Analyseur Web
+TypeMenu:
+  Clip Type: Type de clip
+  Code Snippet: Extrait de code
+  File, Path or App: Fichier, Chemin ou Application
+  Form Auto Fill: Remplissage automatique de formulaire
+  Image: Image
+  Link or Email: Lien ou E-mail
+  Link or File, Path or App: Lien ou Fichier, Chemin ou Application
+  Plain Text: Texte brut
+  Run, Execute: Exécuter
+  Select Language: Sélectionner la langue
+  Shell Command: Commande Shell
+  Template: Modèle
+  Template Fill: Remplissage de modèle
+  Text Template: Modèle de texte
+  Web Request (HTTP): Requête Web (HTTP)
+  Web Scraper / Parser: Extracteur / Analyseur Web
+UnPin All: Tout désépingler
+UnPin Selected: Désépingler sélectionné
+Unlock Application Screen: Déverrouiller l'écran de l'application
+Unlock Pro features: Déverrouiller les fonctionnalités Pro
+Unlock Screen: Déverrouiller l'écran
+Unlock all features: Déverrouiller toutes les fonctionnalités
+Unsaved label: Étiquette non sauvegardée
+Update Error: Erreur de mise à jour
+Update history list: Mettre à jour la liste de l'historique
+Updated: Mis à jour
+Upgrade to Pro: Passer à la version Pro
+Use Passcode: Utiliser le code d'accès
+Use Password: Utiliser le mot de passe
+Using <b>{{Clipboard}}</b> field, allows you to copy text to the clipboard, and it will be inserted into the template: L'utilisation du champ <b>{{Clipboard}}</b> vous permet de copier du texte dans le presse-papiers, qui sera ensuite inséré dans le modèle
+Verify: Vérifier
+Verify Current Password: Vérifier le mot de passe actuel
+Verify Recovery Password: Vérifier le mot de passe de récupération
+Version: Version
+View: Vue
+View Edit: Édition de la vue
+Views:
+  Paste Menu: Menu Coller
+We apologize but you found a bug. Please report this issue to us and try again: Nous nous excusons, mais vous avez trouvé un bogue. Veuillez nous signaler ce problème et réessayer
+? We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
+: Nous n'avons pas pu confirmer la sécurité de ce fichier. Échec de la vérification des balises ID3 et du contrôle d'intégrité. Les fichiers MP3 peuvent potentiellement contenir des logiciels malveillants. Soyez prudent.
+Yes: Oui
+Yes, activate: Oui, activer
+chars: caractères
+contact us.: contactez-nous.
+found: trouvé
+if this error persists, try to restart the application or: si cette erreur persiste, essayez de redémarrer l'application ou
+lines: lignes
+menu items in: éléments de menu dans
+minutes: minutes
+only: seulement
+second: seconde
+seconds: secondes
+show less: afficher moins
+www.site: www.pastebar.app

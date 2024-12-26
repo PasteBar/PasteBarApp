@@ -1,0 +1,179 @@
+<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.: <strong>{{screenLockPassCodeLength}}</strong> chiffres du code d'accès définis
+Activation Success: Activation réussie
+? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
+: Ajouter une étoile au texte copié deux fois en 1 seconde. Cela permet d'ajouter rapidement du texte ou des liens aux favoris et de les retrouver facilement dans l'historique du presse-papiers.
+Add an unlimited number of tabs within each collection for better organization and easy access.: Ajoutez un nombre illimité d'onglets dans chaque collection pour une meilleure organisation et un accès facile.
+'Add an unlimited number of tabs within each collection for better organization and easy access.                                ': 'Ajoutez un nombre illimité d''onglets dans chaque collection pour une meilleure organisation et un accès facile.                                '
+Advanced settings: Paramètres avancés
+Already Active: Déjà actif
+Application Auto Start: Démarrage auto
+Application Color Theme: Thème couleur app
+Application UI Color Theme: Thème couleur de l'interface
+Application UI Fonts Scale: Échelle police de l'interface
+Application UI Language: Langue de l'interface
+Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Les applications ci-dessous n'auront pas leur action de copie capturée dans l'historique. Insensible à la casse.
+Auto Disable History Capture when Screen Unlocked: Désactivation automatique de la capture de l'historique lorsque l'écran est déverrouillé
+Auto Lock Application Screen on User Inactivity: Verrouillage automatique de l'écran de l'application en cas d'inactivité de l'utilisateur
+Auto Lock Screen on User Inactivity: Verrouillage automatique  de l'écran sur inactivité
+Auto Lock the Screen on User Inactivity: Verrouillage automatique de l'écran en cas d'inactivité de l'utilisateur
+Auto Masking Words List: Masquage automatique de liste de mots
+Auto update on capture: Mise à jour automatique lors de la capture
+Auto-Clear Settings: Paramètres d'auto-nettoyage
+Auto-Generate Link Card Preview: Génération automatique d'un aperçu de la carte de lien
+Auto-Preview Link on Hover: Lien de prévisualisation automatique au survol
+Auto-Star on Double Copy: Étoile automatique en cas double copie
+Auto-Update on Capture: Mise à jour automatique à la capture
+Auto-delete clipboard history after: Suppression automatique de l'historique du presse-papiers après
+? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
+: Création automatique d'un aperçu de la carte du lien dans l'historique du presse-papiers. Cela permet de visualiser rapidement les détails du site web sans ouvrir ou coller le lien.
+Back: Retour
+Capture History: Capturer historique
+Change the application UI font size scale: Modifier l'échelle de taille de la police de l'interface utilisateur de l'application
+Change the application UI language: Changer la langue de l'interface de l'application
+Change the application user interface color theme: Changer la couleur du thème de l'interface utilisateur
+Change the application user interface font size scale: Changer l'échelle de taille de police de l'interface utilisateur
+Change the application user interface language: Changer la langue de l'interface utilisateur
+Clip Notes Popup Maximum Dimensions: Dimensions popup notes clip maximales
+Clipboard History Settings: Paramètres de l'historique du presse-papier
+'Complete details:': 'Détails complets :'
+Configure settings to automatically delete clipboard history items after a specified duration.: Configurez les paramètres pour supprimer automatiquement les éléments de l'historique du presse-papiers après une durée spécifiée.
+Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Créer une carte de prévisualisation au survol d'un lien dans l'historique du presse-papiers. Cela vous permet de prévisualiser le lien avant de l'ouvrir ou de le coller. de l'ouvrir ou de le coller.
+Create an unlimited number of collections to organize your clips and menus.: Créez un nombre illimité de collections pour organiser vos clips et menus.
+Custom: Personnalisé
+Custom themes: Thèmes perso
+Decrease UI Font Size: Réduire taille police de l'interface
+? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
+: Afficher le bouton de capture d'historique sur l'écran verrouillé. Permet de contrôler les paramètres de capture directement depuis l'écran de verrouillage.
+Display disabled collections name on the navigation bar collections menu: Afficher le nom des collections désactivées dans le menu des collections de la barre de navigation
+Display disabled collections name on the navigation bar under collections menu: Afficher le nom des collections désactivées dans la barre de navigation sous le menu des collections
+Display full name of selected collection on the navigation bar: 
+Drag and drop to prioritize languages for detection. The higher a language is in the list, the higher its detection priority.: Glissez-déposez pour classer les langues par ordre de priorité. Plus une langue est haut placée dans la liste, plus sa priorité de détection est élevée.
+Email: Email
+Email is not valid: Email non valide
+'Email:': 'Email :'
+Emails do not match: Emails ne correspondent pas
+Enable Auto Start: Activer démarrage automatique
+Enable Clip Title Hover Show with Delay: Activer l'affichage du titre du clip au survol avec un délai
+Enable application auto start on system boot: Activer démarrage auto de l'app au démarrage système
+Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: Activez le verrouillage automatique de l'écran de l'application après une certaine période d'inactivité, afin d'empêcher tout accès non autorisé à vos données.
+Enable auto lock the application screen when user not active: Activer le verrouillage automatique de l'écran de l'application lorsque l'utilisateur n'est pas actif
+Enable auto update on capture: Activer la mise à jour automatique lors de la capture
+Enable history capture: Activer la capture de l'historique
+Enable programming language detection: Activer la détection du langage de programmation
+Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: Activez le déverrouillage de l'écran au lancement de l'application pour une sécurité accrue, protégeant ainsi les données d'un accès non autorisé.
+Enhance security by automatically locking the application screen after a set period of user inactivity.: Renforcez la sécurité en verrouillant automatiquement l'écran de l'application après une période déterminée d'inactivité de l'utilisateur.
+Enter Passcode length: Saisir la longueur du code d'accès
+Enter recovery password to reset passcode.: Saisir le mot de passe de récupération pour réinitialiser le code d'accès.
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Entrez votre code à <strong>{{screenLockPassCodeLength}} chiffres</strong>
+Entered Passcode is invalid: Code saisi non valide
+Excluded Apps List: Liste applicationss exclues
+Execute Web Requests: Exécuter requêtes web
+Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: Exécuter des commandes par le terminal ou shell directement depuis clip PasteBar et copier les résultats dans le presse-papiers.
+'Expires:': 'Expire le :'
+Forgot Passcode ? Enter your recovery password to reset the passcode.: Oublié code ? Entrez votre mot de passe récupération pour réinitialiser.
+Forgot passcode ?: Oublié code ?
+Forgot?: Oublié ?
+Forgot? Reset using Password: Oublié ? Réinitialiser avec mot de passe
+Get priority email support from us to resolve any issues or questions you may have about PasteBar.: Bénéficiez d'une assistance prioritaire par e-mail pour résoudre tous les problèmes ou questions que vous pourriez avoir à propos de PasteBar.
+'Hint: {{screenLockRecoveryPasswordMasked}}': 'Indice : {{screenLockRecoveryPasswordMasked}}'
+Incorrect passcode.: Code incorrect.
+Increase UI Font Size: Augmenter la taille de la police de l'interface
+Issued: Émis
+Large: Grand
+List each application name or window identifier on a new line.: Listez chaque nom d'application ou identifiant de fenêtre sur une nouvelle ligne.
+List each word or sentence on a new line.: Listez chaque mot ou phrase sur une nouvelle ligne.
+Lock Screen Clipboard History Capture Control: Contrôle de la capture de l'historique du presse-papier écran verrouillé
+Lock Screen PassCode: Code écran verrouillé
+Lock Screen Passcode: Code écran verrouillé
+Manage Collections: Gérer les collections
+Maximum 10 digits: Maximum 10 chiffres
+Maximum devices: Nombre maximal d'appareils
+Medium: Moyen
+Minimal 4 digits: Minimum 4 chiffres
+Minimize Window: Réduire la fenêtre
+Minimum number of lines to trigger detection: Nombre minimum de lignes pour déclencher la détection
+Name: Nom
+Open Security Settings: Ouvrir les paramètres sécurité
+Passcode digits remaining: Chiffres du code d'accès restants  
+Passcode is locked.: Le code d'accès est verrouillé.
+Passcode is not set: Code d'accès non défini
+Passcode is not valid: Code d'accès non valide
+Passcode length: Longueur du code d'accès
+Passcode mismatch: Codes d'accès ne correspondent pas
+Passcode reset is locked.:  La réinitialisation du code d'accès est verrouillée. 
+Passcode successfully verified: Code d'accès vérifié avec succès
+Passcode verification error: Erreur de vérification du code d'accès
+Passcode verification is locked.: Vérification du code d'accès est verrouillée.
+Password is incorrect.: Mot de passe incorrect.
+Password is incorrect. <br/>{{screenLockRecoveryPasswordMasked}}: Mot de passe incorrect. <br/>{{screenLockRecoveryPasswordMasked}}
+'Password is incorrect. Hint: {{screenLockRecoveryPasswordMasked}}': 'Mot de passe incorrect. Indice : {{screenLockRecoveryPasswordMasked}}'
+'Password is incorrect. Masked password is: {{screenLockRecoveryPasswordMasked}}': 'Mot de passe incorrect. Mot de passe masqué est : {{screenLockRecoveryPasswordMasked}}'
+Password is incorrect. {{screenLockRecoveryPasswordMasked}}: Mot de passe incorrect. {{screenLockRecoveryPasswordMasked}}
+Passwords do not match: Les mots de passe ne correspondent pas
+PasteBar Settings: Paramètres PasteBar
+Pin Window: Épingler la fenêtre
+Pin on Top Window: Épingler en haut
+Please set up a Passcode and recovery password in Security Settings to enable Screen Lock and ensure better security.: Veuillez configurer un code d'accès et un mot de passe de récupération dans les paramètres de sécurité pour activer le verrouillage de l'écran et garantir une meilleure sécurité.
+Please try again: Veuillez réessayer
+Preview current popup size on hover.: Aperçu taille popup actuelle au survol.
+Prioritize Language Detection: Priorité à la détection des langues
+Priority support: Support prioritaire
+Programming Language Detection: Détection du langage de programmation
+Programming Language Selection: Sélection du langage de programmation
+Protect your data by requiring screen unlock authentication whenever the application starts.: Protégez vos données en exigeant l'authentification au démarrage de l'application.
+Recovery Password for Lock Screen Passcode: Mot de passe de récupération pour le code de l'écran de verrouillage
+Recovery password is set.: Mot de passe de récupération défini.
+Refresh Application UI: Actualiser l'interface de l'application
+Refresh UI: Actualiser l'interface
+Require Screen Unlock at Application Start: Déverrouillage écran requis au démarrage de l'application
+? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
+: Exiger le déverrouillage de l'écran au lancement de l'application pour renforcer la sécurité. Ce paramètre garantit que seuls les utilisateurs autorisés peuvent accéder à l'application, protégeant ainsi vos données contre tout accès non autorisé dès le départ.
+Reset Font Size: Réinitialiser la taille des caractères
+Run Terminal or Shell Commands: Exécuter des commandes avec le terminal ou shell
+Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Extraire et analyser sites web ou réponses API avec les outils intégrés et copier les données extraites dans le presse-papiers.
+? 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
+: 'Extraire et analyser les sites web ou les réponses API avec les outils intégrés et copier les données extraites dans le presse-papiers.                                '
+Security: Sécurité
+Security Settings: Paramètres de sécurité
+Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Envoyer les requêtes HTTP aux APIs/services web et copier les données de réponse dans le presse-papiers.
+Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Les mots ou phrases sensibles énumérés ci-dessous seront automatiquement masqués s'ils se trouvent dans le texte copié. Insensible à la casse.
+Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Définir un code d'accès pour déverrouiller l'écran et protéger vos données des accès non autorisés.
+? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
+:  Définissez un mot de passe de récupération pour réinitialiser facilement le code de votre écran de verrouillage en cas d'oubli. Votre mot de passe sera stocké en toute sécurité dans la mémoire du système d'exploitation de votre appareil.
+Settings: Paramètres
+Show Clipboard History Capture Control on Lock Screen: Afficher le contrôle de la capture de l'historique du presse-papier sur l'écran de verrouillage
+Show Disable History Capture When Screen Locked: Afficher Désactivation de la capture de l'historique lorsque l'écran est verrouillé
+Show Disabled Collections: Afficher les collections désactivées
+? Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
+:  Afficher le bouton de capture de l'historique du presse-papiers lorsque l'écran de l'application est verrouillé. Cela vous permet de contrôler les paramètres de l'historique de capture à partir de l'écran verrouillé de l'application.
+Show collection name on the navbar: Afficher le nom de la collection dans la barre de navigation
+Show disabled collections on the navbar list: Afficher les collections désactivées dans la liste de la barre de navigation
+Skip auto start prompt on app launch: Ignorer l'invite de démarrage automatique au lancement
+Small: Petit
+Stop Words List: Liste de mots à ignorer
+Swap Panels Layout: Inverser la disposition des panneaux
+Switch the layout position of panels in Clipboard History and Paste Menu views: Modifier la position des panneaux dans les vues de l'historique du presse-papiers et Menu coller
+Thank you again for using PasteBar.: Merci encore d'utiliser PasteBar.
+Thank you for testing! 🙌: Merci pour le test ! 🙌
+? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
+: Cette option vous permet de contrôler l'affichage et la durée des notes au survol des clips. Vous pouvez choisir d'afficher les notes instantanément ou avec un délai pour éviter les popups involontaires.
+? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
+: Cette option vous permet de personnaliser la largeur et la hauteur maximales de la fenêtre contextuelle qui affiche les notes de clip, afin qu'elle s'adapte confortablement à la taille souhaitée.
+To downgrade your current version, please visit: Pour rétrograder votre version actuelle, visitez
+'To downgrade, please visit: ': 'Pour rétrograder, visitez : '
+To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: Pour une détection optimale, sélectionnez jusqu'à 7 langues. Limiter les choix améliore la précision.
+Today: Aujourd'hui
+Tomorrow: Demain
+Try after <strong>{{resetPassCodeNextDelay}}</strong> seconds: Réessayez dans <strong>{{resetPassCodeNextDelay}}</strong> secondes
+Try again after <strong>{{resetPassCodeNextDelay}}</strong> seconds: Réessayez encore dans <strong>{{resetPassCodeNextDelay}}</strong> secondes
+UI Language: Langue de l'interface
+UnPin Window: Détacher la fenêtre
+Unlimited Collections: Collections illimitées
+Unlimited Tabs per Collection: Onglets illimités par collection
+Unlimited paste history: Historique de collage illimité
+Use Password: Utiliser mot de passe
+User Preferences: Préférences utilisateur
+Web Scraping and Parsing: Extraction et analyse web
+Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Les mots ou phrases énumérés ci-dessous ne seront pas capturés dans l'historique du presse-papiers s'ils se trouvent dans le texte copié. Insensible à la casse
+passcode reset: réinitialisation code d'accès
+password reset: réinitialisation mot de passe

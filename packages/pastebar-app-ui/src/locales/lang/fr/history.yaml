@@ -1,0 +1,40 @@
+All History Settings: Tous les paramètres d'historique
+All done! History's been cleared.: Terminé ! L'historique a été effacé.
+Auto Update on Capture: Mise à jour automatique lors de la capture
+Auto-Clear Settings: Paramètres d'effacement automatique
+Capture History: Capturer l'historique
+Clear: Effacer
+Clear All: Tout effacer
+Clear All History: Effacer tout l'historique
+Clear History: Effacer l'historique
+Confirm Clear All History: Confirmer l'effacement de tout l'historique
+Do you really want to remove ALL clipboard history items?: Voulez-vous vraiment supprimer TOUS les éléments de l'historique du presse-papier ?
+Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Voulez-vous supprimer les éléments de l'historique du presse-papier antérieurs à {{olderThen}} {{durationType}}
+Enable Capture History: Activer la capture de l'historique
+Filters:
+  App Filters: Filtres d'applications
+  Audio: Audio
+  Clear Filters: Effacer les filtres
+  Code: Code
+  Emoji: Emoji
+  Image: Image
+  Language Filters: Filtres de langue
+  Languages: Langues
+  Languages Filter: Filtre de langues
+  Languages Filters: Filtres de langues
+  Link: Lien
+  Pinned: Épinglé
+  Secret: Secret
+  Select Filters: Sélectionner les filtres
+  Source: Source
+  Source Application: Application source
+  Source Filters: Filtres de source
+  Starred: Favoris
+  Text: Texte
+  Video: Vidéo
+Hide pinned history: Masquer l'historique épinglé
+History Settings: Paramètres de l'historique
+Paste Menu: Menu Coller
+Select Filters: Sélectionner les filtres
+View pinned history: Voir l'historique épinglé
+'{{isAll}} Clipboard History': 'Historique du presse-papier {{isAll}}'

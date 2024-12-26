@@ -16,6 +16,7 @@ export const LANGUAGES: {
   { code: 'de', name: 'Deutsch', flag: '🇩🇪', website: 'www.pastebar.app' },
   { code: 'fr', name: 'Français', flag: '🇫🇷', website: 'www.pastebar.app' },
   { code: 'it', name: 'Italiano', flag: '🇮🇹', website: 'www.pastebar.app' },
+  { code: 'tr', name: 'Türkçe', flag: '🇹🇷', website: 'www.pastebar.app' },
   {
     code: 'ru',
     name: 'Русский',

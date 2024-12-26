@@ -1,0 +1,179 @@
+<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.: <strong>{{screenLockPassCodeLength}}</strong> rakamlı şifre ayarlandı.
+Activation Success: Aktivasyon Başarılı
+? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
+: Kopyalanan metni 1 saniye içinde iki kez kopyaladığınızda, kopyalanan metne bir yıldız ekleyin. Bu, kopyalanan metni veya bağlantıları favorilerinize hızlı bir şekilde eklemenizi ve pano geçmişinde kolayca bulmanızı sağlar.
+Add an unlimited number of tabs within each collection for better organization and easy access.: Daha iyi organizasyon ve kolay erişim için her koleksiyona sınırsız sayıda sekme ekleyin.
+'Add an unlimited number of tabs within each collection for better organization and easy access.                                ': 'Daha iyi organizasyon ve kolay erişim için her koleksiyona sınırsız sayıda sekme ekleyin.                                '
+Advanced settings: Gelişmiş ayarlar
+Already Active: Zaten Aktif
+Application Auto Start: Uygulama Otomatik Başlatma
+Application Color Theme: Uygulama Renk Teması
+Application UI Color Theme: Uygulama arayüz Renk Teması
+Application UI Fonts Scale: Uygulama Arayüzü Yazı Tipleri Ölçeği
+Application UI Language: Uygulama Kullanıcı Arayüzü Dili
+Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Aşağıda listelenen uygulamaların panoya kopyalama eylemi pano geçmişinde yakalanmayacaktır. Harflere etkisizdir.
+Auto Disable History Capture when Screen Unlocked: Ekran Kilidi Açıldığında Geçmiş Yakalamayı Otomatik Olarak Devre Dışı Bırak
+Auto Lock Application Screen on User Inactivity: Kullanıcı Etkin Olmadığında Uygulama Ekranını Otomatik Olarak Kilitle
+Auto Lock Screen on User Inactivity: Kullanıcı Etkin Olmadığında Ekranı Otomatik Kilitle
+Auto Lock the Screen on User Inactivity: Kullanıcı Etkin Olmadığında Ekranı Otomatik Olarak Kilitle
+Auto Masking Words List: Otomatik Maskeleme Sözcükleri Listesi
+Auto update on capture: Yakalama sırasında otomatik güncelleme
+Auto-Clear Settings: Otomatik Temizleme Ayarları
+Auto-Generate Link Card Preview: Otomatik Bağlantı Kartı Önizlemesi Oluştur
+Auto-Preview Link on Hover: Üzerine gelindiğinde Bağlantıyı Otomatik Önizleme
+Auto-Star on Double Copy: Çift Kopyalamada Otomatik Favorile
+Auto-Update on Capture: Yakalamada Otomatik Güncelleme
+Auto-delete clipboard history after: Panonun geçmişini otomatik olarak sil
+? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
+: Bağlantı kartı önizlemesini pano geçmişinde otomatik olarak oluşturun. Bu, bağlantıyı açmadan veya yapıştırmadan web sitesi ayrıntılarını hızlı bir şekilde görüntülemenizi sağlar.
+Back: Geri
+Capture History: Yakalama Geçmişi
+Change the application UI font size scale: Uygulama arayüzü yazı tipi boyutunu değiştirme
+Change the application UI language: Uygulama arayüzü dilini değiştirin
+Change the application user interface color theme: Uygulama arayüzü renk temasını değiştirin
+Change the application user interface font size scale: Uygulama arayüzü yazı tipi boyutunu değiştirme
+Change the application user interface language: Uygulama arayüzü dilini değiştirin
+Clip Notes Popup Maximum Dimensions: Klip Notları Açılır Penceresi Maksimum Boyutla
+Clipboard History Settings: Pano Geçmiş Ayarları
+'Complete details:': 'Tüm detaylar:'
+Configure settings to automatically delete clipboard history items after a specified duration.: Belirli bir sürenin sonunda panoya kaydedilen geçmiş öğelerinin otomatik olarak silinmesi için ayarları yapılandırın.
+Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Panonun geçmişinde bağlantı üzerine gelindiğinde önizleme kartı oluşturun. Bu, bağlantıyı açmadan veya yapıştırmadan önce önizlemenizi sağlar.
+Create an unlimited number of collections to organize your clips and menus.: Kliplerinizi ve menülerinizi düzenlemek için sınırsız sayıda koleksiyon oluşturun.
+Custom: Özel
+Custom themes: Özel temalar
+Decrease UI Font Size: Arayüz Yazı Tipi Boyutunu Azalt
+? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
+: Kilitli uygulama ekranında panoya geçmiş yakalama geçişini görüntüleyin. Bu, geçmiş yakalama ayarlarını doğrudan kilit ekranından kontrol etmenizi sağlar.
+Display disabled collections name on the navigation bar collections menu: Gezinme çubuğu koleksiyonlar menüsünde devre dışı bırakılan koleksiyonların adını göster
+Display disabled collections name on the navigation bar under collections menu: Koleksiyonlar menüsü altındaki gezinme çubuğunda devre dışı bırakılan koleksiyonların adını göster
+Display full name of selected collection on the navigation bar: Gezinme çubuğunda seçili koleksiyonun tam adını görüntüle
+Drag and drop to prioritize languages for detection. The higher a language is in the list, the higher its detection priority.: Algılama için dilleri önceliklendirmek üzere sürükleyip bırakın. Bir dil listede ne kadar yukarıdaysa, algılama önceliği o kadar yüksektir.
+Email: E-posta
+Email is not valid: E-posta geçerli değil
+'Email:': 'E-posta:'
+Emails do not match: E-postalar eşleşmiyor
+Enable Auto Start: Otomatik Başlatmayı Etkinleştir
+Enable Clip Title Hover Show with Delay: Gecikmeli Klip Başlığı üzerine geldiğinde göster
+Enable application auto start on system boot: Sistem açıldığında uygulamanın otomatik başlatılmasını etkinleştir
+Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: Verilerinize yetkisiz erişimi önlemek için, belirli bir süre hareketsizlikten sonra uygulama ekranının otomatik olarak kilitlenmesini etkinleştirin.
+Enable auto lock the application screen when user not active: Kullanıcı aktif olmadığında uygulama ekranının otomatik olarak kilitlenmesini etkinleştirin
+Enable auto update on capture: Yakalama sırasında otomatik güncellemeyi etkinleştir
+Enable history capture: Geçmiş yakalamayı etkinleştir
+Enable programming language detection: Programlama dili algılamayı etkinleştir
+Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: Gelişmiş güvenlik için uygulama başlatıldığında ekran kilidi açma gereksinimini etkinleştirin ve verileri yetkisiz erişime karşı koruyun.
+Enhance security by automatically locking the application screen after a set period of user inactivity.: Kullanıcının belirli bir süre hareketsiz kalması durumunda uygulama ekranını otomatik olarak kilitleyerek güvenliği artırın.
+Enter Passcode length: Şifre uzunluğunu girin
+Enter recovery password to reset passcode.: Şifreyi sıfırlamak için kurtarma parolasını girin.
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: <strong>{{screenLockPassCodeLength}} haneli</strong> şifrenizi girin
+Entered Passcode is invalid: Girilen Parola geçersiz
+Excluded Apps List: Hariç Tutulan Uygulamalar Listesi
+Execute Web Requests: Web Isteklerini Yürüt
+Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: Terminal veya kabuk komutlarını doğrudan PasteBar klipinden yürütün ve sonuçları panoya kopyalayın.
+'Expires:': 'Sona erme:'
+Forgot Passcode ? Enter your recovery password to reset the passcode.: Şifrenizimi Unuttunuz? Şifrenizi sıfırlamak için kurtarma parolanızı girin.
+Forgot passcode ?: Şifremi unuttum ?
+Forgot?: Unuttum?
+Forgot? Reset using Password: Unuttunuz mu? Şifreyi kullanarak sıfırlayın
+Get priority email support from us to resolve any issues or questions you may have about PasteBar.: PasteBar ile ilgili herhangi bir sorun veya sorunuzun çözümü için bizden öncelikli e-posta desteği alın.
+'Hint: {{screenLockRecoveryPasswordMasked}}': 'Ipucu: {{screenLockRecoveryPasswordMasked}}'
+Incorrect passcode.: Hatalı şifre.
+Increase UI Font Size: Arayüz Yazı Tipi Boyutunu Artır
+Issued: Verilen
+Large: Büyük
+List each application name or window identifier on a new line.: Her uygulama adını veya pencere tanımlayıcısını yeni bir satırda listeleyin.
+List each word or sentence on a new line.: Her kelimeyi veya cümleyi yeni bir satıra yazın.
+Lock Screen Clipboard History Capture Control: Kilit Ekranı Panosu Geçmiş Yakalama Kontrolü
+Lock Screen PassCode: Ekran kılıdı parolası
+Lock Screen Passcode: Ekran kılıdı parolası
+Manage Collections: Koleksiyonları yönet
+Maximum 10 digits: En fazla 10 haneli
+Maximum devices: Maksimum cihazlar
+Medium: Orta
+Minimal 4 digits: En az 4 haneli
+Minimize Window: Pencereyi küçült
+Minimum number of lines to trigger detection: Tespiti tetiklemek için gereken minimum satır sayısı
+Name: Ad
+Open Security Settings: Güvenlik Ayarlarını Aç
+Passcode digits remaining: Kalan şifre rakamları
+Passcode is locked.: Şifre kilitli.
+Passcode is not set: Şifre ayarlanmadı
+Passcode is not valid: Şifre geçerli değil
+Passcode length: Şifre uzunluğu
+Passcode mismatch: Şifre uyuşmuyor
+Passcode reset is locked.: Şifre sıfırlama kilitli.
+Passcode successfully verified: Şifre başarıyla doğrulandı
+Passcode verification error: Parola doğrulama hatası
+Passcode verification is locked.: Şifre doğrulaması kilitli.
+Password is incorrect.: Şifre hatalı.
+Password is incorrect. <br/>{{screenLockRecoveryPasswordMasked}}: Şifre hatalı. <br/>{{screenLockRecoveryPasswordMasked}}
+'Password is incorrect. Hint: {{screenLockRecoveryPasswordMasked}}': 'Şifre hatalı. Ipucu: {{screenLockRecoveryPasswordMasked}}'
+'Password is incorrect. Masked password is: {{screenLockRecoveryPasswordMasked}}': 'Şifre hatalı. Maskeli şifre: {{screenLockRecoveryPasswordMasked}}'
+Password is incorrect. {{screenLockRecoveryPasswordMasked}}: Şifre hatalı. {{screenLockRecoveryPasswordMasked}}
+Passwords do not match: Şifreler eşleşmiyor
+PasteBar Settings: PasteBar Ayarları
+Pin Window: Pencereyi Sabitle
+Pin on Top Window: Üst Pencereye Sabitleyin
+Please set up a Passcode and recovery password in Security Settings to enable Screen Lock and ensure better security.: Ekran Kilidini etkinleştirmek ve daha iyi güvenlik sağlamak için lütfen Güvenlik Ayarları'nda bir Parola ve kurtarma parolası ayarlayın.
+Please try again: Lütfen tekrar deneyin
+Preview current popup size on hover.: Üzerine gelindiğinde mevcud açılır pencerenin boyutunu önizleyin.
+Prioritize Language Detection: Dil Algılamayı Önceliklendir
+Priority support: Öncelikli destek
+Programming Language Detection: Programlama Dili Algılama
+Programming Language Selection: Programlama Dili Seçimi
+Protect your data by requiring screen unlock authentication whenever the application starts.: Uygulama başlatıldığında ekran kilidi açma kimlik doğrulamasını zorunlu kılarak verilerinizi koruyun.
+Recovery Password for Lock Screen Passcode: Kilit Ekranı Parolası için Kurtarma Parolası
+Recovery password is set.: Kurtarma şifresi ayarlandı.
+Refresh Application UI: Uygulama Arayüzünü Yenile
+Refresh UI: Arayüzü Yenile
+Require Screen Unlock at Application Start: Uygulama Başlangıcında Ekran Kilidini Açmayı Gerektir
+? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
+: Güvenliği artırmak için uygulama başlatıldığında ekran kilidini açmayı zorunlu kılın. Bu ayar, yalnızca yetkili kullanıcıların uygulamaya erişebilmesini sağlayarak verilerinizi en baştan yetkisiz erişime karşı korur.
+Reset Font Size: Yazı Tipi Boyutunu Sıfırla
+Run Terminal or Shell Commands: Terminal veya Kabuk Komutlarını Çalıştırın
+Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Dahili web kazıma araçlarını kullanarak web sitelerini veya API yanıtlarını kazıyın, ayrıştırın ve çıkarılan verileri panoya kopyalayın.
+? 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
+: 'Dahili web kazıma araçlarını kullanarak web sitelerini veya API yanıtlarını kazıyın, ayrıştırın ve çıkarılan verileri panoya kopyalayın.                                '
+Security: Güvenlik
+Security Settings: Güvenlik Ayarları
+Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Web API'lerine veya servislerine HTTP istekleri gönderin ve yanıt verilerini panoya kopyalayın.
+Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Aşağıda listelenen hassas kelimeler veya cümleler kopyalanan metinde bulunursa otomatik olarak maskelenecektir. Büyük/küçük harfe duyarlı değildir.
+Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Kilitli ekranınızı açmak ve verilerinizi yetkisiz erişime karşı korumak için bir parola belirleyin.
+? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
+: Kilit ekranı parolanızı unuttuğunuzda kolayca sıfırlamak için bir kurtarma parolası ayarlayın. Parolanız cihazınızın işletim sistemi depolamasında güvenli bir şekilde saklanacaktır.
+Settings: Ayarlar
+Show Clipboard History Capture Control on Lock Screen: Kilit Ekranında Panoya Geçmiş Yakalama Denetimini Göster
+Show Disable History Capture When Screen Locked: Ekran Kilitliyken Geçmiş Yakalamayı Devre Dışı Bırak'ı göster
+Show Disabled Collections: Etkisiz Koleksiyonlarını Göster
+? Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
+: Uygulama ekranı kilitliyken panoya geçmiş yakalama geçişini göster. Bu, uygulama kilitli ekranından yakalama geçmişi ayarlarını kontrol etmenizi sağlar.
+Show collection name on the navbar: Koleksiyon adını gezinme çubuğunda göster
+Show disabled collections on the navbar list: Etkisiz koleksiyonları gezinme çubuğu listesinde göster
+Skip auto start prompt on app launch: Uygulama başlatıldığında otomatik başlatma istemini atla
+Small: Küçük
+Stop Words List: Durdurma Sözcükleri Listesi
+Swap Panels Layout: Panel Düzenini Değiştir
+Switch the layout position of panels in Clipboard History and Paste Menu views: Panoya Geçmiş ve Yapıştır Menüsü görünümlerinde panellerin düzen konumunu değiştirin
+Thank you again for using PasteBar.: PasteBar'ı kullandığınız için tekrar teşekkür ederiz.
+Thank you for testing! 🙌: Test ettiğiniz için teşekkür ederiz! 🙌
+? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
+: Bu seçenek, kliplerdeki gezinme notlarının görüntülenmesini ve zamanlamasını kontrol etmenizi sağlar. Notları anında veya istenmeyen açılır pencereleri önlemek için gecikmeli olarak göstermeyi seçebilirsiniz.
+? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
+: Bu seçenek, klip notlarını görüntüleyen açılır pencerenin maksimum genişliğini ve yüksekliğini özelleştirmenize olanak tanır ve böylece pencerenin istediğiniz boyuta rahatça sığmasını sağlar.
+To downgrade your current version, please visit: Mevcut sürümünüzü düşürmek için lütfen şu adresi ziyaret edin
+'To downgrade, please visit: ': 'Sürümü düşürmek için lütfen şu adresi ziyaret edin:'
+To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: En iyi algılama doğruluğunu sağlamak için lütfen 7 dile kadar seçin. Seçenekleri sınırlamak hassasiyeti artırır.
+Today: Bugün
+Tomorrow: Yarın
+Try after <strong>{{resetPassCodeNextDelay}}</strong> seconds: <strong>{{resetPassCodeNextDelay}}</strong> saniye sonra deneyin
+Try again after <strong>{{resetPassCodeNextDelay}}</strong> seconds: <strong>{{resetPassCodeNextDelay}}</strong> saniye sonra tekrar deneyin
+UI Language: Arayüz Dili
+UnPin Window: Pencereyi Sabitlemeyi bırak
+Unlimited Collections: Sınırsız Koleksiyonlar
+Unlimited Tabs per Collection: Koleksiyon başına sınırsız sekme
+Unlimited paste history: Sınırsız yapıştırma geçmişi
+Use Password: Şifreyi Kullan
+User Preferences: Kullanıcı Tercihleri
+Web Scraping and Parsing: Web Kazıma ve Ayrıştırma
+Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Aşağıda listelenen kelimeler veya cümleler kopyalanan metinde bulunursa pano geçmişine kaydedilmeyecektir. Büyük/küçük harf duyarlı değildir.
+passcode reset: parolayı sıfırla
+password reset: şifreyi sıfırla

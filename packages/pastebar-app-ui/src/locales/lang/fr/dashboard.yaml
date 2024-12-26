@@ -1,0 +1,246 @@
+API Key: Clé API
+Add: Ajouter
+Add Auth: Ajouter l'authentification
+Add Clipboard Value: Ajouter la valeur du presse-papiers
+Add Custom: Ajouter personnalisé
+Add Custom Field: Ajouter un champ personnalisé
+Add Delay Time: Ajouter un délai
+Add First Board: Ajouter le premier tableau
+Add Form Field: Ajouter un champ de formulaire
+Add Header: Ajouter un en-tête
+Add Key Press: Ajouter une pression de touche
+Add Key Press After Paste: Ajouter une pression de touche après le collage
+Add Link Card: Ajouter une carte de lien
+Add Open URL: Ajouter l'ouverture d'URL
+Add Output Template: Ajouter un modèle de sortie
+Add Regex Match Group Filter: Ajouter un filtre de groupe de correspondance Regex
+Add Request Header: Ajouter un en-tête de requête
+Add Response Filter: Ajouter un filtre de réponse
+Add Scraping Rule: Ajouter une règle d'extraction
+Add Section: Ajouter une section
+Add Tab: Ajouter un onglet
+Add Template Field: Ajouter un champ de modèle
+Add a Tab: Ajouter un onglet
+Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Ajouter le champ <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> dans le modèle
+Add field <b>{{<b>{{name}}</b>}}</b> into the template: Ajouter le champ <b>{{<b>{{name}}</b>}}</b> dans le modèle
+Add image: Ajouter une image
+Add note: Ajouter une note
+Add to Board: Ajouter au tableau
+Add {{type}}: Ajouter {{type}}
+All field labels must be unique to ensure they are correctly used within the template.: Tous les libellés de champs doivent être uniques pour garantir leur utilisation correcte dans le modèle.
+Are you sure you want to delete <strong>{{boardName}}</strong> board?: Êtes-vous sûr de vouloir supprimer le tableau <strong>{{boardName}}</strong> ?
+Are you sure you want to delete <strong>{{tabName}}</strong> tab?: Êtes-vous sûr de vouloir supprimer l'onglet <strong>{{tabName}}</strong> ?
+Are you sure you want to delete?: Êtes-vous sûr de vouloir supprimer ?
+Are you sure you want to remove image from the clip?: Êtes-vous sûr de vouloir supprimer l'image du clip ?
+Auth: Authentification
+Auto update is Off: La mise à jour automatique est désactivée
+Basic Auth: Authentification de base
+Basic Password: Mot de passe de base
+Basic Username: Nom d'utilisateur de base
+Bearer Token: Jeton Bearer
+Board Layout Height: Hauteur de la disposition du tableau
+Board Layout Split: Division de la disposition du tableau
+Board Menu: Menu du tableau
+Board is Not Empty: Le tableau n'est pas vide
+Boards: Tableaux
+Border Width: Largeur de la bordure
+CSS Selector: Sélecteur CSS
+Cancel: Annuler
+Change Layout: Modifier la disposition
+Change color: Changer la couleur
+Clear: Effacer
+Clear All Fields: Effacer tous les champs
+Click To Add: Cliquer pour ajouter
+Clip Menu: Menu du clip
+Clip Options: Options du clip
+Clipboard: Presse-papiers
+Clips:
+  App: Application
+  Clip Menu: Menu du clip
+  Clips: Clips
+  Link: Lien
+Close Edit: Fermer l'édition
+Command:
+  error: erreur
+  output: sortie
+Command error: Erreur de commande
+Common Fields: Champs communs
+Confirm Clear All Fields: Confirmer l'effacement de tous les champs
+Confirm to remove Auth: Confirmer la suppression de l'authentification
+Confirm to remove filters: Confirmer la suppression des filtres
+Confirm to remove headers: Confirmer la suppression des en-têtes
+Copy Clip: Copier le clip
+Create Board: Créer un tableau
+Create Tab: Créer un onglet
+Create tab: Créer un onglet
+Dashboard: Tableau de bord
+Delay: Délai
+Delete Board: Supprimer le tableau
+Delete Clip: Supprimer le clip
+Delete Tab: Supprimer l'onglet
+Delete board: Supprimer le tableau
+Delete field: Supprimer le champ
+Delete tab: Supprimer l'onglet
+Detect Template Fields: Détecter les champs du modèle
+Detect for Template Fields: Détecter les champs du modèle
+Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Le champ désactivé <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> a été trouvé dans le modèle
+Done Create Clip: Création du clip terminée
+Done Edit: Édition terminée
+Done Edit Tabs: Édition des onglets terminée
+Done Organize: Organisation terminée
+Drag & Drop Path: Chemin de glisser-déposer
+Drop To Add: Déposer pour ajouter
+Drop image file here, or use a separate window for drag and drop.: Déposez le fichier image ici, ou utilisez une fenêtre séparée pour le glisser-déposer.
+Drop to Pin: Déposer pour épingler
+Edit Note: Modifier la note
+Edit Template: Modifier le modèle
+Edit subtitle: Modifier le sous-titre
+Edit tab name: Modifier le nom de l'onglet
+Enable / Disable: Activer / Désactiver
+Enable / Disable URL Open: Activer / Désactiver l'ouverture d'URL
+Enter Label: Saisir le libellé
+Enter URL: Saisir l'URL
+Enter board subtitle or description: Saisir le sous-titre ou la description du tableau
+Enter board title: Saisir le titre du tableau
+Enter clip name: Saisir le nom du clip
+Enter clip note: Saisir la note du clip
+Enter code: Saisir le code
+Enter credit card number: Saisir le numéro de carte de crédit
+Enter default value: Saisir la valeur par défaut
+Enter field value: Saisir la valeur du champ
+Enter full path to file, folder or application: Saisir le chemin complet du fichier, dossier ou application
+Enter regex for output filer: Saisir l'expression régulière pour le filtre de sortie
+Enter request url: Saisir l'URL de la requête
+Enter secret value: Saisir la valeur secrète
+Enter section label: Saisir le libellé de la section
+Enter select option: Saisir l'option de sélection
+Enter tab name: Saisir le nom de l'onglet
+Enter template or drag from history: Saisir le modèle ou glisser depuis l'historique
+Enter template value: Saisir la valeur du modèle
+Enter value or drag from history: Saisir la valeur ou glisser depuis l'historique
+Enter web link or email: Saisir le lien web ou l'e-mail
+Errors:
+  No fields found in the template.: Aucun champ trouvé dans le modèle.
+  Please fix output template or confirm to save as is.: Veuillez corriger le modèle de sortie ou confirmer pour enregistrer tel quel.
+  Please fix template fields or confirm to save as is.: Veuillez corriger les champs du modèle ou confirmer pour enregistrer tel quel.
+  Please fix the problem or confirm to save as is.: Veuillez corriger le problème ou confirmer pour enregistrer tel quel.
+  Please verify your link for any errors, or confirm to save as is.: Veuillez vérifier votre lien pour d'éventuelles erreurs, ou confirmer pour enregistrer tel quel.
+  Please verify your path for any errors, or confirm to save as is.: Veuillez vérifier votre chemin pour d'éventuelles erreurs, ou confirmer pour enregistrer tel quel.
+  Your command runs with errors, confirm you want to save as is.: Votre commande s'exécute avec des erreurs, confirmez que vous voulez l'enregistrer telle quelle.
+  Your request runs with errors, confirm you want to save as is.: Votre requête s'exécute avec des erreurs, confirmez que vous voulez l'enregistrer telle quelle.
+FILTERED_TYPES:
+  Dot Path: Chemin par points
+  JSON Path: Chemin JSON
+  RegEx: Expression régulière
+  RegEx Replace: Remplacement par expression régulière
+  Remove Quotes: Supprimer les guillemets
+Field: Champ
+Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Le champ <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> a été trouvé dans le modèle
+Field Options: Options du champ
+Fields Value: Valeur des champs
+File, folder or app path does not exist: Le chemin du fichier, dossier ou application n'existe pas
+File, folder or app path is valid: Le chemin du fichier, dossier ou application est valide
+File, folder or app path might not be valid: Le chemin du fichier, dossier ou application pourrait ne pas être valide
+Fill Template: Remplir le modèle
+Filter Type: Type de filtre
+Filter's Value: Valeur du filtre
+Find in Clip: Rechercher dans le clip
+Find in clip: Rechercher dans le clip
+Find in history: Rechercher dans l'historique
+Form Fields: Champs du formulaire
+General Fields: Champs généraux
+HTML: HTML
+Headers: En-têtes
+Hide Label: Masquer le libellé
+History capture is off: La capture de l'historique est désactivée
+Key Press: Pression de touche
+Key Press After: Pression de touche après
+Key Press After Paste: Pression de touche après le collage
+'Key Press After Paste: {{keyPress}}': 'Pression de touche après le collage : {{keyPress}}'
+Label Left: Libellé à gauche
+Label Top: Libellé en haut
+Label on Left: Libellé à gauche
+Labels: Libellés
+Last run: Dernière exécution
+Last update: Dernière mise à jour
+Layout Max Width: Largeur maximale de la disposition
+Mask to hide clipboard value in preview: Masquer pour cacher la valeur du presse-papiers dans l'aperçu
+Move Clip: Déplacer le clip
+Moved Clips Panel: Panneau des clips déplacés
+Name: Nom
+New Board: Nouveau tableau
+New Clip: Nouveau clip
+No Boards: Aucun tableau
+No Clipboard History: Aucun historique du presse-papiers
+No Tabs or Boards: Aucun onglet ou tableau
+Number of columns: Nombre de colonnes
+Open: Ouvrir
+Open URL Disable / Enable: Désactiver / Activer l'ouverture d'URL
+Output Template: Modèle de sortie
+Panel for moved or copied items from other tabs: Panneau pour les éléments déplacés ou copiés d'autres onglets
+Please confirm to save as is.: Veuillez confirmer pour enregistrer tel quel.
+Press: Appuyer
+RETURN_POSITION_TYPES:
+  First Only: Premier seulement
+  Last Only: Dernier seulement
+RULES_TYPES:
+  CSS Selector: Sélecteur CSS
+  RegEx Find: Recherche par expression régulière
+  RegEx Group Match: Correspondance de groupe par expression régulière
+  RegEx Match: Correspondance par expression régulière
+  RegEx Replace: Remplacement par expression régulière
+RegEx Find: Recherche par expression régulière
+RegEx Match: Correspondance par expression régulière
+RegEx Match Group: Groupe de correspondance par expression régulière
+RegEx Replace: Remplacement par expression régulière
+Regex Match Group Filter: Filtre de groupe de correspondance par expression régulière
+Remove Open URL: Supprimer l'ouverture d'URL
+Remove headers: Supprimer les en-têtes
+Remove image: Supprimer l'image
+Rename: Renommer
+Reset to Defaults: Réinitialiser aux valeurs par défaut
+Response Filters: Filtres de réponse
+Result: Résultat
+SEPARATOR_TYPES:
+  Comma (,): Virgule (,)
+  New Line (\n): Nouvelle ligne (\n)
+  Pipe (|): Barre verticale (|)
+  Semicolon (;): Point-virgule (;)
+  Space (' '): Espace (' ')
+  Tab (\t): Tabulation (\t)
+Save as Defaults: Enregistrer comme valeurs par défaut
+Scan for Template Fields: Rechercher les champs du modèle
+Select Color: Sélectionner la couleur
+Select Default Option: Sélectionner l'option par défaut
+Select Option: Sélectionner l'option
+Select Options: Sélectionner les options
+Show Label: Afficher le libellé
+Special Field: Champ spécial
+Subtitle: Sous-titre
+Tab: Onglet
+Tab is Not Empty: L'onglet n'est pas vide
+Tabs Menu: Menu des onglets
+Template: Modèle
+Template Edit: Modifier le modèle
+Template Fields: Champs du modèle
+Template should have⠀<b>{{output}}</b>⠀placeholder.: Le modèle doit avoir un espace réservé <b>{{output}}</b>.
+Test Request: Tester la requête
+Test Run: Exécution de test
+Text: Texte
+This action cannot be undone.: Cette action ne peut pas être annulée.
+This field allows to insert text from clipboard: Ce champ permet d'insérer du texte depuis le presse-papier
+Too long: Trop long
+Too short: Trop court
+Turn On auto update: Activer la mise à jour automatique
+Turn on history capture: Activer la capture de l'historique
+Type:
+  Command: Commande
+  Request: Requête
+  Scraper: Extracteur
+URL: URL
+Unsaved name: Nom non enregistré
+Unsaved note: Note non enregistrée
+Unsaved subtitle: Sous-titre non enregistré
+Unsaved title: Titre non enregistré
+Update Link Card: Mettre à jour la carte de lien
+Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.: Utilisez des doubles accolades pour {{nom du champ}}. Utilisez {{clipboard}} pour ajouter la valeur actuelle du presse-papier
