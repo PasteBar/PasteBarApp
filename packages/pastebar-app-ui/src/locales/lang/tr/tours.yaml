@@ -1,0 +1,241 @@
+HISTORY_PANEL_TOUR:
+- element: '#side-panel_tour'
+  popover:
+    title: Pano Geçmiş Paneli
+    description: Bu panel, daha sonra kolayca erişebilmeniz için kopyalanmış pano geçmişinizi görüntüler. Geçmişinizde gezinin, içerik arayın veya türe göre filtreleyin. Özelleştirilmiş bir görünüm için bu paneli yeniden boyutlandırabilirsiniz.
+    prefferedSide: right
+- element: '#history-find_tour'
+  popover:
+    title: Geçmişi Bul ve Filtrele
+    description: Pano geçmişinizdeki belirli öğeleri hızla bulmak için aramayı kullanın. İhtiyacınız olanı kolayca bulmak için sonuçları türe (metin, resim veya bağlantılar) göre filtreleyin. Bulunan bir öğeyi tekrar kopyalayın veya panoya kaydedin.
+    prefferedSide: bottom
+    alignment: center
+- element: '#history-list_tour .history-item'
+  popover:
+    title: Pano Geçmiş Öğesi
+    description: Pano Geçmişinizdeki her öğe, daha önce kopyaladığınız içeriği temsil eder.Bir öğeye <b>çift tıklayın</b> veya panoya geri kopyalamak için simgeye tıklayın. Pano panelinde kaydedilmiş bir klip oluşturmak için <b>basın ve sürükleyin</b>. Bağlam menüsünde daha fazla seçenek için bir öğeye <b>sağ tıklayın</b>.
+    prefferedSide: right
+- element: '#tabs-history_tour'
+  meta:
+    closeTourCssPosition: hidden
+  popover:
+    title: Geçmiş/Menü Gezinme Sekmeleri
+    description: İçeriğinizin kolay yönetimi ve erişimi için Panoya Geçmişi ve Yapıştırma Menüsü görünümleri arasında geçiş yapın.
+    alignment: center
+    prefferedSide: top
+- element: '#history-menu-button_tour'
+  meta:
+    closeTourCssPosition: hidden
+  popover:
+    title: Geçmiş Seçili Öğeler Menüsü
+    description: Panonuz Geçmişinizdeki seçili öğeleri yönetmek için bu menüyü kullanın. Öğeleri <b>çoklu seçebilir</b>, tümünün seçimini kaldırabilir, panoya ekleyebilir, silebilir veya belirli tarihler için geçmişi temizleyebilirsiniz.
+    alignment: end
+    prefferedSide: right
+- element: .panel-resize_tour
+  popover:
+    title: Yeniden Boyutlandırılabilir Panel Görünümü
+    description: Panel görünümünü tercihlerinize uyacak şekilde yeniden boyutlandırarak çalışma alanınızı özelleştirin. Yeniden boyutlandırma imleci görünene kadar farenizi panelin kenarı üzerinde gezdirin, ardından panel boyutunu ayarlamak için <b>tıklayın ve sürükleyin</b>.
+    prefferedSide: right
+
+DASHBOARD_CLIPS_TOUR:    
+- element: .clips-dashboard-panel_tour
+  meta:
+    closeTourCssPosition: hidden
+  popover:
+    title: Gösterge Paneli
+    description: Bu panel, kaydedilmiş kliplerinizi düzenlemek ve yönetmek için merkezi bir dağıtıcı sağlar. İçeriğinizi yapılandırmak için özel sekmeler ve panolar oluşturun. Yeni klipler oluşturmak için Panonuz Geçmişinizden öğeleri <b>sürükleyin ve bırakın</b>. Farklı pano kategorileri arasında geçiş yapmak için sekmeleri kullanın.
+    prefferedSide: left
+- element: '#dashboard-tabs_tour'
+  popover:
+    title: Gösterge Paneli Sekmeleri
+    description: Özel sekmeler oluşturun ve bunları Pano'nuzun farklı bölümlerinde gezinmek için kullanın. Kliplerinizi ve içeriklerinizi hızlı bir şekilde yönetmek ve erişmek için kategoriler arasında geçiş yapın.
+    alignment: center
+    prefferedSide: bottom
+- element: '#dashboard-tabs-create-button_tour'
+  popover:
+    title: Pano Öğeleri Oluştur
+    description: Panonuz için yeni öğeler oluşturun. İçeriğinizi düzenlemek için klipler, panolar veya özel sekmeler ekleyin.
+    alignment: end
+    prefferedSide: bottom
+- element: '#dashboard-tabs-context-menu_tour'
+  popover:
+    title: Sekmeler ve Düzen Menüsü
+    description: Sekmelere <b>sağ tıklayın</b> veya düzeninizi düzenlemek ve sekmelerinizi yönetmek için <b>menü simgesine tıklayın</b>. Mevcut sekmeleri düzenleyebilir veya pano düzenini iş akışı tercihlerinize uyacak şekilde değiştirebilirsiniz.
+    alignment: end
+    prefferedSide: bottom
+- element: .board-panel_tour
+  popover:
+    title: Pano Paneli
+    description: Bu pano paneli, kaydedilmiş kliplerinizi hızlı ve kolay erişim için düzenlemenizi sağlar. Panonuzdan öğeleri <b>sürükleyin ve bırakın</b>. İçeriğinizi etkili bir şekilde kategorize etmek ve yönetmek için panoları kullanın.
+    alignment: center
+    prefferedSide: right
+- element: .board-panel-header_tour
+  popover:
+    title: Pano Paneli Başlığı
+    description: Panonun panelini hızla genişletmek için başlığa <b>çift tıklayın</b> veya panoyu özelleştirmek ve yönetmek için diğer seçenekleri görmek üzere <b>sağ tıklayın</b>.
+    alignment: start
+    prefferedSide: right
+- element: .clip_tour
+  popover:
+    title: Kaydedilen Klip Öğesi
+    description: Kaydedilen klip içeriğine hızlı bir şekilde erişin. Kopyalamak için <b>çift tıklayın</b> veya <b>pano simgesine tıklayın</b>. Öğeleri yeniden düzenlemek için <b>uzun basın</b> veya klibinizi özelleştirmek ve düzenlemek için daha fazla seçenek için <b>sağ tıklayın</b>.
+    alignment: start
+    prefferedSide: right
+- element: .panel-resize_tour
+  popover:
+    title: Boyutlandırılabilir Panel Görünümü
+    description: Panel görünümünü tercihlerinize uyacak şekilde yeniden boyutlandırarak çalışma alanınızı özelleştirin. Yeniden boyutlandırma imleci görünene kadar farenizi panelin kenarı üzerinde gezdirin, ardından panel boyutunu ayarlamak için <b>tıklayın ve sürükleyin</b>.
+    prefferedSide: right
+
+MENU_TOUR:
+- element: '#side-panel_tour'
+  popover:
+    title: Yapıştır Menü Paneli
+    description: Bu panel sisteminizin görev çubuğunu veya menü çubuğunun yerel yapıştırma menüsünü yönetmenizi sağlar. Öğeleri yeniden düzenlemek için <b>tutun ve sürükleyin</b>, yeniden adlandırmak için <b>çift tıklayın</b>. Çoklu seçim yapmak için ALT veya Command tuşuna <b>basın</b> ve herhangi bir öğeye tıklayın.
+    prefferedSide: right
+- element: '#menu-find_tour'
+  popover:
+    title: Menü Öğelerini Bul
+    description: Belirli menü öğelerini hızlıca bulmak için arama çubuğunu kullanın. İhtiyacınız olan öğeleri filtrelemek ve bulmak için anahtar sözcükleri yazın.
+    prefferedSide: bottom
+    alignment: center
+- element: div[role=treeitem]
+  popover:
+    title: Menü Öğesi Ağacı
+    description: Menü ağacındaki her öğe tek tek veya grup halinde yeniden düzenlenebilir. Yeniden adlandırmak için <b>çift tıklayın</b>, yeniden düzenlemek için <b>basılı tutun</b> ve sürükleyin. Çoklu seçim yapmak için <b>ALT</b> veya Command tuşuna basın ve tıklayın.
+    prefferedSide: right
+- element: '#tabs-menu_tour'
+  meta:
+    closeTourCssPosition: hidden
+  popover:
+    title: Geçmiş/Menü Gezinme Sekmeleri
+    description: İçeriğinizin kolay yönetimi ve erişimi için Panoya Geçmişi ve Yapıştırma Menüsü görünümleri arasında geçiş yapın.
+    alignment: center
+    prefferedSide: top
+- element: '#menu-icon-menu-button_tour'
+  meta:
+    closeTourCssPosition: hidden
+  popover:
+    title: Seçili Öğeler Yapıştır Menüsü
+    description: Birden fazla seçili menü öğesini yönetmek için bu menüyü kullanın. Çoklu seçim yapın, tümünün seçimini kaldırın, yerel menüyü yeniden oluşturun veya yapıştırma menünüzü hızla düzenlemek için öğeleri silin.
+    alignment: end
+    prefferedSide: right
+- element: '#menu-main-list_tour'
+  meta:
+    closeTourCssPosition: hidden
+  popover:
+    title: Yapıştır Menü Panelini Yönet
+    description:Bu panel tüm etkin menü öğelerini yönetmenize olanak tanır. Yapıştır menünüzü özelleştirmek için öğeler ekleyin, düzenleyin veya kaldırın. Yeni öğeler oluşturun veya mevcut klipleri bağlayın. İçeriği panoya kopyalamak için <b>çift tıklayın</b> ve daha fazla seçenek için <b>sağ tıklayın</b>.
+    alignment: start
+    prefferedSide: left
+- element: .menu-item_tour
+  popover:
+    title: Menü Öğesi
+    description: Burada her menü öğesini ayrı ayrı yönetebilirsiniz. Menü içeriğini görmek için genişletme simgesine <b>tıklayın</b>. İçeriği panoya kopyalamak için <b>çift tıklayın</b> ve daha fazla seçenek görmek için <b>sağ tıklayın</b>.
+    alignment: center
+    prefferedSide: bottom
+- element: '#add-menu-item__tour'
+  popover:
+    title:  Menü Öğesi Ekle
+    description: Artı simgesine tıklayın ve yeni öğeyi eklemek istediğiniz konumu, mevcut menü öğesinin öncesini veya sonrasını seçin. Yeni bir menü, alt menüler, ayırıcılar, devre dışı bırakılmış menü öğeleri, yakın geçmişten menü öğeleri veya kaydedilmiş bir klibe bağlantı oluşturabilirsiniz.
+    alignment: end
+    prefferedSide: bottom
+- element: '#toggle-inactive-menu-items_tour'
+  popover:
+    title: Etkin Olmayan Menü Öğelerini Değiştir
+    description: Etkin olmayan menü öğelerini göstermek veya gizlemek için bu simgeye tıklayın. Bu, gerektiğinde etkin öğelere odaklanarak menünüzü yönetmenize ve düzenlemenize yardımcı olur. Menünüzü basitleştirin ve çalışma alanınızı daha verimli hale getirmek için dağınıklığı giderin.
+    alignment: start
+    prefferedSide: bottom
+- element: .panel-resize_tour
+  popover:
+    title: Boyutlandırılabilir Panel Görünümü
+    description: Panel görünümünü tercihlerinize uyacak şekilde yeniden boyutlandırarak çalışma alanınızı özelleştirin. Yeniden boyutlandırma imleci görünene kadar farenizi panelin kenarı üzerinde gezdirin, ardından panel boyutunu ayarlamak için <b>tıklayın ve sürükleyin</b>.
+    prefferedSide: right
+
+NAVBAR_TOUR:
+- element: '#navbar-panel_tour'
+  popover:
+    title: Gezinme Çubuğu
+    description: Gezinme çubuğu, PasteBar'ın özelliklerine ve ayarlarına hızlı erişim sağlar. Panoya Geçmiş ve Yapıştır Menüleri görünümleri arasında geçiş yapmak, koleksiyonlarınıza erişmek, genel bir arama yapmak, sabitlenmiş panonun görünürlüğünü değiştirmek, ayarları düzenlemek ve gerektiğinde yardım almak için kullanın.
+    alignment: center
+    prefferedSide: bottom
+- element: '#navbar-pastebar_tour'
+  popover:
+    title: PasteBar Menü
+    description: PasteBar menüsü temel işlevlere ve bilgilere hızlı erişim sağlar. Burada güncellemeleri kontrol edebilir, ayarlara erişebilir, uygulama ekranını kilitleyebilir, ana pencereyi kapatabilir veya uygulamadan çıkabilirsiniz.
+    alignment: start
+    prefferedSide: bottom
+- element: '#navbar-view_tour'
+  popover:
+    title: Görünüm menüsü
+    description: Use the View menu to navigate your clipboard history and paste menu, adjust options, change the color theme, modify the UI font size, and change the language. Access additional settings for a personalized experience.
+    alignment: start
+    prefferedSide: bottom
+- element: '#navbar-collections_tour'
+  popover:
+    title: Koleksiyonlar Menüsü
+    description: Koleksiyonlar Menüsü, farklı klip, pano ve sekme koleksiyonları arasında geçiş yapmanızı sağlar. Her koleksiyonu, içeriği proje veya kategoriye göre düzenlemek gibi özel ihtiyaçlarınıza uyacak şekilde oluşturun ve özelleştirin.
+    alignment: center
+    prefferedSide: bottom
+- element: '#navbar-toggle-history-split'
+  popover:
+    title: Bölünmüş Geçmiş Penceresini Aç/Kapat
+    description: Pano geçmişini ayrı bir pencerede açmak veya kapatmak için bu simgeye tıklayın. Pano geçmişinizi ana pencereden bağımsız olarak yönetmek için bu özelliği kullanın.
+    alignment: center
+    preferredSide: bottom
+- element: '#navbar-search_tour'
+  popover:
+    title: Genel Arama
+    description: Etkin koleksiyondaki klipleri, panoları ve menü öğelerini hızlı bir şekilde bulmak için genel aramayı kullanın. Sonuçları filtrelemek ve ihtiyacınız olan içeriği verimli bir şekilde bulmak için anahtar sözcükleri yazın. Bir klibi doğrudan arama sonuçlarından kopyalamak için <b>çift tıklayın</b>.
+    alignment: center
+    prefferedSide: bottom
+- element: '#navbar-pinned_tour'
+  popover:
+    title: Sabitlenmiş Panoyu Aç/Kapat
+    description: Sabitlenmiş panoyu göstermek veya gizlemek için bu simgeye tıklayın. Çalışma alanınızı düzenli tutmak ve en alakalı içeriğe odaklanmak için bu özelliği kullanın.
+    alignment: end
+    prefferedSide: bottom
+- element: '#navbar-help_tour'
+  popover:
+    title: Yardım Menüsü
+    description: Yardım menüsünden rehberli turlara ve kullanıcı arayüzü özelliği vitrinlerine hızla erişin. PasteBar'ın özelliklerini ve kullanıcı arayüzünü etkili bir şekilde gezinmenize ve anlamanıza yardımcı olmak için adım adım rehberlik ve gösteriler sunar.
+    alignment: end
+    prefferedSide: bottom
+- element: '#navbar-close-window_tour'
+  popover:
+    title: Ana Pencereyi Kapat
+    description: Ana PasteBar penceresini kapatmak için kapatma simgesine tıklayın ve işlevselliğini görev çubuğundan veya menü çubuğu simgesinden kullanmaya devam edin. Ana uygulama penceresini her zaman ana menüden yeniden açabilirsiniz.
+    alignment: end
+    prefferedSide: bottom
+
+SETTINGS_TOUR:
+- element: '#app-settings-history_tour'
+  popover:
+    title: Pano Geçmiş Ayarları
+    description: PasteBar'ın kopyaladığınız içeriği nasıl yakalayacağını ve yöneteceğini özelleştirmek için pano geçmişi ayarlarınızı düzenleyin. Kişiselleştirilmiş bir deneyim için otomatik güncelleme, otomatik favorileme, bağlantı önizlemesi, durdurma sözcükleri listesi ve programlama dili otomatik algılama gibi özellikleri etkinleştirin veya devre dışı bırakın.
+    alignment: start
+    prefferedSide: right
+- element: '#app-settings-collections_tour'
+  popover:
+    title: Koleksiyon Ayarlarını Yönet
+    description: Koleksiyonlarınızı düzenlemek ve özelleştirmek için Koleksiyonları Yönet'i kullanın. Yeni koleksiyonlar ekleyin, mevcut olanları düzenleyin ve iş akışınıza uyacak şekilde aralarında geçiş yapın. İlgili klipleri, panoları ve sekmeleri gruplayarak içeriğinizi verimli bir şekilde yönetin.
+    alignment: start
+    prefferedSide: right
+- element: '#app-settings-preferences_tour'
+  popover:
+    title: Kullanıcı Tercihleri
+    description: Yazı tipi boyutunu ayarlayın, renk temalarını değiştirin, arayüz dilini değiştirin ve otomatik başlatma seçeneklerini yapılandırın. Panel düzenlerini değiştirin, gezinme çubuğunda koleksiyon adlarını gösterin ve klip notu açılır pencerelerini yönetin.
+    alignment: start
+    prefferedSide: right
+- element: '#app-settings-security_tour'
+  popover:
+    title: Güvenlik Ayarları
+    description: Verilerinizi korumak için güvenlik ayarlarınızı yapılandırın. Bir kilit ekranı parolası ve kurtarma parolası ayarlayın. Pano geçmişi yakalamayı kilit ekranından kontrol edin ve hareketsizlik durumunda otomatik kilitlemeyi etkinleştirin. PasteBar uygulamanızın güvenliğini artırmak için bu ayarları düzenleyin.
+    alignment: start
+    prefferedSide: right
+- element: '#app-settings-back_tour'
+  popover:
+    title: Ana Ekrana Dön
+    description: Ayarlardan ana uygulama görünümüne dönmek için geri butonuna tıklayın.
+    alignment: start
+    prefferedSide: right

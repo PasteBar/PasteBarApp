@@ -1,0 +1,353 @@
+' No': ' Hayır'
+' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': ' Bu izin, PasteBar'ın panoya erişebilmesini ve uygulamalar arasında kopyalama ve yapıştırma işlemleri gerçekleştirebilmesini sağlar.'
+About PasteBar: PasteBar Hakkında
+Action Menu: Eylem Menüsü
+? Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Şablona <b>{{Clipboard}}</b> alanı ekleyin. Bu, metni panoya kopyalamanıza ve şablona eklenmesine olanak tanır
+Add Clip: Klip Ekle
+Add First Option: Ilk Seçeneği Ekle
+Add Link Card: Bağlantı Kartı Ekle
+Add Menu: Menü Ekle
+Add Option: Seçenek Ekle
+Add PasteBar to Accessibility: Erişilebilirliğe PasteBar'ı ekle
+Add To Player: Oynatıcıya Ekleyin
+Add to: A ekle
+Add to Clips: Kliplere Ekleyin
+Add to Clips or Menu: Kliplere veya Menüye ekleyin
+Add to Menu: Menüye ekleyin
+Add to clip or menu: Klipe veya menüye ekleyin
+Add to template fields: Şablon alanına ekleyin
+Added: Eklendi
+Adding this file to the player is not recommended unless you trust the source.: Kaynağa güvenmiyorsanız bu dosyayı oynatıcıya eklemeniz önerilmez.
+Allow PasteBar to Copy and Paste from Clipboard: PasteBar'ın Panodan Kopyalayıp Yapıştırmasına İzin Ver
+Are you sure you want to delete?: Bunu silmek istediğinizden eminmisiniz?
+Are you sure?: Eminmisiniz?
+Attach History Window: Geçmiş Penceresini Ekle
+Back: Geri
+Build on {{buildDate}}: Kurulum tarihi {{buildDate}}
+Cancel: Iptal
+Cancel Reset: Iptalı Sıfırla
+Check: Kontrol et
+Check / Done: Kontrol et / Tamamlandı
+Check and Close: Kontrol et ve Kapat
+Check and Done: Kontorl et ve Tamamla
+Clear History: Tarihi temizle
+Clear Tracks: Takipleri temizle
+Clear found results and filters: Arama sonuçlarını ve filtreleri temizle
+Click to Confirm: Onaylamak için tıklayın
+Clip: Klip
+Clip Boards: Clip Boards
+Clipboard: Pano
+Clipboard History: Pano Geçmişi
+Clipboard History Only: Tek Pano Geçmişi
+Clipboard History Settings: Pano Geçmişi Ayarları
+Close: Kapat
+Close Edit: Düzenlemeyi Kapat
+Close Expand Edit: Geniş Düzenlemeyi Kapat
+Close Find: Bulmayı Kapat
+Close History Window: Geçmiş Penceresini Kapat
+Close modal and continue in browser: Modal'i kapat ve tarayıcıda devam et
+Confirm: Onayla
+Confirm  action: Eylemi onayla
+Confirm Delete: Silmeyi onayla
+Confirm Email: Epostayi onayla
+Confirm Passcode: Şifreyi onayla
+Confirm Password: Parolayı onayla
+Confirm Remove: Kaldırmayı onayla
+Confirm Your Passcode: Şifrenizi onaylayın
+Confirm passcode reset: Şifre sıfırlamayı onaylayın
+Confirm password reset: Parola sıfırlamayı onaylayın
+Confirm password reset action: Parola sıfırlama eylemini onaylayın
+Confirm your action: Eyleminizi onaylayın
+Confirm {{action}}: Onaylayın {{action}}
+Contact Form: Iletişim Formu
+Copied: Kopyalandı
+Copy: Kopyala
+Copy & Paste: Kopyala & Yapıştır
+Copy and Paste: Kopyala ve Yapıştır
+'Copy of ': 'Şunun kopyası '
+Copy to Clipboard: Panoya kopyala
+Create: Oluştur
+Created: Oluşturuldu
+Delay Next: Sonraki Gecikme
+Delete: Sil
+Deselect All: Tüm seçimi iptal et
+Deselect pinned: Sabitlenmiş olanları iptal et
+Digits Only Passcode: Ancak rakamlı parola
+Disabled: Etkisiz
+Done: Tamamlandı
+Done Adding: Eklemeyi Tamamla
+Done Edit: Düzenlemeyi Tamamla
+Done Reorder: Yeniden sıralamayı Tamamla
+Download mp3: mp3 Indir
+Drag: Sürükle
+Drag to Move: Taşımak için sürükle
+Drop To Add: Eklemek için sürükle
+Drop Zone: Bırakma bölgesi
+Edit: Düzenle
+Edit Label: Etiketi Düzenle
+'Email: {{email}}': 'Email: {{email}}'
+Emoji: Emoji
+Empty: Boş
+Empty Select: Boş seçim
+Enable / Disable: Etkin / Devre dışı
+Enable PasteBar in Accessibility Settings: Erişilebilirlik Ayarlarında PasteBar'ı Etkinleştir
+Enabled: Etkinleştirildi
+Enter Current Passcode: Mevcut parolayı gir
+Enter Digits Only Passcode: Ancak rakamlardan oluşan parolayı gir
+Enter Email: Epostayı gir
+Enter Passcode: Parolayı gir
+Enter Password: Şifreyi gir
+Enter Recovery Password: Kurtarma şifresini gir
+Enter passcode or password to unlock: Açmak için şifre veya parolayı giriniz
+Errors:
+  Error loading link: Bağlantıyı yüklerken hata oluştu
+  Cant save to file: Dosyayı kaydedemiyoruz
+  Something went wrong! {{err}} Please try again.: Bir şeyler ters gitti! {{err}} Lütfen tekrar deneyin.
+Expand Edit: Düzenlemeyi genişlet
+Expires on {{proExpiresOn}}: Sona erme tarihi {{proExpiresOn}}
+? Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Şablonda <b>{{Clipboard}}</b> alanı bulundu. Bu, metni panoya kopyalamanıza olanak tanır ve şablona eklenir
+Field is not found in the template: Alan şablonda bulunamadı
+Find Clip: Klipi Bul
+Find History: Geçmişi Bul
+Found in template but missing from fields definition: Şablonda bulundu ama alan tanımında eksik
+Got it: Anlaşıldı
+Hide Muli Select: Çoklu seçimi gizle
+Hide Pinned Board: Sabitlenmiş Panoyu Gizle
+History: Tarih
+Image: Resim
+Image Scale {{ImageScale}}x: Resim çözünürlüğü {{ImageScale}}x
+Image size: Resim boyutu
+Image size in pixels: Resim boyutu pikselde
+In View: Görünümde
+In View Edit: Görünümde Düzenle
+Inactive: Pasif
+Large View: Geniş Görünüm
+Large View Edit: Geniş Görünüm Düzenle
+Later: Sonra
+Light: Işık
+Lines Wrap: Satır Sarma
+Make Active: Aktif hale getir
+Make Disabled: Etkisiz hale getir
+Make Enabled: Etkin hale getir
+Make Inactive: Etkisiz yap
+Manage: Yönet
+Maximum height: Maksimum yükseklik
+Maximum width: Maksimum genişlik
+Menu: Menü
+Move Down: Aşağı kaydır
+Move Up: Yukarı kaydır
+Multi Select: Çoklu seçim
+'Name: {{name}}': 'Ad: {{name}}'
+Next Delay: Sonraki Gecikme
+Next Track: Sonraki Parça
+No: Hayır
+No Key Press: Tuşa basma
+No Wrap: Sarma yok
+Not Now: Şimdi değil
+Not found in the template: Şablonda bulunamadı
+Nothing found: Hiçbir şey bulunamadı
+Number of lines: Satır sayısı
+Ok, but later: Tamam, ama sonra
+Open: Aç
+Open Accessibility: Erişilebilirliği aç
+Open History Window: Geçmiş penceresini aç
+Open Window: Pencereyi aç
+Open contact form in browser: Tarayıcıda iletişim formunu aç
+Open payment in browser: Tarayıcıda ödemeyi aç
+Options: Ayarlar
+Password: Şifre
+Paste Delay: Yapıştırma Gecikmesi
+Paste Menu: Yapıştırma Menüsü
+Paste in {{pastingCountDown}}...: Yapıştırılıyor {{pastingCountDown}}...
+PasteBar: PasteBar
+PasteBar Application Error: PasteBar Uygulama Hatası
+PasteBar History: PasteBar Geçmişi
+PasteBar application now can access the clipboard and perform copy and paste operations across applications.: PasteBar uygulaması artık panoya erişebiliyor ve uygulamalar arasında kopyalama ve yapıştırma işlemleri gerçekleştirebiliyor.
+PasteBar was successfuly added to Accessibility settings: PasteBar Erişilebilirlik ayarlarına başarıyla eklendi
+Pasted: Yapıştırıldı
+Path: Yol
+Pause: Duraklat
+Pause Playing: Oynatmayı Duraklat
+? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+: 'İzin Kontrolü Başarısız: PasteBar Erişilebilirlik ayarlarına başarıyla eklenemedi. Lütfen gerekli izinleri verin ve tekrar Tamamlandı'ya tıklayın.'
+Pin Selected: Pin Seçildi
+Pinned: Sabitlendi
+Play: Oynat
+Please add PasteBar to the list of apps in: Lütfen PasteBar'ı uygulama listesine ekleyin
+Please confirm your action!: Lütfen eyleminizi onaylayın!
+Press: Tıkla
+Press ESC key to close: Kapatmak için ESC tuşuna basın
+Previous Track: Önceki Parça
+Pro: Pro
+Quit: Çık
+Rebuild Menu: Menüyü yeniden oluştur
+Recent History: Mevcut Geçmiş
+Recovery Password: Parola Kurtarma
+Remove: Kaldır
+Remove Link Card: Bağlantı Kartını Kaldır
+Remove Selected Star: Seçili Favorileri Kaldır
+Remove all fields from template: Şablondan tüm alanları kaldır
+Remove all tracks: Tüm parçaları kaldır
+Remove current track: Mevcut parçayı kaldır
+Remove from Player: Oyuncudan Kaldır
+Remove from template: Şablondan kaldır
+Rename: Yeniden Adlandır
+Renew: Yenile
+Reorder pinned: Yeniden sıralamaya sabitlendi
+Repeat 1: Tekrar 1
+Repeat all: Hepsini Tekrarla
+Repeat off: Tekrarlamayı kapat
+Report and Try Again: Bildir ve Tekrar Dene
+Reset: Sıfırla
+Reset Passcode: Şifreyi sıfırla
+Reset Password: Parolayı sıfırla
+Reset with Passcode: Parola ile Sıfırla
+Restart: Tekrar başlat
+Reverse Order: Ters sıralama
+Run and Copy Response: Yanıtı Çalıştır ve Kopyala
+Run and Paste Response: Yanıtı Çalıştır ve Yapıştır
+Running: Çalışıyor
+Save: Kaydet
+Save It!: Kaydet!
+Saved: Kaydedildi
+Scroll to Top: Başa dön
+Second: Saniye
+Seconds: Saniyeler
+'Security Alert: MP3 Verification Failed': 'Güvenlik Uyarısı: MP3 Doğrulaması Başarısız Oldu'
+Select: Seç
+Select Default Option: Varsayılan Seçeneği Seç
+Select Language: Dili seç
+Select default: Varsayılanı seç
+Select is empty: Seçim boş
+Select option: Seçenek seçin
+Select pinned: Sabitleneni seçin
+Separate History Window: Farklı Geçmiş Penceresi
+Sequence Copy: Dizi kopyası
+Sequence Copy Paste: Dizi Kopyala Yapıştır
+Sequence Delay Next: Dizi Gecikme Sonrası
+Sequence Next Delay: Dizi Sonrakı Gecıkme
+Sequence Paste: Dizi Yapıştır
+Sequence Reverse Order: Dizi Ters Sırala
+Set: Ayarla
+Set Password: Şifre Ayarla
+Show Large View: Büyük Görünümde Göster
+Show all: Hepsini Göster
+Source: Kaynak
+Split History Window: Geçmiş Penceresini Böl
+Star: Favorile
+Star Selected: Seçimi Favorile
+Stay here: Burda Kal
+Stay in touch: Iletişimde kal
+Success!: Başarılı!
+Swap Panels Layout: Panel Düzenini Değiştir
+System Settings -> Privacy & Security -> Accessibility: Sistem Ayarları -> Gizlilik & Güvenlik -> Erişebilirlik
+Thank you for reporting the error.: Hatayı raporladığınız için teşekkür ederiz.
+Thank you for using Pro: Pro kullandığınız için teşekkür ederiz
+Thank you!: Teşekkür Ederiz!
+This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.: Bu izin, PasteBar'ın panoya erişebilmesini ve uygulamalar arasında kopyalama ve yapıştırma işlemleri gerçekleştirebilmesini sağlar.
+Too long: Çok uzun
+Too short: Çok kısa
+Toolbar:
+  Blank Text Formatting: Boş Metin Biçimlendirme
+  Bold Formatting: Kalın Biçimlendirme
+  Bold Text Formatting: Kalın Metin Biçimlendirme
+  Copy and Paste Formatting: Kopyala ve Yapıştır Biçimlendirmesi
+  Header Formatting: Başlık Biçimlendirmesi
+  Hightlight Text Formatting: Vurgulu Metin Biçimlendirmesi
+  Italic Formatting: Yatık Biçimlendirme
+  Masked Text Formatting: Maskelenmiş Metin Biçimlendirme
+  Remove Text Formatting: Metin Biçimlendirmesini Kaldır
+Trust and Play: Güven ve Oynat
+Type:
+  App: Uygulama
+  Auto Fill: Otomatik Doldurma
+  AutoFill: OtomatikDoldurma
+  Clip: Klip
+  Code: Kod
+  Code Snippet: Kod Parçacığı
+  Command: Komut
+  Email: Eposta
+  Emoji: Emoji
+  Empty: Boş
+  Error: Hata
+  File: Dosya
+  File, Path or App: Dosya, Doysa yolu veya Uygulama
+  Form Auto Fill: Formu Otomatık Doldur
+  Image: Resim
+  Label: Etiket
+  Link: Bağlantı
+  Link or Email: Bağlantı veya Eposta
+  Menu: Menü
+  Mp3: mp3
+  Path: Yol
+  Plain Text: Düz Metin
+  Request: Istek
+  Run Auto Fill: Otomatik Doldurmayı Çalıştır
+  Scraper: Kazıyıcı
+  Secret: Gizli
+  Shell Command: Kabuk Komutu
+  Submenu: Alt menü
+  Template: Şablon
+  Template Fill: Şablonu doldur
+  Text: Metin
+  Video: Video
+  Web Request (HTTP): Web Isteği (HTTP)
+  Web Scraper / Parser: Web kazıyıcı / ayrıştırıcı
+TypeMenu:
+  Clip Type: Klip Türü
+  Code Snippet: Kod Parçacığı
+  File, Path or App: Dosya, Dosya yolu veya Uygulama
+  Form Auto Fill: Form Otomatik Doldurma
+  Image: Resim
+  Link or Email: Bağlantı veya Eposta
+  Link or File, Path or App: Bağlantı veya Dosya, Dosya yolu veya Uygulama
+  Plain Text: Düz Metin
+  Run, Execute: Çalıştır, Komutgönder
+  Select Language: Dil Seçin
+  Shell Command: Kabuk Komutu
+  Template: Şablon
+  Template Fill: Şablonu doldur
+  Text Template: Metin Şablonu
+  Web Request (HTTP): Web Isteği (HTTP)
+  Web Scraper / Parser: Web kazıyıcı / ayrıştırıcı
+UnPin All: Tümünü Kaldır
+UnPin Selected: Seçileni Kaldır
+Unlock Application Screen: Uygulama Ekranının Kilidini Aç
+Unlock Pro features: Pro özelliklerini aç
+Unlock Screen: Ekranın Kilidini Aç
+Unlock all features: Tüm özellikleri aç
+Unsaved label: Kaydedilmemiş etiket
+Update Error: Hatayı güncelle
+Update history list: Geçmiş listeyi güncelle
+Updated: Güncellendi
+Upgrade to Pro: Pro'ya yükselt
+Use Passcode: Şifreyi kullan
+Use Password: Parolayı kullan
+Using <b>{{Clipboard}}</b> field, allows you to copy text to the clipboard, and it will be inserted into the template: <b>{{Clipboard}}</b> alanını kullanmak,metni panoya kopyalamanıza ve şablona eklemenize izin verir
+Verify: Doğrula
+Verify Current Password: Mevcut Şifreyi Doğrula
+Verify Recovery Password: Kurtarma Parolasını Doğrula
+Version: Versiyon
+View: Görünüm
+View Edit: Görüntüle Düzenle
+Views:
+  Paste Menu: Yapıştır Menüsü
+We apologize but you found a bug. Please report this issue to us and try again: Özür dileriz ancak bir hata buldunuz. Lütfen bu sorunu bize bildirin ve tekrar deneyin
+? We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
+:Bu dosyanın güvenliğini doğrulayamadık. ID3 etiketi doğrulaması ve bütünlük kontrolü başarısız oldu. MP3 dosyaları potansiyel olarak kötü amaçlı yazılım içerebilir. Lütfen dikkatli olun.
+Yes: Evet
+Yes, activate: Evet, etkinleştir
+chars: karakterler
+contact us.: Iletişime Geçin.
+found: bulundu
+if this error persists, try to restart the application or: Bu hata devam ederse uygulamayı yeniden başlatmayı deneyin veya
+lines: çizgiler
+menu items in: menü öğeleri
+minutes: dakikalar
+only: ancak
+second: saniye
+seconds: saniyeler
+show less: az göster
+www.site: www.pastebar.app

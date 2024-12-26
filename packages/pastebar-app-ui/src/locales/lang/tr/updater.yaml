@@ -1,0 +1,30 @@
+Check for Update: Uygulama Güncellemesini Kontrol Edin
+Checking for Update...: Güncelleme Kontrol Ediliyor...
+Confirm Restart: Yeniden Başlatmayı Onayla
+Confirm Update: Güncellemeyi Onayla
+Download Completed: İndirme Tamamlandı
+Download Completed Quit and Manually Install: İndirilen güncelleme dosyası otomatik olarak açılmalıdır. Güncellemeyi tamamlamak için önce PasteBar uygulamasından çıkın, ardından en son sürümün kurulumunu manuel olarak tamamlayın. Kurulum tamamlandıktan sonra, güncellenmiş sürümü kullanarak PasteBar'ı başlatın.
+Download Update: Güncellemeyi İndir
+Downloading...: İndiriliyor...
+General Update Error: Güncelleme işlemi sırasında bir hata oluştu. Lütfen daha sonra tekrar güncellemeyi deneyin. Sorun devam ederse, güncellemeyi manuel olarak indirip yüklemeniz gerekir.
+Install Update: Güncellemeyi Yükle
+Installing Update: Güncellemeyi Yükleme
+No Update Available: Güncelleme Yok
+Permission Denied Message: Güncelleme işlemi yetersiz ayrıcalıklar nedeniyle eski uygulama dosyalarını değiştiremedi. Yönetici ayrıcalıklarına sahip bir kullanıcı hesabı kullanarak uygulama dosyalarını manuel olarak indirmeniz ve güncellemeniz gerekir.
+Quit PasteBar: PasteBardan çık
+Release date {{date}}: Yayın tarihi {{date}}
+Remind Me Later: Daha Sonra Hatırlat
+Restart: Yeniden Başlat
+Restart Required: Yeniden Başlatma gerekli
+Restart to Finish: Bitirmek için Yeniden Başlat
+Restart to Update: PasteBar'ı yeniden başlat
+Skip Download: İndirmeyi atla
+Skip This Version: Bu Sürümü Atla
+Try Install Again: Tekrar Yüklemeyi Deneyin
+Update Available: Güncelleme Mevcut
+Update Error: Güncelleme Hatası
+Update Install Error: Güncelleme Yükleme Hatası
+'Update: Permission Denied': 'Güncelleme: İzin Reddedildi'
+Upgrade removes Pro features: Yükseltme Pro özelliklerini kaldırır
+Version {{newVersion}} is available: Sürüm {{newVersion}} mevcüt
+View Changes: Değişiklikleri Görüntüle
