@@ -125,7 +125,7 @@ MENU_TOUR:
     closeTourCssPosition: hidden
   popover:
     title: Yapıştır Menü Panelini Yönet
-    description:Bu panel tüm etkin menü öğelerini yönetmenize olanak tanır. Yapıştır menünüzü özelleştirmek için öğeler ekleyin, düzenleyin veya kaldırın. Yeni öğeler oluşturun veya mevcut klipleri bağlayın. İçeriği panoya kopyalamak için <b>çift tıklayın</b> ve daha fazla seçenek için <b>sağ tıklayın</b>.
+    description: Bu panel tüm etkin menü öğelerini yönetmenize olanak tanır. Yapıştır menünüzü özelleştirmek için öğeler ekleyin, düzenleyin veya kaldırın. Yeni öğeler oluşturun veya mevcut klipleri bağlayın. İçeriği panoya kopyalamak için <b>çift tıklayın</b> ve daha fazla seçenek için <b>sağ tıklayın</b>.
     alignment: start
     prefferedSide: left
 - element: .menu-item_tour

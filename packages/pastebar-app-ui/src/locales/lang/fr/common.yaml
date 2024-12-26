@@ -1,5 +1,5 @@
 ' No': ' Non'
-' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': ' Cette autorisation permet à PasteBar d'accéder au presse-papiers et d'effectuer des opérations de copier-coller entre les applications.'
+' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': Cette autorisation permet à PasteBar d'accéder au presse-papiers et d'effectuer des opérations de copier-coller entre les applications.
 About PasteBar: À propos de PasteBar
 Action Menu: Menu d'action
 ? Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
@@ -171,7 +171,7 @@ Path: Chemin
 Pause: Pause
 Pause Playing: Mettre en pause la lecture
 ? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
-: 'Vérification des autorisations échouée : PasteBar n'a pas été ajouté avec succès aux paramètres d'accessibilité. Veuillez accorder les autorisations requises et cliquer à nouveau sur Terminé.'
+: 'Vérification des autorisations échouée : PasteBar n`a pas été ajouté avec succès aux paramètres d`accessibilité. Veuillez accorder les autorisations requises et cliquer à nouveau sur Terminé.'
 Pin Selected: Épingle sélectionné
 Pinned: Épinglé
 Play: Lire

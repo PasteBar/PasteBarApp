@@ -12,7 +12,7 @@ Application UI Color Theme: Thème couleur de l'interface
 Application UI Fonts Scale: Échelle police de l'interface
 Application UI Language: Langue de l'interface
 Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Les applications ci-dessous n'auront pas leur action de copie capturée dans l'historique. Insensible à la casse.
-Auto Disable History Capture when Screen Unlocked: Désactivation automatique de la capture de l'historique lorsque l'écran est déverrouillé :
+Auto Disable History Capture when Screen Unlocked: Désactivation automatique de la capture de l'historique lorsque l'écran est déverrouillé
 Auto Lock Application Screen on User Inactivity: Verrouillage automatique de l'écran de l'application en cas d'inactivité de l'utilisateur
 Auto Lock Screen on User Inactivity: Verrouillage automatique  de l'écran sur inactivité
 Auto Lock the Screen on User Inactivity: Verrouillage automatique de l'écran en cas d'inactivité de l'utilisateur
@@ -121,7 +121,7 @@ Priority support: Support prioritaire
 Programming Language Detection: Détection du langage de programmation
 Programming Language Selection: Sélection du langage de programmation
 Protect your data by requiring screen unlock authentication whenever the application starts.: Protégez vos données en exigeant l'authentification au démarrage de l'application.
-Recovery Password for Lock Screen Passcode: Mot de passe de récupération pour le code de l'écran de verrouillage :
+Recovery Password for Lock Screen Passcode: Mot de passe de récupération pour le code de l'écran de verrouillage
 Recovery password is set.: Mot de passe de récupération défini.
 Refresh Application UI: Actualiser l'interface de l'application
 Refresh UI: Actualiser l'interface
@@ -142,7 +142,7 @@ Set a passcode to unlock the locked screen and protect your data from unauthoriz
 :  Définissez un mot de passe de récupération pour réinitialiser facilement le code de votre écran de verrouillage en cas d'oubli. Votre mot de passe sera stocké en toute sécurité dans la mémoire du système d'exploitation de votre appareil.
 Settings: Paramètres
 Show Clipboard History Capture Control on Lock Screen: Afficher le contrôle de la capture de l'historique du presse-papier sur l'écran de verrouillage
-Show Disable History Capture When Screen Locked: Afficher Désactivation de la capture de l'historique lorsque l'écran est verrouillé : 
+Show Disable History Capture When Screen Locked: Afficher Désactivation de la capture de l'historique lorsque l'écran est verrouillé
 Show Disabled Collections: Afficher les collections désactivées
 ? Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
 :  Afficher le bouton de capture de l'historique du presse-papiers lorsque l'écran de l'application est verrouillé. Cela vous permet de contrôler les paramètres de l'historique de capture à partir de l'écran verrouillé de l'application.
