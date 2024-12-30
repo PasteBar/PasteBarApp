@@ -4,6 +4,8 @@ import { atomWithStore } from 'jotai-zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
 
+import { isWindowsOS } from './signalStore'
+
 export const HISTORY_DEFAULT_PANEL_WIDTH_MAC = 350
 export const HISTORY_DEFAULT_PANEL_WIDTH_WIN = 320
 
@@ -190,6 +192,9 @@ export const uiStore = createStore<UIStoreState>()(
         }))
       },
       setOSType: (osType: string) => {
+        if (osType === 'Windows_NT') {
+          isWindowsOS.value = true
+        }
         set(() => ({
           isWindows: osType === 'Windows_NT',
           isMacOSX: osType === 'Darwin',

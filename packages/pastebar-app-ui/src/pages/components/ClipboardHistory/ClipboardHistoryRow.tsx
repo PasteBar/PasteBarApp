@@ -112,6 +112,8 @@ interface ClipboardHistoryRowProps {
   removeLinkMetaData?: (historyId: UniqueIdentifier) => Promise<void>
   isDragPreview?: boolean
   setSelectHistoryItem?: (id: UniqueIdentifier) => void
+  setSelectedHistoryItems?: (ids: UniqueIdentifier[]) => void
+  selectedHistoryItems?: UniqueIdentifier[]
   clipboard?: ClipboardHistoryItem
   isDark: boolean
   setRowHeight?: (index: number, height: number) => void
@@ -166,6 +168,8 @@ export function ClipboardHistoryRowComponent({
   setWrapText = () => {},
   setBrokenImageItem = () => {},
   setSelectHistoryItem = () => {},
+  selectedHistoryItems = [],
+  setSelectedHistoryItems = () => {},
   isDragPreview = false,
   setRowHeight = () => {},
   setHistoryFilters = () => {},
@@ -1083,6 +1087,8 @@ export function ClipboardHistoryRowComponent({
             generateLinkMetaData={generateLinkMetaData}
             removeLinkMetaData={removeLinkMetaData}
             setSelectHistoryItem={setSelectHistoryItem}
+            setSelectedHistoryItems={setSelectedHistoryItems}
+            selectedHistoryItems={selectedHistoryItems}
             onCopyPaste={onCopyPaste}
             setHistoryFilters={setHistoryFilters}
             setAppFilters={setAppFilters}

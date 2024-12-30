@@ -20,7 +20,6 @@ import {
   ClipboardX,
   EqualNot,
   Expand,
-  Filter,
   GalleryVertical,
   ListFilter,
   MenuSquare,
@@ -32,7 +31,6 @@ import {
   SquareAsterisk,
   Star,
   StarOff,
-  TrashIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -40,6 +38,7 @@ import { useNavigate } from 'react-router-dom'
 import { ensureUrlPrefix } from '~/lib/utils'
 
 import {
+  Badge,
   Box,
   ContextMenuCheckboxItem,
   ContextMenuContent,
@@ -58,6 +57,7 @@ import {
   usePinnedClipboardHistoryByIds,
   useUpdateClipboardHistoryById,
 } from '~/hooks/queries/use-history-items'
+import { useSignal } from '~/hooks/use-signal'
 
 import { LinkMetadata } from '~/types/history'
 import { CreateDashboardItemType } from '~/types/menu'
@@ -87,6 +87,8 @@ interface ClipboardHistoryRowContextMenuProps {
   ) => Promise<LinkMetadata | void>
   removeLinkMetaData?: (historyId: UniqueIdentifier) => Promise<void>
   setSelectHistoryItem: (id: UniqueIdentifier) => void
+  setSelectedHistoryItems?: (ids: UniqueIdentifier[]) => void
+  selectedHistoryItems?: UniqueIdentifier[]
   onCopyPaste: (id: UniqueIdentifier, delay?: number) => void
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
@@ -111,11 +113,13 @@ export default function ClipboardHistoryRowContextMenu({
   removeLinkMetaData = () => Promise.resolve(),
   setHistoryFilters = () => {},
   setAppFilters = () => {},
+  setSelectedHistoryItems = () => {},
   isSelected,
   hasLinkCard,
   setSavingItem,
   setLargeViewItemId,
   setSelectHistoryItem,
+  selectedHistoryItems,
   onCopyPaste,
 }: ClipboardHistoryRowContextMenuProps) {
   const { t } = useTranslation()
@@ -128,8 +132,7 @@ export default function ClipboardHistoryRowContextMenu({
     addToHistoryExclusionAppList,
   } = useAtomValue(settingsStoreAtom)
 
-  const { deleteClipboardHistoryItem } = useAtomValue(clipboardHistoryStoreAtom)
-
+  const showDeleteMenuItemsConfirmation = useSignal(false)
   const { updateClipboardHistoryById } = useUpdateClipboardHistoryById()
   const { deleteClipboardHistoryByIds } = useDeleteClipboardHistoryByIds()
   const { pinnedClipboardHistoryByIds } = usePinnedClipboardHistoryByIds()
@@ -152,7 +155,7 @@ export default function ClipboardHistoryRowContextMenu({
 
   return (
     <ContextMenuPortal>
-      <ContextMenuContent className="w-[190px]">
+      <ContextMenuContent className="max-w-[210px]">
         <ContextMenuItem
           onClick={() => {
             setSelectHistoryItem(historyId)
@@ -547,21 +550,78 @@ export default function ClipboardHistoryRowContextMenu({
         )}
 
         <ContextMenuSeparator />
-        <ContextMenuItem
-          onClick={async e => {
-            await deleteClipboardHistoryByIds({ historyIds: [historyId] })
-            deleteClipboardHistoryItem(historyId)
-          }}
-        >
-          <Flex>
-            <Text className="!text-red-500 dark:!text-red-600">
-              {t('Delete', { ns: 'common' })}
-            </Text>
-          </Flex>
-          <div className="ml-auto">
-            <TrashIcon className="h-4 w-4 text-red-500 dark:!text-red-600" />
-          </div>
-        </ContextMenuItem>
+        {isSelected && selectedHistoryItems && selectedHistoryItems.length > 1 ? (
+          <ContextMenuItem
+            onClick={async e => {
+              if (showDeleteMenuItemsConfirmation.value) {
+                await deleteClipboardHistoryByIds({ historyIds: selectedHistoryItems })
+                setTimeout(() => {
+                  setSelectedHistoryItems([])
+                }, 400)
+                showDeleteMenuItemsConfirmation.value = false
+              } else {
+                e.preventDefault()
+                showDeleteMenuItemsConfirmation.value = true
+                setTimeout(() => {
+                  showDeleteMenuItemsConfirmation.value = false
+                }, 3000)
+              }
+            }}
+          >
+            <Flex>
+              <Text className="!text-red-500 dark:!text-red-600">
+                {!showDeleteMenuItemsConfirmation.value
+                  ? t('Delete', { ns: 'common' })
+                  : t('Click to Confirm', { ns: 'common' })}
+                <Badge
+                  variant="destructive"
+                  className="bg-red-500 ml-1 py-0 font-semibold"
+                >
+                  {selectedHistoryItems.length}
+                </Badge>
+              </Text>
+            </Flex>
+            {!showDeleteMenuItemsConfirmation.value && (
+              <div className="ml-auto">
+                <Badge variant="default" className="ml-1 py-0 font-semibold">
+                  DEL
+                </Badge>
+              </div>
+            )}
+          </ContextMenuItem>
+        ) : (
+          <ContextMenuItem
+            onClick={async e => {
+              if (showDeleteMenuItemsConfirmation.value) {
+                await deleteClipboardHistoryByIds({ historyIds: [historyId] })
+                setTimeout(() => {
+                  showDeleteMenuItemsConfirmation.value = false
+                }, 400)
+              } else {
+                e.preventDefault()
+                showDeleteMenuItemsConfirmation.value = true
+                setTimeout(() => {
+                  showDeleteMenuItemsConfirmation.value = false
+                }, 3000)
+              }
+            }}
+          >
+            <Flex>
+              <Text className="!text-red-500 dark:!text-red-600">
+                {!showDeleteMenuItemsConfirmation.value
+                  ? t('Delete', { ns: 'common' })
+                  : t('Click to Confirm', { ns: 'common' })}
+              </Text>
+            </Flex>
+            {!showDeleteMenuItemsConfirmation.value && (
+              <div className="ml-auto">
+                <Badge variant="default" className="ml-1 py-0 font-semibold">
+                  DEL
+                </Badge>
+              </div>
+            )}
+          </ContextMenuItem>
+        )}
       </ContextMenuContent>
     </ContextMenuPortal>
   )
