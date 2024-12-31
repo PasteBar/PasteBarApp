@@ -3,7 +3,6 @@ import { confirm, message } from '@tauri-apps/api/dialog'
 import HistoryIcon from '~/assets/icons/history'
 import {
   clipboardHistoryStore,
-  clipboardHistoryStoreAtom,
   createClipHistoryItemIds,
   hasDashboardItemCreate,
   hoveringHistoryRowId,
@@ -79,8 +78,6 @@ export const ClipboardHistoryIconMenu = ({
     isHistoryAutoUpdateOnCaputureEnabled,
     setIsHistoryAutoUpdateOnCaputureEnabled,
   } = useAtomValue(settingsStoreAtom)
-
-  const { deleteClipboardHistoryItems } = useAtomValue(clipboardHistoryStoreAtom)
 
   useHotkeys(['alt+s'], () => {
     setShowSelectHistoryItems(!showSelectHistoryItems)
@@ -292,7 +289,6 @@ export const ClipboardHistoryIconMenu = ({
                 await deleteClipboardHistoryByIds({ historyIds: selectedHistoryItems })
                 setTimeout(() => {
                   onDelete()
-                  deleteClipboardHistoryItems(selectedHistoryItems)
                   setSelectedHistoryItems([])
                   setShowSelectHistoryItems(false)
                   setIsDeleting(false)

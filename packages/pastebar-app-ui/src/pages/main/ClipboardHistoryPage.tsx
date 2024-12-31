@@ -236,7 +236,7 @@ export default function ClipboardHistoryPage() {
         await deleteClipboardHistoryByIds({ historyIds: selectedHistoryItems })
         setSelectedHistoryItems([])
       } else if (hoveringHistoryIdDelete) {
-        await deleteClipboardHistoryItem(hoveringHistoryIdDelete)
+        await deleteClipboardHistoryByIds({ historyIds: [hoveringHistoryIdDelete] })
       }
     },
   })
@@ -253,8 +253,6 @@ export default function ClipboardHistoryPage() {
     setHistoryListSimpleBar,
     scrollToTopHistoryList,
     updateClipboardHistory,
-    deleteClipboardHistoryItem,
-    deleteClipboardHistoryItems,
     addToClipboardHistoryIdsURLErrors,
     addToGenerateLinkMetaDataInProgress,
     removeToGenerateLinkMetaDataInProgress,
@@ -692,18 +690,6 @@ export default function ClipboardHistoryPage() {
             })
 
             setTimeout(() => {
-              if (selectedHistoryItems.length > 0) {
-                deleteClipboardHistoryItems(
-                  Array.from(new Set([...selectedHistoryItems, activeId]))
-                )
-              } else {
-                Array.from(new Set([...selectedHistoryItems, activeId])).forEach(
-                  itemId => {
-                    deleteClipboardHistoryItem(itemId)
-                  }
-                )
-              }
-
               doRefetchFindClipboardHistory()
               setDragOverPinnedId(null)
               setDragOverTrashId(null)

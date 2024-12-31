@@ -351,6 +351,7 @@ export function useDeleteClipboardHistoryByIds() {
         queryClient.invalidateQueries({
           queryKey: ['get_clipboard_history_pinned'],
         })
+        invoke('build_system_menu')
       } else {
         console.log('delete clipboard error', data)
       }
@@ -376,6 +377,7 @@ export function useClearClipboardHistoryOlderThan() {
         queryClient.invalidateQueries({
           queryKey: ['get_clipboard_history_pinned'],
         })
+        invoke('build_system_menu')
       } else {
         console.log('clear clipboard error', data)
       }
@@ -395,13 +397,13 @@ export function useClearRecentClipboardHistory() {
   >('clear_recent_clipboard_history', {
     onSuccess: data => {
       if (data === 'ok') {
-        console.log('clear recent clipboard success', data)
         queryClient.invalidateQueries({
           queryKey: ['get_clipboard_history'],
         })
         queryClient.invalidateQueries({
           queryKey: ['get_clipboard_history_pinned'],
         })
+        invoke('build_system_menu')
       } else {
         console.log('clear recent clipboard error', data)
       }
