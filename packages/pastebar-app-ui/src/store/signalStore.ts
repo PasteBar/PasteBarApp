@@ -16,6 +16,7 @@ export type AppTourType = ValueOf<typeof APP_TOURS>
 
 export const recentSearchTerm = signal<string | null>(null)
 export const isAppLocked = signal(false)
+export const isWindowsOS = signal(false)
 export const resetPassCodeNextDelayInSeconds = signal<number>(0)
 export const resetPassCodeNumberOfTried = signal<number>(0)
 export const openActionConfirmModal = signal(false)

@@ -2,7 +2,6 @@ import { UniqueIdentifier } from '@dnd-kit/core'
 import { confirm, message } from '@tauri-apps/api/dialog'
 import {
   clipboardHistoryStore,
-  clipboardHistoryStoreAtom,
   createClipHistoryItemIds,
   hasDashboardItemCreate,
   hoveringHistoryRowId,
@@ -52,7 +51,6 @@ export const ClipboardHistoryWindowIcons = ({
   isDeleting,
   onDelete,
   setIsDeleting,
-  isDark,
   setSelectHistoryItem,
   setSelectedHistoryItems,
   showSelectHistoryItems,
@@ -67,8 +65,6 @@ export const ClipboardHistoryWindowIcons = ({
     isHistoryAutoUpdateOnCaputureEnabled,
     setIsHistoryAutoUpdateOnCaputureEnabled,
   } = useAtomValue(settingsStoreAtom)
-
-  const { deleteClipboardHistoryItems } = useAtomValue(clipboardHistoryStoreAtom)
 
   useHotkeys(['alt+s'], () => {
     setShowSelectHistoryItems(!showSelectHistoryItems)
@@ -246,7 +242,6 @@ export const ClipboardHistoryWindowIcons = ({
               await deleteClipboardHistoryByIds({ historyIds: selectedHistoryItems })
               setTimeout(() => {
                 onDelete()
-                deleteClipboardHistoryItems(selectedHistoryItems)
                 setSelectedHistoryItems([])
                 setShowSelectHistoryItems(false)
                 setIsDeleting(false)

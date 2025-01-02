@@ -21,6 +21,7 @@ import {
   createClipBoardItemId,
   createClipHistoryItemIds,
   createMenuItemFromHistoryId,
+  hoveringHistoryRowId,
   isKeyAltPressed,
   settingsStoreAtom,
   showClipsMoveOnBoardId,
@@ -101,6 +102,7 @@ import {
   usePasteHistoryItem,
 } from '~/hooks/use-copypaste-history-item'
 import { useDebounce } from '~/hooks/use-debounce'
+import useDeleteConfirmationTimer from '~/hooks/use-delete-confirmation-items'
 import { useSignal } from '~/hooks/use-signal'
 
 import {
@@ -226,6 +228,19 @@ export default function ClipboardHistoryPage() {
   const isPinnedPanelHovering = useSignal(false)
   const isPinnedPanelKeepOpen = useSignal(false)
 
+  const { showConfirmation, hoveringHistoryIdDelete } = useDeleteConfirmationTimer({
+    hoveringHistoryRowId,
+    selectedHistoryItems,
+    onConfirmedDelete: async () => {
+      if (selectedHistoryItems.length > 0) {
+        await deleteClipboardHistoryByIds({ historyIds: selectedHistoryItems })
+        setSelectedHistoryItems([])
+      } else if (hoveringHistoryIdDelete) {
+        await deleteClipboardHistoryByIds({ historyIds: [hoveringHistoryIdDelete] })
+      }
+    },
+  })
+
   const isPinnedPanelHoverOpen = useMemo(() => {
     return isPinnedPanelKeepOpen.value || isPinnedPanelHovering.value
   }, [isPinnedPanelHovering.value, isPinnedPanelKeepOpen.value])
@@ -238,8 +253,6 @@ export default function ClipboardHistoryPage() {
     setHistoryListSimpleBar,
     scrollToTopHistoryList,
     updateClipboardHistory,
-    deleteClipboardHistoryItem,
-    deleteClipboardHistoryItems,
     addToClipboardHistoryIdsURLErrors,
     addToGenerateLinkMetaDataInProgress,
     removeToGenerateLinkMetaDataInProgress,
@@ -587,7 +600,9 @@ export default function ClipboardHistoryPage() {
 
   const hasIsDeleting = (historyId: UniqueIdentifier) => {
     return (
+      (showConfirmation && selectedHistoryItems.includes(historyId)) ||
       historyId === showHistoryDeleteConfirmationId.value ||
+      (showConfirmation && historyId === hoveringHistoryIdDelete) ||
       historyId === dragOverTrashId ||
       (Boolean(dragOverTrashId) &&
         Boolean(activeDragId) &&
@@ -675,18 +690,6 @@ export default function ClipboardHistoryPage() {
             })
 
             setTimeout(() => {
-              if (selectedHistoryItems.length > 0) {
-                deleteClipboardHistoryItems(
-                  Array.from(new Set([...selectedHistoryItems, activeId]))
-                )
-              } else {
-                Array.from(new Set([...selectedHistoryItems, activeId])).forEach(
-                  itemId => {
-                    deleteClipboardHistoryItem(itemId)
-                  }
-                )
-              }
-
               doRefetchFindClipboardHistory()
               setDragOverPinnedId(null)
               setDragOverTrashId(null)
@@ -1041,6 +1044,10 @@ export default function ClipboardHistoryPage() {
                                                 showLargeViewHistoryId.value = historyId
                                               }}
                                               setSelectHistoryItem={setSelectHistoryItem}
+                                              selectedHistoryItems={selectedHistoryItems}
+                                              setSelectedHistoryItems={
+                                                setSelectedHistoryItems
+                                              }
                                               onCopy={setCopiedItem}
                                               onCopyPaste={setPastedItem}
                                               pastingCountDown={
@@ -1642,6 +1649,10 @@ export default function ClipboardHistoryPage() {
                                               setHistoryFilters={setHistoryFilters}
                                               setAppFilters={setAppFilters}
                                               setSelectHistoryItem={setSelectHistoryItem}
+                                              selectedHistoryItems={selectedHistoryItems}
+                                              setSelectedHistoryItems={
+                                                setSelectedHistoryItems
+                                              }
                                               onCopy={setCopiedItem}
                                               onCopyPaste={setPastedItem}
                                               pastingCountDown={

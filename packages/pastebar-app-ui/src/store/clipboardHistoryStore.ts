@@ -22,8 +22,6 @@ export interface ClipboardHistoryStoreState {
   clipboardHistory: ClipboardHistoryItem[]
   newClipboardHistory: ClipboardHistoryItem[]
   foundClipboardHistory: ClipboardHistoryItem[]
-  deleteClipboardHistoryItem: (historyId: UniqueIdentifier) => void
-  deleteClipboardHistoryItems: (historyIds: UniqueIdentifier[]) => void
   newClipboardHistoryCount: number
   setHistoryListSimpleBar: (historyListSimpleBar: React.RefObject<HTMLElement>) => void
   generateLinkMetaData: (
@@ -69,34 +67,6 @@ export const clipboardHistoryStore = createStore<ClipboardHistoryStoreState>()(
     addToClipboardHistoryIdsURLErrors: (historyId: UniqueIdentifier) => {
       set(() => ({
         clipboardHistoryIdsURLErrors: [...get().clipboardHistoryIdsURLErrors, historyId],
-      }))
-    },
-    deleteClipboardHistoryItem(historyId: UniqueIdentifier) {
-      const { clipboardHistory, foundClipboardHistory } = get()
-      const _clipboardHistory = clipboardHistory.filter(
-        clipboard => clipboard.historyId !== historyId
-      )
-      const _foundClipboardHistory = foundClipboardHistory.filter(
-        clipboard => clipboard.historyId !== historyId
-      )
-      set(() => ({
-        clipboardHistory: _clipboardHistory,
-        foundClipboardHistory: _foundClipboardHistory,
-      }))
-    },
-    deleteClipboardHistoryItems(historyIds: UniqueIdentifier[]) {
-      const { clipboardHistory, foundClipboardHistory } = get()
-
-      const _clipboardHistory = clipboardHistory.filter(
-        clipboard => !historyIds.includes(clipboard.historyId)
-      )
-
-      const _foundClipboardHistory = foundClipboardHistory.filter(
-        clipboard => !historyIds.includes(clipboard.historyId)
-      )
-      set(() => ({
-        clipboardHistory: _clipboardHistory,
-        foundClipboardHistory: _foundClipboardHistory,
       }))
     },
     scrollToTopHistoryList(force = false) {

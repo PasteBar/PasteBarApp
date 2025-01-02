@@ -9,7 +9,6 @@ import {
   availableVersionBody,
   availableVersionDate,
   availableVersionNumber,
-  clipboardHistoryStoreAtom,
   collectionsStoreAtom,
   isAppLocked,
   isCreatingMenuItem,
@@ -89,8 +88,8 @@ import { ThemeModeToggle } from '~/components/theme-mode-toggle'
 import { Badge, Box, Button, Flex, Shortcut, Text } from '~/components/ui'
 
 import { useSelectCollectionById } from '~/hooks/queries/use-collections'
+import { useDeleteClipboardHistoryByIds } from '~/hooks/queries/use-history-items'
 import { useDeleteItemById } from '~/hooks/queries/use-items'
-import { useSignal } from '~/hooks/use-signal'
 
 import { PlayerMenu } from '../components/audio-player/PlayerMenu'
 import Logo from './Logo'
@@ -118,6 +117,8 @@ export function NavBar() {
     handlePrev,
     togglePlayPause,
   } = useAtomValue(playerStoreAtom)
+
+  const { deleteClipboardHistoryByIds } = useDeleteClipboardHistoryByIds()
 
   const { currentCollectionId, collections, pinnedClips } =
     useAtomValue(collectionsStoreAtom)
@@ -191,8 +192,6 @@ export function NavBar() {
     isShowNavBarItemsOnHoverOnly,
     isHideCollectionsOnNavBar,
   } = useAtomValue(settingsStoreAtom)
-
-  const { deleteClipboardHistoryItem } = useAtomValue(clipboardHistoryStoreAtom)
 
   const {
     fontSize,
@@ -464,7 +463,9 @@ export function NavBar() {
                   } else if (
                     showInvalidTrackWarningAddSong.value?.sourceType === 'history'
                   ) {
-                    deleteClipboardHistoryItem(showInvalidTrackWarningAddSong.value?.id)
+                    await deleteClipboardHistoryByIds({
+                      historyIds: showInvalidTrackWarningAddSong.value?.id,
+                    })
                   }
                   invalidTrackWarning.dismiss()
                 }}

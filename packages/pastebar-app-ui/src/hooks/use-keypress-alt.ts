@@ -1,11 +1,15 @@
 import { useEffect } from 'react'
-import { isKeyAltPressed, isKeyCtrlPressed } from '~/store'
+import { isKeyAltPressed, isKeyCtrlPressed, isWindowsOS } from '~/store'
 
 export default function useKeyPressAltCtrl() {
-  const altKeys = ['Alt', 'Meta']
+  const altKeys = ['Meta']
+  const altWindowsKeys = ['Alt']
   const ctrlKeys = ['Control']
 
   function hasAltKey(event: KeyboardEvent) {
+    if (isWindowsOS.value) {
+      return altWindowsKeys.includes(event.key)
+    }
     return altKeys.includes(event.key)
   }
 
