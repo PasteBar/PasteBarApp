@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { emit } from '@tauri-apps/api/event'
 import { invoke } from '@tauri-apps/api/tauri'
 import { CLIPBOARD_HISTORY_SCROLL_PAGE_SIZE, clipboardHistoryStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
@@ -351,6 +352,11 @@ export function useDeleteClipboardHistoryByIds() {
         queryClient.invalidateQueries({
           queryKey: ['get_clipboard_history_pinned'],
         })
+
+        if (!window.isQuickPasteWindow) {
+          emit('update-history-items-quickpaste')
+        }
+
         invoke('build_system_menu')
       } else {
         console.log('delete clipboard error', data)

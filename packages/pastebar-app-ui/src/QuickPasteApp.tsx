@@ -186,6 +186,16 @@ function QuickPasteApp() {
       }
     )
 
+    const listenToHistoryItemsUnlisten = listen(
+      'update-history-items-quickpaste',
+      async () => {
+        await queryClient.invalidateQueries({
+          queryKey: ['get_clipboard_history'],
+        })
+        clipboardHistoryStore.updateClipboardHistory()
+      }
+    )
+
     window.addEventListener('unhandledrejection', event => {
       console.error('Unhandled promise rejection:', event)
     })
@@ -197,6 +207,10 @@ function QuickPasteApp() {
     })
 
     return () => {
+      listenToHistoryItemsUnlisten.then(unlisten => {
+        unlisten()
+      })
+
       listenToClipboardUnlisten.then(unlisten => {
         unlisten()
       })
