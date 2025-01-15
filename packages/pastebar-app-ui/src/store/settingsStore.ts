@@ -78,6 +78,8 @@ type Settings = {
   screenLockRecoveryPasswordMasked: string | null
   isAppLocked: boolean
   isScreenLockPassCodeRequireOnStart: boolean
+  clipTextMinLength: number
+  clipTextMaxLength: number
 }
 
 type Constants = {
@@ -161,6 +163,8 @@ export interface SettingsStoreState {
   syncStateUpdate: (name: string, value: any) => void
   relaunchApp: () => void
   initSettings: (settings: Settings) => void
+  setClipTextMinLength: (width: number) => void
+  setClipTextMaxLength: (height: number) => void
 }
 
 const initialState: SettingsStoreState & Settings = {
@@ -219,6 +223,8 @@ const initialState: SettingsStoreState & Settings = {
   isAppLocked: false,
   isScreenLockPassCodeRequireOnStart: false,
   isFirstRunAfterUpdate: false,
+  clipTextMinLength: 0,
+  clipTextMaxLength: 5000,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -272,6 +278,8 @@ const initialState: SettingsStoreState & Settings = {
   setIsKeepMainWindowClosedOnRestartEnabled: () => {},
   setIsHideCollectionsOnNavBar: () => {},
   setIsShowNavBarItemsOnHoverOnly: () => {},
+  setClipTextMinLength: () => {},
+  setClipTextMaxLength: () => {},
   initConstants: () => {},
   setAppDataDir: () => {},
   updateSetting: () => {},
@@ -556,6 +564,12 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       'hotKeysShowHideQuickPasteWindow',
       hotKeysShowHideQuickPasteWindow
     )
+  },
+  setClipTextMinLength: async (length: number) => {
+    return get().updateSetting('clipTextMinLength', length)
+  },
+  setClipTextMaxLength: async (length: number) => {
+    return get().updateSetting('clipTextMaxLength', length)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

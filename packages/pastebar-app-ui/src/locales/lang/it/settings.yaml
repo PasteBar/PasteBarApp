@@ -27,6 +27,7 @@ Auto-delete clipboard history after: Elimina automaticamente la cronologia degli
 : Crea automaticamente l'anteprima della scheda link nella cronologia degli appunti. Questo permette di visualizzare rapidamente i dettagli del sito web senza aprire o incollare il link.
 Back: Indietro
 Capture History: Cattura Cronologia
+Capture History Text Length Limits: Limiti di Lunghezza del Testo della Cronologia degli Appunti
 Change the application UI font size scale: Cambia la scala della dimensione dei caratteri dell'interfaccia utente
 Change the application UI language: Cambia la lingua dell'interfaccia utente
 Change the application user interface color theme: Cambia il tema colore dell'interfaccia utente
@@ -158,6 +159,8 @@ Thank you for testing! 🙌: Grazie per il test! 🙌
 : Questa opzione ti permette di controllare la visualizzazione e la tempistica delle note al passaggio del mouse sui clip. Puoi scegliere di mostrare le note istantaneamente o con un ritardo per prevenire popup indesiderati.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 : Questa opzione ti permette di personalizzare la larghezza e l'altezza massima del popup che mostra le note dei clip, assicurando che si adatti comodamente alla dimensione desiderata.
+? This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
+: Questa opzione ti permette di personalizzare la lunghezza minima e massima del testo che può essere catturato nella cronologia degli appunti. Impostare uno dei due valori su 0 rende quel limite illimitato.
 To downgrade your current version, please visit: Per tornare a una versione precedente, visita
 'To downgrade, please visit: ': 'Per tornare a una versione precedente, visita: '
 To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: Per garantire la migliore precisione di rilevamento, seleziona fino a 7 lingue. Limitare le scelte migliora la precisione.

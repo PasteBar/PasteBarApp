@@ -27,7 +27,7 @@ async function loadPasteBarAppPackage() {
     const packageJsonUrl = pathToFileURL(packageJsonPath).href;
 
     pastebarAppPackage = await import(packageJsonUrl, {
-      assert: { type: 'json' }
+      with: { type: 'json' }
     });
 
   } catch (e) {

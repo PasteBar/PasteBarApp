@@ -28,6 +28,7 @@ Auto-delete clipboard history after: Suppression automatique de l'historique du 
 : Création automatique d'un aperçu de la carte du lien dans l'historique du presse-papiers. Cela permet de visualiser rapidement les détails du site web sans ouvrir ou coller le lien.
 Back: Retour
 Capture History: Capturer historique
+Capture History Text Length Limits: Limites de longueur du texte de l'historique de capture
 Change the application UI font size scale: Modifier l'échelle de taille de la police de l'interface utilisateur de l'application
 Change the application UI language: Changer la langue de l'interface de l'application
 Change the application user interface color theme: Changer la couleur du thème de l'interface utilisateur
@@ -159,6 +160,8 @@ Thank you for testing! 🙌: Merci pour le test ! 🙌
 : Cette option vous permet de contrôler l'affichage et la durée des notes au survol des clips. Vous pouvez choisir d'afficher les notes instantanément ou avec un délai pour éviter les popups involontaires.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 : Cette option vous permet de personnaliser la largeur et la hauteur maximales de la fenêtre contextuelle qui affiche les notes de clip, afin qu'elle s'adapte confortablement à la taille souhaitée.
+? This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
+: Cette option vous permet de personnaliser la longueur minimale et maximale du texte pouvant être capturé dans l'historique du presse-papiers. La définition de l'une ou l'autre valeur à 0 rend cette limite illimitée.
 To downgrade your current version, please visit: Pour rétrograder votre version actuelle, visitez
 'To downgrade, please visit: ': 'Pour rétrograder, visitez : '
 To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: Pour une détection optimale, sélectionnez jusqu'à 7 langues. Limiter les choix améliore la précision.

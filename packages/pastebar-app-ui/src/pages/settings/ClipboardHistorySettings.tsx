@@ -82,6 +82,10 @@ function SortableItem({ id, language }: SortableItemProps) {
 export default function ClipboardHistorySettings() {
   const {
     isHistoryEnabled,
+    clipTextMinLength,
+    clipTextMaxLength,
+    setClipTextMinLength,
+    setClipTextMaxLength,
     setIsHistoryEnabled,
     isHistoryAutoUpdateOnCaputureEnabled,
     setIsHistoryAutoUpdateOnCaputureEnabled,
@@ -260,6 +264,89 @@ export default function ClipboardHistorySettings() {
                 </Box>
                 {isHistoryEnabled && (
                   <>
+                    <Box className="max-w-xl mt-4 animate-in fade-in">
+                      <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                          <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                            {t('Capture History Text Length Limits', {
+                              ns: 'settings',
+                            })}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <Text className="text-sm text-muted-foreground">
+                            {t(
+                              'This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.',
+                              {
+                                ns: 'settings',
+                              }
+                            )}
+                          </Text>
+
+                          <Flex className="w-full gap-10 my-4 items-start justify-start">
+                            <InputField
+                              className="text-md !w-36"
+                              type="number"
+                              step="1"
+                              min={0}
+                              small
+                              label={t('Minimum length', { ns: 'common' })}
+                              value={clipTextMinLength}
+                              onBlur={() => {
+                                if (clipTextMinLength < 0) {
+                                  setClipTextMinLength(0)
+                                }
+                              }}
+                              onChange={e => {
+                                const value = e.target.value
+                                if (value === '') {
+                                  setClipTextMinLength(0);
+                                } else {
+                                  const number = parseInt(value)
+                                  setClipTextMinLength(number)
+                                  
+                                }
+                              }}
+                            />
+                            <InputField
+                              className="text-md !w-36"
+                              type="number"
+                              step="0"
+                              min={0}
+                              small
+                              label={t('Maximum length', { ns: 'common' })}
+                              value={clipTextMaxLength}
+                              onBlur={() => {
+                                if (clipTextMaxLength < 0) {
+                                  setClipTextMaxLength(0)
+                                }
+                              }}
+                              onChange={e => {
+                                const value = e.target.value
+                                if (value === '') {
+                                  setClipTextMaxLength(0);
+                                } else {
+                                  const number = parseInt(value)
+                                  setClipTextMaxLength(number)
+                                }
+                              }}
+                            />
+                          </Flex>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            disabled={clipTextMinLength === 0 && clipTextMaxLength === 5000}
+                            onClick={() => {
+                              setClipTextMinLength(0)
+                              setClipTextMaxLength(5000)
+                            }}
+                            className="text-sm bg-slate-200 dark:bg-slate-700 dark:text-slate-200 mt-1"
+                          >
+                            {t('Reset', { ns: 'common' })}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </Box>
                     <Box className="max-w-xl animate-in fade-in mt-4">
                       <Card
                         className={`${
@@ -595,9 +682,6 @@ export default function ClipboardHistorySettings() {
                         <CardContent>
                           <InputField
                             className="text-md !w-36"
-                            error={
-                              false ? t('Invalid number', { ns: 'common' }) : undefined
-                            }
                             small
                             label={t('Number of lines', { ns: 'common' })}
                             value={historyDetectLanguageMinLines}

@@ -105,21 +105,38 @@ where
 
       if !text.is_empty() {
         let mut is_excluded = false;
-        if let Some(setting) = settings_map.get("isExclusionListEnabled") {
-          if let Some(value_bool) = setting.value_bool {
-            if value_bool {
-              let exclusion_list: Vec<String> = settings_map
-                .get("historyExclusionList")
-                .and_then(|s| s.value_text.as_ref())
-                .map_or(Vec::new(), |exclusion_list_text| {
-                  exclusion_list_text.lines().map(String::from).collect()
-                });
 
-              is_excluded = text.lines().any(|line| {
-                exclusion_list
-                  .iter()
-                  .any(|item| line.to_lowercase().contains(&item.to_lowercase()))
-              });
+        let text_min_length = settings_map
+          .get("clipTextMinLength")
+          .and_then(|s| s.value_int)
+          .unwrap_or(0) as usize;
+
+        let text_max_length = settings_map
+          .get("clipTextMaxLength")
+          .and_then(|s| s.value_int)
+          .unwrap_or(5000) as usize;
+
+        if text.len() < text_min_length || (text.len() > text_max_length && text_max_length > 0) {
+          is_excluded = true;
+        }
+
+        if !is_excluded {
+          if let Some(setting) = settings_map.get("isExclusionListEnabled") {
+            if let Some(value_bool) = setting.value_bool {
+              if value_bool {
+                let exclusion_list: Vec<String> = settings_map
+                  .get("historyExclusionList")
+                  .and_then(|s| s.value_text.as_ref())
+                  .map_or(Vec::new(), |exclusion_list_text| {
+                    exclusion_list_text.lines().map(String::from).collect()
+                  });
+
+                is_excluded = text.lines().any(|line| {
+                  exclusion_list
+                    .iter()
+                    .any(|item| line.to_lowercase().contains(&item.to_lowercase()))
+                });
+              }
             }
           }
         }

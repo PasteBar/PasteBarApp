@@ -28,6 +28,7 @@ Auto-delete clipboard history after: Panonun geçmişini otomatik olarak sil
 : Bağlantı kartı önizlemesini pano geçmişinde otomatik olarak oluşturun. Bu, bağlantıyı açmadan veya yapıştırmadan web sitesi ayrıntılarını hızlı bir şekilde görüntülemenizi sağlar.
 Back: Geri
 Capture History: Yakalama Geçmişi
+Capture History Text Length Limits: Yakalama Geçmişi Metin Uzunluğu Sınırları
 Change the application UI font size scale: Uygulama arayüzü yazı tipi boyutunu değiştirme
 Change the application UI language: Uygulama arayüzü dilini değiştirin
 Change the application user interface color theme: Uygulama arayüzü renk temasını değiştirin
@@ -159,6 +160,8 @@ Thank you for testing! 🙌: Test ettiğiniz için teşekkür ederiz! 🙌
 : Bu seçenek, kliplerdeki gezinme notlarının görüntülenmesini ve zamanlamasını kontrol etmenizi sağlar. Notları anında veya istenmeyen açılır pencereleri önlemek için gecikmeli olarak göstermeyi seçebilirsiniz.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 : Bu seçenek, klip notlarını görüntüleyen açılır pencerenin maksimum genişliğini ve yüksekliğini özelleştirmenize olanak tanır ve böylece pencerenin istediğiniz boyuta rahatça sığmasını sağlar.
+? This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
+: Bu seçenek, panoya kaydedilen metnin minimum ve maksimum uzunluğunu özelleştirmenize olanak tanır. Her iki değeri de 0 olarak ayarlamak, bu sınırı sınırsız yapar.
 To downgrade your current version, please visit: Mevcut sürümünüzü düşürmek için lütfen şu adresi ziyaret edin
 'To downgrade, please visit: ': 'Sürümü düşürmek için lütfen şu adresi ziyaret edin:'
 To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: En iyi algılama doğruluğunu sağlamak için lütfen 7 dile kadar seçin. Seçenekleri sınırlamak hassasiyeti artırır.

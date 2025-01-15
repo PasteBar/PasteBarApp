@@ -28,6 +28,7 @@ Auto-delete clipboard history after: 自动删除剪贴板历史时间
 : 在剪贴板历史中自动创建链接卡片预览。这允许快速查看网站详情，无需打开或粘贴链接。
 Back: 返回
 Capture History: 捕获历史
+Capture History Text Length Limits: 捕获历史文本长度限制
 Change the application UI font size scale: 更改应用程序 UI 字体大小比例
 Change the application UI language: 更改应用程序 UI 语言
 Change the application user interface color theme: 更改应用程序用户界面颜色主题
@@ -159,6 +160,8 @@ Thank you for testing! 🙌: 感谢您的测试！🙌
 : 此选项让您控制剪辑悬停注释的显示和时间。您可以选择立即显示注释或延迟显示，以防止意外弹出。
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 : 此选项让您自定义显示剪辑注释的弹出窗口的最大宽度和高度，确保它舒适地适应您所需的尺寸。
+? This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
+: 此选项让您自定义剪贴板历史中可以捕获的文本的最小和最大长度。将任一值设置为 0 表示该限制为无限。
 To downgrade your current version, please visit: 要降级您的当前版本，请访问
 'To downgrade, please visit: ': '要降级，请访问：'
 To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: 为确保最佳检测准确性，请最多选择 7 种语言。限制选择可提高精确度。
