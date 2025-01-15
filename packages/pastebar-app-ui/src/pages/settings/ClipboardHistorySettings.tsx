@@ -289,9 +289,6 @@ export default function ClipboardHistorySettings() {
                               type="number"
                               step="1"
                               min={0}
-                              error={
-                                false ? t('Invalid number', { ns: 'common' }) : undefined
-                              }
                               small
                               label={t('Minimum length', { ns: 'common' })}
                               value={clipTextMinLength}
@@ -316,9 +313,6 @@ export default function ClipboardHistorySettings() {
                               type="number"
                               step="0"
                               min={0}
-                              error={
-                                false ? t('Invalid number', { ns: 'common' }) : undefined
-                              }
                               small
                               label={t('Maximum length', { ns: 'common' })}
                               value={clipTextMaxLength}
@@ -688,9 +682,6 @@ export default function ClipboardHistorySettings() {
                         <CardContent>
                           <InputField
                             className="text-md !w-36"
-                            error={
-                              false ? t('Invalid number', { ns: 'common' }) : undefined
-                            }
                             small
                             label={t('Number of lines', { ns: 'common' })}
                             value={historyDetectLanguageMinLines}

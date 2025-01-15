@@ -922,9 +922,6 @@ export default function UserPreferences() {
                           step="20"
                           max={800}
                           min={100}
-                          error={
-                            false ? t('Invalid number', { ns: 'common' }) : undefined
-                          }
                           small
                           label={t('Maximum width', { ns: 'common' })}
                           value={clipNotesMaxWidth}
@@ -953,9 +950,6 @@ export default function UserPreferences() {
                           step="20"
                           max={600}
                           min={100}
-                          error={
-                            false ? t('Invalid number', { ns: 'common' }) : undefined
-                          }
                           small
                           label={t('Maximum height', { ns: 'common' })}
                           value={clipNotesMaxHeight}
