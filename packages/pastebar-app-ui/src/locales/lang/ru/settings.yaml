@@ -35,6 +35,7 @@ Change the application user interface font size scale: Изменить масш
 Change the application user interface language: Изменить язык интерфейса приложения
 Clip Notes Popup Maximum Dimensions: Максимальные размеры всплывающего окна заметок к клипам
 Clipboard History Settings: Настройки истории буфера
+Clipboard History Text Length Limits: Ограничения длины текста в истории буфера обмена
 'Complete details:': 'Полные детали:'
 Configure settings to automatically delete clipboard history items after a specified duration.: Настройте параметры для автоматического удаления элементов истории буфера обмена по истечении указанного времени.
 Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Создавайте карточку предварительного просмотра при наведении на ссылку в истории буфера обмена. Это позволяет просматривать ссылку перед открытием или вставкой.
@@ -142,6 +143,8 @@ Thank you again for using PasteBar.: Спасибо Вам еще раз за и
 Thank you for testing! 🙌: Спасибо за тестирование! 🙌
 ? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 : Эта настройка позволяет управлять отображением и временем задержки всплывающих заметок при наведении на имя клипа. Выберите быстрый показ заметок или с задержкой.
+? This option lets you customize the limits for the length of text stored in the clipboard history. Setting the value to 0 makes it unlimited.
+: Эта настройка позволяет вам задать ограничения на длину текста, сохраняемого в истории буфера обмена. Установка значения 0 делает его неограниченным.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 : Эта настройка дает возможность задать максимальные размеры всплывающего окна с заметками к клипам, чтобы оно лучше соответствовало вашим требованиям.
 'To downgrade, please visit: ': 'Чтобы найти предыдущие версии, посетите следующую страницу: '

@@ -34,6 +34,7 @@ Change the application user interface font size scale: Cambia la scala della dim
 Change the application user interface language: Cambia la lingua dell'interfaccia utente
 Clip Notes Popup Maximum Dimensions: Dimensioni Massime del Popup delle Note dei Clip
 Clipboard History Settings: Impostazioni della Cronologia degli Appunti
+Clipboard History Text Length Limits: Limiti di Lunghezza del Testo della Cronologia degli Appunti
 'Complete details:': 'Dettagli completi:'
 Configure settings to automatically delete clipboard history items after a specified duration.: Configura le impostazioni per eliminare automaticamente gli elementi della cronologia degli appunti dopo una durata specificata.
 Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Crea una scheda di anteprima al passaggio del mouse sul link nella cronologia degli appunti. Questo ti permette di visualizzare l'anteprima del link prima di aprirlo o incollarlo.
@@ -156,6 +157,8 @@ Thank you again for using PasteBar.: Grazie ancora per utilizzare PasteBar.
 Thank you for testing! 🙌: Grazie per il test! 🙌
 ? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 : Questa opzione ti permette di controllare la visualizzazione e la tempistica delle note al passaggio del mouse sui clip. Puoi scegliere di mostrare le note istantaneamente o con un ritardo per prevenire popup indesiderati.
+? This option lets you customize the limits for the length of text stored in the clipboard history. Setting the value to 0 makes it unlimited.
+: Questa opzione ti permette di personalizzare i limiti per la lunghezza del testo memorizzato nella cronologia degli appunti. Impostare il valore a 0 lo rende illimitato.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 : Questa opzione ti permette di personalizzare la larghezza e l'altezza massima del popup che mostra le note dei clip, assicurando che si adatti comodamente alla dimensione desiderata.
 To downgrade your current version, please visit: Per tornare a una versione precedente, visita

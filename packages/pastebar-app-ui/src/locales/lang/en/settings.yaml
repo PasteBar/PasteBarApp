@@ -35,6 +35,7 @@ Change the application user interface font size scale: Change the application us
 Change the application user interface language: Change the application user interface language
 Clip Notes Popup Maximum Dimensions: Clip Notes Popup Maximum Dimensions
 Clipboard History Settings: Clipboard History Settings
+Clipboard History Text Length Limits: Clipboard History Text Length Limits
 'Complete details:': 'Complete details:'
 Configure settings to automatically delete clipboard history items after a specified duration.: Configure settings to automatically delete clipboard history items after a specified duration.
 Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.
@@ -157,6 +158,8 @@ Thank you again for using PasteBar.: Thank you again for using PasteBar.
 Thank you for testing! 🙌: Thank you for testing! 🙌
 ? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 : This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
+? This option lets you customize the limits for the length of text stored in the clipboard history. Setting the value to 0 makes it unlimited.
+: This option lets you customize the limits for the length of text stored in the clipboard history. Setting the value to 0 makes it unlimited.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 : This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 To downgrade your current version, please visit: To downgrade your current version, please visit

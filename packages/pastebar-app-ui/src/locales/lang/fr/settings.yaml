@@ -35,6 +35,7 @@ Change the application user interface font size scale: Changer l'échelle de tai
 Change the application user interface language: Changer la langue de l'interface utilisateur
 Clip Notes Popup Maximum Dimensions: Dimensions popup notes clip maximales
 Clipboard History Settings: Paramètres de l'historique du presse-papier
+Clipboard History Text Length Limits: Limites de longueur du texte de l'historique du presse-papiers
 'Complete details:': 'Détails complets :'
 Configure settings to automatically delete clipboard history items after a specified duration.: Configurez les paramètres pour supprimer automatiquement les éléments de l'historique du presse-papiers après une durée spécifiée.
 Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Créer une carte de prévisualisation au survol d'un lien dans l'historique du presse-papiers. Cela vous permet de prévisualiser le lien avant de l'ouvrir ou de le coller. de l'ouvrir ou de le coller.
@@ -157,6 +158,8 @@ Thank you again for using PasteBar.: Merci encore d'utiliser PasteBar.
 Thank you for testing! 🙌: Merci pour le test ! 🙌
 ? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 : Cette option vous permet de contrôler l'affichage et la durée des notes au survol des clips. Vous pouvez choisir d'afficher les notes instantanément ou avec un délai pour éviter les popups involontaires.
+? This option lets you customize the limits for the length of text stored in the clipboard history. Setting the value to 0 makes it unlimited.
+: Cette option vous permet de personnaliser les limites de la longueur du texte stocké dans l'historique du presse-papiers. Définir la valeur à 0 la rend illimitée.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
 : Cette option vous permet de personnaliser la largeur et la hauteur maximales de la fenêtre contextuelle qui affiche les notes de clip, afin qu'elle s'adapte confortablement à la taille souhaitée.
 To downgrade your current version, please visit: Pour rétrograder votre version actuelle, visitez
