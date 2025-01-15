@@ -135,6 +135,8 @@ function App() {
           isHistoryAutoUpdateOnCaputureEnabled:
             settings.isHistoryAutoUpdateOnCaputureEnabled?.valueBool,
           isHistoryEnabled: settings.isHistoryEnabled?.valueBool,
+          clipTextMinLength: settings.clipTextMinLength?.valueInt,
+          clipTextMaxLength: settings.clipTextMaxLength?.valueInt,
           isAutoClearSettingsEnabled: settings.isAutoClearSettingsEnabled?.valueBool,
           autoClearSettingsDuration: settings.autoClearSettingsDuration?.valueInt,
           autoClearSettingsDurationType:

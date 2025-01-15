@@ -114,7 +114,7 @@ where
         let text_max_length = settings_map
           .get("clipTextMaxLength")
           .and_then(|s| s.value_int)
-          .unwrap_or(0) as usize;
+          .unwrap_or(5000) as usize;
 
         if text.len() < text_min_length || (text.len() > text_max_length && text_max_length > 0) {
           is_excluded = true;

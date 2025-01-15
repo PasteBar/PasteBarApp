@@ -224,7 +224,7 @@ const initialState: SettingsStoreState & Settings = {
   isScreenLockPassCodeRequireOnStart: false,
   isFirstRunAfterUpdate: false,
   clipTextMinLength: 0,
-  clipTextMaxLength: 0,
+  clipTextMaxLength: 5000,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
