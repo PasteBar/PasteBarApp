@@ -175,7 +175,10 @@ export function ClipEditContent({
   const itemLocalOptions = useSignal<{
     noLinkCard?: boolean | undefined
     pressKeysAfterPaste?: string | undefined
-  }>({})
+    autoTrimSpaces?: boolean | undefined
+  }>({
+    autoTrimSpaces: true,
+  })
   const webrequestLocalOptions = useSignal<ClipWebRequestOptions>({
     method: 'GET',
     headers: [],
@@ -475,7 +478,7 @@ export function ClipEditContent({
     showPathValidationError.value = undefined
     webrequestTestOutputObject.value = {}
 
-    const saveValue = clipValue.value.trim()
+    const saveValue = clipValue.value
 
     if (!force) {
       if (isTemplate) {
@@ -1952,6 +1955,24 @@ export function ClipEditContent({
                   >
                     {t('Type:::Emoji', { ns: 'common' })}
                     {hasEmoji && (
+                      <div className="ml-auto pl-2">
+                        <Check size={15} className="fill-transparent" />
+                      </div>
+                    )}
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    className={itemLocalOptions.value.autoTrimSpaces ? 'font-semibold' : ''}
+                    onClick={e => {
+                      e.preventDefault()
+                      itemLocalOptions.value = {
+                        ...itemLocalOptions.value,
+                        autoTrimSpaces: !itemLocalOptions.value.autoTrimSpaces,
+                      }
+                    }}
+                  >
+                    {t('Type:::Trim', { ns: 'common' })}
+                    {itemLocalOptions.value.autoTrimSpaces && (
                       <div className="ml-auto pl-2">
                         <Check size={15} className="fill-transparent" />
                       </div>

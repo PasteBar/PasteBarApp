@@ -40,6 +40,7 @@ pub enum ClipFormKeyPress {
 pub struct ItemField {
   pub press_keys_after_paste: Option<ClipFormKeyPress>,
   pub no_link_card: Option<bool>,
+  pub auto_trim_spaces: Option<bool>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -197,7 +198,7 @@ pub async fn copy_clip_item(
   copy_from_menu: bool,
 ) -> String {
   // Fetch the item from the database
-  let item = match get_item_by_id(item_id.clone()) {
+  let mut item = match get_item_by_id(item_id.clone()) {
     Ok(i) => i,
     Err(e) => {
       eprintln!("Failed to find item: {}", e);
@@ -206,6 +207,18 @@ pub async fn copy_clip_item(
   };
 
   let mut manager = app_handle.clipboard_manager();
+  dbg!(&item);
+
+  let mut auto_trim_spaces = true;
+  if let Some(item_options) = item.item_options {
+    if let Ok(item_field) = serde_json::from_str::<ItemField>(&item_options) {
+      auto_trim_spaces = item_field.auto_trim_spaces.unwrap_or(true);
+    }
+  }
+
+  if (auto_trim_spaces) {
+    item.value = item.value.map(|v| v.trim().to_string());
+  }
 
   if let (Some(true), true) = (item.is_link, copy_from_menu) {
     match &item.value {

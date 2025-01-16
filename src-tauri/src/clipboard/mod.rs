@@ -99,9 +99,12 @@ where
       Ok(active_window) => Some(active_window.app_name),
       Err(()) => None,
     };
-
     if let Ok(mut text) = clipboard_text {
-      text = text.trim().to_string();
+      text = text.to_string();
+
+      if copied_from_app.as_deref() != Some("PasteBar") {
+        text = text.trim().to_string();
+      }
 
       if !text.is_empty() {
         let mut is_excluded = false;

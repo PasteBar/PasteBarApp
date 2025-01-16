@@ -191,8 +191,8 @@ export function getValuePreview(
     return {
       valuePreview:
         isImageData && value
-          ? value.substring(0, 200).trim() + '...'
-          : value?.trim() || 'No content',
+          ? value.substring(0, 200) + '...'
+          : 'No content',
       morePreviewLines: null,
       morePreviewChars: null,
     }
@@ -208,7 +208,7 @@ export function getValuePreview(
     const morePreviewLines = normalizedValue.split('\n').length - 5
 
     return {
-      valuePreview: bbCode.closeTags(previewLines.trim()),
+      valuePreview: bbCode.closeTags(previewLines),
       morePreviewLines: morePreviewLines > 0 ? morePreviewLines : null,
       morePreviewChars: !morePreviewLines ? normalizedValue.length - 160 : null,
     }
@@ -217,7 +217,7 @@ export function getValuePreview(
     const morePreviewChars = normalizedValue.length - 60
 
     return {
-      valuePreview: bbCode.closeTags(normalizedValue.substring(0, 60).trim()) + '...',
+      valuePreview: bbCode.closeTags(normalizedValue.substring(0, 60)) + '...',
       morePreviewLines: null,
       morePreviewChars: morePreviewChars > 0 ? morePreviewChars : null,
     }
