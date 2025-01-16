@@ -207,8 +207,6 @@ pub async fn copy_clip_item(
   };
 
   let mut manager = app_handle.clipboard_manager();
-  dbg!(&item);
-
   let mut auto_trim_spaces = true;
   if let Some(item_options) = item.item_options {
     if let Ok(item_field) = serde_json::from_str::<ItemField>(&item_options) {
