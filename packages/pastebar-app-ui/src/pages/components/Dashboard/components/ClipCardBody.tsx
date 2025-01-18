@@ -163,7 +163,7 @@ export function ClipCardBody({
     }
   }, [requestOptions])
 
-  const stringValue: string = value || '';
+  const textValue: string = value || '';
 
   useEffect(() => {
     if (isExpanded.value) {
@@ -173,7 +173,7 @@ export function ClipCardBody({
 
   useEffect(() => {
     if (isPath) {
-      invoke('check_path', { path: stringValue })
+      invoke('check_path', { path: textValue })
         .then(() => {
           pathTypeCheck.value = pathType
         })
@@ -190,8 +190,8 @@ export function ClipCardBody({
   }, [searchTerm])
 
   const imageMaxHeight = isLargeView ? 'max-h-[600px]' : 'max-h-[300px]'
-  const isEmptyBody = stringValue.length === 0
-  const isMp3 = isLink && stringValue?.endsWith('.mp3')
+  const isEmptyBody = textValue.length === 0
+  const isMp3 = isLink && textValue?.endsWith('.mp3')
 
   useEffect(() => {
     if (isShowLinkedClip) {
@@ -225,7 +225,7 @@ export function ClipCardBody({
             )}
             <Highlight
               theme={isDark ? themes.vsDark : themes.github}
-              code={stringValue}
+              code={textValue}
               language={'path'}
             >
               {({ className, style, tokens, getLineProps, getTokenProps }) => {
@@ -270,7 +270,7 @@ export function ClipCardBody({
           <Box className="text-ellipsis self-start text-xs overflow-hidden select-none">
             <Box className="flex px-0 py-1 items-center justify-center">
               <ImageWithFallback
-                src={stringValue}
+                src={textValue}
                 hasError={isBrokenImage.value}
                 onErrorCallback={() => {
                   isBrokenImage.value = true
@@ -286,7 +286,7 @@ export function ClipCardBody({
           <Box className="text-ellipsis self-start text-xs overflow-hidden select-none">
             <Box className="flex px-0 pt-1.5 pb-0.5 items-center justify-center">
               <ImageWithFallback
-                src={ensureUrlPrefix(stringValue)}
+                src={ensureUrlPrefix(textValue)}
                 hasError={isBrokenImage.value}
                 onErrorCallback={() => {
                   isBrokenImage.value = true
@@ -296,7 +296,7 @@ export function ClipCardBody({
                 className={`${imageMaxHeight} min-h-10`}
               />
             </Box>
-            <code className="pb-0.5">{hyperlinkText(stringValue, arrLinks)}</code>
+            <code className="pb-0.5">{hyperlinkText(textValue, arrLinks)}</code>
           </Box>
         ) : isImage ? (
           <Box className="px-0 py-1.5 flex items-center justify-center relative animate-in fade-in duration-300 !fill-mode-forwards select-none">
@@ -354,7 +354,7 @@ export function ClipCardBody({
               isLargeView={isLargeView}
               isShowMore={isExpanded.value || morePreviewLines == null}
               isWrapped={isWrapText.value}
-              value={isExpanded.value ? stringValue : valuePreview}
+              value={isExpanded.value ? textValue : valuePreview}
               language={detectedLanguage}
             />
           </Box>
@@ -368,7 +368,7 @@ export function ClipCardBody({
               isShowMore={true}
               isWrapped={isWrapText.value}
               autoHideScrollbar={true}
-              value={stringValue}
+              value={textValue}
               language="shell"
             />
             {commandRequestOutput && (
@@ -423,7 +423,7 @@ export function ClipCardBody({
               isLargeView={isLargeView}
               isShowMore={true}
               isWrapped={isWrapText.value}
-              value={stringValue}
+              value={textValue}
               autoHideScrollbar={true}
               webRequestMethod={
                 isWebRequest ? webrequestLocalOptions.value.method : 'URL'
@@ -503,7 +503,7 @@ export function ClipCardBody({
             hasLinkCard={hasLinkCard}
             metadataLinkByItemId={metadataLinkByItemId}
             isImage={isImage}
-            trimmedValue={stringValue}
+            textValue={textValue}
             valuePreview={valuePreview}
             morePreviewLines={morePreviewLines}
             isDark={isDark}
@@ -601,7 +601,7 @@ export function ClipCardBody({
           </Box>
         ) : isMp3 ? (
           <PlayButton
-            src={stringValue}
+            src={textValue}
             isPinnedBoard={false}
             isClip={true}
             id={clipId}
@@ -721,7 +721,7 @@ export function ClipCardBody({
             >
               {isVideo
                 ? t('Type:::Video', { ns: 'common' })
-                : isEmailNotUrl(stringValue)
+                : isEmailNotUrl(textValue)
                   ? t('Type:::Email', { ns: 'common' })
                   : isMp3
                     ? t('Type:::Mp3', { ns: 'common' })

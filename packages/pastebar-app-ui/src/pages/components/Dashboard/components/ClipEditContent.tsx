@@ -478,7 +478,7 @@ export function ClipEditContent({
     showPathValidationError.value = undefined
     webrequestTestOutputObject.value = {}
 
-    const saveValue = clipValue.value
+    const saveValue = itemLocalOptions.value?.autoTrimSpaces === false ? clipValue.value : clipValue.value.trim()
 
     if (!force) {
       if (isTemplate) {

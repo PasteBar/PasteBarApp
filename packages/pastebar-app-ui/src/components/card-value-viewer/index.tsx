@@ -118,7 +118,7 @@ interface CardValueViewerProps {
   isExpanded: boolean
   searchTerm: string
   isDark: boolean
-  trimmedValue: string
+  textValue: string
 }
 
 export const CardValueViewer: FC<CardValueViewerProps> = ({
@@ -133,7 +133,7 @@ export const CardValueViewer: FC<CardValueViewerProps> = ({
   isVideo,
   isMasked,
   isLargeView,
-  trimmedValue,
+  textValue,
   hasLinkCard,
   metadataLinkByItemId,
   metadataLinkImageWidth = 24,
@@ -161,12 +161,12 @@ export const CardValueViewer: FC<CardValueViewerProps> = ({
   }, [valuePreview])
 
   const valueParsed = useMemo(() => {
-    if (!isImageData && !isCode && !isImage && trimmedValue) {
+    if (!isImageData && !isCode && !isImage && textValue) {
       return isMasked
-        ? maskValue(bbCode.remove(trimmedValue))
-        : bbCode.parse(trimmedValue)
+        ? maskValue(bbCode.remove(textValue))
+        : bbCode.parse(textValue)
     }
-  }, [trimmedValue])
+  }, [textValue])
 
   const highlightedContent = useMemo(() => {
     if (searchTerm.length > 1) {
@@ -222,7 +222,7 @@ export const CardValueViewer: FC<CardValueViewerProps> = ({
           <Box className="self-start mt-1 mb-1 text-xs w-full select-none overflow-hidden">
             <LinkCard
               isDisabled={
-                ensureUrlPrefix(trimmedValue) !== metadataLinkByItemId?.linkUrl &&
+                ensureUrlPrefix(textValue) !== metadataLinkByItemId?.linkUrl &&
                 !Boolean(metadataLinkByItemId?.linkIsTrack)
               }
               title={metadataLinkByItemId?.linkTitle}

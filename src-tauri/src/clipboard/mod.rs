@@ -100,11 +100,6 @@ where
       Err(()) => None,
     };
     if let Ok(mut text) = clipboard_text {
-      text = text.to_string();
-
-      if copied_from_app.as_deref() != Some("PasteBar") {
-        text = text.trim().to_string();
-      }
 
       if !text.is_empty() {
         let mut is_excluded = false;

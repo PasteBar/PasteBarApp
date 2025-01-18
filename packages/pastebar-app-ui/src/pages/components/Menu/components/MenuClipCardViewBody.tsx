@@ -147,7 +147,7 @@ export function MenuClipCardViewBody({
     }
   }, [requestOptions])
 
-  const stringValue: string = value || ''
+  const textValue: string = value || ''
 
   useEffect(() => {
     if (isExpanded.value) {
@@ -157,7 +157,7 @@ export function MenuClipCardViewBody({
 
   useEffect(() => {
     if (isPath) {
-      invoke('check_path', { path: stringValue })
+      invoke('check_path', { path: textValue })
         .then(() => {
           pathTypeCheck.value = pathType
         })
@@ -168,7 +168,7 @@ export function MenuClipCardViewBody({
   }, [isPath])
 
   const imageMaxHeight = isLargeView ? 'max-h-[600px]' : 'max-h-[300px]'
-  const isEmptyBody = stringValue.length === 0
+  const isEmptyBody = textValue.length === 0
 
   return (
     <CardContent
@@ -184,7 +184,7 @@ export function MenuClipCardViewBody({
         {isPath ? (
           <Highlight
             theme={isDark ? themes.vsDark : themes.github}
-            code={stringValue}
+            code={textValue}
             language={'path'}
           >
             {({ className, style, tokens, getLineProps, getTokenProps }) => {
@@ -226,7 +226,7 @@ export function MenuClipCardViewBody({
           <Box className="text-ellipsis self-start text-xs overflow-hidden cursor-pointer">
             <Box className="flex px-0 py-1 items-center justify-center">
               <ImageWithFallback
-                src={stringValue}
+                src={textValue}
                 hasError={isBrokenImage.value}
                 onErrorCallback={() => {
                   isBrokenImage.value = true
@@ -242,7 +242,7 @@ export function MenuClipCardViewBody({
           <Box className="text-ellipsis self-start text-xs cursor-pointer overflow-hidden">
             <Box className="flex px-0 pt-1.5 pb-0.5 items-center justify-center">
               <ImageWithFallback
-                src={ensureUrlPrefix(stringValue)}
+                src={ensureUrlPrefix(textValue)}
                 hasError={isBrokenImage.value}
                 onErrorCallback={() => {
                   isBrokenImage.value = true
@@ -252,7 +252,7 @@ export function MenuClipCardViewBody({
                 className={`${imageMaxHeight} min-h-10`}
               />
             </Box>
-            <code className="pb-0.5">{hyperlinkText(stringValue, arrLinks)}</code>
+            <code className="pb-0.5">{hyperlinkText(textValue, arrLinks)}</code>
           </Box>
         ) : isImage ? (
           <Box className="px-0 py-1.5 flex items-center justify-center relative animate-in fade-in duration-300 !fill-mode-forwards">
@@ -287,7 +287,7 @@ export function MenuClipCardViewBody({
               isLargeView={isLargeView}
               isShowMore={isExpanded.value || morePreviewLines == null}
               isWrapped={isWrapText.value}
-              value={isExpanded.value ? stringValue : valuePreview}
+              value={isExpanded.value ? textValue : valuePreview}
               language={detectedLanguage}
             />
           </Box>
@@ -300,7 +300,7 @@ export function MenuClipCardViewBody({
               isShowMore={true}
               isWrapped={isWrapText.value}
               autoHideScrollbar={true}
-              value={stringValue}
+              value={textValue}
               language="shell"
             />
             {commandRequestOutput && (
@@ -354,7 +354,7 @@ export function MenuClipCardViewBody({
               isLargeView={isLargeView}
               isShowMore={true}
               isWrapped={isWrapText.value}
-              value={stringValue}
+              value={textValue}
               autoHideScrollbar={true}
               webRequestMethod={
                 isWebRequest ? webrequestLocalOptions.value.method : 'URL'
@@ -428,7 +428,7 @@ export function MenuClipCardViewBody({
             isCode={isCode}
             isMasked={isMasked}
             isImage={isImage}
-            trimmedValue={stringValue}
+            textValue={textValue}
             valuePreview={valuePreview}
             isDark={isDark}
             hasLinkCard={hasLinkCard}
@@ -636,7 +636,7 @@ export function MenuClipCardViewBody({
             >
               {isVideo
                 ? t('Type:::Video', { ns: 'common' })
-                : isEmailNotUrl(stringValue)
+                : isEmailNotUrl(textValue)
                   ? t('Type:::Email', { ns: 'common' })
                   : t('Type:::Link', { ns: 'common' })}
             </Box>

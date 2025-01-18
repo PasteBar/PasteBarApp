@@ -93,7 +93,7 @@ export function ClipboardHistoryLargeViewComponent({
   const contextMenuButtonRef = useRef<HTMLDivElement>(null)
   const contextMenuTriggerRef = useRef<HTMLDivElement>(null)
 
-  const trimmedValue: string = clipboard?.value?.trim() ?? ''
+  const textValue: string = clipboard?.value ?? ''
   const hasLinkCard =
     clipboard?.isLink &&
     clipboard?.linkMetadata?.linkTitle &&
@@ -138,7 +138,7 @@ export function ClipboardHistoryLargeViewComponent({
                   <Box className="text-ellipsis self-start text-xs w-full select-text overflow-hidden">
                     <Box className="flex px-0 py-1 items-center justify-center">
                       <ImageWithFallback
-                        src={trimmedValue}
+                        src={textValue}
                         hasError={isBrokenImage}
                         key={clipboard.historyId}
                         decoding="async"
@@ -160,7 +160,7 @@ export function ClipboardHistoryLargeViewComponent({
                   <Box className="text-ellipsis self-start text-xs w-full select-text overflow-hidden">
                     <Box className="flex px-0 pt-1.5 pb-0.5 items-center justify-center">
                       <ImageWithFallback
-                        src={ensureUrlPrefix(trimmedValue)}
+                        src={ensureUrlPrefix(textValue)}
                         key={clipboard.historyId}
                         hasError={isBrokenImage}
                         height={clipboard.imageHeight}
@@ -173,8 +173,8 @@ export function ClipboardHistoryLargeViewComponent({
                     </Box>
                     <code className="pb-0.5">
                       {searchTerm
-                        ? highlightMatchedText(trimmedValue, searchTerm)
-                        : hyperlinkText(trimmedValue, clipboard.arrLinks)}
+                        ? highlightMatchedText(textValue, searchTerm)
+                        : hyperlinkText(textValue, clipboard.arrLinks)}
                     </code>
                   </Box>
                 ) : clipboard.isImage && clipboard.imagePathFullRes ? (
@@ -194,7 +194,7 @@ export function ClipboardHistoryLargeViewComponent({
                   >
                     <Highlight
                       theme={isDark ? themes.vsDark : themes.github}
-                      code={trimmedValue}
+                      code={textValue}
                       language={clipboard.detectedLanguage}
                     >
                       {({ className, style, tokens, getLineProps, getTokenProps }) => {
@@ -255,10 +255,10 @@ export function ClipboardHistoryLargeViewComponent({
                     key={clipboard.historyId}
                   >
                     {clipboard.isVideo ? (
-                      <YoutubeEmbed url={trimmedValue} minWidth={530} />
+                      <YoutubeEmbed url={textValue} minWidth={530} />
                     ) : isSocialEmbed ? (
                       <CardSocialEmbed
-                        url={trimmedValue}
+                        url={textValue}
                         isTwitter={isTwitter}
                         isDark={isDark}
                         isInstagram={isInstagram}
@@ -285,12 +285,12 @@ export function ClipboardHistoryLargeViewComponent({
                     )}
                     <code
                       className={`justify-start select-text ${
-                        isWrapText ? 'whitespace-break-spaces' : 'whitespace-normal'
+                        isWrapText ? 'whitespace-break-spaces' : 'whitespace-pre'
                       }`}
                     >
                       {searchTerm
-                        ? highlightMatchedText(trimmedValue, searchTerm)
-                        : hyperlinkText(trimmedValue, clipboard.arrLinks)}
+                        ? highlightMatchedText(textValue, searchTerm)
+                        : hyperlinkText(textValue, clipboard.arrLinks)}
                       {clipboard.valueMorePreviewChars && (
                         <Box className="select-none"> {'\u00A0'} </Box>
                       )}
