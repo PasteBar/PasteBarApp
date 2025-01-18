@@ -190,9 +190,7 @@ export function getValuePreview(
   if (!value || isLargeView) {
     return {
       valuePreview:
-        isImageData && value
-          ? value.substring(0, 200) + '...'
-          : value || 'No content',
+        isImageData && value ? value.substring(0, 200) + '...' : value || 'No content',
       morePreviewLines: null,
       morePreviewChars: null,
     }
@@ -222,20 +220,19 @@ export function getValuePreview(
       morePreviewChars: morePreviewChars > 0 ? morePreviewChars : null,
     }
   } else {
-    const preview = normalizedValue.trim()
-    const previewLines = preview.split('\n')
+    const previewLines = normalizedValue.split('\n')
     const morePreviewLines = normalizedValue.split('\n').length - previewLines.length
 
     if (isImageData) {
       return {
-        valuePreview: preview.substring(0, 60) + '...',
+        valuePreview: normalizedValue.substring(0, 60) + '...',
         morePreviewLines: null,
         morePreviewChars: null,
       }
     }
 
     return {
-      valuePreview: preview,
+      valuePreview: normalizedValue,
       morePreviewLines: morePreviewLines > 0 ? morePreviewLines : null,
       morePreviewChars: null,
     }
