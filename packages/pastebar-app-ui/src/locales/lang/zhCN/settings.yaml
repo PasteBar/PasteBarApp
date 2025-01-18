@@ -23,6 +23,7 @@ Auto-Generate Link Card Preview: 自动生成链接卡片预览
 Auto-Preview Link on Hover: 悬停时自动预览链接
 Auto-Star on Double Copy: 双重复制时自动星标
 Auto-Update on Capture: 捕获时自动更新
+Auto-Trim Spaces on Capture: 捕获时自动删除空格
 Auto-delete clipboard history after: 自动删除剪贴板历史时间
 ? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
 : 在剪贴板历史中自动创建链接卡片预览。这允许快速查看网站详情，无需打开或粘贴链接。
@@ -59,6 +60,7 @@ Enable application auto start on system boot: 启用系统启动时应用程序�
 Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: 启用在一定时间不活动后自动锁定应用程序屏幕，以防止未经授权访问您的数据。
 Enable auto lock the application screen when user not active: 用户不活动时启用自动锁定应用程序屏幕
 Enable auto update on capture: 启用捕获时自动更新
+Enable auto trim spaces on history capture: 启用历史记录捕获时自动修剪空格
 Enable history capture: 启用历史捕获
 Enable programming language detection: 启用编程语言检测
 Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: 启用应用启动时的屏幕解锁要求，以增强安全性，保护数据免受未授权访问。

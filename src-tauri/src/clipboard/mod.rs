@@ -100,6 +100,14 @@ where
       Err(()) => None,
     };
     if let Ok(mut text) = clipboard_text {
+      let trim_text_history = settings_map
+        .get("isHistoryAutoTrimOnCaputureEnabled")
+        .and_then(|s| s.value_bool)
+        .unwrap_or(true);
+
+      if trim_text_history {
+        text = text.trim().to_string();
+      }
 
       if !text.is_empty() {
         let mut is_excluded = false;

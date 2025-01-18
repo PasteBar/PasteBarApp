@@ -88,6 +88,8 @@ export default function ClipboardHistorySettings() {
     setClipTextMaxLength,
     setIsHistoryEnabled,
     isHistoryAutoUpdateOnCaputureEnabled,
+    setIsHistoryAutoTrimOnCaputureEnabled,
+    isHistoryAutoTrimOnCaputureEnabled,
     setIsHistoryAutoUpdateOnCaputureEnabled,
     setIsExclusionListEnabled,
     setIsExclusionAppListEnabled,
@@ -300,11 +302,10 @@ export default function ClipboardHistorySettings() {
                               onChange={e => {
                                 const value = e.target.value
                                 if (value === '') {
-                                  setClipTextMinLength(0);
+                                  setClipTextMinLength(0)
                                 } else {
                                   const number = parseInt(value)
                                   setClipTextMinLength(number)
-                                  
                                 }
                               }}
                             />
@@ -324,7 +325,7 @@ export default function ClipboardHistorySettings() {
                               onChange={e => {
                                 const value = e.target.value
                                 if (value === '') {
-                                  setClipTextMaxLength(0);
+                                  setClipTextMaxLength(0)
                                 } else {
                                   const number = parseInt(value)
                                   setClipTextMaxLength(number)
@@ -335,7 +336,9 @@ export default function ClipboardHistorySettings() {
                           <Button
                             variant="secondary"
                             size="sm"
-                            disabled={clipTextMinLength === 0 && clipTextMaxLength === 5000}
+                            disabled={
+                              clipTextMinLength === 0 && clipTextMaxLength === 5000
+                            }
                             onClick={() => {
                               setClipTextMinLength(0)
                               setClipTextMaxLength(5000)
@@ -347,6 +350,7 @@ export default function ClipboardHistorySettings() {
                         </CardContent>
                       </Card>
                     </Box>
+
                     <Box className="max-w-xl animate-in fade-in mt-4">
                       <Card
                         className={`${
@@ -371,6 +375,37 @@ export default function ClipboardHistorySettings() {
                         <CardContent>
                           <Text className="text-sm text-muted-foreground">
                             {t('Enable auto update on capture', { ns: 'settings' })}
+                          </Text>
+                        </CardContent>
+                      </Card>
+                    </Box>
+
+                    <Box className="max-w-xl animate-in fade-in mt-4">
+                      <Card
+                        className={`${
+                          !isHistoryAutoTrimOnCaputureEnabled &&
+                          'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                        }`}
+                      >
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                          <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                            {t('Auto-Trim Spaces on Capture', { ns: 'settings' })}
+                          </CardTitle>
+                          <Switch
+                            checked={isHistoryAutoTrimOnCaputureEnabled}
+                            className="ml-auto"
+                            onCheckedChange={() => {
+                              setIsHistoryAutoTrimOnCaputureEnabled(
+                                !isHistoryAutoTrimOnCaputureEnabled
+                              )
+                            }}
+                          />
+                        </CardHeader>
+                        <CardContent>
+                          <Text className="text-sm text-muted-foreground">
+                            {t('Enable auto trim spaces on history capture', {
+                              ns: 'settings',
+                            })}
                           </Text>
                         </CardContent>
                       </Card>

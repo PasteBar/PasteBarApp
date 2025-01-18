@@ -22,6 +22,7 @@ Auto-Generate Link Card Preview: Genera Automaticamente l'Anteprima della Scheda
 Auto-Preview Link on Hover: Anteprima Automatica del Link al Passaggio del Mouse
 Auto-Star on Double Copy: Stella Automatica al Doppio Copia
 Auto-Update on Capture: Aggiornamento Automatico alla Cattura
+Auto-Trim Spaces on Capture: Rimozione automatica degli spazi alla cattura
 Auto-delete clipboard history after: Elimina automaticamente la cronologia degli appunti dopo
 ? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
 : Crea automaticamente l'anteprima della scheda link nella cronologia degli appunti. Questo permette di visualizzare rapidamente i dettagli del sito web senza aprire o incollare il link.
@@ -57,6 +58,7 @@ Enable Clip Title Hover Show with Delay: Abilita Visualizzazione del Titolo del 
 Enable application auto start on system boot: Abilita l'avvio automatico dell'applicazione all'avvio del sistema
 Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: Abilita il blocco automatico dello schermo dell'applicazione dopo un certo periodo di inattività, per prevenire l'accesso non autorizzato ai tuoi dati.
 Enable auto lock the application screen when user not active: Abilita il blocco automatico dello schermo dell'applicazione quando l'utente non è attivo
+Enable auto trim spaces on history capture: Attiva la rimozione automatica degli spazi durante la cattura della cronologia
 Enable auto update on capture: Abilita l'aggiornamento automatico alla cattura
 Enable history capture: Abilita la cattura della cronologia
 Enable programming language detection: Abilita il rilevamento del linguaggio di programmazione

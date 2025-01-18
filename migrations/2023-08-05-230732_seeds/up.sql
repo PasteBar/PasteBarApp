@@ -31,6 +31,9 @@ INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('isHistoryAutoUpdateOnCaputureEnabled', NULL, true, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)
+VALUES ('isHistoryAutoTrimOnCaputureEnabled', NULL, true, NULL);
+
+INSERT INTO settings (name, value_text, value_bool, value_int)
 VALUES ('isHistoryDetectLanguageEnabled', NULL, true, NULL);
 
 INSERT INTO settings (name, value_text, value_bool, value_int)

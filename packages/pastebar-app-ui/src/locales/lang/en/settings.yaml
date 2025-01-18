@@ -22,6 +22,7 @@ Auto-Clear Settings: Auto-Clear Settings
 Auto-Generate Link Card Preview: Auto-Generate Link Card Preview
 Auto-Preview Link on Hover: Auto-Preview Link on Hover
 Auto-Star on Double Copy: Auto-Star on Double Copy
+Auto-Trim Spaces on Capture: Auto-Trim Spaces on Capture
 Auto-Update on Capture: Auto-Update on Capture
 Auto-delete clipboard history after: Auto-delete clipboard history after
 ? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
@@ -58,6 +59,7 @@ Enable Clip Title Hover Show with Delay: Enable Clip Title Hover Show with Delay
 Enable application auto start on system boot: Enable application auto start on system boot
 Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.
 Enable auto lock the application screen when user not active: Enable auto lock the application screen when user not active
+Enable auto trim spaces on history capture: Enable auto trim spaces on history capture
 Enable auto update on capture: Enable auto update on capture
 Enable history capture: Enable history capture
 Enable programming language detection: Enable programming language detection

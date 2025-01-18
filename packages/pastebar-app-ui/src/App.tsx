@@ -132,6 +132,8 @@ function App() {
             settings.historyDetectLanguagesEnabledList?.valueText.split(','),
           appToursCompletedList: settings.appToursCompletedList?.valueText.split(','),
           appToursSkippedList: settings.appToursSkippedList?.valueText.split(','),
+          isHistoryAutoTrimOnCaputureEnabled:
+            settings.isHistoryAutoTrimOnCaputureEnabled?.valueBool,
           isHistoryAutoUpdateOnCaputureEnabled:
             settings.isHistoryAutoUpdateOnCaputureEnabled?.valueBool,
           isHistoryEnabled: settings.isHistoryEnabled?.valueBool,

@@ -49,6 +49,7 @@ type Settings = {
   autoClearSettingsDurationType: string
   autoMaskWordsList: string
   isHistoryAutoUpdateOnCaputureEnabled: boolean
+  isHistoryAutoTrimOnCaputureEnabled: boolean
   copyPasteDelay: number
   copyPasteSequencePinnedDelay: number
   copyPasteSequenceIsReversOrder: boolean
@@ -90,6 +91,9 @@ export interface SettingsStoreState {
   setIsHistoryEnabled: (isHistoryEnabled: boolean) => void
   setIsHistoryAutoUpdateOnCaputureEnabled: (
     isHistoryAutoUpdateOnCaputureEnabled: boolean
+  ) => void
+  setIsHistoryAutoTrimOnCaputureEnabled: (
+    isHistoryAutoTrimOnCaputureEnabled: boolean
   ) => void
   setIsFirstRun: (isFirstRun: boolean) => void
   setIsFirstRunAfterUpdate: (isFirstRunAfterUpdate: boolean) => void
@@ -214,6 +218,7 @@ const initialState: SettingsStoreState & Settings = {
   isSkipAutoStartPrompt: false,
   userSelectedLanguage: '',
   isHistoryAutoUpdateOnCaputureEnabled: true,
+  isHistoryAutoTrimOnCaputureEnabled: true,
   isIdleScreenAutoLockEnabled: false,
   idleScreenAutoLockTimeInMinutes: null,
   isShowHistoryCaptureOnLockedScreen: false,
@@ -247,6 +252,7 @@ const initialState: SettingsStoreState & Settings = {
   setHotKeysShowHideQuickPasteWindow: () => {},
   setHistoryExclusionList: () => {},
   setIsHistoryAutoUpdateOnCaputureEnabled: () => {},
+  setIsHistoryAutoTrimOnCaputureEnabled: () => {},
   addToHistoryExclusionAppList: () => {},
   setHistoryDetectLanguagesEnabledList: () => {},
   setAppToursCompletedList: () => {},
@@ -379,6 +385,14 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
     } catch (e) {
       console.error(e)
     }
+  },
+  setIsHistoryAutoTrimOnCaputureEnabled: async (
+    isHistoryAutoTrimOnCaputureEnabled: boolean
+  ) => {
+    return get().updateSetting(
+      'isHistoryAutoTrimOnCaputureEnabled',
+      isHistoryAutoTrimOnCaputureEnabled
+    )
   },
   setIsHistoryAutoUpdateOnCaputureEnabled: async (
     isHistoryAutoUpdateOnCaputureEnabled: boolean
