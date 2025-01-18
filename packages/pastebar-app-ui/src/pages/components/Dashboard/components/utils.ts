@@ -192,7 +192,7 @@ export function getValuePreview(
       valuePreview:
         isImageData && value
           ? value.substring(0, 200) + '...'
-          : 'No content',
+          : value || 'No content',
       morePreviewLines: null,
       morePreviewChars: null,
     }
