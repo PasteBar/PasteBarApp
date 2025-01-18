@@ -263,7 +263,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
     clipboard.isPinned,
   ])
 
-  const trimmedValue: string = clipboard?.value?.trim() ?? ''
+  const textValue: string = clipboard?.value ?? ''
   const hasLinkCard =
     clipboard?.isLink &&
     clipboard?.linkMetadata?.linkTitle &&
@@ -277,7 +277,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
       !hasLinkCard &&
       clipboard?.isLink &&
       clipboard?.value &&
-      !isEmailNotUrl(trimmedValue) &&
+      !isEmailNotUrl(textValue) &&
       !hasClipboardHistoryURLErrors &&
       !hasGenerateLinkMetaDataInProgress &&
       isAutoGenerateLinkCardsEnabled
@@ -467,7 +467,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
                 <Box className="text-ellipsis self-start text-xs w-full _select-text overflow-hidden cursor-pointer">
                   <Box className="flex px-0 py-1 items-center justify-center w-full">
                     <ImageWithFallback
-                      src={trimmedValue}
+                      src={textValue}
                       hasError={isBrokenImage}
                       onErrorCallback={() => {
                         setBrokenImageItem(clipboard.historyId)
@@ -492,7 +492,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
                 <Box className="text-ellipsis self-start text-xs w-full _select-text cursor-pointer overflow-hidden">
                   <Box className="flex px-0 pt-1.5 pb-0.5 items-center justify-center w-full">
                     <ImageWithFallback
-                      src={ensureUrlPrefix(trimmedValue)}
+                      src={ensureUrlPrefix(textValue)}
                       hasError={isBrokenImage}
                       height={clipboard.imageHeight}
                       onErrorCallback={() => {
@@ -508,17 +508,17 @@ export function ClipboardHistoryQuickPasteRowComponent({
                   </Box>
                   <code className="pb-0.5">
                     {searchTerm
-                      ? highlightWithPreviewMatchedText(trimmedValue, searchTerm)
-                      : hyperlinkText(trimmedValue, clipboard.arrLinks)}
+                      ? highlightWithPreviewMatchedText(textValue, searchTerm)
+                      : hyperlinkText(textValue, clipboard.arrLinks)}
                   </code>
                 </Box>
               ) : clipboard.isLink && clipboard.isVideo ? (
                 <Box className="text-ellipsis self-start text-xs w-full _select-text cursor-pointer overflow-hidden">
-                  <YoutubeEmbed url={trimmedValue} />
+                  <YoutubeEmbed url={textValue} />
                   <code className="pb-0.5">
                     {searchTerm
-                      ? highlightWithPreviewMatchedText(trimmedValue, searchTerm)
-                      : hyperlinkText(trimmedValue, clipboard.arrLinks)}
+                      ? highlightWithPreviewMatchedText(textValue, searchTerm)
+                      : hyperlinkText(textValue, clipboard.arrLinks)}
                   </code>
                 </Box>
               ) : clipboard.isImage && clipboard.imageDataUrl ? (
@@ -545,7 +545,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
                 >
                   <Highlight
                     theme={isDark ? themes.vsDark : themes.github}
-                    code={isExpanded ? trimmedValue : clipboard.valuePreview.trim()}
+                    code={isExpanded ? textValue : clipboard.valuePreview.trim()}
                     language={clipboard.detectedLanguage}
                   >
                     {({ className, style, tokens, getLineProps, getTokenProps }) => {
@@ -616,8 +616,8 @@ export function ClipboardHistoryQuickPasteRowComponent({
                   {isExpanded ? (
                     <code className="justify-start cursor-pointer">
                       {searchTerm
-                        ? highlightMatchedText(trimmedValue, searchTerm)
-                        : hyperlinkText(trimmedValue, clipboard.arrLinks)}
+                        ? highlightMatchedText(textValue, searchTerm)
+                        : hyperlinkText(textValue, clipboard.arrLinks)}
                       {clipboard.valueMorePreviewChars && (
                         <Box className="select-none"> {'\u00A0'} </Box>
                       )}
@@ -625,11 +625,11 @@ export function ClipboardHistoryQuickPasteRowComponent({
                   ) : (
                     <code className="justify-start cursor-pointer">
                       {searchTerm
-                        ? highlightWithPreviewMatchedText(trimmedValue ?? '', searchTerm)
+                        ? highlightWithPreviewMatchedText(textValue ?? '', searchTerm)
                         : hyperlinkTextWithPreview({
                             previewLinkCard: !hasLinkCard && isLinkCardPreviewEnabled,
                             isPreviewError: hasClipboardHistoryURLErrors,
-                            value: clipboard.valuePreview?.trim() ?? '',
+                            value: clipboard.valuePreview ?? '',
                             links: clipboard.arrLinks,
                             itemId: null,
                             historyId: clipboard.historyId,
@@ -642,7 +642,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
                       )}
                       {isMp3 && (
                         <PlayButton
-                          src={trimmedValue}
+                          src={textValue}
                           hasLinkCard={hasLinkCard}
                           isPinnedBoard={isPinnedTop}
                           isPinned={clipboard.isPinned}
@@ -797,7 +797,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
                       >
                         {clipboard.isVideo
                           ? t('Type:::Video', { ns: 'common' })
-                          : isEmailNotUrl(trimmedValue)
+                          : isEmailNotUrl(textValue)
                             ? t('Type:::Email', { ns: 'common' })
                             : isMp3
                               ? t('Type:::Mp3', { ns: 'common' })

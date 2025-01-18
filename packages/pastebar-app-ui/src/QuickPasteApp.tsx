@@ -72,6 +72,8 @@ function QuickPasteApp() {
             settings.historyDetectLanguagesEnabledList?.valueText.split(','),
           appToursCompletedList: settings.appToursCompletedList?.valueText.split(','),
           appToursSkippedList: settings.appToursSkippedList?.valueText.split(','),
+          isHistoryAutoTrimOnCaputureEnabled:
+            settings.isHistoryAutoTrimOnCaputureEnabled?.valueBool,
           isHistoryAutoUpdateOnCaputureEnabled:
             settings.isHistoryAutoUpdateOnCaputureEnabled?.valueBool,
           isHistoryEnabled: settings.isHistoryEnabled?.valueBool,
@@ -118,6 +120,8 @@ function QuickPasteApp() {
           isShowDisabledCollectionsOnNavBarMenu:
             settings.isShowDisabledCollectionsOnNavBarMenu?.valueBool,
           userSelectedLanguage: settings.userSelectedLanguage?.valueText,
+          clipTextMinLength: settings.clipTextMinLength?.valueInt,
+          clipTextMaxLength: settings.clipTextMaxLength?.valueInt,
           isAppReady: true,
         })
 

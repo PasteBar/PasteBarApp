@@ -259,8 +259,8 @@ export function ClipboardHistoryRowComponent({
     clipboard.isFavorite,
     clipboard.isPinned,
   ])
-
-  const trimmedValue: string = clipboard?.value?.trim() ?? ''
+  
+  const stringValue: string = clipboard?.value ?? ''
   const hasLinkCard =
     clipboard?.isLink &&
     clipboard?.linkMetadata?.linkTitle &&
@@ -274,7 +274,7 @@ export function ClipboardHistoryRowComponent({
       !hasLinkCard &&
       clipboard?.isLink &&
       clipboard?.value &&
-      !isEmailNotUrl(trimmedValue) &&
+      !isEmailNotUrl(stringValue) &&
       !hasClipboardHistoryURLErrors &&
       !hasGenerateLinkMetaDataInProgress &&
       isAutoGenerateLinkCardsEnabled
@@ -435,7 +435,7 @@ export function ClipboardHistoryRowComponent({
                   hoveringHistoryRowId.value = null
                 }}
                 onDoubleClickCapture={e => {
-                  if (!getSelectedText().text.trim()) {
+                  if (!getSelectedText().text) {
                     if (e.altKey || e.metaKey) {
                       onCopyPaste(clipboard.historyId)
                     } else {
@@ -478,7 +478,7 @@ export function ClipboardHistoryRowComponent({
                     <Box className="text-ellipsis self-start text-xs w-full _select-text overflow-hidden cursor-pointer">
                       <Box className="flex px-0 py-1 items-center justify-center w-full">
                         <ImageWithFallback
-                          src={trimmedValue}
+                          src={stringValue}
                           hasError={isBrokenImage}
                           onErrorCallback={() => {
                             setBrokenImageItem(clipboard.historyId)
@@ -503,7 +503,7 @@ export function ClipboardHistoryRowComponent({
                     <Box className="text-ellipsis self-start text-xs w-full _select-text cursor-pointer overflow-hidden">
                       <Box className="flex px-0 pt-1.5 pb-0.5 items-center justify-center w-full">
                         <ImageWithFallback
-                          src={ensureUrlPrefix(trimmedValue)}
+                          src={ensureUrlPrefix(stringValue)}
                           hasError={isBrokenImage}
                           height={clipboard.imageHeight}
                           onErrorCallback={() => {
@@ -519,17 +519,17 @@ export function ClipboardHistoryRowComponent({
                       </Box>
                       <code className="pb-0.5">
                         {searchTerm
-                          ? highlightWithPreviewMatchedText(trimmedValue, searchTerm)
-                          : hyperlinkText(trimmedValue, clipboard.arrLinks)}
+                          ? highlightWithPreviewMatchedText(stringValue, searchTerm)
+                          : hyperlinkText(stringValue, clipboard.arrLinks)}
                       </code>
                     </Box>
                   ) : clipboard.isLink && clipboard.isVideo ? (
                     <Box className="text-ellipsis self-start text-xs w-full _select-text cursor-pointer overflow-hidden">
-                      <YoutubeEmbed url={trimmedValue} />
+                      <YoutubeEmbed url={stringValue} />
                       <code className="pb-0.5">
                         {searchTerm
-                          ? highlightWithPreviewMatchedText(trimmedValue, searchTerm)
-                          : hyperlinkText(trimmedValue, clipboard.arrLinks)}
+                          ? highlightWithPreviewMatchedText(stringValue, searchTerm)
+                          : hyperlinkText(stringValue, clipboard.arrLinks)}
                       </code>
                     </Box>
                   ) : clipboard.isImage && clipboard.imageDataUrl ? (
@@ -556,7 +556,7 @@ export function ClipboardHistoryRowComponent({
                     >
                       <Highlight
                         theme={isDark ? themes.vsDark : themes.github}
-                        code={isExpanded ? trimmedValue : clipboard.valuePreview.trim()}
+                        code={isExpanded ? stringValue : clipboard.valuePreview}
                         language={clipboard.detectedLanguage}
                       >
                         {({ className, style, tokens, getLineProps, getTokenProps }) => {
@@ -634,23 +634,23 @@ export function ClipboardHistoryRowComponent({
                       {isExpanded ? (
                         <code className="justify-start cursor-pointer">
                           {searchTerm
-                            ? highlightMatchedText(trimmedValue, searchTerm)
-                            : hyperlinkText(trimmedValue, clipboard.arrLinks)}
+                            ? highlightMatchedText(stringValue, searchTerm)
+                            : hyperlinkText(stringValue, clipboard.arrLinks)}
                           {clipboard.valueMorePreviewChars && (
                             <Box className="select-none"> {'\u00A0'} </Box>
                           )}
                         </code>
                       ) : (
-                        <code className="justify-start cursor-pointer">
+                        <code className="justify-start cursor-pointer whitespace-pre">
                           {searchTerm
                             ? highlightWithPreviewMatchedText(
-                                trimmedValue ?? '',
+                                stringValue ?? '',
                                 searchTerm
                               )
                             : hyperlinkTextWithPreview({
                                 previewLinkCard: !hasLinkCard && isLinkCardPreviewEnabled,
                                 isPreviewError: hasClipboardHistoryURLErrors,
-                                value: clipboard.valuePreview?.trim() ?? '',
+                                value: clipboard.valuePreview ?? '',
                                 links: clipboard.arrLinks,
                                 itemId: null,
                                 historyId: clipboard.historyId,
@@ -663,7 +663,7 @@ export function ClipboardHistoryRowComponent({
                           )}
                           {isMp3 && (
                             <PlayButton
-                              src={trimmedValue}
+                              src={stringValue}
                               hasLinkCard={hasLinkCard}
                               isPinnedBoard={isPinnedTop}
                               isPinned={clipboard.isPinned}
@@ -957,7 +957,7 @@ export function ClipboardHistoryRowComponent({
                           >
                             {clipboard.isVideo
                               ? t('Type:::Video', { ns: 'common' })
-                              : isEmailNotUrl(trimmedValue)
+                              : isEmailNotUrl(stringValue)
                                 ? t('Type:::Email', { ns: 'common' })
                                 : isMp3
                                   ? t('Type:::Mp3', { ns: 'common' })

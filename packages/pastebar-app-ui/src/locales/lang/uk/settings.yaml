@@ -22,6 +22,7 @@ Auto-Preview Link on Hover: Автоматичний попередній пер
 Auto-Star on Double Copy: Автоматичне додавання до вибраного при подвійному копіюванні
 Auto-Update on Capture: Автоматичне оновлення при захопленні
 Auto-delete clipboard history after: Автоматичне видалення історії буфера обміну після
+Auto-Trim Spaces on Capture: Автоматичне видалення пробілів при захопленні
 ? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
 : Автоматично створювати попередній перегляд посилань в історії буфера обміну. Це дозволяє швидко переглядати деталі веб-сайтів без відкриття або вставки посилання.
 ? Automatically create link preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
@@ -58,6 +59,7 @@ Enable Clip Title Hover Show with Delay: Увімкнути затримку п�
 Enable application auto start on system boot: Увімкнути автозапуск додатку при завантаженні системи
 Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: Увімкнути автоматичне блокування екрану додатку після певного періоду бездіяльності, щоб запобігти несанкціонованому доступу до ваших даних.
 Enable auto update on capture: Увімкнути автоматичне оновлення при захопленні
+Enable auto trim spaces on history capture: Увімкнути автоматичне видалення пробілів при захопленні історії буфера
 Enable history capture: Увімкнути захоплення історії буфера
 Enable programming language detection: Увімкнути визначення мови програмування
 Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: Увімкнути вимогу розблокування екрану при запуску додатку для підвищення безпеки, захисту даних від несанкціонованого доступу.

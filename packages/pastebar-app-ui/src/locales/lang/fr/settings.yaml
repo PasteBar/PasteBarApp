@@ -22,6 +22,7 @@ Auto-Clear Settings: Paramètres d'auto-nettoyage
 Auto-Generate Link Card Preview: Génération automatique d'un aperçu de la carte de lien
 Auto-Preview Link on Hover: Lien de prévisualisation automatique au survol
 Auto-Star on Double Copy: Étoile automatique en cas double copie
+Auto-Trim Spaces on Capture: Suppression automatique des espaces à la capture
 Auto-Update on Capture: Mise à jour automatique à la capture
 Auto-delete clipboard history after: Suppression automatique de l'historique du presse-papiers après
 ? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
@@ -58,6 +59,7 @@ Enable Clip Title Hover Show with Delay: Activer l'affichage du titre du clip au
 Enable application auto start on system boot: Activer démarrage auto de l'app au démarrage système
 Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: Activez le verrouillage automatique de l'écran de l'application après une certaine période d'inactivité, afin d'empêcher tout accès non autorisé à vos données.
 Enable auto lock the application screen when user not active: Activer le verrouillage automatique de l'écran de l'application lorsque l'utilisateur n'est pas actif
+Enable auto trim spaces on history capture: Activer la suppression automatique des espaces lors de la capture de l'historique
 Enable auto update on capture: Activer la mise à jour automatique lors de la capture
 Enable history capture: Activer la capture de l'historique
 Enable programming language detection: Activer la détection du langage de programmation
