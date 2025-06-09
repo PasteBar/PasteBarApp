@@ -149,7 +149,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@tailwindcss/line-clamp": "^0.4.4",
-    "@tauri-apps/cli": "^1.6.0",
+    "@tauri-apps/cli": "^1.6.3",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/codemirror": "^5.60.15",

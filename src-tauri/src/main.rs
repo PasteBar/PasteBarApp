@@ -63,6 +63,8 @@ use commands::security_commands;
 use commands::shell_commands;
 use commands::tabs_commands;
 use commands::translations_commands;
+use commands::user_settings_command;
+
 use db::AppConstants;
 use mouse_position::mouse_position::Mouse;
 use std::collections::HashMap;
@@ -1182,6 +1184,13 @@ async fn main() {
       security_commands::verify_os_password,
       security_commands::delete_os_password,
       security_commands::get_stored_os_password,
+      user_settings_command::cmd_get_custom_db_path,
+      user_settings_command::cmd_set_custom_db_path,
+      user_settings_command::cmd_remove_custom_db_path,
+      user_settings_command::cmd_get_all_settings,
+      user_settings_command::cmd_get_setting,
+      user_settings_command::cmd_set_setting,
+      user_settings_command::cmd_remove_setting,
       open_osx_accessibility_preferences,
       check_osx_accessibility_preferences,
       open_path_or_app,

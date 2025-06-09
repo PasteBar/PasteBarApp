@@ -10,6 +10,7 @@ use diesel::connection::SimpleConnection;
 use diesel::prelude::*;
 use diesel::r2d2 as diesel_r2d2;
 
+use crate::services::user_settings_service::load_user_config;
 use diesel::sqlite::SqliteConnection;
 
 // use diesel::connection::{set_default_instrumentation, Instrumentation, InstrumentationEvent};
@@ -61,7 +62,7 @@ impl diesel::r2d2::CustomizeConnection<SqliteConnection, diesel::r2d2::Error>
   }
 }
 
-fn adjust_canonicalization<P: AsRef<Path>>(p: P) -> String {
+pub fn adjust_canonicalization<P: AsRef<Path>>(p: P) -> String {
   const VERBATIM_PREFIX: &str = r#"\\?\"#;
   let p = p.as_ref().display().to_string();
   if p.starts_with(VERBATIM_PREFIX) {
@@ -217,6 +218,22 @@ fn db_file_exists() -> bool {
 }
 
 fn get_db_path() -> String {
+  let user_config = load_user_config();
+
+  if let Some(custom_path) = user_config.custom_db_path {
+    let final_path = adjust_custom_db_path(&custom_path);
+
+    // Check if it's valid/writable
+    if can_access_or_create(&final_path) {
+      return final_path;
+    } else {
+      eprintln!(
+        "Warning: custom_db_path=\"{}\" is invalid or not writable. Falling back to default...",
+        custom_path
+      );
+    }
+  }
+
   if cfg!(debug_assertions) {
     let app_dir = APP_CONSTANTS.get().unwrap().app_dev_data_dir.clone();
     let path = if cfg!(target_os = "macos") {
@@ -250,6 +267,101 @@ fn get_db_path() -> String {
     };
 
     path
+  }
+}
+
+fn can_access_or_create(db_path: &str) -> bool {
+  let path = std::path::Path::new(db_path);
+
+  if let Some(parent) = path.parent() {
+    if let Err(e) = std::fs::create_dir_all(parent) {
+      eprintln!(
+        "Failed to create parent directory '{}': {}",
+        parent.display(),
+        e
+      );
+      return false;
+    }
+  }
+
+  match std::fs::OpenOptions::new()
+    .read(true)
+    .write(true)
+    .create(true)
+    .open(&path)
+  {
+    Ok(_file) => true,
+    Err(e) => {
+      eprintln!("Failed to open custom DB path '{}': {}", db_path, e);
+      false
+    }
+  }
+}
+
+fn adjust_custom_db_path(custom_path: &str) -> String {
+  use std::path::PathBuf;
+  let path = PathBuf::from(custom_path);
+
+  match fs::metadata(&path) {
+    Ok(metadata) => {
+      if metadata.is_dir() {
+        // It's a directory, so append "pastebar-db.data" to it
+        let mut dir_path = path.clone();
+        dir_path.push("pastebar-db.data");
+        dir_path.to_string_lossy().into_owned()
+      } else {
+        // It's a file or symlink, so leave it as is
+        custom_path.to_string()
+      }
+    }
+    Err(_) => {
+      // If we can’t read metadata (e.g. it doesn't exist yet),
+      // we treat `custom_path` as a file path already.
+      custom_path.to_string()
+    }
+  }
+}
+
+pub fn get_config_file_path() -> PathBuf {
+  if cfg!(debug_assertions) {
+    let app_dir = APP_CONSTANTS.get().unwrap().app_dev_data_dir.clone();
+    if cfg!(target_os = "macos") {
+      PathBuf::from(format!(
+        "{}/pastebar_settings.yaml",
+        adjust_canonicalization(app_dir)
+      ))
+    } else if cfg!(target_os = "windows") {
+      PathBuf::from(format!(
+        "{}\\pastebar_settings.yaml",
+        adjust_canonicalization(app_dir)
+      ))
+    } else {
+      PathBuf::from(format!(
+        "{}/pastebar_settings.yaml",
+        adjust_canonicalization(app_dir)
+      ))
+    }
+  } else {
+    // Release mode
+    let app_data_dir = APP_CONSTANTS.get().unwrap().app_data_dir.clone();
+    let data_dir = app_data_dir.as_path();
+
+    if cfg!(target_os = "macos") {
+      PathBuf::from(format!(
+        "{}/pastebar_settings.yaml",
+        adjust_canonicalization(data_dir)
+      ))
+    } else if cfg!(target_os = "windows") {
+      PathBuf::from(format!(
+        "{}\\pastebar_settings.yaml",
+        adjust_canonicalization(data_dir)
+      ))
+    } else {
+      PathBuf::from(format!(
+        "{}/pastebar_settings.yaml",
+        adjust_canonicalization(data_dir)
+      ))
+    }
   }
 }
 

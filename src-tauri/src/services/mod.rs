@@ -7,4 +7,5 @@ pub mod settings_service;
 pub mod shell_service;
 pub mod tabs_service;
 pub mod translations;
+pub mod user_settings_service;
 pub mod utils;
