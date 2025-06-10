@@ -32,7 +32,7 @@ use std::path::{Path, PathBuf};
 
 use std::io::Cursor;
 
-use crate::db::APP_CONSTANTS;
+use crate::db::{self, APP_CONSTANTS};
 use crate::schema::clipboard_history;
 use crate::schema::clipboard_history::dsl::*;
 use crate::schema::link_metadata;
@@ -226,11 +226,7 @@ pub fn add_clipboard_history_from_image(
   let _history_id = nanoid!().to_string();
   let folder_name = &_history_id[..3];
 
-  let base_dir = if cfg!(debug_assertions) {
-    &APP_CONSTANTS.get().unwrap().app_dev_data_dir
-  } else {
-    &APP_CONSTANTS.get().unwrap().app_data_dir
-  };
+  let base_dir = db::get_clipboard_images_dir();
 
   let (_image_width, _image_height) = image.dimensions();
 
@@ -279,7 +275,7 @@ pub fn add_clipboard_history_from_image(
       ))
       .execute(connection);
   } else {
-    let folder_path = base_dir.join("clipboard-images").join(folder_name);
+    let folder_path = base_dir.join(folder_name);
     ensure_dir_exists(&folder_path);
 
     let image_file_name = folder_path.join(format!("{}.png", &_history_id));
@@ -712,13 +708,7 @@ pub fn delete_recent_clipboard_history(
 pub fn delete_all_clipboard_histories() -> String {
   let connection = &mut establish_pool_db_connection();
 
-  let base_dir = if cfg!(debug_assertions) {
-    &APP_CONSTANTS.get().unwrap().app_dev_data_dir
-  } else {
-    &APP_CONSTANTS.get().unwrap().app_data_dir
-  };
-
-  let folder_path = base_dir.join("clipboard-images");
+  let folder_path = db::get_clipboard_images_dir();
 
   let _ = remove_dir_if_exists(&folder_path);
 

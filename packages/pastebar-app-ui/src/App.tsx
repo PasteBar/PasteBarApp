@@ -107,6 +107,11 @@ function App() {
 
         settingsStore.initSettings({
           appDataDir: import.meta.env.TAURI_DEBUG ? appDevDataDir : appDataDir,
+          // Initialize new DB path settings for type conformity; actual value loaded by loadInitialCustomDbPath
+          customDbPath: null,
+          isCustomDbPathValid: null,
+          customDbPathError: null,
+          dbRelocationInProgress: false,
           appLastUpdateVersion: settings.appLastUpdateVersion?.valueText,
           appLastUpdateDate: settings.appLastUpdateDate?.valueText,
           isHideMacOSDockIcon: settings.isHideMacOSDockIcon?.valueBool,
@@ -187,6 +192,8 @@ function App() {
         settingsStore.initConstants({
           APP_DETECT_LANGUAGES_SUPPORTED: appDetectLanguageSupport,
         })
+        // Load the actual custom DB path after basic settings are initialized
+        settingsStore.loadInitialCustomDbPath()
         type().then(osType => {
           if (osType === 'Windows_NT' && settings.copyPasteDelay?.valueInt === 0) {
             settingsStore.updateSetting('copyPasteDelay', 2)

@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use crate::db::APP_CONSTANTS;
+use crate::db::{self, APP_CONSTANTS};
 use crate::models::models::UpdatedItemData;
 use crate::models::Item;
 use crate::services::utils::debug_output;
@@ -509,13 +509,7 @@ pub fn add_image_to_item(item_id: &str, image_full_path: &str) -> Result<String,
 
   let is_svg = extension == "svg";
 
-  let base_dir = if cfg!(debug_assertions) {
-    &APP_CONSTANTS.get().unwrap().app_dev_data_dir
-  } else {
-    &APP_CONSTANTS.get().unwrap().app_data_dir
-  };
-
-  let folder_path = base_dir.join("clip-images").join(&item_id[..3]);
+  let folder_path = db::get_clip_images_dir().join(&item_id[..3]);
   ensure_dir_exists(&folder_path);
   let new_image_path = folder_path.join(format!("{}.{}", item_id, extension));
 
@@ -636,13 +630,7 @@ pub fn save_item_image_from_history_item(
 ) -> Result<String, String> {
   let folder_name = &item_id[..3];
 
-  let base_dir = if cfg!(debug_assertions) {
-    &APP_CONSTANTS.get().unwrap().app_dev_data_dir
-  } else {
-    &APP_CONSTANTS.get().unwrap().app_data_dir
-  };
-
-  let folder_path = base_dir.join("clip-images").join(folder_name);
+  let folder_path = db::get_clip_images_dir().join(folder_name);
   ensure_dir_exists(&folder_path);
 
   let clip_image_file_name = folder_path.join(format!("{}.png", &item_id));
@@ -684,13 +672,7 @@ pub fn upload_image_file_to_item_id(
 
   let file_name = format!("{}.{}", item_id, extension);
 
-  let base_dir = if cfg!(debug_assertions) {
-    &APP_CONSTANTS.get().unwrap().app_dev_data_dir
-  } else {
-    &APP_CONSTANTS.get().unwrap().app_data_dir
-  };
-
-  let folder_path = base_dir.join("clip-images").join(&item_id[..3]);
+  let folder_path = db::get_clip_images_dir().join(&item_id[..3]);
   ensure_dir_exists(&folder_path);
   let image_path = folder_path.join(&file_name);
 

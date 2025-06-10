@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
-import { invoke } from '@tauri-apps/api'
+import { dialog, invoke } from '@tauri-apps/api'
+import { join } from '@tauri-apps/api/path'
 import i18n from '~/locales'
 import { LANGUAGES } from '~/locales/languges'
 import {
   clipNotesDelays,
   clipNotesSizes,
   fontSizeIncrements,
+  settingsStore, // Import the Zustand store instance for getState()
   settingsStoreAtom,
   themeStoreAtom,
   uiStoreAtom,
@@ -39,6 +41,335 @@ import {
 
 import md from '~/store/example.md?raw'
 
+// Helper component for Custom Database Location settings
+function CustomDatabaseLocationSettings() {
+  const { t } = useTranslation()
+  const {
+    customDbPath,
+    // isCustomDbPathValid is checked via settingsStore.getState() after validation
+    customDbPathError: storeCustomDbPathError, // Renamed to avoid conflict with local error state
+    dbRelocationInProgress,
+    validateCustomDbPath,
+    applyCustomDbPath,
+    revertToDefaultDbPath,
+    relaunchApp,
+  } = useAtomValue(settingsStoreAtom)
+
+  const [newDbPathInput, setNewDbPathInput] = useState(customDbPath || '')
+  const [dbOperation, setDbOperation] = useState<'move' | 'copy' | 'none'>('copy')
+
+  const [isApplying, setIsApplying] = useState(false)
+  const [isReverting, setIsReverting] = useState(false)
+  const [operationError, setOperationError] = useState<string | null>(null)
+  const [validationError, setValidationError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setNewDbPathInput(customDbPath || '')
+    setValidationError(null) // Clear local validation error when customDbPath changes
+  }, [customDbPath])
+
+  // Effect to react to validation errors from the store
+  useEffect(() => {
+    const state = settingsStore.getState()
+    if (newDbPathInput && storeCustomDbPathError && !state.isCustomDbPathValid) {
+      setValidationError(storeCustomDbPathError)
+    } else if (state.isCustomDbPathValid) {
+      setValidationError(null)
+    }
+    // Intentionally not depending on state.isCustomDbPathValid directly to avoid loop with onBlur validation
+  }, [storeCustomDbPathError, newDbPathInput])
+
+  const handleBrowse = async () => {
+    setOperationError(null)
+    setValidationError(null)
+    try {
+      const selected = await dialog.open({
+        directory: true,
+        multiple: false,
+        title: t('Select Data Directory', { ns: 'settings' }),
+      })
+      if (typeof selected === 'string') {
+        const status: any = await invoke('cmd_check_custom_data_path', {
+          pathStr: selected,
+        })
+        let finalPath = selected
+        if (status === 'NotEmpty') {
+          const confirmSubfolder = window.confirm(
+            t(
+              'The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?',
+              { ns: 'settings' }
+            )
+          )
+          if (confirmSubfolder) {
+            finalPath = await join(selected, 'pastebar-data')
+          }
+        } else if (status === 'IsPastebarDataAndNotEmpty') {
+          window.alert(
+            t(
+              'This folder already contains PasteBar data. The application will use this existing data after restart.',
+              { ns: 'settings' }
+            )
+          )
+        }
+        setNewDbPathInput(finalPath)
+        await validateCustomDbPath(finalPath)
+      }
+    } catch (error) {
+      console.error('Error handling directory selection:', error)
+      setOperationError(
+        t('An error occurred during directory processing.', { ns: 'settings' })
+      )
+    }
+  }
+
+  const handleApply = async () => {
+    if (!newDbPathInput || newDbPathInput === customDbPath) {
+      setOperationError(
+        t('Please select a new directory different from the current one.', {
+          ns: 'settings',
+        })
+      )
+      return
+    }
+    setIsApplying(true)
+    setOperationError(null)
+    setValidationError(null)
+
+    await validateCustomDbPath(newDbPathInput)
+    const currentStoreState = settingsStore.getState()
+
+    if (!currentStoreState.isCustomDbPathValid) {
+      setValidationError(
+        currentStoreState.customDbPathError ||
+          t('Invalid directory selected.', { ns: 'settings' })
+      )
+      setIsApplying(false)
+      return
+    }
+
+    const confirmed = window.confirm(
+      t(
+        'Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.',
+        {
+          ns: 'settings',
+          operation: t(dbOperation, { ns: 'settings' }),
+          path: newDbPathInput,
+        }
+      )
+    )
+    if (confirmed) {
+      try {
+        await applyCustomDbPath(newDbPathInput, dbOperation)
+        // Consider using a toast notification here
+        relaunchApp()
+      } catch (error: any) {
+        setOperationError(
+          error.message ||
+            t('Failed to apply custom database location.', { ns: 'settings' })
+        )
+      } finally {
+        setIsApplying(false)
+      }
+    } else {
+      setIsApplying(false)
+    }
+  }
+
+  const handleRevert = async () => {
+    setOperationError(null)
+    setValidationError(null)
+    const confirmedInitial = window.confirm(
+      t(
+        'Are you sure you want to revert to the default database location? The application will restart.',
+        { ns: 'settings' }
+      )
+    )
+    if (!confirmedInitial) return
+
+    let moveFileConfirmed = false
+    let overwriteConfirmed = false // Default to false
+
+    if (customDbPath) {
+      // Only ask about moving if there IS a custom path currently set
+      moveFileConfirmed = window.confirm(
+        t(
+          'Do you want to attempt to move the database file from "{{customPath}}" back to the default location?',
+          { ns: 'settings', customPath: customDbPath }
+        )
+      )
+      if (moveFileConfirmed) {
+        // Only ask for overwrite if they chose to move the file
+        overwriteConfirmed = window.confirm(
+          t(
+            'If a database file already exists at the default location, do you want to overwrite it? Choosing "Cancel" will skip moving the file if an existing file is found.',
+            { ns: 'settings' }
+          )
+        )
+      }
+    }
+
+    setIsReverting(true)
+    try {
+      await revertToDefaultDbPath(moveFileConfirmed, overwriteConfirmed)
+      // Consider using a toast notification here
+      relaunchApp()
+    } catch (error: any) {
+      setOperationError(
+        error.message ||
+          t('Failed to revert to default database location.', { ns: 'settings' })
+      )
+    } finally {
+      setIsReverting(false)
+    }
+  }
+
+  const isLoading = dbRelocationInProgress || isApplying || isReverting
+  const currentPathDisplay = customDbPath || t('Default', { ns: 'settings' })
+  const isPathUnchanged = newDbPathInput === customDbPath
+
+  return (
+    <Box className="animate-in fade-in max-w-xl mt-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            {t('Custom Application Data Location', { ns: 'settings' })}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Text className="text-sm text-muted-foreground">
+            {t('Current database location', { ns: 'settings' })}:{' '}
+            <span className="font-semibold">{currentPathDisplay}</span>
+          </Text>
+
+          <InputField
+            label={t('New Data Directory Path', { ns: 'settings' })}
+            value={newDbPathInput}
+            onChange={e => {
+              setNewDbPathInput(e.target.value)
+              setOperationError(null)
+              setValidationError(null) // Clear validation error on input change
+            }}
+            onBlur={async () => {
+              if (newDbPathInput && newDbPathInput !== customDbPath) {
+                await validateCustomDbPath(newDbPathInput)
+              } else if (!newDbPathInput && customDbPath) {
+                // if input is cleared but a custom path was set
+                settingsStore.setState({
+                  customDbPathError: null,
+                  isCustomDbPathValid: null,
+                })
+                setValidationError(null)
+              } else if (newDbPathInput === customDbPath) {
+                settingsStore.setState({
+                  customDbPathError: null,
+                  isCustomDbPathValid: null,
+                })
+                setValidationError(null)
+              }
+            }}
+            disabled={isLoading}
+            placeholder={t(
+              'Enter new directory path or leave empty for default on next revert',
+              { ns: 'settings' }
+            )}
+          />
+          {validationError && (
+            <Text className="text-sm text-red-500">{validationError}</Text>
+          )}
+
+          <Button onClick={handleBrowse} disabled={isLoading} variant="outline">
+            {dbRelocationInProgress && !isApplying && !isReverting ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
+            {t('Browse...', { ns: 'common' })}
+          </Button>
+
+          <Flex className="items-center space-x-4">
+            <Text className="text-sm">
+              {t('Operation when applying new path', { ns: 'settings' })}:
+            </Text>
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="dbOperation"
+                value="copy"
+                checked={dbOperation === 'copy'}
+                onChange={() => setDbOperation('copy')}
+                disabled={isLoading}
+                className="form-radio accent-primary"
+              />
+              <TextNormal size="sm">{t('Copy data', { ns: 'settings' })}</TextNormal>
+            </label>
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="dbOperation"
+                value="move"
+                checked={dbOperation === 'move'}
+                onChange={() => setDbOperation('move')}
+                disabled={isLoading}
+                className="form-radio accent-primary"
+              />
+              <TextNormal size="sm">{t('Move data', { ns: 'settings' })}</TextNormal>
+            </label>
+            <label className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="dbOperation"
+                value="none"
+                checked={dbOperation === 'none'}
+                onChange={() => setDbOperation('none')}
+                disabled={isLoading}
+                className="form-radio accent-primary"
+              />
+              <TextNormal size="sm">
+                {t('Use new location', { ns: 'settings' })}
+              </TextNormal>
+            </label>
+          </Flex>
+
+          {operationError && (
+            <Text className="text-sm text-red-500">{operationError}</Text>
+          )}
+
+          <Flex className="space-x-2">
+            <Button
+              onClick={handleApply}
+              disabled={
+                isLoading || !newDbPathInput || isPathUnchanged || !!validationError
+              }
+            >
+              {isApplying ? (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              {t('Apply and Restart', { ns: 'settings' })}
+            </Button>
+            {customDbPath && ( // Only show revert button if a custom path is currently set
+              <Button
+                onClick={handleRevert}
+                disabled={isLoading}
+                variant="secondary" // Base variant
+                className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white dark:text-slate-100" // Destructive-like styling
+              >
+                {isReverting ? (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                {t('Revert to Default and Restart', { ns: 'settings' })}
+              </Button>
+            )}
+          </Flex>
+          <Text className="text-xs text-muted-foreground pt-2">
+            {t(
+              'Changing the database location requires an application restart to take effect.',
+              { ns: 'settings' }
+            )}
+          </Text>
+        </CardContent>
+      </Card>
+    </Box>
+  )
+}
+
 export default function UserPreferences() {
   const { t } = useTranslation()
 
@@ -69,12 +400,16 @@ export default function UserPreferences() {
     hotKeysShowHideQuickPasteWindow,
     setHotKeysShowHideMainAppWindow,
     setHotKeysShowHideQuickPasteWindow,
+    // Custom DB Path states and actions (customDbPath, isCustomDbPathValid, etc.)
+    // are now handled in the CustomDatabaseLocationSettings component.
+    // relaunchApp is also used there.
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
     useAtomValue(uiStoreAtom)
 
   const [isAutoStartEnabled, setIsAutoStartEnabled] = useState(false)
+  // Local states for DB path input, operation, and confirmations have been moved to CustomDatabaseLocationSettings
 
   const { setTheme, theme } = useTheme()
   const { mode, setMode, themeDark } = useAtomValue(themeStoreAtom)
@@ -83,7 +418,7 @@ export default function UserPreferences() {
     if (theme !== mode) {
       setMode(theme)
     }
-  }, [theme])
+  }, [theme, mode, setMode]) // Added mode and setMode to dependency array
 
   useEffect(() => {
     invoke('is_autostart_enabled').then(isEnabled => {
@@ -107,6 +442,8 @@ export default function UserPreferences() {
       setQuickPasteHotkey(hotKeysShowHideQuickPasteWindow)
     }
   }, [hotKeysShowHideMainAppWindow, hotKeysShowHideQuickPasteWindow])
+  // Removed mainAppHotkey, quickPasteHotkey from local state dependencies in the original thought process,
+  // as they are set inside this effect. The effect correctly depends on props.
 
   const handleKeyDown = (
     event: KeyboardEvent | React.KeyboardEvent<HTMLInputElement>,
@@ -273,6 +610,10 @@ export default function UserPreferences() {
                     </CardContent>
                   </Card>
                 </Box>
+
+                {/* ------------- Custom Database Location Settings Card ------------- */}
+                <CustomDatabaseLocationSettings />
+                {/* ------------------------------------------------------------------ */}
 
                 <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card>

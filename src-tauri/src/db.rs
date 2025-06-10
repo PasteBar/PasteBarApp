@@ -217,57 +217,45 @@ fn db_file_exists() -> bool {
   Path::new(&db_path).exists()
 }
 
-fn get_db_path() -> String {
+/// Returns the base directory for application data.
+/// This will be a `pastebar-data` subdirectory if a custom path is set.
+pub fn get_data_dir() -> PathBuf {
   let user_config = load_user_config();
-
-  if let Some(custom_path) = user_config.custom_db_path {
-    let final_path = adjust_custom_db_path(&custom_path);
-
-    // Check if it's valid/writable
-    if can_access_or_create(&final_path) {
-      return final_path;
-    } else {
-      eprintln!(
-        "Warning: custom_db_path=\"{}\" is invalid or not writable. Falling back to default...",
-        custom_path
-      );
-    }
-  }
-
-  if cfg!(debug_assertions) {
-    let app_dir = APP_CONSTANTS.get().unwrap().app_dev_data_dir.clone();
-    let path = if cfg!(target_os = "macos") {
-      format!(
-        "{}/local.pastebar-db.data",
-        adjust_canonicalization(app_dir)
-      )
-    } else if cfg!(target_os = "windows") {
-      format!(
-        "{}\\local.pastebar-db.data",
-        adjust_canonicalization(app_dir)
-      )
-    } else {
-      format!(
-        "{}/local.pastebar-db.data",
-        adjust_canonicalization(app_dir)
-      )
-    };
-
-    path
+  if let Some(custom_path_str) = user_config.custom_db_path {
+    PathBuf::from(custom_path_str)
   } else {
-    let app_data_dir = APP_CONSTANTS.get().unwrap().app_data_dir.clone();
-    let data_dir = app_data_dir.as_path();
-
-    let path = if cfg!(target_os = "macos") {
-      format!("{}/pastebar-db.data", adjust_canonicalization(data_dir))
-    } else if cfg!(target_os = "windows") {
-      format!("{}\\pastebar-db.data", adjust_canonicalization(data_dir))
-    } else {
-      format!("{}/pastebar-db.data", adjust_canonicalization(data_dir))
-    };
-
-    path
+    get_default_data_dir()
   }
+}
+
+/// Returns the default application data directory.
+pub fn get_default_data_dir() -> PathBuf {
+  if cfg!(debug_assertions) {
+    APP_CONSTANTS.get().unwrap().app_dev_data_dir.clone()
+  } else {
+    APP_CONSTANTS.get().unwrap().app_data_dir.clone()
+  }
+}
+
+pub fn get_db_path() -> String {
+  let db_path = get_data_dir().join("pastebar-db.data");
+  db_path.to_string_lossy().into_owned()
+}
+
+/// Returns the path to the `clip-images` directory.
+pub fn get_clip_images_dir() -> PathBuf {
+  get_data_dir().join("clip-images")
+}
+
+/// Returns the path to the `clipboard-images` directory.
+pub fn get_clipboard_images_dir() -> PathBuf {
+  get_data_dir().join("clipboard-images")
+}
+
+/// Returns the default database file path as a string.
+pub fn get_default_db_path_string() -> String {
+  let db_path = get_default_data_dir().join("pastebar-db.data");
+  db_path.to_string_lossy().into_owned()
 }
 
 fn can_access_or_create(db_path: &str) -> bool {
@@ -298,33 +286,13 @@ fn can_access_or_create(db_path: &str) -> bool {
   }
 }
 
-fn adjust_custom_db_path(custom_path: &str) -> String {
-  use std::path::PathBuf;
-  let path = PathBuf::from(custom_path);
-
-  match fs::metadata(&path) {
-    Ok(metadata) => {
-      if metadata.is_dir() {
-        // It's a directory, so append "pastebar-db.data" to it
-        let mut dir_path = path.clone();
-        dir_path.push("pastebar-db.data");
-        dir_path.to_string_lossy().into_owned()
-      } else {
-        // It's a file or symlink, so leave it as is
-        custom_path.to_string()
-      }
-    }
-    Err(_) => {
-      // If we can’t read metadata (e.g. it doesn't exist yet),
-      // we treat `custom_path` as a file path already.
-      custom_path.to_string()
-    }
-  }
-}
-
 pub fn get_config_file_path() -> PathBuf {
   if cfg!(debug_assertions) {
-    let app_dir = APP_CONSTANTS.get().unwrap().app_dev_data_dir.clone();
+    let app_dir = APP_CONSTANTS
+      .get()
+      .expect("APP_CONSTANTS not initialized")
+      .app_dev_data_dir
+      .clone();
     if cfg!(target_os = "macos") {
       PathBuf::from(format!(
         "{}/pastebar_settings.yaml",

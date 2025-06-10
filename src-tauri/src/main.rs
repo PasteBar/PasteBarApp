@@ -1185,8 +1185,12 @@ async fn main() {
       security_commands::delete_os_password,
       security_commands::get_stored_os_password,
       user_settings_command::cmd_get_custom_db_path,
-      user_settings_command::cmd_set_custom_db_path,
-      user_settings_command::cmd_remove_custom_db_path,
+      // user_settings_command::cmd_set_custom_db_path, // Replaced by cmd_set_and_relocate_db
+      // user_settings_command::cmd_remove_custom_db_path, // Replaced by cmd_revert_to_default_db_location
+      user_settings_command::cmd_validate_custom_db_path,
+      user_settings_command::cmd_check_custom_data_path,
+      user_settings_command::cmd_set_and_relocate_data,
+      user_settings_command::cmd_revert_to_default_data_location,
       user_settings_command::cmd_get_all_settings,
       user_settings_command::cmd_get_setting,
       user_settings_command::cmd_set_setting,
