@@ -71,12 +71,14 @@ Enable auto lock the application screen after a certain period of inactivity, to
 Enable auto lock the application screen when user not active: Enable auto lock the application screen when user not active
 Enable auto trim spaces on history capture: Enable auto trim spaces on history capture
 Enable auto update on capture: Enable auto update on capture
-Enable history capture: Enable history capture
-Enable programming language detection: Enable programming language detection
-Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.
-Enhance security by automatically locking the application screen after a set period of user inactivity.: Enhance security by automatically locking the application screen after a set period of user inactivity.
+Enable custom data location to store application data in a directory of your choice instead of the default location.: Enable custom data location to store application data in a directory of your choice instead of the default location.
 Enter Passcode length: Enter Passcode length
 Enter new directory path or leave empty for default on next revert: Enter new directory path or leave empty for default on next revert
+Selected directory: Selected directory
+Select Directory...: Select Directory...
+Change Directory...: Change Directory...
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
+Failed to select directory: Failed to select directory
 Enter recovery password to reset passcode.: Enter recovery password to reset passcode.
 Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode
 Entered Passcode is invalid: Entered Passcode is invalid
@@ -182,6 +184,7 @@ Thank you again for using PasteBar.: Thank you again for using PasteBar.
 Thank you for testing! 🙌: Thank you for testing! 🙌
 The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?: The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?
 This folder already contains PasteBar data. The application will use this existing data after restart.: This folder already contains PasteBar data. The application will use this existing data after restart.
+Are you sure you want to go back to the default data folder? This will remove the custom location setting.: Are you sure you want to go back to the default data folder? This will remove the custom location setting.
 ? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 : This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.

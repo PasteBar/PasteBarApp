@@ -238,7 +238,13 @@ pub fn get_default_data_dir() -> PathBuf {
 }
 
 pub fn get_db_path() -> String {
-  let db_path = get_data_dir().join("pastebar-db.data");
+  let filename = if cfg!(debug_assertions) {
+    "local.pastebar-db.data"
+  } else {
+    "pastebar-db.data"
+  };
+
+  let db_path = get_data_dir().join(filename);
   db_path.to_string_lossy().into_owned()
 }
 

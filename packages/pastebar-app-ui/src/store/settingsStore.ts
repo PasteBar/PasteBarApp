@@ -94,11 +94,8 @@ type Constants = {
 export interface SettingsStoreState {
   setCustomDbPath: (path: string | null) => void
   validateCustomDbPath: (path: string) => Promise<void>
-  applyCustomDbPath: (
-    newPath: string,
-    operation: 'move' | 'copy' | 'none'
-  ) => Promise<string>
-  revertToDefaultDbPath: (moveFile: boolean, overwrite: boolean) => Promise<string>
+  applyCustomDbPath: (newPath: string, operation: 'copy' | 'none') => Promise<string>
+  revertToDefaultDbPath: () => Promise<string>
   loadInitialCustomDbPath: () => Promise<void>
   setIsHistoryEnabled: (isHistoryEnabled: boolean) => void
   setIsHistoryAutoUpdateOnCaputureEnabled: (
@@ -795,7 +792,7 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       })
     }
   },
-  applyCustomDbPath: async (newPath: string, operation: 'move' | 'copy' | 'none') => {
+  applyCustomDbPath: async (newPath: string, operation: 'copy' | 'none') => {
     set({ dbRelocationInProgress: true, customDbPathError: null })
     try {
       const message = await invoke('cmd_set_and_relocate_data', {
@@ -814,13 +811,10 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       throw error
     }
   },
-  revertToDefaultDbPath: async (moveFile: boolean, overwrite: boolean) => {
+  revertToDefaultDbPath: async () => {
     set({ dbRelocationInProgress: true, customDbPathError: null })
     try {
-      const message = await invoke('cmd_revert_to_default_data_location', {
-        moveFilesBack: moveFile,
-        overwriteDefault: overwrite,
-      })
+      const message = await invoke('cmd_revert_to_default_data_location')
       set({
         customDbPath: null,
         isCustomDbPathValid: null,

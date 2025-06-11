@@ -52,14 +52,10 @@ This document outlines the plan to implement the feature allowing users to speci
         5.  If successful, call `user_settings_service::set_custom_db_path(&new_parent_dir_path)`.
         6.  Return a success or error message.
 
-*   **`cmd_revert_to_default_data_location(move_files_back: bool, overwrite_default: bool) -> Result<String, String>`** (renamed and signature updated)
+*   **`cmd_revert_to_default_data_location() -> Result<String, String>`** (renamed and simplified)
     *   **Updated Steps:**
-        1.  Get the current custom data directory.
-        2.  Get the default application data directory.
-        3.  If `move_files_back` is `true`:
-            *   Move/copy the DB file, `clip-images` dir, and `clipboard-images` dir from the custom location back to the default location.
-            *   Handle the `overwrite_default` flag for each item.
-        4.  Call `user_settings_service::remove_custom_db_path()` to clear the setting.
+        1.  Call `user_settings_service::remove_custom_db_path()` to clear the custom data path setting.
+        2.  Return a success message indicating the setting has been removed.
 
 ## 3. Frontend (React)
 

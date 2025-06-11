@@ -36,6 +36,14 @@ pub fn cmd_check_custom_data_path(path_str: String) -> Result<PathStatus, String
     }
   }
 
+  // Check if directory contains PasteBar database files
+  let has_dev_db = path.join("local.pastebar-db.data").exists();
+  let has_prod_db = path.join("pastebar-db.data").exists();
+
+  if has_dev_db || has_prod_db {
+    return Ok(PathStatus::IsPastebarDataAndNotEmpty);
+  }
+
   if path.read_dir().map_err(|e| e.to_string())?.next().is_some() {
     return Ok(PathStatus::NotEmpty);
   }
@@ -175,57 +183,13 @@ pub fn cmd_set_and_relocate_data(
   ))
 }
 
-/// Clears the custom data path and optionally moves the data back to default.
+/// Clears the custom data path setting.
 #[command]
-pub fn cmd_revert_to_default_data_location(
-  move_files_back: bool,
-  overwrite_default: bool,
-) -> Result<String, String> {
-  let current_custom_data_dir = get_data_dir();
-  let default_data_dir = get_default_data_dir();
+pub fn cmd_revert_to_default_data_location() -> Result<String, String> {
+  // Simply remove the custom database path setting
+  remove_custom_db_path()?;
 
-  if move_files_back && current_custom_data_dir != default_data_dir {
-    let items_to_relocate = vec!["pastebar-db.data", "clip-images", "clipboard-images"];
-
-    for item_name in items_to_relocate {
-      let source_path = current_custom_data_dir.join(item_name);
-      let dest_path = default_data_dir.join(item_name);
-
-      if !source_path.exists() {
-        continue;
-      }
-
-      if dest_path.exists() && !overwrite_default {
-        return Err(format!(
-          "Default item at {} already exists. Cannot overwrite without explicit confirmation.",
-          dest_path.display()
-        ));
-      }
-
-      if source_path.is_dir() {
-        fs::rename(&source_path, &dest_path).map_err(|e| {
-          format!(
-            "Failed to move directory {} to {}: {}",
-            source_path.display(),
-            dest_path.display(),
-            e
-          )
-        })?;
-      } else {
-        fs::rename(&source_path, &dest_path).map_err(|e| {
-          format!(
-            "Failed to move file {} to {}: {}",
-            source_path.display(),
-            dest_path.display(),
-            e
-          )
-        })?;
-      }
-    }
-  }
-
-  user_settings_service::remove_custom_db_path()?;
-  Ok("Data location reverted to default. Please restart the application.".to_string())
+  Ok("Custom database location setting removed successfully.".to_string())
 }
 
 /// Return all key-value pairs from the `data` map.
