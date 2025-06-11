@@ -13,7 +13,10 @@ Application UI Fonts Scale: Application UI Fonts Scale
 Application UI Language: Application UI Language
 Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.
 Apply and Restart: Apply and Restart
+Are you sure you want to go back to the default data folder? This will remove the custom location setting.: Are you sure you want to go back to the default data folder? This will remove the custom location setting.
 Are you sure you want to revert to the default database location? The application will restart.: Are you sure you want to revert to the default database location? The application will restart.
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: Are you sure you want to set "{{path}}" as the new data folder? The application will restart.
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.
 Auto Disable History Capture when Screen Unlocked: Auto Disable History Capture when Screen Unlocked
 Auto Lock Application Screen on User Inactivity: Auto Lock Application Screen on User Inactivity
 Auto Lock Screen on User Inactivity: Auto Lock Screen on User Inactivity
@@ -32,6 +35,7 @@ Auto-delete clipboard history after: Auto-delete clipboard history after
 Back: Back
 Capture History: Capture History
 Capture History Text Length Limits: Capture History Text Length Limits
+Change Directory...: Change Directory...
 Change the application UI font size scale: Change the application UI font size scale
 Change the application UI language: Change the application UI language
 Change the application user interface color theme: Change the application user interface color theme
@@ -46,6 +50,8 @@ Copy data: Copy data
 Copy database file: Copy database file
 Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.
 Create an unlimited number of collections to organize your clips and menus.: Create an unlimited number of collections to organize your clips and menus.
+Current data folder: Current data folder
+Current data location: Current data location
 Current database location: Current database location
 Custom: Custom
 Custom Application Data Location: Custom Application Data Location
@@ -74,11 +80,6 @@ Enable auto update on capture: Enable auto update on capture
 Enable custom data location to store application data in a directory of your choice instead of the default location.: Enable custom data location to store application data in a directory of your choice instead of the default location.
 Enter Passcode length: Enter Passcode length
 Enter new directory path or leave empty for default on next revert: Enter new directory path or leave empty for default on next revert
-Selected directory: Selected directory
-Select Directory...: Select Directory...
-Change Directory...: Change Directory...
-The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
-Failed to select directory: Failed to select directory
 Enter recovery password to reset passcode.: Enter recovery password to reset passcode.
 Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode
 Entered Passcode is invalid: Entered Passcode is invalid
@@ -87,6 +88,7 @@ Execute Web Requests: Execute Web Requests
 Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.
 'Expires:': 'Expires:'
 Failed to revert to default database location.: Failed to revert to default database location.
+Failed to select directory: Failed to select directory
 Forgot Passcode ? Enter your recovery password to reset the passcode.: Forgot Passcode ? Enter your recovery password to reset the passcode.
 Forgot passcode ?: Forgot passcode ?
 Forgot?: Forgot?
@@ -160,8 +162,8 @@ Scrape and parse websites or API responses using built-in web scraping tools and
 : 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
 Security: Security
 Security Settings: Security Settings
+Select Custom Data Folder...: Select Custom Data Folder...
 Select Data Directory: Select Data Directory
-Select Database Directory: Select Database Directory
 Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Send HTTP requests to web APIs or services and copy the response data to the clipboard.
 Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.
 Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Set a passcode to unlock the locked screen and protect your data from unauthorized access.
@@ -182,9 +184,10 @@ Swap Panels Layout: Swap Panels Layout
 Switch the layout position of panels in Clipboard History and Paste Menu views: Switch the layout position of panels in Clipboard History and Paste Menu views
 Thank you again for using PasteBar.: Thank you again for using PasteBar.
 Thank you for testing! 🙌: Thank you for testing! 🙌
+? The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
+: The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
 The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?: The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?
 This folder already contains PasteBar data. The application will use this existing data after restart.: This folder already contains PasteBar data. The application will use this existing data after restart.
-Are you sure you want to go back to the default data folder? This will remove the custom location setting.: Are you sure you want to go back to the default data folder? This will remove the custom location setting.
 ? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 : This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
@@ -208,5 +211,6 @@ Use new location: Use new location
 User Preferences: User Preferences
 Web Scraping and Parsing: Web Scraping and Parsing
 Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.
+none: none
 passcode reset: passcode reset
 password reset: password reset

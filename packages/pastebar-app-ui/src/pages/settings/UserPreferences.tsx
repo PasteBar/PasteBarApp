@@ -186,8 +186,17 @@ function CustomDatabaseLocationSettings() {
       return
     }
 
-    const confirmed = await dialog.confirm(
-      t(
+    let confirmMessage: string
+    if (dbOperation === 'none') {
+      confirmMessage = t(
+        'Are you sure you want to set "{{path}}" as the new data folder? The application will restart.',
+        {
+          ns: 'settings',
+          path: selectedDbPath,
+        }
+      )
+    } else {
+      confirmMessage = t(
         'Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.',
         {
           ns: 'settings',
@@ -195,7 +204,9 @@ function CustomDatabaseLocationSettings() {
           path: selectedDbPath,
         }
       )
-    )
+    }
+
+    const confirmed = await dialog.confirm(confirmMessage)
     if (confirmed) {
       try {
         await applyCustomDbPath(selectedDbPath, dbOperation)
@@ -267,14 +278,14 @@ function CustomDatabaseLocationSettings() {
           {isCustomLocationEnabled && (
             <div className="space-y-4 mt-4">
               <Text className="text-sm text-muted-foreground">
-                {t('Current database location', { ns: 'settings' })}:{' '}
+                {t('Current data folder', { ns: 'settings' })}:{' '}
                 <span className="font-semibold">{currentPathDisplay}</span>
               </Text>
 
               {selectedDbPath && (
                 <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-md border">
                   <Text className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                    {t('Selected directory', { ns: 'settings' })}:
+                    {t('Current data folder', { ns: 'settings' })}:
                   </Text>
                   <Text className="text-sm text-blue-700 dark:text-blue-200 break-all">
                     {selectedDbPath}
@@ -291,8 +302,8 @@ function CustomDatabaseLocationSettings() {
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
                 {selectedDbPath
-                  ? t('Change Directory...', { ns: 'settings' })
-                  : t('Select Directory...', { ns: 'settings' })}
+                  ? t('Change Custom Data Folder...', { ns: 'settings' })
+                  : t('Select Custom Data Folder...', { ns: 'settings' })}
               </Button>
 
               {selectedDbPath && (
@@ -300,20 +311,6 @@ function CustomDatabaseLocationSettings() {
                   <Text className="text-sm">
                     {t('Operation when applying new path', { ns: 'settings' })}:
                   </Text>
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="dbOperation"
-                      value="copy"
-                      checked={dbOperation === 'copy'}
-                      onChange={() => setDbOperation('copy')}
-                      disabled={isLoading}
-                      className="form-radio accent-primary"
-                    />
-                    <TextNormal size="sm">
-                      {t('Copy data', { ns: 'settings' })}
-                    </TextNormal>
-                  </label>
                   <label className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="radio"
@@ -326,6 +323,20 @@ function CustomDatabaseLocationSettings() {
                     />
                     <TextNormal size="sm">
                       {t('Use new location', { ns: 'settings' })}
+                    </TextNormal>
+                  </label>
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="dbOperation"
+                      value="copy"
+                      checked={dbOperation === 'copy'}
+                      onChange={() => setDbOperation('copy')}
+                      disabled={isLoading}
+                      className="form-radio accent-primary"
+                    />
+                    <TextNormal size="sm">
+                      {t('Copy data', { ns: 'settings' })}
                     </TextNormal>
                   </label>
                 </Flex>
