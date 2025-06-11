@@ -264,6 +264,40 @@ pub fn get_default_db_path_string() -> String {
   db_path.to_string_lossy().into_owned()
 }
 
+/// Converts an absolute image path to a relative path with {{base_folder}} placeholder
+pub fn to_relative_image_path(absolute_path: &str) -> String {
+  let data_dir = get_data_dir();
+  let data_dir_str = data_dir.to_string_lossy();
+  
+  if absolute_path.starts_with(&data_dir_str.as_ref()) {
+    // Remove the data directory prefix and replace with placeholder
+    let relative_path = absolute_path.strip_prefix(&data_dir_str.as_ref())
+      .unwrap_or(absolute_path)
+      .trim_start_matches('/')
+      .trim_start_matches('\\');
+    format!("{{{{base_folder}}}}/{}", relative_path)
+  } else {
+    // If path doesn't start with data dir, return as is
+    absolute_path.to_string()
+  }
+}
+
+/// Converts a relative image path with {{base_folder}} placeholder to absolute path
+pub fn to_absolute_image_path(relative_path: &str) -> String {
+  if relative_path.starts_with("{{base_folder}}") {
+    let data_dir = get_data_dir();
+    let path_without_placeholder = relative_path
+      .strip_prefix("{{base_folder}}")
+      .unwrap_or(relative_path)
+      .trim_start_matches('/')
+      .trim_start_matches('\\');
+    data_dir.join(path_without_placeholder).to_string_lossy().into_owned()
+  } else {
+    // If path doesn't have placeholder, return as is
+    relative_path.to_string()
+  }
+}
+
 fn can_access_or_create(db_path: &str) -> bool {
   let path = std::path::Path::new(db_path);
 

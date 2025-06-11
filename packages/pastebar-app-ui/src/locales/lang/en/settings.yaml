@@ -35,7 +35,9 @@ Auto-delete clipboard history after: Auto-delete clipboard history after
 Back: Back
 Capture History: Capture History
 Capture History Text Length Limits: Capture History Text Length Limits
+Change Custom Data Folder...: Change Custom Data Folder...
 Change Directory...: Change Directory...
+Change Selected Folder...: Change Selected Folder...
 Change the application UI font size scale: Change the application UI font size scale
 Change the application UI language: Change the application UI language
 Change the application user interface color theme: Change the application user interface color theme
@@ -46,6 +48,7 @@ Clip Notes Popup Maximum Dimensions: Clip Notes Popup Maximum Dimensions
 Clipboard History Settings: Clipboard History Settings
 'Complete details:': 'Complete details:'
 Configure settings to automatically delete clipboard history items after a specified duration.: Configure settings to automatically delete clipboard history items after a specified duration.
+ConfirmRevertToDefaultDbPathMessage: Are you sure you want to revert to the default data location? Your application data will be moved to the default path.
 Copy data: Copy data
 Copy database file: Copy database file
 Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.
@@ -56,9 +59,12 @@ Current database location: Current database location
 Custom: Custom
 Custom Application Data Location: Custom Application Data Location
 Custom Database Location: Custom Database Location
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: Custom data location is active. You can change it or revert to the default location. Changes require an application restart.
 Custom themes: Custom themes
 Decrease UI Font Size: Decrease UI Font Size
 Default: Default
+Disable Image Capture: Disable Image Capture
+Disable capturing and storing images from clipboard: Disable capturing and storing images from clipboard
 ? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
 : Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
 Display disabled collections name on the navigation bar collections menu: Display disabled collections name on the navigation bar collections menu
@@ -78,6 +84,9 @@ Enable auto lock the application screen when user not active: Enable auto lock t
 Enable auto trim spaces on history capture: Enable auto trim spaces on history capture
 Enable auto update on capture: Enable auto update on capture
 Enable custom data location to store application data in a directory of your choice instead of the default location.: Enable custom data location to store application data in a directory of your choice instead of the default location.
+Enable history capture: Enable history capture
+Enable programming language detection: Enable programming language detection
+Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.
 Enter Passcode length: Enter Passcode length
 Enter new directory path or leave empty for default on next revert: Enter new directory path or leave empty for default on next revert
 Enter recovery password to reset passcode.: Enter recovery password to reset passcode.
@@ -155,6 +164,7 @@ Require Screen Unlock at Application Start: Require Screen Unlock at Application
 ? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
 : Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
 Reset Font Size: Reset Font Size
+Revert to Default: Revert to Default
 Revert to Default and Restart: Revert to Default and Restart
 Run Terminal or Shell Commands: Run Terminal or Shell Commands
 Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.
@@ -163,12 +173,18 @@ Scrape and parse websites or API responses using built-in web scraping tools and
 Security: Security
 Security Settings: Security Settings
 Select Custom Data Folder...: Select Custom Data Folder...
-Select Data Directory: Select Data Directory
+Select Data Folder: Select Data Folder
+Select Data Folder...: Select Data Folder...
+Select a custom location to store your application data instead of the default location.: Select a custom location to store your application data instead of the default location.
+Selected data folder: Selected data folder
+Selected new data folder: Selected new data folder
+Selected new data folder for change: Selected new data folder for change
 Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Send HTTP requests to web APIs or services and copy the response data to the clipboard.
 Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.
 Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Set a passcode to unlock the locked screen and protect your data from unauthorized access.
 ? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
 : Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
+Setting a custom database location requires an application restart to take effect.: Setting a custom database location requires an application restart to take effect.
 Settings: Settings
 Show Clipboard History Capture Control on Lock Screen: Show Clipboard History Capture Control on Lock Screen
 Show Disable History Capture When Screen Locked: Show Disable History Capture When Screen Locked

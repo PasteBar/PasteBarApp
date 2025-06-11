@@ -538,7 +538,9 @@ pub async fn save_to_file_clip_item(
         }
       }
     } else if let (Some(image_path), Some(true)) = (item.image_path_full_res, item.is_image) {
-      img_data = Some(std::fs::read(&image_path).map_err(|e| e.to_string())?);
+      // Convert relative path to absolute path
+      let absolute_path = crate::db::to_absolute_image_path(&image_path);
+      img_data = Some(std::fs::read(&absolute_path).map_err(|e| e.to_string())?);
     } else if let Some(true) = item.is_link {
       if let Some(image_url) = &item.value {
         let parsed_url = Url::parse(&ensure_url_prefix(image_url)).map_err(|e| e.to_string())?;

@@ -102,7 +102,11 @@ pub fn get_item_by_id(item_id: String) -> Result<Item, String> {
     .first::<Item>(connection);
 
   match found_item {
-    Ok(item) => Ok(item),
+    Ok(mut item) => {
+      // Transform image path for frontend consumption
+      item.transform_image_path_for_frontend();
+      Ok(item)
+    },
     Err(e) => Err(format!("Item not found: {}", e)),
   }
 }
@@ -538,9 +542,13 @@ pub fn add_image_to_item(item_id: &str, image_full_path: &str) -> Result<String,
 
   let connection = &mut establish_pool_db_connection();
 
+  // Convert absolute path to relative path before storing
+  let relative_image_path = new_image_path.to_str()
+    .map(|path| db::to_relative_image_path(path));
+  
   diesel::update(items.find(item_id))
     .set((
-      image_path_full_res.eq(new_image_path.to_str()),
+      image_path_full_res.eq(relative_image_path),
       is_image.eq(true),
       image_height.eq(_image_height),
       image_width.eq(_image_width),
@@ -652,7 +660,11 @@ pub fn save_item_image_from_history_item(
     e.to_string()
   })?;
 
-  Ok(clip_image_file_name.to_str().unwrap().to_string())
+  // Return relative path instead of absolute path
+  let relative_path = clip_image_file_name.to_str()
+    .map(|path| db::to_relative_image_path(path))
+    .unwrap_or_default();
+  Ok(relative_path)
 }
 
 pub fn upload_image_file_to_item_id(
@@ -705,9 +717,13 @@ pub fn upload_image_file_to_item_id(
   let _image_hash_string = chrono::Utc::now().timestamp_millis().to_string();
   let connection = &mut establish_pool_db_connection();
 
+  // Convert absolute path to relative path before storing
+  let relative_image_path = image_path.to_str()
+    .map(|path| db::to_relative_image_path(path));
+  
   let _ = diesel::update(items.find(item_id))
     .set((
-      image_path_full_res.eq(image_path.to_str()),
+      image_path_full_res.eq(relative_image_path),
       image_data_url.eq(_image_data_url),
       image_height.eq(_image_height),
       image_width.eq(_image_width),

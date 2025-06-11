@@ -20,6 +20,7 @@ pub enum PathStatus {
   Empty,
   NotEmpty,
   IsPastebarDataAndNotEmpty,
+  HasPastebarDataSubfolder,
 }
 
 /// Checks the status of a given path.
@@ -30,18 +31,33 @@ pub fn cmd_check_custom_data_path(path_str: String) -> Result<PathStatus, String
     return Ok(PathStatus::Empty); // Treat non-existent paths as empty for this purpose
   }
 
+  // Check if the selected path itself is named "pastebar-data"
   if path.file_name().and_then(|n| n.to_str()) == Some("pastebar-data") {
     if path.read_dir().map_err(|e| e.to_string())?.next().is_some() {
       return Ok(PathStatus::IsPastebarDataAndNotEmpty);
     }
   }
 
-  // Check if directory contains PasteBar database files
+  // Check if directory contains PasteBar database files directly
   let has_dev_db = path.join("local.pastebar-db.data").exists();
   let has_prod_db = path.join("pastebar-db.data").exists();
 
   if has_dev_db || has_prod_db {
     return Ok(PathStatus::IsPastebarDataAndNotEmpty);
+  }
+
+  // Check if there's a "pastebar-data" subfolder in the selected directory
+  let pastebar_data_subfolder = path.join("pastebar-data");
+  if pastebar_data_subfolder.exists() && pastebar_data_subfolder.is_dir() {
+    // Check if the pastebar-data subfolder contains database files
+    let has_dev_db_in_subfolder = pastebar_data_subfolder.join("local.pastebar-db.data").exists();
+    let has_prod_db_in_subfolder = pastebar_data_subfolder.join("pastebar-db.data").exists();
+    
+    if has_dev_db_in_subfolder || has_prod_db_in_subfolder {
+      return Ok(PathStatus::IsPastebarDataAndNotEmpty);
+    } else {
+      return Ok(PathStatus::HasPastebarDataSubfolder);
+    }
   }
 
   if path.read_dir().map_err(|e| e.to_string())?.next().is_some() {
@@ -59,6 +75,20 @@ pub fn cmd_get_custom_db_path() -> Option<String> {
 
 // cmd_set_custom_db_path is now part of cmd_set_and_relocate_db
 // cmd_remove_custom_db_path is now part of cmd_revert_to_default_db_location
+
+/// Creates a directory at the specified path.
+#[command]
+pub fn cmd_create_directory(path_str: String) -> Result<(), String> {
+  let path = Path::new(&path_str);
+  fs::create_dir_all(&path).map_err(|e| {
+    format!(
+      "Failed to create directory {}: {}",
+      path.display(),
+      e
+    )
+  })?;
+  Ok(())
+}
 
 /// Validates if the provided path is a writable directory.
 #[command]

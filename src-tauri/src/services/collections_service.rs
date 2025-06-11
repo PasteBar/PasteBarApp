@@ -361,9 +361,15 @@ pub fn get_active_collection_with_menu_items() -> Result<CollectionWithItems, Er
     ))
     .load::<AssociatedMenu>(connection)?;
 
+  // Transform image paths for frontend consumption
+  let mut transformed_items = associated_items;
+  for item in &mut transformed_items {
+    item.transform_image_path_for_frontend();
+  }
+
   Ok(CollectionWithItems {
     collection,
-    items: associated_items,
+    items: transformed_items,
   })
 }
 
@@ -447,9 +453,15 @@ pub fn get_active_collection_with_clips() -> Result<CollectionWithClips, Error> 
     ))
     .load::<AssociatedClips>(connection);
 
+  // Transform image paths for frontend consumption
+  let mut transformed_clips = associated_clips?;
+  for clip in &mut transformed_clips {
+    clip.transform_image_path_for_frontend();
+  }
+
   Ok(CollectionWithClips {
     collection,
-    clips: associated_clips?,
+    clips: transformed_clips,
     tabs: collection_tabs,
   })
 }
@@ -739,4 +751,22 @@ pub fn create_default_board_item(
   let _ = add_item_to_collection(collection_id, new_item_id.clone(), tab_id, None, 0);
 
   Ok(new_item.item_id)
+}
+
+impl AssociatedClips {
+  /// Transforms the image_path_full_res field from relative to absolute path for frontend consumption
+  pub fn transform_image_path_for_frontend(&mut self) {
+    if let Some(ref mut path) = self.image_path_full_res {
+      *path = crate::db::to_absolute_image_path(path);
+    }
+  }
+}
+
+impl AssociatedMenu {
+  /// Transforms the image_path_full_res field from relative to absolute path for frontend consumption
+  pub fn transform_image_path_for_frontend(&mut self) {
+    if let Some(ref mut path) = self.image_path_full_res {
+      *path = crate::db::to_absolute_image_path(path);
+    }
+  }
 }

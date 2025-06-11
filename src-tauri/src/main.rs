@@ -740,7 +740,9 @@ async fn main() {
                   None => return (),
                 };
 
-                let img_data = std::fs::read(&image_path).expect("Failed to read image from path");
+                // Convert relative path to absolute path
+                let absolute_path = db::to_absolute_image_path(&image_path);
+                let img_data = std::fs::read(&absolute_path).expect("Failed to read image from path");
                 let base64_image = base64::encode(&img_data);
 
                 write_image_to_clipboard(base64_image).expect("Failed to write image to clipboard");
@@ -833,7 +835,9 @@ async fn main() {
                   None => return (),
                 };
 
-                let img_data = std::fs::read(&image_path).expect("Failed to read image from path");
+                // Convert relative path to absolute path
+                let absolute_path = db::to_absolute_image_path(&image_path);
+                let img_data = std::fs::read(&absolute_path).expect("Failed to read image from path");
                 let base64_image = base64::encode(&img_data);
 
                 write_image_to_clipboard(base64_image).expect("Failed to write image to clipboard");
@@ -1187,6 +1191,7 @@ async fn main() {
       user_settings_command::cmd_get_custom_db_path,
       // user_settings_command::cmd_set_custom_db_path, // Replaced by cmd_set_and_relocate_db
       // user_settings_command::cmd_remove_custom_db_path, // Replaced by cmd_revert_to_default_db_location
+      user_settings_command::cmd_create_directory,
       user_settings_command::cmd_validate_custom_db_path,
       user_settings_command::cmd_check_custom_data_path,
       user_settings_command::cmd_set_and_relocate_data,

@@ -85,6 +85,7 @@ type Settings = {
   isScreenLockPassCodeRequireOnStart: boolean
   clipTextMinLength: number
   clipTextMaxLength: number
+  isImageCaptureDisabled: boolean
 }
 
 type Constants = {
@@ -159,6 +160,7 @@ export interface SettingsStoreState {
   setIsKeepMainWindowClosedOnRestartEnabled: (isEnabled: boolean) => void
   setIsHideCollectionsOnNavBar: (isEnabled: boolean) => void
   setIsShowNavBarItemsOnHoverOnly: (isEnabled: boolean) => void
+  setIsImageCaptureDisabled: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -243,6 +245,7 @@ const initialState: SettingsStoreState & Settings = {
   isFirstRunAfterUpdate: false,
   clipTextMinLength: 0,
   clipTextMaxLength: 5000,
+  isImageCaptureDisabled: false,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -299,6 +302,7 @@ const initialState: SettingsStoreState & Settings = {
   setIsShowNavBarItemsOnHoverOnly: () => {},
   setClipTextMinLength: () => {},
   setClipTextMaxLength: () => {},
+  setIsImageCaptureDisabled: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -370,7 +374,8 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       if (
         name === 'isHistoryEnabled' ||
         name === 'userSelectedLanguage' ||
-        name === 'isAppLocked'
+        name === 'isAppLocked' ||
+        name === 'isImageCaptureDisabled'
       ) {
         invoke('build_system_menu')
       }
@@ -602,6 +607,9 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setClipTextMaxLength: async (length: number) => {
     return get().updateSetting('clipTextMaxLength', length)
+  },
+  setIsImageCaptureDisabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isImageCaptureDisabled', isEnabled)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

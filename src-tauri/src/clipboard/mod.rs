@@ -22,6 +22,7 @@ use active_win_pos_rs::get_active_window;
 use crate::cron_jobs;
 use crate::models::Setting;
 use crate::services::history_service;
+use crate::services::utils::debug_output;
 
 #[derive(Debug)]
 pub struct LanguageDetectOptions {
@@ -230,6 +231,19 @@ where
         }
       }
     } else if let Ok(image_binary) = clipboard_manager.get_image_binary() {
+      // Check if image capturing is disabled
+      let is_image_capture_disabled = settings_map
+        .get("isImageCaptureDisabled")
+        .and_then(|s| s.value_bool)
+        .unwrap_or(false);
+
+      if is_image_capture_disabled {
+        debug_output(|| {
+          println!("Image capturing is disabled, skipping image capture!");
+        });
+        return CallbackResult::Next;
+      }
+
       let mut is_app_excluded = false;
 
       if let Some(setting) = settings_map.get("isExclusionAppListEnabled") {

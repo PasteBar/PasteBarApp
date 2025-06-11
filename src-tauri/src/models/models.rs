@@ -331,3 +331,21 @@ pub struct Tabs {
   pub tab_layout_split: i32,
   pub tab_is_protected: bool,
 }
+
+impl Item {
+  /// Transforms the image_path_full_res field from relative to absolute path for frontend consumption
+  pub fn transform_image_path_for_frontend(&mut self) {
+    if let Some(ref mut path) = self.image_path_full_res {
+      *path = crate::db::to_absolute_image_path(path);
+    }
+  }
+}
+
+impl ClipboardHistory {
+  /// Transforms the image_path_full_res field from relative to absolute path for frontend consumption
+  pub fn transform_image_path_for_frontend(&mut self) {
+    if let Some(ref mut path) = self.image_path_full_res {
+      *path = crate::db::to_absolute_image_path(path);
+    }
+  }
+}

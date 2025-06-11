@@ -182,3 +182,36 @@ Web Scraping and Parsing: 网页抓取和解析
 Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: 如果在复制的文本中找到以下列出的词或句子，将不会被记录在剪贴板历史中。不区分大小写。
 passcode reset: 密码重置
 password reset: 密码重置
+Apply and Restart: 应用并重启
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: 您确定要将"{{path}}"设置为新的数据文件夹吗？应用程序将重新启动。
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: 您确定要将数据库{{operation}}到"{{path}}"吗？应用程序将重新启动。
+Change Custom Data Folder...: 更改自定义数据文件夹...
+Change Selected Folder...: 更改选定文件夹...
+Changing the database location requires an application restart to take effect.: 更改数据库位置需要重新启动应用程序才能生效。
+ConfirmRevertToDefaultDbPathMessage: 您确定要恢复到默认数据位置吗？您的应用程序数据将移动到默认路径。
+Copy data: 复制数据
+Current data folder: 当前数据文件夹
+Custom Application Data Location: 自定义应用程序数据位置
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: 自定义数据位置已激活。您可以更改它或恢复到默认位置。更改需要重新启动应用程序。
+Default: 默认
+Enable custom data location to store application data in a directory of your choice instead of the default location.: 启用自定义数据位置，将应用程序数据存储在您选择的目录中，而不是默认位置。
+Failed to apply custom database location.: 应用自定义数据库位置失败。
+Failed to create directory. Please check permissions and try again.: 创建目录失败。请检查权限并重试。
+Failed to revert to default database location.: 恢复到默认数据库位置失败。
+Found existing "pastebar-data" folder. The application will use this folder to store data.: 找到现有的"pastebar-data"文件夹。应用程序将使用此文件夹存储数据。
+Invalid directory selected.: 选择的目录无效。
+Operation when applying new path: 应用新路径时的操作
+Please select a directory first.: 请先选择一个目录。
+Please select a new directory different from the current one.: 请选择与当前不同的新目录。
+Revert to Default: 恢复到默认
+Select Data Folder: 选择数据文件夹
+Select Data Folder...: 选择数据文件夹...
+Select a custom location to store your application data instead of the default location.: 选择一个自定义位置来存储应用程序数据，而不是默认位置。
+Selected data folder: 选定的数据文件夹
+Selected new data folder for change: 选定的新数据文件夹用于更改
+Setting a custom database location requires an application restart to take effect.: 设置自定义数据库位置需要重新启动应用程序才能生效。
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: 选定的文件夹不为空且不包含PasteBar数据文件。您想创建一个"pastebar-data"子文件夹来存储数据吗？
+This folder already contains PasteBar data. The application will use this existing data after restart.: 此文件夹已包含PasteBar数据。应用程序将在重启后使用这些现有数据。
+Use new location: 使用新位置
+An error occurred during directory processing.: 目录处理期间发生错误。
+An error occurred during directory selection or setup.: 目录选择或设置期间发生错误。

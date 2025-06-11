@@ -182,3 +182,36 @@ Web Scraping and Parsing: Extraction et analyse web
 Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Les mots ou phrases énumérés ci-dessous ne seront pas capturés dans l'historique du presse-papiers s'ils se trouvent dans le texte copié. Insensible à la casse
 passcode reset: réinitialisation code d'accès
 password reset: réinitialisation mot de passe
+Apply and Restart: Appliquer et redémarrer
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: Êtes-vous sûr de vouloir définir "{{path}}" comme nouveau dossier de données ? L'application va redémarrer.
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: Êtes-vous sûr de vouloir {{operation}} la base de données vers "{{path}}" ? L'application va redémarrer.
+Change Custom Data Folder...: Changer le dossier de données personnalisé...
+Change Selected Folder...: Changer le dossier sélectionné...
+Changing the database location requires an application restart to take effect.: Le changement de l'emplacement de la base de données nécessite un redémarrage de l'application pour prendre effet.
+ConfirmRevertToDefaultDbPathMessage: Êtes-vous sûr de vouloir revenir à l'emplacement de données par défaut ? Vos données d'application seront déplacées vers le chemin par défaut.
+Copy data: Copier les données
+Current data folder: Dossier de données actuel
+Custom Application Data Location: Emplacement de données d'application personnalisé
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: L'emplacement de données personnalisé est actif. Vous pouvez le modifier ou revenir à l'emplacement par défaut. Les modifications nécessitent un redémarrage de l'application.
+Default: Par défaut
+Enable custom data location to store application data in a directory of your choice instead of the default location.: Activer l'emplacement de données personnalisé pour stocker les données d'application dans un répertoire de votre choix au lieu de l'emplacement par défaut.
+Failed to apply custom database location.: Échec de l'application de l'emplacement de base de données personnalisé.
+Failed to create directory. Please check permissions and try again.: Échec de la création du répertoire. Veuillez vérifier les autorisations et réessayer.
+Failed to revert to default database location.: Échec du retour à l'emplacement de base de données par défaut.
+Found existing "pastebar-data" folder. The application will use this folder to store data.: Dossier "pastebar-data" existant trouvé. L'application utilisera ce dossier pour stocker les données.
+Invalid directory selected.: Répertoire sélectionné invalide.
+Operation when applying new path: Opération lors de l'application du nouveau chemin
+Please select a directory first.: Veuillez d'abord sélectionner un répertoire.
+Please select a new directory different from the current one.: Veuillez sélectionner un nouveau répertoire différent de l'actuel.
+Revert to Default: Revenir au défaut
+Select Data Folder: Sélectionner le dossier de données
+Select Data Folder...: Sélectionner le dossier de données...
+Select a custom location to store your application data instead of the default location.: Sélectionnez un emplacement personnalisé pour stocker vos données d'application au lieu de l'emplacement par défaut.
+Selected data folder: Dossier de données sélectionné
+Selected new data folder for change: Nouveau dossier de données sélectionné pour modification
+Setting a custom database location requires an application restart to take effect.: La définition d'un emplacement de base de données personnalisé nécessite un redémarrage de l'application pour prendre effet.
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: Le dossier sélectionné n'est pas vide et ne contient pas de fichiers de données PasteBar. Voulez-vous créer un sous-dossier "pastebar-data" pour stocker les données ?
+This folder already contains PasteBar data. The application will use this existing data after restart.: Ce dossier contient déjà des données PasteBar. L'application utilisera ces données existantes après le redémarrage.
+Use new location: Utiliser le nouvel emplacement
+An error occurred during directory processing.: Une erreur s'est produite lors du traitement du répertoire.
+An error occurred during directory selection or setup.: Une erreur s'est produite lors de la sélection ou configuration du répertoire.

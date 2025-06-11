@@ -11,6 +11,7 @@ Confirm Clear All History: Confirmer l'effacement de tout l'historique
 Do you really want to remove ALL clipboard history items?: Voulez-vous vraiment supprimer TOUS les éléments de l'historique du presse-papier ?
 Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Voulez-vous supprimer les éléments de l'historique du presse-papier antérieurs à {{olderThen}} {{durationType}}
 Enable Capture History: Activer la capture de l'historique
+Enable Image Capture: Activer la capture d'images
 Filters:
   App Filters: Filtres d'applications
   Audio: Audio

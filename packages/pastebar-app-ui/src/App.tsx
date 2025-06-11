@@ -144,6 +144,7 @@ function App() {
           isHistoryEnabled: settings.isHistoryEnabled?.valueBool,
           clipTextMinLength: settings.clipTextMinLength?.valueInt,
           clipTextMaxLength: settings.clipTextMaxLength?.valueInt,
+          isImageCaptureDisabled: settings.isImageCaptureDisabled?.valueBool,
           isAutoClearSettingsEnabled: settings.isAutoClearSettingsEnabled?.valueBool,
           autoClearSettingsDuration: settings.autoClearSettingsDuration?.valueInt,
           autoClearSettingsDurationType:
@@ -430,6 +431,9 @@ function App() {
 
       if (name === 'isHistoryEnabled') {
         settingsStore.updateSetting('isHistoryEnabled', Boolean(value_bool))
+      }
+      if (name === 'isImageCaptureDisabled') {
+        settingsStore.updateSetting('isImageCaptureDisabled', Boolean(value_bool))
       }
     })
 
