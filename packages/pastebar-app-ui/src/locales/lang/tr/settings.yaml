@@ -183,8 +183,8 @@ Words or sentences listed below will not be captured in clipboard history if fou
 passcode reset: parolayı sıfırla
 password reset: şifreyi sıfırla
 Apply and Restart: Uygula ve Yeniden Başlat
-Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: "{{path}}" yeni veri klasörü olarak ayarlamak istediğinizden emin misiniz? Uygulama yeniden başlayacak.
-Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: Veritabanını "{{path}}" konumuna {{operation}} yapmak istediğinizden emin misiniz? Uygulama yeniden başlayacak.
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: '"{{path}}" yeni veri klasörü olarak ayarlamak istediğinizden emin misiniz? Uygulama yeniden başlayacak.'
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: 'Veritabanını "{{path}}" konumuna {{operation}} yapmak istediğinizden emin misiniz? Uygulama yeniden başlayacak.'
 Change Custom Data Folder...: Özel Veri Klasörünü Değiştir...
 Change Selected Folder...: Seçili Klasörü Değiştir...
 Changing the database location requires an application restart to take effect.: Veritabanı konumunu değiştirmek, etkili olması için uygulamanın yeniden başlatılmasını gerektirir.
