@@ -87,6 +87,8 @@ export default function ClipboardHistorySettings() {
     setClipTextMinLength,
     setClipTextMaxLength,
     setIsHistoryEnabled,
+    isImageCaptureDisabled,
+    setIsImageCaptureDisabled,
     isHistoryAutoUpdateOnCaputureEnabled,
     setIsHistoryAutoTrimOnCaputureEnabled,
     isHistoryAutoTrimOnCaputureEnabled,
@@ -404,6 +406,35 @@ export default function ClipboardHistorySettings() {
                         <CardContent>
                           <Text className="text-sm text-muted-foreground">
                             {t('Enable auto trim spaces on history capture', {
+                              ns: 'settings',
+                            })}
+                          </Text>
+                        </CardContent>
+                      </Card>
+                    </Box>
+
+                    <Box className="max-w-xl animate-in fade-in mt-4">
+                      <Card
+                        className={`${
+                          !isImageCaptureDisabled &&
+                          'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                        }`}
+                      >
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                          <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                            {t('Disable Image Capture', { ns: 'settings' })}
+                          </CardTitle>
+                          <Switch
+                            checked={isImageCaptureDisabled}
+                            className="ml-auto"
+                            onCheckedChange={() => {
+                              setIsImageCaptureDisabled(!isImageCaptureDisabled)
+                            }}
+                          />
+                        </CardHeader>
+                        <CardContent>
+                          <Text className="text-sm text-muted-foreground">
+                            {t('Disable capturing and storing images from clipboard', {
                               ns: 'settings',
                             })}
                           </Text>

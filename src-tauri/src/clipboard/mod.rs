@@ -22,6 +22,7 @@ use active_win_pos_rs::get_active_window;
 use crate::cron_jobs;
 use crate::models::Setting;
 use crate::services::history_service;
+use crate::services::utils::debug_output;
 
 #[derive(Debug)]
 pub struct LanguageDetectOptions {
@@ -230,6 +231,19 @@ where
         }
       }
     } else if let Ok(image_binary) = clipboard_manager.get_image_binary() {
+      // Check if image capturing is disabled
+      let is_image_capture_disabled = settings_map
+        .get("isImageCaptureDisabled")
+        .and_then(|s| s.value_bool)
+        .unwrap_or(false);
+
+      if is_image_capture_disabled {
+        debug_output(|| {
+          println!("Image capturing is disabled, skipping image capture!");
+        });
+        return CallbackResult::Next;
+      }
+
       let mut is_app_excluded = false;
 
       if let Some(setting) = settings_map.get("isExclusionAppListEnabled") {
@@ -299,58 +313,7 @@ impl ClipboardManager {
     clipboard.set_text(text).map_err(|err| err.to_string())
   }
 
-  pub fn read_image(&self) -> Result<String, String> {
-    let mut clipboard = Clipboard::new().unwrap();
-    let image = clipboard.get_image().map_err(|err| err.to_string())?;
-    let tmp_dir = tempfile::Builder::new()
-      .prefix("clipboard-img")
-      .tempdir()
-      .map_err(|err| err.to_string())?;
-    let fname = tmp_dir.path().join("clipboard-img.png");
-
-    let image2: RgbaImage = ImageBuffer::from_raw(
-      image.width.try_into().unwrap(),
-      image.height.try_into().unwrap(),
-      image.bytes.into_owned(),
-    )
-    .unwrap();
-    image2.save(fname.clone()).map_err(|err| err.to_string())?;
-    let mut file = File::open(fname.clone()).unwrap();
-    let mut buffer = vec![];
-    file.read_to_end(&mut buffer).unwrap();
-    let base64_str = general_purpose::STANDARD_NO_PAD.encode(buffer);
-    Ok(base64_str)
-  }
-
-  pub fn get_image_binary(&self) -> Result<ImageData, String> {
-    let mut clipboard = Clipboard::new().unwrap();
-    let image_data = clipboard.get_image().map_err(|err| err.to_string())?;
-
-    Ok(image_data)
-  }
-
-  pub fn read_image_binary(&self) -> Result<Vec<u8>, String> {
-    let mut clipboard = Clipboard::new().unwrap();
-    let image = clipboard.get_image().map_err(|err| err.to_string())?;
-    let tmp_dir = tempfile::Builder::new()
-      .prefix("clipboard-img")
-      .tempdir()
-      .map_err(|err| err.to_string())?;
-    let fname = tmp_dir.path().join("clipboard-img.png");
-
-    let image2: RgbaImage = ImageBuffer::from_raw(
-      image.width.try_into().unwrap(),
-      image.height.try_into().unwrap(),
-      image.bytes.into_owned(),
-    )
-    .unwrap();
-    image2.save(fname.clone()).map_err(|err| err.to_string())?;
-    let mut file = File::open(fname.clone()).unwrap();
-    let mut buffer = vec![];
-    file.read_to_end(&mut buffer).unwrap();
-    Ok(buffer)
-  }
-
+  // write_image function remains unchanged as it's writing, not reading
   pub fn write_image(&self, base64_image: String) -> Result<(), String> {
     let mut clipboard = Clipboard::new().unwrap();
     let decoded = general_purpose::STANDARD_NO_PAD
@@ -372,6 +335,139 @@ impl ClipboardManager {
       .set_image(img_data)
       .map_err(|err| err.to_string())?;
     Ok(())
+  }
+
+  pub fn read_image(&self) -> Result<String, String> {
+    let mut clipboard = Clipboard::new().unwrap();
+    let image = clipboard.get_image().map_err(|err| err.to_string())?;
+
+    // Handle stride alignment
+    let bytes_per_pixel = 4; // RGBA
+    let expected_bytes_per_row = image.width * bytes_per_pixel;
+    let actual_bytes_per_row = image.bytes.len() / image.height;
+
+    let cleaned_bytes = if actual_bytes_per_row != expected_bytes_per_row {
+      // Remove stride padding
+      let mut cleaned = Vec::with_capacity(expected_bytes_per_row * image.height);
+
+      for row in 0..image.height {
+        let row_start = row * actual_bytes_per_row;
+        let row_end = row_start + expected_bytes_per_row;
+        cleaned.extend_from_slice(&image.bytes[row_start..row_end]);
+      }
+      cleaned
+    } else {
+      image.bytes.into_owned()
+    };
+
+    // Create image from cleaned bytes
+    let image2: RgbaImage = ImageBuffer::from_raw(
+      image.width.try_into().unwrap(),
+      image.height.try_into().unwrap(),
+      cleaned_bytes,
+    )
+    .ok_or_else(|| "Failed to create image from raw bytes".to_string())?;
+
+    // Save to temporary file and encode as base64
+    let tmp_dir = tempfile::Builder::new()
+      .prefix("clipboard-img")
+      .tempdir()
+      .map_err(|err| err.to_string())?;
+    let fname = tmp_dir.path().join("clipboard-img.png");
+
+    image2.save(&fname).map_err(|err| err.to_string())?;
+
+    let mut file = File::open(&fname).map_err(|err| err.to_string())?;
+    let mut buffer = vec![];
+    file
+      .read_to_end(&mut buffer)
+      .map_err(|err| err.to_string())?;
+
+    let base64_str = general_purpose::STANDARD_NO_PAD.encode(buffer);
+    Ok(base64_str)
+  }
+
+  pub fn get_image_binary(&self) -> Result<ImageData, String> {
+    let mut clipboard = Clipboard::new().unwrap();
+    let image_data = clipboard.get_image().map_err(|err| err.to_string())?;
+
+    // Only check for stride alignment on Windows
+    #[cfg(target_os = "windows")]
+    {
+      let bytes_per_pixel = 4; // RGBA
+      let expected_bytes_per_row = image_data.width * bytes_per_pixel;
+      let actual_bytes_per_row = image_data.bytes.len() / image_data.height;
+
+      if actual_bytes_per_row != expected_bytes_per_row {
+        // We have stride padding, need to remove it
+        let mut cleaned_bytes = Vec::with_capacity(expected_bytes_per_row * image_data.height);
+
+        for row in 0..image_data.height {
+          let row_start = row * actual_bytes_per_row;
+          let row_end = row_start + expected_bytes_per_row;
+          cleaned_bytes.extend_from_slice(&image_data.bytes[row_start..row_end]);
+        }
+
+        return Ok(ImageData {
+          width: image_data.width,
+          height: image_data.height,
+          bytes: Cow::Owned(cleaned_bytes),
+        });
+      }
+    }
+
+    // For macOS, Linux, and Windows without padding, return as-is
+    Ok(image_data)
+  }
+
+  // Function 2: Returns Vec<u8> of PNG file data
+  pub fn read_image_binary(&self) -> Result<Vec<u8>, String> {
+    let mut clipboard = Clipboard::new().unwrap();
+    let image = clipboard.get_image().map_err(|err| err.to_string())?;
+
+    // Handle stride alignment
+    let bytes_per_pixel = 4; // RGBA
+    let expected_bytes_per_row = image.width * bytes_per_pixel;
+    let actual_bytes_per_row = image.bytes.len() / image.height;
+
+    let cleaned_bytes = if actual_bytes_per_row != expected_bytes_per_row {
+      // Remove stride padding
+      let mut cleaned = Vec::with_capacity(expected_bytes_per_row * image.height);
+
+      for row in 0..image.height {
+        let row_start = row * actual_bytes_per_row;
+        let row_end = row_start + expected_bytes_per_row;
+        cleaned.extend_from_slice(&image.bytes[row_start..row_end]);
+      }
+      cleaned
+    } else {
+      image.bytes.into_owned()
+    };
+
+    // Create image from cleaned bytes
+    let image2: RgbaImage = ImageBuffer::from_raw(
+      image.width.try_into().unwrap(),
+      image.height.try_into().unwrap(),
+      cleaned_bytes,
+    )
+    .ok_or_else(|| "Failed to create image from raw bytes".to_string())?;
+
+    // Save to temporary file and read back
+    let tmp_dir = tempfile::Builder::new()
+      .prefix("clipboard-img")
+      .tempdir()
+      .map_err(|err| err.to_string())?;
+    let fname = tmp_dir.path().join("clipboard-img.png");
+
+    image2.save(&fname).map_err(|err| err.to_string())?;
+
+    let mut file = File::open(&fname).map_err(|err| err.to_string())?;
+    let mut buffer = vec![];
+    file
+      .read_to_end(&mut buffer)
+      .map_err(|err| err.to_string())?;
+
+    Ok(buffer)
   }
 }
 

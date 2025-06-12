@@ -165,28 +165,38 @@ Web Scraping and Parsing: Веб-скрейпінг та аналіз
 Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Слова або речення, перелічені нижче, не будуть захоплюватися в історію буфера обміну, якщо вони будуть знайдені в скопійованому тексті. Без урахування регістру.
 passcode reset: скидання коду доступу
 password reset: скидання пароля
-Backup and Restore: Резервне копіювання та відновлення
-Create Backup: Створити резервну копію
-Include images in backup: Включити зображення в резервну копію
-Backup Now: Створити резервну копію зараз
-Restore Data: Відновити дані
-Restore from File...: Відновити з файлу...
-Select backup file: Вибрати файл резервної копії
-Available Backups: Доступні резервні копії
-Total backup space: "{{size}}": Загальний розмір резервних копій: {{size}}
-No backups found: Резервні копії не знайдені
-Restore: Відновити
-Delete: Видалити
-Create a backup of your data?: Створити резервну копію ваших даних?
-Backup created successfully: Резервну копію успішно створено
-Move to another location?: Перемістити в інше місце?
-This will replace all current data. Are you sure?: Це замінить всі поточні дані. Ви впевнені?
-Restore from "{{filename}}"? This will replace all current data.: Відновити з {{filename}}? Це замінить всі поточні дані.
-Delete this backup? This action cannot be undone.: Видалити цю резервну копію? Цю дію неможливо скасувати.
-Restore completed. The application will restart.: Відновлення завершено. Додаток перезапуститься.
-Creating backup...: Створення резервної копії...
-Restoring backup...: Відновлення резервної копії...
-Backup deleted successfully: Резервну копію успішно видалено
-Failed to delete backup: Не вдалося видалити резервну копію
-Invalid backup file: Недійсний файл резервної копії
-The selected file is not a valid PasteBar backup: Вибраний файл не є дійсною резервною копією PasteBar
+Apply and Restart: Застосувати та перезапустити
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: Ви впевнені, що хочете встановити "{{path}}" як нову папку даних? Додаток буде перезапущено.
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: Ви впевнені, що хочете {{operation}} базу даних до "{{path}}"? Додаток буде перезапущено.
+Change Custom Data Folder...: Змінити користувацьку папку даних...
+Change Selected Folder...: Змінити вибрану папку...
+Changing the database location requires an application restart to take effect.: Зміна розташування бази даних вимагає перезапуску додатка для набрання чинності.
+ConfirmRevertToDefaultDbPathMessage: Ви впевнені, що хочете повернутися до розташування даних за замовчуванням? Дані вашого додатка будуть переміщені за шляхом за замовчуванням.
+Copy data: Копіювати дані
+Current data folder: Поточна папка даних
+Custom Application Data Location: Користувацьке розташування даних додатка
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: Користувацьке розташування даних активне. Ви можете змінити його або повернутися до розташування за замовчуванням. Зміни вимагають перезапуску додатка.
+Default: За замовчуванням
+Enable custom data location to store application data in a directory of your choice instead of the default location.: Увімкнути користувацьке розташування даних для зберігання даних додатка в обраній вами директорії замість розташування за замовчуванням.
+Failed to apply custom database location.: Не вдалося застосувати користувацьке розташування бази даних.
+Failed to create directory. Please check permissions and try again.: Не вдалося створити директорію. Перевірте дозволи та спробуйте знову.
+Failed to revert to default database location.: Не вдалося повернутися до розташування бази даних за замовчуванням.
+Found existing "pastebar-data" folder. The application will use this folder to store data.: Знайдено існуючу папку "pastebar-data". Додаток буде використовувати цю папку для зберігання даних.
+Invalid directory selected.: Вибрано недійсну директорію.
+Operation when applying new path: Операція при застосуванні нового шляху
+Please select a directory first.: Будь ласка, спочатку виберіть директорію.
+Please select a new directory different from the current one.: Будь ласка, виберіть нову директорію, відмінну від поточної.
+Revert to Default: Повернутися до замовчування
+Select Data Folder: Вибрати папку даних
+Select Data Folder...: Вибрати папку даних...
+Select a custom location to store your application data instead of the default location.: Виберіть користувацьке розташування для зберігання даних вашого додатка замість розташування за замовчуванням.
+Selected data folder: Вибрана папка даних
+Selected new data folder for change: Вибрана нова папка даних для зміни
+Setting a custom database location requires an application restart to take effect.: Встановлення користувацького розташування бази даних вимагає перезапуску додатка для набрання чинності.
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: Вибрана папка не порожня і не містить файлів даних PasteBar. Хочете створити підпапку "pastebar-data" для зберігання даних?
+This folder already contains PasteBar data. The application will use this existing data after restart.: Ця папка вже містить дані PasteBar. Додаток буде використовувати ці існуючі дані після перезапуску.
+Use new location: Використовувати нове розташування
+An error occurred during directory processing.: Сталася помилка під час обробки директорії.
+An error occurred during directory selection or setup.: Сталася помилка під час вибору або налаштування директорії.
+Disable Image Capture: Вимкнути Захоплення Зображень
+Disable capturing and storing images from clipboard: Вимкнути захоплення та збереження зображень з буферу обміну

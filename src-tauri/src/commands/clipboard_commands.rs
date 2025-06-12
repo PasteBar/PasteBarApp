@@ -130,11 +130,15 @@ pub fn copy_history_item(app_handle: AppHandle, history_id: String) -> String {
 
   if let (Some(true), Some(false)) = (history_item.is_image, history_item.is_link) {
     let base64_image = match history_item.image_path_full_res {
-      Some(path) => match std::fs::read(&path) {
-        Ok(img_data) => base64::encode(&img_data),
-        Err(e) => {
-          eprintln!("Failed to read image from path: {}", e);
-          IMAGE_NOT_FOUND_BASE64.to_string()
+      Some(path) => {
+        // Convert relative path to absolute path
+        let absolute_path = crate::db::to_absolute_image_path(&path);
+        match std::fs::read(&absolute_path) {
+          Ok(img_data) => base64::encode(&img_data),
+          Err(e) => {
+            eprintln!("Failed to read image from path: {}", e);
+            IMAGE_NOT_FOUND_BASE64.to_string()
+          }
         }
       },
       None => IMAGE_NOT_FOUND_BASE64.to_string(),
@@ -412,11 +416,15 @@ pub async fn copy_clip_item(
     }
   } else if let (Some(true), Some(false)) = (item.is_image, item.is_link) {
     let base64_image = match item.image_path_full_res {
-      Some(path) => match std::fs::read(&path) {
-        Ok(img_data) => base64::encode(&img_data),
-        Err(e) => {
-          eprintln!("Failed to read image from path: {}", e);
-          IMAGE_NOT_FOUND_BASE64.to_string()
+      Some(path) => {
+        // Convert relative path to absolute path
+        let absolute_path = crate::db::to_absolute_image_path(&path);
+        match std::fs::read(&absolute_path) {
+          Ok(img_data) => base64::encode(&img_data),
+          Err(e) => {
+            eprintln!("Failed to read image from path: {}", e);
+            IMAGE_NOT_FOUND_BASE64.to_string()
+          }
         }
       },
       None => IMAGE_NOT_FOUND_BASE64.to_string(),

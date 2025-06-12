@@ -26,7 +26,11 @@ import {
 type Settings = {
   appLastUpdateVersion: string
   appLastUpdateDate: string
-  appDataDir: string
+  appDataDir: string // This might be the old customDbPath or a general app data dir. We'll add a specific one.
+  customDbPath: string | null // Path to the custom database directory
+  isCustomDbPathValid: boolean | null // Validation status of the entered customDbPath
+  customDbPathError: string | null // Error message if validation fails or operation fails
+  dbRelocationInProgress: boolean // True if a DB move/copy/revert operation is ongoing
   isAppReady: boolean
   isClipNotesHoverCardsEnabled: boolean
   clipNotesHoverCardsDelayMS: number
@@ -81,6 +85,7 @@ type Settings = {
   isScreenLockPassCodeRequireOnStart: boolean
   clipTextMinLength: number
   clipTextMaxLength: number
+  isImageCaptureDisabled: boolean
 }
 
 type Constants = {
@@ -88,6 +93,11 @@ type Constants = {
 }
 
 export interface SettingsStoreState {
+  setCustomDbPath: (path: string | null) => void
+  validateCustomDbPath: (path: string) => Promise<void>
+  applyCustomDbPath: (newPath: string, operation: 'copy' | 'none') => Promise<string>
+  revertToDefaultDbPath: () => Promise<string>
+  loadInitialCustomDbPath: () => Promise<void>
   setIsHistoryEnabled: (isHistoryEnabled: boolean) => void
   setIsHistoryAutoUpdateOnCaputureEnabled: (
     isHistoryAutoUpdateOnCaputureEnabled: boolean
@@ -120,7 +130,7 @@ export interface SettingsStoreState {
   setAppToursCompletedList: (words: string[]) => void
   setAppToursSkippedList: (words: string[]) => void
   setHistoryDetectLanguagesPrioritizedList: (words: string[]) => void
-  setAppDataDir: (appDataDir: string) => void
+  setAppDataDir: (appDataDir: string) => void // Keep if used for other general app data
   setIsAutoCloseOnCopyPaste: (isEnabled: boolean) => void
   setClipNotesHoverCardsDelayMS: (delay: number) => void
   setClipNotesMaxWidth: (width: number) => void
@@ -150,6 +160,7 @@ export interface SettingsStoreState {
   setIsKeepMainWindowClosedOnRestartEnabled: (isEnabled: boolean) => void
   setIsHideCollectionsOnNavBar: (isEnabled: boolean) => void
   setIsShowNavBarItemsOnHoverOnly: (isEnabled: boolean) => void
+  setIsImageCaptureDisabled: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -175,7 +186,11 @@ const initialState: SettingsStoreState & Settings = {
   appLastUpdateVersion: '0.0.1',
   appLastUpdateDate: '',
   isAppReady: false,
-  appDataDir: '',
+  appDataDir: '', // Default app data dir if needed for other things
+  customDbPath: null,
+  isCustomDbPathValid: null,
+  customDbPathError: null,
+  dbRelocationInProgress: false,
   isHistoryEnabled: true,
   isFirstRun: true,
   historyDetectLanguagesEnabledList: [],
@@ -230,6 +245,7 @@ const initialState: SettingsStoreState & Settings = {
   isFirstRunAfterUpdate: false,
   clipTextMinLength: 0,
   clipTextMaxLength: 5000,
+  isImageCaptureDisabled: false,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -286,8 +302,14 @@ const initialState: SettingsStoreState & Settings = {
   setIsShowNavBarItemsOnHoverOnly: () => {},
   setClipTextMinLength: () => {},
   setClipTextMaxLength: () => {},
+  setIsImageCaptureDisabled: () => {},
   initConstants: () => {},
-  setAppDataDir: () => {},
+  setAppDataDir: () => {}, // Keep if used for other general app data
+  setCustomDbPath: () => {},
+  validateCustomDbPath: async () => {},
+  applyCustomDbPath: async () => '',
+  revertToDefaultDbPath: async () => '',
+  loadInitialCustomDbPath: async () => {},
   updateSetting: () => {},
   setIsFirstRun: () => {},
   setAppLastUpdateVersion: () => {},
@@ -352,7 +374,8 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       if (
         name === 'isHistoryEnabled' ||
         name === 'userSelectedLanguage' ||
-        name === 'isAppLocked'
+        name === 'isAppLocked' ||
+        name === 'isImageCaptureDisabled'
       ) {
         invoke('build_system_menu')
       }
@@ -585,6 +608,9 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   setClipTextMaxLength: async (length: number) => {
     return get().updateSetting('clipTextMaxLength', length)
   },
+  setIsImageCaptureDisabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isImageCaptureDisabled', isEnabled)
+  },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()
     return (
@@ -738,10 +764,77 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
     availableVersionDateISO.value = null
   },
   initConstants: (CONST: Constants) => set(() => ({ CONST })),
-  setAppDataDir: (appDataDir: string) =>
+  setAppDataDir: (
+    appDataDir: string // Keep if used for other general app data
+  ) =>
     set(() => ({
       appDataDir,
     })),
+  // Actions for custom DB path
+  setCustomDbPath: (path: string | null) =>
+    set({ customDbPath: path, isCustomDbPathValid: null, customDbPathError: null }),
+  loadInitialCustomDbPath: async () => {
+    try {
+      const path = await invoke('cmd_get_custom_db_path')
+      set({ customDbPath: path as string | null })
+    } catch (error) {
+      console.error('Failed to load initial custom DB path:', error)
+      set({ customDbPathError: 'Failed to load custom DB path setting.' })
+    }
+  },
+  validateCustomDbPath: async (path: string) => {
+    set({
+      dbRelocationInProgress: true,
+      customDbPathError: null,
+      isCustomDbPathValid: null,
+    })
+    try {
+      await invoke('cmd_validate_custom_db_path', { pathStr: path })
+      set({ isCustomDbPathValid: true, dbRelocationInProgress: false })
+    } catch (error) {
+      console.error('Custom DB path validation failed:', error)
+      set({
+        isCustomDbPathValid: false,
+        customDbPathError: error as string,
+        dbRelocationInProgress: false,
+      })
+    }
+  },
+  applyCustomDbPath: async (newPath: string, operation: 'copy' | 'none') => {
+    set({ dbRelocationInProgress: true, customDbPathError: null })
+    try {
+      const message = await invoke('cmd_set_and_relocate_data', {
+        newParentDirPath: newPath,
+        operation,
+      })
+      set({
+        customDbPath: newPath,
+        isCustomDbPathValid: true,
+        dbRelocationInProgress: false,
+      })
+      return message as string
+    } catch (error) {
+      console.error('Failed to apply custom DB path:', error)
+      set({ customDbPathError: error as string, dbRelocationInProgress: false })
+      throw error
+    }
+  },
+  revertToDefaultDbPath: async () => {
+    set({ dbRelocationInProgress: true, customDbPathError: null })
+    try {
+      const message = await invoke('cmd_revert_to_default_data_location')
+      set({
+        customDbPath: null,
+        isCustomDbPathValid: null,
+        dbRelocationInProgress: false,
+      })
+      return message as string
+    } catch (error) {
+      console.error('Failed to revert to default DB path:', error)
+      set({ customDbPathError: error as string, dbRelocationInProgress: false })
+      throw error
+    }
+  },
   setAppLastUpdateVersion: (appLastUpdateVersion: string) => {
     return get().updateSetting('appLastUpdateVersion', appLastUpdateVersion)
   },

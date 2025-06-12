@@ -12,6 +12,7 @@ Do you really want to remove ALL clipboard history items?: Ви дійсно х�
 Do you want to remove all recent clipboard history older than {{olderThen}} {{durationType}}: Ви хочете видалити всю нещодавню історію буфера обміну за період {{olderThen}} {{durationType}}
 Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Ви хочете видалити історію буфера обміну старішу за {{olderThen}} {{durationType}}
 Enable Capture History: Увімкнути захоплення історії
+Enable Image Capture: Увімкнути захоплення зображень
 Filters:
   App Filters: Фільтри додатків
   Audio: Аудіо

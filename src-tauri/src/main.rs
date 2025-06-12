@@ -64,6 +64,8 @@ use commands::security_commands;
 use commands::shell_commands;
 use commands::tabs_commands;
 use commands::translations_commands;
+use commands::user_settings_command;
+
 use db::AppConstants;
 use mouse_position::mouse_position::Mouse;
 use std::collections::HashMap;
@@ -739,7 +741,9 @@ async fn main() {
                   None => return (),
                 };
 
-                let img_data = std::fs::read(&image_path).expect("Failed to read image from path");
+                // Convert relative path to absolute path
+                let absolute_path = db::to_absolute_image_path(&image_path);
+                let img_data = std::fs::read(&absolute_path).expect("Failed to read image from path");
                 let base64_image = base64::encode(&img_data);
 
                 write_image_to_clipboard(base64_image).expect("Failed to write image to clipboard");
@@ -832,7 +836,9 @@ async fn main() {
                   None => return (),
                 };
 
-                let img_data = std::fs::read(&image_path).expect("Failed to read image from path");
+                // Convert relative path to absolute path
+                let absolute_path = db::to_absolute_image_path(&image_path);
+                let img_data = std::fs::read(&absolute_path).expect("Failed to read image from path");
                 let base64_image = base64::encode(&img_data);
 
                 write_image_to_clipboard(base64_image).expect("Failed to write image to clipboard");
@@ -1189,6 +1195,18 @@ async fn main() {
       security_commands::verify_os_password,
       security_commands::delete_os_password,
       security_commands::get_stored_os_password,
+      user_settings_command::cmd_get_custom_db_path,
+      // user_settings_command::cmd_set_custom_db_path, // Replaced by cmd_set_and_relocate_db
+      // user_settings_command::cmd_remove_custom_db_path, // Replaced by cmd_revert_to_default_db_location
+      user_settings_command::cmd_create_directory,
+      user_settings_command::cmd_validate_custom_db_path,
+      user_settings_command::cmd_check_custom_data_path,
+      user_settings_command::cmd_set_and_relocate_data,
+      user_settings_command::cmd_revert_to_default_data_location,
+      user_settings_command::cmd_get_all_settings,
+      user_settings_command::cmd_get_setting,
+      user_settings_command::cmd_set_setting,
+      user_settings_command::cmd_remove_setting,
       open_osx_accessibility_preferences,
       check_osx_accessibility_preferences,
       open_path_or_app,

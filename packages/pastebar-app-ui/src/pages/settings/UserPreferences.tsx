@@ -10,8 +10,9 @@ import {
   themeStoreAtom,
   uiStoreAtom,
 } from '~/store'
+import CustomDatabaseLocationSettings from './CustomDatabaseLocationSettings'
 import { useAtomValue } from 'jotai'
-import { MessageSquare, MessageSquareDashed } from 'lucide-react'
+import { ChevronDown, ChevronUp, MessageSquare, MessageSquareDashed } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -83,7 +84,7 @@ export default function UserPreferences() {
     if (theme !== mode) {
       setMode(theme)
     }
-  }, [theme])
+  }, [theme, mode, setMode]) // Added mode and setMode to dependency array
 
   useEffect(() => {
     invoke('is_autostart_enabled').then(isEnabled => {
@@ -107,6 +108,8 @@ export default function UserPreferences() {
       setQuickPasteHotkey(hotKeysShowHideQuickPasteWindow)
     }
   }, [hotKeysShowHideMainAppWindow, hotKeysShowHideQuickPasteWindow])
+  // Removed mainAppHotkey, quickPasteHotkey from local state dependencies in the original thought process,
+  // as they are set inside this effect. The effect correctly depends on props.
 
   const handleKeyDown = (
     event: KeyboardEvent | React.KeyboardEvent<HTMLInputElement>,
@@ -273,6 +276,10 @@ export default function UserPreferences() {
                     </CardContent>
                   </Card>
                 </Box>
+
+                {/* ------------- Custom Database Location Settings Card ------------- */}
+                <CustomDatabaseLocationSettings />
+                {/* ------------------------------------------------------------------ */}
 
                 <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card>

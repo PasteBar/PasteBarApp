@@ -107,6 +107,11 @@ function App() {
 
         settingsStore.initSettings({
           appDataDir: import.meta.env.TAURI_DEBUG ? appDevDataDir : appDataDir,
+          // Initialize new DB path settings for type conformity; actual value loaded by loadInitialCustomDbPath
+          customDbPath: null,
+          isCustomDbPathValid: null,
+          customDbPathError: null,
+          dbRelocationInProgress: false,
           appLastUpdateVersion: settings.appLastUpdateVersion?.valueText,
           appLastUpdateDate: settings.appLastUpdateDate?.valueText,
           isHideMacOSDockIcon: settings.isHideMacOSDockIcon?.valueBool,
@@ -139,6 +144,7 @@ function App() {
           isHistoryEnabled: settings.isHistoryEnabled?.valueBool,
           clipTextMinLength: settings.clipTextMinLength?.valueInt,
           clipTextMaxLength: settings.clipTextMaxLength?.valueInt,
+          isImageCaptureDisabled: settings.isImageCaptureDisabled?.valueBool,
           isAutoClearSettingsEnabled: settings.isAutoClearSettingsEnabled?.valueBool,
           autoClearSettingsDuration: settings.autoClearSettingsDuration?.valueInt,
           autoClearSettingsDurationType:
@@ -187,6 +193,8 @@ function App() {
         settingsStore.initConstants({
           APP_DETECT_LANGUAGES_SUPPORTED: appDetectLanguageSupport,
         })
+        // Load the actual custom DB path after basic settings are initialized
+        settingsStore.loadInitialCustomDbPath()
         type().then(osType => {
           if (osType === 'Windows_NT' && settings.copyPasteDelay?.valueInt === 0) {
             settingsStore.updateSetting('copyPasteDelay', 2)
@@ -423,6 +431,9 @@ function App() {
 
       if (name === 'isHistoryEnabled') {
         settingsStore.updateSetting('isHistoryEnabled', Boolean(value_bool))
+      }
+      if (name === 'isImageCaptureDisabled') {
+        settingsStore.updateSetting('isImageCaptureDisabled', Boolean(value_bool))
       }
     })
 

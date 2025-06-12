@@ -12,6 +12,11 @@ Application UI Color Theme: Application UI Color Theme
 Application UI Fonts Scale: Application UI Fonts Scale
 Application UI Language: Application UI Language
 Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.
+Apply and Restart: Apply and Restart
+Are you sure you want to go back to the default data folder? This will remove the custom location setting.: Are you sure you want to go back to the default data folder? This will remove the custom location setting.
+Are you sure you want to revert to the default database location? The application will restart.: Are you sure you want to revert to the default database location? The application will restart.
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: Are you sure you want to set "{{path}}" as the new data folder? The application will restart.
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.
 Auto Disable History Capture when Screen Unlocked: Auto Disable History Capture when Screen Unlocked
 Auto Lock Application Screen on User Inactivity: Auto Lock Application Screen on User Inactivity
 Auto Lock Screen on User Inactivity: Auto Lock Screen on User Inactivity
@@ -30,25 +35,42 @@ Auto-delete clipboard history after: Auto-delete clipboard history after
 Back: Back
 Capture History: Capture History
 Capture History Text Length Limits: Capture History Text Length Limits
+Change Custom Data Folder...: Change Custom Data Folder...
+Change Directory...: Change Directory...
+Change Selected Folder...: Change Selected Folder...
 Change the application UI font size scale: Change the application UI font size scale
 Change the application UI language: Change the application UI language
 Change the application user interface color theme: Change the application user interface color theme
 Change the application user interface font size scale: Change the application user interface font size scale
 Change the application user interface language: Change the application user interface language
+Changing the database location requires an application restart to take effect.: Changing the database location requires an application restart to take effect.
 Clip Notes Popup Maximum Dimensions: Clip Notes Popup Maximum Dimensions
 Clipboard History Settings: Clipboard History Settings
 'Complete details:': 'Complete details:'
 Configure settings to automatically delete clipboard history items after a specified duration.: Configure settings to automatically delete clipboard history items after a specified duration.
+ConfirmRevertToDefaultDbPathMessage: Are you sure you want to revert to the default data location? Your application data will be moved to the default path.
+Copy data: Copy data
+Copy database file: Copy database file
 Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.
 Create an unlimited number of collections to organize your clips and menus.: Create an unlimited number of collections to organize your clips and menus.
+Current data folder: Current data folder
+Current data location: Current data location
+Current database location: Current database location
 Custom: Custom
+Custom Application Data Location: Custom Application Data Location
+Custom Database Location: Custom Database Location
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: Custom data location is active. You can change it or revert to the default location. Changes require an application restart.
 Custom themes: Custom themes
 Decrease UI Font Size: Decrease UI Font Size
+Default: Default
+Disable Image Capture: Disable Image Capture
+Disable capturing and storing images from clipboard: Disable capturing and storing images from clipboard
 ? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
 : Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
 Display disabled collections name on the navigation bar collections menu: Display disabled collections name on the navigation bar collections menu
 Display disabled collections name on the navigation bar under collections menu: Display disabled collections name on the navigation bar under collections menu
 Display full name of selected collection on the navigation bar: Display full name of selected collection on the navigation bar
+Do you want to attempt to move the database file from "{{customPath}}" back to the default location?: Do you want to attempt to move the database file from "{{customPath}}" back to the default location?
 Drag and drop to prioritize languages for detection. The higher a language is in the list, the higher its detection priority.: Drag and drop to prioritize languages for detection. The higher a language is in the list, the higher its detection priority.
 Email: Email
 Email is not valid: Email is not valid
@@ -61,11 +83,12 @@ Enable auto lock the application screen after a certain period of inactivity, to
 Enable auto lock the application screen when user not active: Enable auto lock the application screen when user not active
 Enable auto trim spaces on history capture: Enable auto trim spaces on history capture
 Enable auto update on capture: Enable auto update on capture
+Enable custom data location to store application data in a directory of your choice instead of the default location.: Enable custom data location to store application data in a directory of your choice instead of the default location.
 Enable history capture: Enable history capture
 Enable programming language detection: Enable programming language detection
 Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.
-Enhance security by automatically locking the application screen after a set period of user inactivity.: Enhance security by automatically locking the application screen after a set period of user inactivity.
 Enter Passcode length: Enter Passcode length
+Enter new directory path or leave empty for default on next revert: Enter new directory path or leave empty for default on next revert
 Enter recovery password to reset passcode.: Enter recovery password to reset passcode.
 Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode
 Entered Passcode is invalid: Entered Passcode is invalid
@@ -73,12 +96,16 @@ Excluded Apps List: Excluded Apps List
 Execute Web Requests: Execute Web Requests
 Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.
 'Expires:': 'Expires:'
+Failed to revert to default database location.: Failed to revert to default database location.
+Failed to select directory: Failed to select directory
 Forgot Passcode ? Enter your recovery password to reset the passcode.: Forgot Passcode ? Enter your recovery password to reset the passcode.
 Forgot passcode ?: Forgot passcode ?
 Forgot?: Forgot?
 Forgot? Reset using Password: Forgot? Reset using Password
 Get priority email support from us to resolve any issues or questions you may have about PasteBar.: Get priority email support from us to resolve any issues or questions you may have about PasteBar.
 'Hint: {{screenLockRecoveryPasswordMasked}}': 'Hint: {{screenLockRecoveryPasswordMasked}}'
+? If a database file already exists at the default location, do you want to overwrite it? Choosing "Cancel" will skip moving the file if an existing file is found.
+: If a database file already exists at the default location, do you want to overwrite it? Choosing "Cancel" will skip moving the file if an existing file is found.
 Incorrect passcode.: Incorrect passcode.
 Increase UI Font Size: Increase UI Font Size
 Issued: Issued
@@ -95,8 +122,13 @@ Medium: Medium
 Minimal 4 digits: Minimal 4 digits
 Minimize Window: Minimize Window
 Minimum number of lines to trigger detection: Minimum number of lines to trigger detection
+Move data: Move data
+Move database file: Move database file
 Name: Name
+New Data Directory Path: New Data Directory Path
+New Database Directory Path: New Database Directory Path
 Open Security Settings: Open Security Settings
+Operation when applying new path: Operation when applying new path
 Passcode digits remaining: Passcode digits remaining
 Passcode is locked.: Passcode is locked.
 Passcode is not set: Passcode is not set
@@ -132,17 +164,27 @@ Require Screen Unlock at Application Start: Require Screen Unlock at Application
 ? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
 : Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
 Reset Font Size: Reset Font Size
+Revert to Default: Revert to Default
+Revert to Default and Restart: Revert to Default and Restart
 Run Terminal or Shell Commands: Run Terminal or Shell Commands
 Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.
 ? 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
 : 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
 Security: Security
 Security Settings: Security Settings
+Select Custom Data Folder...: Select Custom Data Folder...
+Select Data Folder: Select Data Folder
+Select Data Folder...: Select Data Folder...
+Select a custom location to store your application data instead of the default location.: Select a custom location to store your application data instead of the default location.
+Selected data folder: Selected data folder
+Selected new data folder: Selected new data folder
+Selected new data folder for change: Selected new data folder for change
 Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Send HTTP requests to web APIs or services and copy the response data to the clipboard.
 Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.
 Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Set a passcode to unlock the locked screen and protect your data from unauthorized access.
 ? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
 : Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
+Setting a custom database location requires an application restart to take effect.: Setting a custom database location requires an application restart to take effect.
 Settings: Settings
 Show Clipboard History Capture Control on Lock Screen: Show Clipboard History Capture Control on Lock Screen
 Show Disable History Capture When Screen Locked: Show Disable History Capture When Screen Locked
@@ -158,6 +200,10 @@ Swap Panels Layout: Swap Panels Layout
 Switch the layout position of panels in Clipboard History and Paste Menu views: Switch the layout position of panels in Clipboard History and Paste Menu views
 Thank you again for using PasteBar.: Thank you again for using PasteBar.
 Thank you for testing! 🙌: Thank you for testing! 🙌
+? The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
+: The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
+The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?: The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?
+This folder already contains PasteBar data. The application will use this existing data after restart.: This folder already contains PasteBar data. The application will use this existing data after restart.
 ? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 : This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
 ? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
@@ -177,8 +223,10 @@ Unlimited Collections: Unlimited Collections
 Unlimited Tabs per Collection: Unlimited Tabs per Collection
 Unlimited paste history: Unlimited paste history
 Use Password: Use Password
+Use new location: Use new location
 User Preferences: User Preferences
 Web Scraping and Parsing: Web Scraping and Parsing
 Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.
+none: none
 passcode reset: passcode reset
 password reset: password reset
