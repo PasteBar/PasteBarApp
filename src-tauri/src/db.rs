@@ -190,6 +190,7 @@ pub fn establish_pool_db_connection(
 
   DB_POOL_CONNECTION
     .read()
+    .unwrap()
     .get()
     .unwrap_or_else(|_| panic!("Error connecting to db pool"))
 }
