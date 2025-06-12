@@ -19,6 +19,72 @@ import {
   TextNormal,
 } from '~/components/ui'
 
+// Define PathStatus enum to match backend
+type PathStatusResponse = 'Empty' | 'NotEmpty' | 'IsPastebarDataAndNotEmpty' | 'HasPastebarDataSubfolder';
+
+interface SelectPathResult {
+  status: 'selected' | 'cancelled' | 'error';
+  path?: string; // The final, potentially adjusted path
+  error?: string; // Error message specifically from the selection/path adjustment process
+}
+
+// Reusable function for path selection and initial processing logic
+async function selectAndProcessPath(
+  t: ReturnType<typeof useTranslation>['t'],
+): Promise<SelectPathResult> {
+  try {
+    const selected = await dialog.open({
+      directory: true,
+      multiple: false,
+      title: t('Select Data Folder', { ns: 'settings' }),
+    });
+
+    if (typeof selected === 'string') {
+      let finalPath = selected;
+      // Type assertion for status from invoke
+      const status: PathStatusResponse = await invoke('cmd_check_custom_data_path', { pathStr: selected });
+
+      if (status === 'HasPastebarDataSubfolder') {
+        finalPath = await join(selected, 'pastebar-data');
+        await dialog.message(
+          t('Found existing "pastebar-data" folder. The application will use this folder to store data.', { ns: 'settings' })
+        );
+      } else if (status === 'NotEmpty') {
+        const confirmSubfolder = await dialog.confirm(
+          t('The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?', { ns: 'settings' })
+        );
+        if (confirmSubfolder) {
+          finalPath = await join(selected, 'pastebar-data');
+          try {
+            await invoke('cmd_create_directory', { pathStr: finalPath });
+          } catch (dirError: any) {
+            console.error('Failed to create pastebar-data directory:', dirError);
+            return { status: 'error', error: t('Failed to create directory. Please check permissions and try again.', { ns: 'settings' }) };
+          }
+        } else {
+          return { status: 'cancelled' }; // User cancelled subfolder creation
+        }
+      } else if (status === 'IsPastebarDataAndNotEmpty') {
+        await dialog.message(
+          t('This folder already contains PasteBar data. The application will use this existing data after restart.', { ns: 'settings' })
+        );
+      }
+      // `Empty` status requires no special handling here for path adjustment.
+
+      return { status: 'selected', path: finalPath };
+    } else {
+      // User cancelled the dialog
+      return { status: 'cancelled' };
+    }
+  } catch (err: any) {
+    console.error('Error during path selection and processing:', err);
+    // Check if error is a string or has a message property
+    const errorMessage = typeof err === 'string' ? err : err?.message || t('An error occurred during directory processing.', { ns: 'settings' });
+    return { status: 'error', error: errorMessage };
+  }
+}
+
+
 export default function CustomDatabaseLocationSettings() {
   const { t } = useTranslation()
   const {
@@ -38,7 +104,7 @@ export default function CustomDatabaseLocationSettings() {
   const [dbOperationForChangeDialog, setDbOperationForChangeDialog] = useState<
     'copy' | 'none'
   >('none')
-  const [isApplyingChange, setIsApplyingChange] = useState(false)
+  // Removed isApplyingChange, will use isProcessing for this purpose.
   // isRevertingPath state is effectively handled by isProcessing when called from CardContent's revert button
 
   // General states
@@ -81,69 +147,19 @@ export default function CustomDatabaseLocationSettings() {
   const handleBrowseForChangeDialog = async () => {
     setOperationError(null)
     setValidationErrorForChangeDialog(null)
-    try {
-      const selected = await dialog.open({
-        directory: true,
-        multiple: false,
-        title: t('Select Data Folder', { ns: 'settings' }),
-      })
-      if (typeof selected === 'string') {
-        const status: any = await invoke('cmd_check_custom_data_path', {
-          pathStr: selected,
-        })
-        let finalPath = selected
 
-        if (status === 'HasPastebarDataSubfolder') {
-          // Use existing pastebar-data subfolder
-          finalPath = await join(selected, 'pastebar-data')
-          await dialog.message(
-            t(
-              'Found existing "pastebar-data" folder. The application will use this folder to store data.',
-              { ns: 'settings' }
-            )
-          )
-        } else if (status === 'NotEmpty') {
-          const confirmSubfolder = await dialog.confirm(
-            t(
-              'The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?',
-              { ns: 'settings' }
-            )
-          )
-          if (confirmSubfolder) {
-            finalPath = await join(selected, 'pastebar-data')
-            // Create the directory after user confirmation
-            try {
-              await invoke('cmd_create_directory', { pathStr: finalPath })
-            } catch (error) {
-              console.error('Failed to create pastebar-data directory:', error)
-              setOperationError(
-                t('Failed to create directory. Please check permissions and try again.', { ns: 'settings' })
-              )
-              return
-            }
-          } else {
-            return
-          }
-        } else if (status === 'IsPastebarDataAndNotEmpty') {
-          await dialog.message(
-            t(
-              'This folder already contains PasteBar data. The application will use this existing data after restart.',
-              { ns: 'settings' }
-            )
-          )
-        }
+    const result = await selectAndProcessPath(t);
 
-        setSelectedPathForChangeDialog(finalPath)
-        if (finalPath !== customDbPath) {
-          await validateCustomDbPath(finalPath) // Validation result will be reflected in storeCustomDbPathError
-        }
+    if (result.status === 'selected' && result.path) {
+      setSelectedPathForChangeDialog(result.path);
+      if (result.path !== customDbPath) {
+        // Trigger validation, result will be reflected in storeCustomDbPathError via useEffect
+        await validateCustomDbPath(result.path);
       }
-    } catch (error) {
-      console.error('Error handling directory selection for change:', error)
-      setOperationError(
-        t('An error occurred during directory processing.', { ns: 'settings' })
-      )
+    } else if (result.status === 'error') {
+      setOperationError(result.error || t('An error occurred during directory processing.', { ns: 'settings' }));
     }
+    // If 'cancelled', do nothing
   }
 
   // Renamed from handleApply, used by "Apply and Restart" button in CardContent
@@ -156,7 +172,7 @@ export default function CustomDatabaseLocationSettings() {
       )
       return
     }
-    setIsApplyingChange(true)
+    // setIsApplyingChange(true) // Removed
     setIsProcessing(true) // General processing state
     setOperationError(null)
     setValidationErrorForChangeDialog(null)
@@ -170,7 +186,7 @@ export default function CustomDatabaseLocationSettings() {
         currentStoreState.customDbPathError ||
           t('Invalid directory selected.', { ns: 'settings' })
       )
-      setIsApplyingChange(false)
+      // setIsApplyingChange(false) // Removed
       setIsProcessing(false)
       return
     }
@@ -206,11 +222,11 @@ export default function CustomDatabaseLocationSettings() {
             t('Failed to apply custom database location.', { ns: 'settings' })
         )
       } finally {
-        setIsApplyingChange(false)
+        // setIsApplyingChange(false) // Removed
         setIsProcessing(false)
       }
     } else {
-      setIsApplyingChange(false)
+      // setIsApplyingChange(false) // Removed
       setIsProcessing(false)
     }
   }
@@ -251,67 +267,17 @@ export default function CustomDatabaseLocationSettings() {
   const handleSetupPathSelection = async () => {
     setOperationError(null)
     setValidationErrorForChangeDialog(null)
-    try {
-      const selected = await dialog.open({
-        directory: true,
-        multiple: false,
-        title: t('Select Data Folder', { ns: 'settings' }),
-      })
-      if (typeof selected === 'string') {
-        const status: any = await invoke('cmd_check_custom_data_path', {
-          pathStr: selected,
-        })
-        let finalPath = selected
 
-        if (status === 'HasPastebarDataSubfolder') {
-          // Use existing pastebar-data subfolder
-          finalPath = await join(selected, 'pastebar-data')
-          await dialog.message(
-            t(
-              'Found existing "pastebar-data" folder. The application will use this folder to store data.',
-              { ns: 'settings' }
-            )
-          )
-        } else if (status === 'NotEmpty') {
-          const confirmSubfolder = await dialog.confirm(
-            t(
-              'The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?',
-              { ns: 'settings' }
-            )
-          )
-          if (confirmSubfolder) {
-            finalPath = await join(selected, 'pastebar-data')
-            // Create the directory after user confirmation
-            try {
-              await invoke('cmd_create_directory', { pathStr: finalPath })
-            } catch (error) {
-              console.error('Failed to create pastebar-data directory:', error)
-              setOperationError(
-                t('Failed to create directory. Please check permissions and try again.', { ns: 'settings' })
-              )
-              return
-            }
-          } else {
-            return
-          }
-        } else if (status === 'IsPastebarDataAndNotEmpty') {
-          await dialog.message(
-            t(
-              'This folder already contains PasteBar data. The application will use this existing data after restart.',
-              { ns: 'settings' }
-            )
-          )
-        }
+    const result = await selectAndProcessPath(t);
 
-        setSelectedPathForChangeDialog(finalPath)
-        await validateCustomDbPath(finalPath) // Validation result will be reflected in storeCustomDbPathError
-      }
-    } catch (error) {
-      console.error('Error handling directory selection for setup:', error)
-      setOperationError(
-        t('An error occurred during directory processing.', { ns: 'settings' })
-      )
+    if (result.status === 'selected' && result.path) {
+      setSelectedPathForChangeDialog(result.path);
+      // Trigger validation, result will be reflected in storeCustomDbPathError via useEffect
+      await validateCustomDbPath(result.path);
+    } else if (result.status === 'error') {
+      setOperationError(result.error || t('An error occurred during directory processing.', { ns: 'settings' }));
     }
+    // If 'cancelled', do nothing
   }
 
   // Handle applying the initial setup
@@ -322,7 +288,7 @@ export default function CustomDatabaseLocationSettings() {
       )
       return
     }
-    setIsApplyingChange(true)
+    // setIsApplyingChange(true) // Removed
     setIsProcessing(true)
     setOperationError(null)
     setValidationErrorForChangeDialog(null)
@@ -336,7 +302,7 @@ export default function CustomDatabaseLocationSettings() {
         currentStoreState.customDbPathError ||
           t('Invalid directory selected.', { ns: 'settings' })
       )
-      setIsApplyingChange(false)
+      // setIsApplyingChange(false) // Removed
       setIsProcessing(false)
       return
     }
@@ -372,11 +338,11 @@ export default function CustomDatabaseLocationSettings() {
             t('Failed to apply custom database location.', { ns: 'settings' })
         )
       } finally {
-        setIsApplyingChange(false)
+        // setIsApplyingChange(false) // Removed
         setIsProcessing(false)
       }
     } else {
-      setIsApplyingChange(false)
+      // setIsApplyingChange(false) // Removed
       setIsProcessing(false)
     }
   }
@@ -385,99 +351,55 @@ export default function CustomDatabaseLocationSettings() {
   const chooseAndSetCustomPath = async () => {
     setOperationError(null)
     setIsProcessing(true)
-    let pathSuccessfullySet = false
+    let pathSuccessfullySet = false // This seems to be for the toggle's return value
+    setIsProcessing(true) // Keep this for the overall operation
 
-    try {
-      const selected = await dialog.open({
-        directory: true,
-        multiple: false,
-        title: t('Select Data Folder', { ns: 'settings' }),
-      })
+    const selectionResult = await selectAndProcessPath(t);
 
-      if (typeof selected === 'string') {
-        let finalPath = selected
-        const status: any = await invoke('cmd_check_custom_data_path', {
-          pathStr: selected,
-        })
+    if (selectionResult.status === 'selected' && selectionResult.path) {
+      const finalPath = selectionResult.path;
+      // Path selected and processed, now proceed with validation and confirmation specific to this flow
+      await validateCustomDbPath(finalPath);
+      const currentStoreState = settingsStore.getState();
 
-        if (status === 'HasPastebarDataSubfolder') {
-          // Use existing pastebar-data subfolder
-          finalPath = await join(selected, 'pastebar-data')
-          await dialog.message(
-            t(
-              'Found existing "pastebar-data" folder. The application will use this folder to store data.',
-              { ns: 'settings' }
-            )
-          )
-        } else if (status === 'NotEmpty') {
-          const confirmSubfolder = await dialog.confirm(
-            t(
-              'The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?',
-              { ns: 'settings' }
-            )
-          )
-          if (confirmSubfolder) {
-            finalPath = await join(selected, 'pastebar-data')
-            // Create the directory after user confirmation
-            try {
-              await invoke('cmd_create_directory', { pathStr: finalPath })
-            } catch (error) {
-              console.error('Failed to create pastebar-data directory:', error)
-              setOperationError(
-                t('Failed to create directory. Please check permissions and try again.', { ns: 'settings' })
-              )
-              setIsProcessing(false)
-              return false
-            }
-          } else {
-            setIsProcessing(false)
-            return false // User cancelled subfolder creation
-          }
-        } else if (status === 'IsPastebarDataAndNotEmpty') {
-          await dialog.message(
-            t(
-              'This folder already contains PasteBar data. The application will use this existing data after restart.',
-              { ns: 'settings' }
-            )
-          )
-        }
-
-        await validateCustomDbPath(finalPath)
-        const currentStoreState = settingsStore.getState()
-
-        if (!currentStoreState.isCustomDbPathValid) {
-          setOperationError(
-            currentStoreState.customDbPathError ||
-              t('Invalid directory selected.', { ns: 'settings' })
-          )
-          setIsProcessing(false)
-          return false // Validation failed
-        }
-
-        const confirmed = await dialog.confirm(
-          t(
-            'Are you sure you want to set "{{path}}" as the new data folder? The application will restart.',
-            { ns: 'settings', path: finalPath }
-          )
-        )
-
-        if (confirmed) {
-          await applyCustomDbPath(finalPath, 'none') // 'none' for initial setup
-          relaunchApp()
-          pathSuccessfullySet = true // Path will be set by store, app restarts
-        }
+      if (!currentStoreState.isCustomDbPathValid) {
+        setOperationError(
+          currentStoreState.customDbPathError ||
+            t('Invalid directory selected.', { ns: 'settings' })
+        );
+        setIsProcessing(false); // Stop processing as validation failed
+        return false;
       }
-    } catch (error) {
-      console.error('Error choosing custom DB path:', error)
-      setOperationError(
-        t('An error occurred during directory selection or setup.', {
-          ns: 'settings',
-        })
-      )
-    } finally {
-      setIsProcessing(false)
+
+      const confirmed = await dialog.confirm(
+        t(
+          'Are you sure you want to set "{{path}}" as the new data folder? The application will restart.',
+          { ns: 'settings', path: finalPath }
+        )
+      );
+
+      if (confirmed) {
+        try {
+          await applyCustomDbPath(finalPath, 'none'); // 'none' for initial setup
+          relaunchApp();
+          pathSuccessfullySet = true;
+        } catch (applyError: any) {
+          setOperationError(
+            applyError.message ||
+            t('Failed to apply custom database location.', { ns: 'settings' })
+          );
+          // Path selection was ok, but apply failed.
+        }
+      } else {
+        // User cancelled confirmation
+      }
+    } else if (selectionResult.status === 'error') {
+      setOperationError(selectionResult.error || t('An error occurred during directory processing.', { ns: 'settings' }));
     }
-    return pathSuccessfullySet // This return might not be directly used if app restarts
+    // If 'cancelled', do nothing more for path selection part
+
+    setIsProcessing(false); // End processing for the whole operation
+    return pathSuccessfullySet;
   }
 
   const handleToggle = async (checked: boolean) => {
@@ -494,7 +416,7 @@ export default function CustomDatabaseLocationSettings() {
     // If customDbPath is already set, the toggle is disabled so this won't be called
   }
 
-  const isLoading = dbRelocationInProgress || isProcessing || isApplyingChange
+  const isLoading = dbRelocationInProgress || isProcessing // Simplified isLoading
   const currentPathDisplay = customDbPath || t('Default', { ns: 'settings' })
   const isPathUnchangedForChangeDialog = selectedPathForChangeDialog === customDbPath
 
@@ -564,9 +486,7 @@ export default function CustomDatabaseLocationSettings() {
                   variant="outline"
                   className="flex-1 h-10"
                 >
-                  {dbRelocationInProgress && !isApplyingChange && !isProcessing ? (
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                  ) : null}
+                  {/* Spinner removed from here, button will be disabled by isLoading if another operation is in progress */}
                   {t('Change Custom Data Folder...', { ns: 'settings' })}
                 </Button>
                 
@@ -576,7 +496,7 @@ export default function CustomDatabaseLocationSettings() {
                   variant="secondary"
                   className="flex-1 h-10 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white border-yellow-500 dark:border-yellow-600"
                 >
-                  {isProcessing && !isApplyingChange ? (
+                  {isProcessing ? ( // Simplified spinner condition
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                   ) : null}
                   {t('Revert to Default', { ns: 'settings' })}
@@ -634,7 +554,7 @@ export default function CustomDatabaseLocationSettings() {
                   }
                   className="w-full h-10"
                 >
-                  {isApplyingChange ? (
+                  {isProcessing ? ( // Simplified spinner condition
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                   ) : null}
                   {t('Apply and Restart', { ns: 'settings' })}
@@ -682,9 +602,7 @@ export default function CustomDatabaseLocationSettings() {
                 variant="outline"
                 className="w-full h-10"
               >
-                {isProcessing && !isApplyingChange ? (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
+                {/* Spinner removed from here, button will be disabled by isLoading if another operation is in progress */}
                 {selectedPathForChangeDialog 
                   ? t('Change Selected Folder...', { ns: 'settings' })
                   : t('Select Data Folder...', { ns: 'settings' })
@@ -741,7 +659,7 @@ export default function CustomDatabaseLocationSettings() {
                   }
                   className="w-full h-10"
                 >
-                  {isApplyingChange ? (
+                  {isProcessing ? ( // Simplified spinner condition
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                   ) : null}
                   {t('Apply and Restart', { ns: 'settings' })}

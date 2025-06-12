@@ -1,6 +1,6 @@
-use lazy_static::lazy_static;
 use once_cell::sync::OnceCell;
 use serde::Serialize;
+use std::sync::RwLock;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
@@ -38,9 +38,8 @@ pub struct ConnectionOptions {
   pub busy_timeout: Option<Duration>,
 }
 
-lazy_static! {
-  pub static ref DB_POOL_CONNECTION: Pool = init_connection_pool();
-}
+// Replaced lazy_static with RwLock for dynamic pool reinitialization
+pub static DB_POOL_STATE: RwLock<Option<(String, Pool)>> = RwLock::new(None);
 
 impl diesel::r2d2::CustomizeConnection<SqliteConnection, diesel::r2d2::Error>
   for ConnectionOptions
@@ -72,24 +71,74 @@ pub fn adjust_canonicalization<P: AsRef<Path>>(p: P) -> String {
   }
 }
 
-fn init_connection_pool() -> Pool {
-  // debug only with simple sql logger set_default_instrumentation suports only on diesel master
-  // diesel::connection::set_default_instrumentation(simple_sql_logger);
-  let db_path = get_db_path();
-
+// Renamed and modified to take db_path as argument
+fn do_init_connection_pool(db_path_for_pool: &str) -> Pool {
   debug_output(|| {
-    println!("Init pool database connection to: {}", db_path);
+    println!("Initializing new connection pool for: {}", db_path_for_pool);
   });
 
-  let manager = diesel_r2d2::ConnectionManager::<SqliteConnection>::new(db_path);
+  let manager = diesel_r2d2::ConnectionManager::<SqliteConnection>::new(db_path_for_pool);
   r2d2::Pool::builder()
     .connection_customizer(Box::new(ConnectionOptions {
-      enable_wal: false,
+      enable_wal: false, // Consider making these configurable or consistent
       enable_foreign_keys: false,
       busy_timeout: Some(Duration::from_secs(3)),
     }))
     .build(manager)
-    .expect("Failed to create db pool.")
+    .expect("Failed to create db pool.") // Consider returning Result in future
+}
+
+// New function to explicitly reinitialize (or initialize for the first time)
+pub fn reinitialize_db_pool() -> Result<(), String> {
+    let current_db_path = get_db_path();
+    let mut write_guard = DB_POOL_STATE.write().map_err(|e| format!("Failed to acquire write lock on DB_POOL_STATE: {}", e))?;
+
+    // If a pool exists and is for the current path, nothing to do.
+    if let Some((pool_path, _)) = &*write_guard {
+        if pool_path == &current_db_path {
+            debug_output(|| println!("DB pool already initialized for path: {}", current_db_path));
+            return Ok(());
+        }
+    }
+
+    println!("Reinitializing DB pool for path: {}", current_db_path);
+    let new_pool = do_init_connection_pool(&current_db_path);
+    *write_guard = Some((current_db_path, new_pool));
+    Ok(())
+}
+
+// New function to get a clone of the current pool
+pub fn get_db_pool_cloned() -> Result<Pool, String> {
+    let read_guard = DB_POOL_STATE.read().map_err(|e| format!("Failed to acquire read lock on DB_POOL_STATE: {}", e))?;
+
+    if let Some((path, pool)) = &*read_guard {
+        // Check if the path of the current pool is still the active db path.
+        // This is a safeguard. `reinitialize_db_pool` should be the primary mechanism for updates.
+        let current_db_path = get_db_path();
+        if path == &current_db_path {
+            debug_output(|| println!("Cloning existing DB pool for path: {}", path));
+            return Ok(pool.clone());
+        } else {
+            // Path mismatch, means pool is stale. Needs reinitialization.
+            // This situation should ideally be avoided by calling reinitialize_db_pool proactively.
+            debug_output(|| println!("Pool path {} is stale (current is {}). Forcing reinitialization.", path, current_db_path));
+            // Fall through to reinitialize logic by releasing read lock and proceeding.
+        }
+    }
+
+    // Release the current read lock before attempting to acquire a write lock for reinitialization
+    drop(read_guard);
+
+    debug_output(|| println!("DB pool not initialized or stale. Attempting to reinitialize now."));
+    reinitialize_db_pool()?; // Initialize or reinitialize it
+
+    let read_guard_after_init = DB_POOL_STATE.read().map_err(|e| format!("Failed to acquire read lock after init: {}", e))?;
+    if let Some((_, pool)) = &*read_guard_after_init {
+        Ok(pool.clone())
+    } else {
+        // This should not happen if reinitialize_db_pool succeeded.
+        Err("Failed to get DB pool even after reinitialization attempt.".to_string())
+    }
 }
 
 pub fn init(app: &mut tauri::App) {
@@ -160,6 +209,9 @@ pub fn init(app: &mut tauri::App) {
     create_db_file();
   }
 
+  // Initialize the DB pool after constants are set and db file potentially created
+  reinitialize_db_pool().expect("Failed to initialize DB pool at startup");
+
   run_migrations();
 }
 
@@ -178,12 +230,10 @@ pub fn ensure_dir_exists(path: &PathBuf) {
 pub fn establish_pool_db_connection(
 ) -> diesel_r2d2::PooledConnection<diesel_r2d2::ConnectionManager<SqliteConnection>> {
   debug_output(|| {
-    println!("Connecting to db pool");
+    println!("Establishing connection from DB pool.");
   });
-
-  DB_POOL_CONNECTION
-    .get()
-    .unwrap_or_else(|_| panic!("Error connecting to db pool"))
+  let pool = get_db_pool_cloned().unwrap_or_else(|e| panic!("Failed to get DB pool: {}", e));
+  pool.get().unwrap_or_else(|e| panic!("Error getting connection from pool: {}", e))
 }
 
 pub fn _establish_direct_db_connection() -> SqliteConnection {
@@ -197,6 +247,9 @@ pub fn _establish_direct_db_connection() -> SqliteConnection {
 }
 
 fn run_migrations() {
+  // It's important that reinitialize_db_pool() is called before this if the path might have changed.
+  // Or, ensure establish_pool_db_connection always provides a connection to the *correct* current DB.
+  // With get_db_pool_cloned() attempting reinitialization if stale, this should be safer.
   let mut connection = establish_pool_db_connection();
   connection.run_pending_migrations(MIGRATIONS).unwrap();
 }
@@ -244,6 +297,8 @@ pub fn get_db_path() -> String {
     "pastebar-db.data"
   };
 
+  // It's crucial that APP_CONSTANTS and user_config (for custom_db_path) are readable here.
+  // get_data_dir() handles this.
   let db_path = get_data_dir().join(filename);
   db_path.to_string_lossy().into_owned()
 }
@@ -268,13 +323,12 @@ pub fn get_default_db_path_string() -> String {
 pub fn to_relative_image_path(absolute_path: &str) -> String {
   let data_dir = get_data_dir();
   let data_dir_str = data_dir.to_string_lossy();
-  
-  if absolute_path.starts_with(&data_dir_str.as_ref()) {
+
+  if absolute_path.starts_with(data_dir_str.as_ref()) {
     // Remove the data directory prefix and replace with placeholder
-    let relative_path = absolute_path.strip_prefix(&data_dir_str.as_ref())
+    let relative_path = absolute_path.strip_prefix(data_dir_str.as_ref())
       .unwrap_or(absolute_path)
-      .trim_start_matches('/')
-      .trim_start_matches('\\');
+      .trim_start_matches(|c| c == '/' || c == '\\'); // handles both path separators
     format!("{{{{base_folder}}}}/{}", relative_path)
   } else {
     // If path doesn't start with data dir, return as is
@@ -288,9 +342,8 @@ pub fn to_absolute_image_path(relative_path: &str) -> String {
     let data_dir = get_data_dir();
     let path_without_placeholder = relative_path
       .strip_prefix("{{base_folder}}")
-      .unwrap_or(relative_path)
-      .trim_start_matches('/')
-      .trim_start_matches('\\');
+      .unwrap_or(relative_path) // Should not happen if prefix matches
+      .trim_start_matches(|c| c == '/' || c == '\\'); // handles both path separators
     data_dir.join(path_without_placeholder).to_string_lossy().into_owned()
   } else {
     // If path doesn't have placeholder, return as is
@@ -298,6 +351,8 @@ pub fn to_absolute_image_path(relative_path: &str) -> String {
   }
 }
 
+// This function seems unused, can_access_or_create. Keeping it for now.
+#[allow(dead_code)]
 fn can_access_or_create(db_path: &str) -> bool {
   let path = std::path::Path::new(db_path);
 
