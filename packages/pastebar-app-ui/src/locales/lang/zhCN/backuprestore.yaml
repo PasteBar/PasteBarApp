@@ -1,4 +1,6 @@
+Auto Backup on Restore: 恢复时自动备份
 Backup and Restore: 备份和恢复
+Browse: 浏览
 Create Backup: 创建备份
 Include images in backup: 在备份中包含图片
 Backup Now: 立即备份
@@ -6,7 +8,7 @@ Restore Data: 恢复数据
 Restore from File...: 从文件恢复...
 Select backup file: 选择备份文件
 Available Backups: 可用备份
-Total backup space: "{{size}}": 备份总空间: {{size}}
+Total backup space {{size}}: '备份总空间: {{size}}'
 No backups found: 未找到备份
 Restore: 恢复
 Delete: 删除
@@ -25,3 +27,17 @@ Invalid backup file: 无效的备份文件
 The selected file is not a valid PasteBar backup: 选择的文件不是有效的PasteBar备份
 Created: 创建时间
 Size: 大小
+Failed to load backup list: 加载备份列表失败
+Failed to create backup: 创建备份失败
+Restored from {{filename}}: 从{{filename}}恢复
+Failed to restore backup: 恢复备份失败
+Backup Files: 备份文件
+selected file: 选择的文件
+Failed to select backup file: 选择备份文件失败
+Failed to open backup folder: 打开备份文件夹失败
+This will create a backup file containing your database: 这将创建一个包含您数据库的备份文件
+and images: 和图片
+Loading backups...: 正在加载备份...
+will be permanently deleted.: 将被永久删除。
+This action cannot be undone. All current data will be replaced with the backup data.: 此操作无法撤销。所有当前数据将被备份数据替换。
+Restoring a backup will automatically restart the application.: 恢复备份将自动重启应用程序。

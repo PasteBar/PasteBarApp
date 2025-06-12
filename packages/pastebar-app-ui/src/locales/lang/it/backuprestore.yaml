@@ -1,4 +1,6 @@
+Auto Backup on Restore: Backup Automatico al Ripristino
 Backup and Restore: Backup e Ripristino
+Browse: Sfoglia
 Create Backup: Crea Backup
 Include images in backup: Includi immagini nel backup
 Backup Now: Crea Backup Ora
@@ -6,7 +8,7 @@ Restore Data: Ripristina Dati
 Restore from File...: Ripristina da File...
 Select backup file: Seleziona file di backup
 Available Backups: Backup Disponibili
-Total backup space: "{{size}}": Spazio totale backup: {{size}}
+Total backup space {{size}}: 'Spazio totale di backup: {{size}}'
 No backups found: Nessun backup trovato
 Restore: Ripristina
 Delete: Elimina
@@ -25,3 +27,17 @@ Invalid backup file: File di backup non valido
 The selected file is not a valid PasteBar backup: Il file selezionato non è un backup PasteBar valido
 Created: Creato
 Size: Dimensione
+Failed to load backup list: Impossibile caricare l'elenco dei backup
+Failed to create backup: Impossibile creare il backup
+Restored from {{filename}}: Ripristinato da {{filename}}
+Failed to restore backup: Impossibile ripristinare il backup
+Backup Files: File di Backup
+selected file: file selezionato
+Failed to select backup file: Impossibile selezionare il file di backup
+Failed to open backup folder: Impossibile aprire la cartella di backup
+This will create a backup file containing your database: Questo creerà un file di backup contenente il tuo database
+and images: e le immagini
+Loading backups...: Caricamento backup...
+will be permanently deleted.: sarà eliminato permanentemente.
+This action cannot be undone. All current data will be replaced with the backup data.: Questa azione non può essere annullata. Tutti i dati attuali saranno sostituiti con i dati del backup.
+Restoring a backup will automatically restart the application.: Il ripristino di un backup riavvierà automaticamente l'applicazione.

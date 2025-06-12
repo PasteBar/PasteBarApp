@@ -593,6 +593,13 @@ export function NavBar() {
                 </MenubarItem>
                 <MenubarItem
                   onClick={() => {
+                    navigate('/app-settings/backup-restore', { replace: true })
+                  }}
+                >
+                  {t('Backup and Restore', { ns: 'backuprestore' })}
+                </MenubarItem>
+                <MenubarItem
+                  onClick={() => {
                     navigate('/app-settings/security', { replace: true })
                   }}
                 >
@@ -653,9 +660,7 @@ export function NavBar() {
                     >
                       <Text
                         className={`mr-2 ${
-                          isImageCaptureDisabled
-                            ? 'text-slate-900/50'
-                            : 'text-slate-800'
+                          isImageCaptureDisabled ? 'text-slate-900/50' : 'text-slate-800'
                         }`}
                       >
                         {t('Enable Image Capture', { ns: 'history' })}

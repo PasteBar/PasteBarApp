@@ -1,4 +1,6 @@
 Backup and Restore: Sauvegarde et Restauration
+Auto Backup on Restore: Sauvegarde Automatique à la Restauration
+Browse: Parcourir
 Create Backup: Créer une Sauvegarde
 Include images in backup: Inclure les images dans la sauvegarde
 Backup Now: Sauvegarder Maintenant
@@ -6,7 +8,7 @@ Restore Data: Restaurer les Données
 Restore from File...: Restaurer depuis un Fichier...
 Select backup file: Sélectionner le fichier de sauvegarde
 Available Backups: Sauvegardes Disponibles
-Total backup space: "{{size}}": Espace total des sauvegardes: {{size}}
+Total backup space {{size}}: 'Espace total des sauvegardes: {{size}}'
 No backups found: Aucune sauvegarde trouvée
 Restore: Restaurer
 Delete: Supprimer
@@ -25,3 +27,17 @@ Invalid backup file: Fichier de sauvegarde invalide
 The selected file is not a valid PasteBar backup: Le fichier sélectionné n'est pas une sauvegarde PasteBar valide
 Created: Créé
 Size: Taille
+Failed to load backup list: Échec du chargement de la liste des sauvegardes
+Failed to create backup: Échec de la création de la sauvegarde
+Restored from {{filename}}: Restauré depuis {{filename}}
+Failed to restore backup: Échec de la restauration de la sauvegarde
+Backup Files: Fichiers de Sauvegarde
+selected file: fichier sélectionné
+Failed to select backup file: Échec de la sélection du fichier de sauvegarde
+Failed to open backup folder: Échec de l'ouverture du dossier de sauvegarde
+This will create a backup file containing your database: Ceci créera un fichier de sauvegarde contenant votre base de données
+and images: et les images
+Loading backups...: Chargement des sauvegardes...
+will be permanently deleted.: sera définitivement supprimé.
+This action cannot be undone. All current data will be replaced with the backup data.: Cette action ne peut pas être annulée. Toutes les données actuelles seront remplacées par les données de sauvegarde.
+Restoring a backup will automatically restart the application.: La restauration d'une sauvegarde redémarrera automatiquement l'application.

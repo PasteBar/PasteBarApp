@@ -1105,7 +1105,6 @@ async fn main() {
       update_setting,
       backup_restore_commands::create_backup,
       backup_restore_commands::list_backups,
-      backup_restore_commands::select_backup_file,
       backup_restore_commands::restore_backup,
       backup_restore_commands::delete_backup,
       backup_restore_commands::get_data_paths,

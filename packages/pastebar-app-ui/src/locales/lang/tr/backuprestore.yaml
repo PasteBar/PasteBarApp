@@ -1,4 +1,6 @@
+Auto Backup on Restore: Geri Yüklemede Otomatik Yedek
 Backup and Restore: Yedekleme ve Geri Yükleme
+Browse: Gözat
 Create Backup: Yedek Oluştur
 Include images in backup: Yedekte görselleri dahil et
 Backup Now: Şimdi Yedekle
@@ -6,7 +8,7 @@ Restore Data: Verileri Geri Yükle
 Restore from File...: Dosyadan Geri Yükle...
 Select backup file: Yedek dosyası seç
 Available Backups: Mevcut Yedekler
-Total backup space: "{{size}}": Toplam yedek alanı: {{size}}
+Total backup space {{size}}: 'Toplam yedek alanı: {{size}}'
 No backups found: Yedek bulunamadı
 Restore: Geri Yükle
 Delete: Sil
@@ -14,7 +16,7 @@ Create a backup of your data?: Verilerinizin bir yedeğini oluşturmak istiyor m
 Backup created successfully: Yedek başarıyla oluşturuldu
 Move to another location?: Başka bir konuma taşı?
 This will replace all current data. Are you sure?: Bu, mevcut tüm verileri değiştirecek. Emin misiniz?
-Restore from "{{filename}}"? This will replace all current data.: {{filename}} dosyasından geri yüklensin mi? Bu, mevcut tüm verileri değiştirecek.
+Restore from {{filename}}? This will replace all current data.: '{{filename}} dosyasından geri yüklensin mi? Bu, mevcut tüm verileri değiştirecek.'
 Delete this backup? This action cannot be undone.: Bu yedeği sil? Bu eylem geri alınamaz.
 Restore completed. The application will restart.: Geri yükleme tamamlandı. Uygulama yeniden başlatılacak.
 Creating backup...: Yedek oluşturuluyor...
@@ -25,3 +27,17 @@ Invalid backup file: Geçersiz yedek dosyası
 The selected file is not a valid PasteBar backup: Seçilen dosya geçerli bir PasteBar yedeği değil
 Created: Oluşturulma
 Size: Boyut
+Failed to load backup list: Yedek listesi yüklenemedi
+Failed to create backup: Yedek oluşturulamadı
+'Restored from {{filename}}': '{{filename}} dosyasından geri yüklendi'
+Failed to restore backup: Yedek geri yüklenemedi
+Backup Files: Yedek Dosyaları
+selected file: seçilen dosya
+Failed to select backup file: Yedek dosyası seçilemedi
+Failed to open backup folder: Yedek klasörü açılamadı
+This will create a backup file containing your database: Bu, veritabanınızı içeren bir yedek dosyası oluşturacak
+and images: ve görseller
+Loading backups...: Yedekler yükleniyor...
+will be permanently deleted.: kalıcı olarak silinecek.
+This action cannot be undone. All current data will be replaced with the backup data.: Bu eylem geri alınamaz. Mevcut tüm veriler yedek verileriyle değiştirilecek.
+Restoring a backup will automatically restart the application.: Bir yedeği geri yüklemek uygulamayı otomatik olarak yeniden başlatacak.

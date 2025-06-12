@@ -10,7 +10,6 @@ import {
   themeStoreAtom,
   uiStoreAtom,
 } from '~/store'
-import CustomDatabaseLocationSettings from './CustomDatabaseLocationSettings'
 import { useAtomValue } from 'jotai'
 import { ChevronDown, ChevronUp, MessageSquare, MessageSquareDashed } from 'lucide-react'
 import { useTheme } from 'next-themes'
@@ -39,6 +38,8 @@ import {
 } from '~/components/ui'
 
 import md from '~/store/example.md?raw'
+
+import CustomDatabaseLocationSettings from './CustomDatabaseLocationSettings'
 
 export default function UserPreferences() {
   const { t } = useTranslation()

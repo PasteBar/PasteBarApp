@@ -96,6 +96,7 @@ Enter Passcode: Введите код доступа
 Enter Password: Введите пароль
 Enter Recovery Password: Введите пароль восстановления
 Enter passcode or password to unlock: Введите код доступа или пароль для разблокировки
+Error: Error
 Errors:
   Error loading link: Ошибка загрузки ссылки
   Cant save file: Невозможно сохранить файл

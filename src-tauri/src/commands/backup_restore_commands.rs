@@ -3,12 +3,11 @@ use std::path::{Path, PathBuf};
 use std::io::Write;
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
-use tauri::api::dialog::FileDialogBuilder;
 use zip::{ZipWriter, ZipArchive};
 use zip::write::FileOptions;
 use std::io::{Read, Seek};
 
-use crate::db::APP_CONSTANTS;
+use crate::db::{get_data_dir, get_db_path, get_clip_images_dir, get_clipboard_images_dir};
 use crate::services::utils::debug_output;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -27,10 +26,6 @@ pub struct BackupListResponse {
     pub total_size_formatted: String,
 }
 
-fn get_data_dir() -> PathBuf {
-    // Get current data directory - could be custom or default
-    APP_CONSTANTS.get().unwrap().app_data_dir.clone()
-}
 
 fn get_backup_filename() -> String {
     let now = Local::now();
@@ -106,16 +101,22 @@ pub async fn create_backup(include_images: bool) -> Result<String, String> {
     let backup_filename = get_backup_filename();
     let backup_path = data_dir.join(&backup_filename);
 
-    // Database file path
-    let db_filename = if cfg!(debug_assertions) {
-        "local.pastebar-db.data"
-    } else {
-        "pastebar-db.data"
-    };
-    let db_path = data_dir.join(db_filename);
+    debug_output(|| {
+        println!("Data directory: {}", data_dir.display());
+        println!("Backup will be created at: {}", backup_path.display());
+    });
+
+    // Database file path - use the actual database path which handles debug/release naming
+    let db_path_str = get_db_path();
+    let db_path = PathBuf::from(&db_path_str);
+
+    debug_output(|| {
+        println!("Looking for database file at: {}", db_path_str);
+        println!("Database file exists: {}", db_path.exists());
+    });
 
     if !db_path.exists() {
-        return Err("Database file not found".to_string());
+        return Err(format!("Database file not found at: {}", db_path_str));
     }
 
     // Create zip file
@@ -134,6 +135,11 @@ pub async fn create_backup(include_images: bool) -> Result<String, String> {
     db_file.read_to_end(&mut db_buffer)
         .map_err(|e| format!("Failed to read database file: {}", e))?;
     
+    // Get just the filename for the zip entry
+    let db_filename = db_path.file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or("pastebar-db.data");
+    
     zip.start_file(db_filename, options)
         .map_err(|e| format!("Failed to start database file in zip: {}", e))?;
     zip.write_all(&db_buffer)
@@ -141,8 +147,15 @@ pub async fn create_backup(include_images: bool) -> Result<String, String> {
 
     // Add image directories if requested
     if include_images {
-        let clip_images_dir = data_dir.join("clip-images");
-        let history_images_dir = data_dir.join("history-images");
+        let clip_images_dir = get_clip_images_dir();
+        let history_images_dir = get_clipboard_images_dir();
+
+        debug_output(|| {
+            println!("Clip images directory: {}", clip_images_dir.display());
+            println!("Clip images exists: {}", clip_images_dir.exists());
+            println!("History images directory: {}", history_images_dir.display());
+            println!("History images exists: {}", history_images_dir.exists());
+        });
 
         if clip_images_dir.exists() {
             add_directory_to_zip(&mut zip, &clip_images_dir, &data_dir)
@@ -151,7 +164,7 @@ pub async fn create_backup(include_images: bool) -> Result<String, String> {
 
         if history_images_dir.exists() {
             add_directory_to_zip(&mut zip, &history_images_dir, &data_dir)
-                .map_err(|e| format!("Failed to add history-images directory: {}", e))?;
+                .map_err(|e| format!("Failed to add clipboard-images directory: {}", e))?;
         }
     }
 
@@ -224,87 +237,38 @@ pub async fn list_backups() -> Result<BackupListResponse, String> {
     })
 }
 
-#[tauri::command]
-pub fn select_backup_file() -> Result<Option<String>, String> {
-    use std::sync::{Arc, Mutex};
-    use std::sync::mpsc;
-    
-    let (tx, rx) = mpsc::channel();
-    
-    FileDialogBuilder::new()
-        .set_title("Select PasteBar Backup File")
-        .add_filter("Backup Files", &["zip"])
-        .pick_file(move |file_path| {
-            let _ = tx.send(file_path);
-        });
-    
-    // Wait for the dialog result
-    if let Ok(selected_path) = rx.recv() {
-        if let Some(path) = selected_path {
-            let path_str = path.to_string_lossy().to_string();
-            // Validate it's a valid backup file
-            if let Err(e) = validate_backup_file(&path_str) {
-                return Err(format!("Invalid backup file: {}", e));
-            }
-            Ok(Some(path_str))
-        } else {
-            Ok(None)
-        }
-    } else {
-        Err("Failed to get file dialog result".to_string())
-    }
-}
-
-fn validate_backup_file(file_path: &str) -> Result<(), String> {
-    let path = Path::new(file_path);
-    
-    if !path.exists() {
-        return Err("File does not exist".to_string());
-    }
-
-    if !path.extension().map_or(false, |ext| ext == "zip") {
-        return Err("File is not a zip file".to_string());
-    }
-
-    // Open zip and check for required files
-    let file = fs::File::open(path)
-        .map_err(|e| format!("Cannot open file: {}", e))?;
-    
-    let mut archive = ZipArchive::new(file)
-        .map_err(|e| format!("Invalid zip file: {}", e))?;
-
-    // Check for database file
-    let db_files = ["pastebar-db.data", "local.pastebar-db.data"];
-    let has_db = db_files.iter().any(|&db_file| {
-        archive.by_name(db_file).is_ok()
-    });
-
-    if !has_db {
-        return Err("Backup does not contain a valid PasteBar database".to_string());
-    }
-
-    Ok(())
-}
 
 #[tauri::command]
-pub async fn restore_backup(backup_path: String) -> Result<String, String> {
+pub async fn restore_backup(backup_path: String, create_pre_restore_backup: bool) -> Result<String, String> {
     debug_output(|| {
         println!("Restoring backup from: {}", backup_path);
     });
 
-    // Validate backup file
-    validate_backup_file(&backup_path)?;
+    // Basic validation - check if file exists and is a zip
+    let backup_file = Path::new(&backup_path);
+    if !backup_file.exists() {
+        return Err("Backup file does not exist".to_string());
+    }
+    if !backup_file.extension().map_or(false, |ext| ext == "zip") {
+        return Err("Backup file must be a zip file".to_string());
+    }
 
     let data_dir = get_data_dir();
     
-    // Create backup of current data before restore
-    let _pre_restore_backup = format!("pre-restore-backup-{}.zip", Local::now().format("%Y-%m-%d-%H-%M-%S"));
-    let _pre_restore_path = data_dir.join(&_pre_restore_backup);
-    
-    // Create backup of current state
-    if let Err(e) = create_backup(true).await {
+    // Optionally create backup of current data before restore
+    if create_pre_restore_backup {
+        if let Err(e) = create_backup(true).await {
+            debug_output(|| {
+                println!("Warning: Could not create pre-restore backup: {}", e);
+            });
+        } else {
+            debug_output(|| {
+                println!("Created pre-restore backup");
+            });
+        }
+    } else {
         debug_output(|| {
-            println!("Warning: Could not create pre-restore backup: {}", e);
+            println!("Skipping pre-restore backup as requested");
         });
     }
 
