@@ -39,7 +39,7 @@ pub fn insert_or_update_setting_by_name(
   setting: &Setting,
   app_handle: tauri::AppHandle,
 ) -> Result<String, Error> {
-  let connection = &mut DB_POOL_CONNECTION.get().unwrap();
+  let connection = &mut DB_POOL_CONNECTION.read().unwrap().get().unwrap();
 
   match settings
     .filter(name.eq(&setting.name))

@@ -4,6 +4,7 @@ use serde::Serialize;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
+use std::sync::RwLock;
 use std::time::Duration;
 
 use diesel::connection::SimpleConnection;
@@ -39,7 +40,7 @@ pub struct ConnectionOptions {
 }
 
 lazy_static! {
-  pub static ref DB_POOL_CONNECTION: Pool = init_connection_pool();
+  pub static ref DB_POOL_CONNECTION: RwLock<Pool> = RwLock::new(init_connection_pool());
 }
 
 impl diesel::r2d2::CustomizeConnection<SqliteConnection, diesel::r2d2::Error>
@@ -90,6 +91,12 @@ fn init_connection_pool() -> Pool {
     }))
     .build(manager)
     .expect("Failed to create db pool.")
+}
+
+pub fn reinitialize_connection_pool() {
+  let new_pool = init_connection_pool();
+  let mut pool_lock = DB_POOL_CONNECTION.write().unwrap();
+  *pool_lock = new_pool;
 }
 
 pub fn init(app: &mut tauri::App) {
@@ -182,6 +189,7 @@ pub fn establish_pool_db_connection(
   });
 
   DB_POOL_CONNECTION
+    .read()
     .get()
     .unwrap_or_else(|_| panic!("Error connecting to db pool"))
 }
@@ -268,10 +276,11 @@ pub fn get_default_db_path_string() -> String {
 pub fn to_relative_image_path(absolute_path: &str) -> String {
   let data_dir = get_data_dir();
   let data_dir_str = data_dir.to_string_lossy();
-  
+
   if absolute_path.starts_with(&data_dir_str.as_ref()) {
     // Remove the data directory prefix and replace with placeholder
-    let relative_path = absolute_path.strip_prefix(&data_dir_str.as_ref())
+    let relative_path = absolute_path
+      .strip_prefix(&data_dir_str.as_ref())
       .unwrap_or(absolute_path)
       .trim_start_matches('/')
       .trim_start_matches('\\');
@@ -291,7 +300,10 @@ pub fn to_absolute_image_path(relative_path: &str) -> String {
       .unwrap_or(relative_path)
       .trim_start_matches('/')
       .trim_start_matches('\\');
-    data_dir.join(path_without_placeholder).to_string_lossy().into_owned()
+    data_dir
+      .join(path_without_placeholder)
+      .to_string_lossy()
+      .into_owned()
   } else {
     // If path doesn't have placeholder, return as is
     relative_path.to_string()

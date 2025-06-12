@@ -117,7 +117,9 @@ export default function CustomDatabaseLocationSettings() {
             } catch (error) {
               console.error('Failed to create pastebar-data directory:', error)
               setOperationError(
-                t('Failed to create directory. Please check permissions and try again.', { ns: 'settings' })
+                t('Failed to create directory. Please check permissions and try again.', {
+                  ns: 'settings',
+                })
               )
               return
             }
@@ -201,6 +203,12 @@ export default function CustomDatabaseLocationSettings() {
         await applyCustomDbPath(selectedPathForChangeDialog, dbOperationForChangeDialog)
         relaunchApp()
       } catch (error: any) {
+        // Attempt rollback on failure
+        try {
+          await revertToDefaultDbPath()
+        } catch (_) {
+          // Ignore rollback errors
+        }
         setOperationError(
           error.message ||
             t('Failed to apply custom database location.', { ns: 'settings' })
@@ -287,7 +295,9 @@ export default function CustomDatabaseLocationSettings() {
             } catch (error) {
               console.error('Failed to create pastebar-data directory:', error)
               setOperationError(
-                t('Failed to create directory. Please check permissions and try again.', { ns: 'settings' })
+                t('Failed to create directory. Please check permissions and try again.', {
+                  ns: 'settings',
+                })
               )
               return
             }
@@ -317,9 +327,7 @@ export default function CustomDatabaseLocationSettings() {
   // Handle applying the initial setup
   const handleApplySetup = async () => {
     if (!selectedPathForChangeDialog) {
-      setOperationError(
-        t('Please select a directory first.', { ns: 'settings' })
-      )
+      setOperationError(t('Please select a directory first.', { ns: 'settings' }))
       return
     }
     setIsApplyingChange(true)
@@ -367,6 +375,9 @@ export default function CustomDatabaseLocationSettings() {
         await applyCustomDbPath(selectedPathForChangeDialog, dbOperationForChangeDialog)
         relaunchApp()
       } catch (error: any) {
+        try {
+          await revertToDefaultDbPath()
+        } catch (_) {}
         setOperationError(
           error.message ||
             t('Failed to apply custom database location.', { ns: 'settings' })
@@ -424,7 +435,9 @@ export default function CustomDatabaseLocationSettings() {
             } catch (error) {
               console.error('Failed to create pastebar-data directory:', error)
               setOperationError(
-                t('Failed to create directory. Please check permissions and try again.', { ns: 'settings' })
+                t('Failed to create directory. Please check permissions and try again.', {
+                  ns: 'settings',
+                })
               )
               setIsProcessing(false)
               return false
@@ -462,9 +475,19 @@ export default function CustomDatabaseLocationSettings() {
         )
 
         if (confirmed) {
-          await applyCustomDbPath(finalPath, 'none') // 'none' for initial setup
-          relaunchApp()
-          pathSuccessfullySet = true // Path will be set by store, app restarts
+          try {
+            await applyCustomDbPath(finalPath, 'none') // 'none' for initial setup
+            relaunchApp()
+            pathSuccessfullySet = true // Path will be set by store, app restarts
+          } catch (error) {
+            try {
+              await revertToDefaultDbPath()
+            } catch (_) {}
+            setOperationError(
+              (error as any).message ||
+                t('Failed to apply custom database location.', { ns: 'settings' })
+            )
+          }
         }
       }
     } catch (error) {
@@ -506,7 +529,11 @@ export default function CustomDatabaseLocationSettings() {
   return (
     <Box className="animate-in fade-in max-w-xl mt-4">
       <Card
-        className={`${!customDbPath && !isSetupSectionExpanded ? 'opacity-80 bg-gray-100 dark:bg-gray-900/80' : ''}`}
+        className={`${
+          !customDbPath && !isSetupSectionExpanded
+            ? 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+            : ''
+        }`}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
           <CardTitle className="animate-in fade-in text-md font-medium">
@@ -569,7 +596,7 @@ export default function CustomDatabaseLocationSettings() {
                   ) : null}
                   {t('Change Custom Data Folder...', { ns: 'settings' })}
                 </Button>
-                
+
                 <Button
                   onClick={handleRevertFromContent}
                   disabled={isLoading}
@@ -685,10 +712,9 @@ export default function CustomDatabaseLocationSettings() {
                 {isProcessing && !isApplyingChange ? (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
-                {selectedPathForChangeDialog 
+                {selectedPathForChangeDialog
                   ? t('Change Selected Folder...', { ns: 'settings' })
-                  : t('Select Data Folder...', { ns: 'settings' })
-                }
+                  : t('Select Data Folder...', { ns: 'settings' })}
               </Button>
 
               {selectedPathForChangeDialog && (
