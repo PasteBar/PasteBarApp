@@ -15,6 +15,22 @@ use crate::services::user_settings_service::{
 use fs_extra::dir::{copy, CopyOptions};
 use std::path::PathBuf;
 
+fn rollback_moves(items: &[(PathBuf, PathBuf)]) {
+  for (src, dest) in items.iter().rev() {
+    if dest.exists() {
+      if dest.is_dir() {
+        let mut options = CopyOptions::new();
+        options.overwrite = true;
+        let _ = copy(dest, src, &options);
+        let _ = fs::remove_dir_all(dest);
+      } else {
+        let _ = fs::copy(dest, src);
+        let _ = fs::remove_file(dest);
+      }
+    }
+  }
+}
+
 #[derive(serde::Serialize)]
 pub enum PathStatus {
   Empty,
@@ -50,9 +66,11 @@ pub fn cmd_check_custom_data_path(path_str: String) -> Result<PathStatus, String
   let pastebar_data_subfolder = path.join("pastebar-data");
   if pastebar_data_subfolder.exists() && pastebar_data_subfolder.is_dir() {
     // Check if the pastebar-data subfolder contains database files
-    let has_dev_db_in_subfolder = pastebar_data_subfolder.join("local.pastebar-db.data").exists();
+    let has_dev_db_in_subfolder = pastebar_data_subfolder
+      .join("local.pastebar-db.data")
+      .exists();
     let has_prod_db_in_subfolder = pastebar_data_subfolder.join("pastebar-db.data").exists();
-    
+
     if has_dev_db_in_subfolder || has_prod_db_in_subfolder {
       return Ok(PathStatus::IsPastebarDataAndNotEmpty);
     } else {
@@ -80,51 +98,33 @@ pub fn cmd_get_custom_db_path() -> Option<String> {
 #[command]
 pub fn cmd_create_directory(path_str: String) -> Result<(), String> {
   let path = Path::new(&path_str);
-  fs::create_dir_all(&path).map_err(|e| {
-    format!(
-      "Failed to create directory {}: {}",
-      path.display(),
-      e
-    )
-  })?;
+  fs::create_dir_all(&path)
+    .map_err(|e| format!("Failed to create directory {}: {}", path.display(), e))?;
   Ok(())
 }
 
 /// Validates if the provided path is a writable directory.
 #[command]
 pub fn cmd_validate_custom_db_path(path_str: String) -> Result<bool, String> {
-  let path = Path::new(&path_str);
-  if !path.exists() {
-    // Attempt to create it if it doesn't exist, to check writability of parent
-    if let Some(parent) = path.parent() {
-      if !parent.exists() {
-        fs::create_dir_all(parent).map_err(|e| {
-          format!(
-            "Failed to create parent directory {}: {}",
-            parent.display(),
-            e
-          )
-        })?;
-      }
-    }
-    // Check if we can create the directory itself (simulates future db file creation in this dir)
-    fs::create_dir_all(&path).map_err(|e| {
-      format!(
-        "Path {} is not a valid directory or cannot be created: {}",
-        path.display(),
-        e
-      )
-    })?;
-    // Clean up by removing the directory if we created it for validation
-    fs::remove_dir(&path).map_err(|e| {
-      format!(
-        "Failed to clean up validation directory {}: {}",
-        path.display(),
-        e
-      )
-    })?;
-  } else if !path.is_dir() {
-    return Err(format!("Path {} is not a directory.", path_str));
+  let input_path = PathBuf::from(&path_str);
+
+  if input_path
+    .components()
+    .any(|c| matches!(c, std::path::Component::ParentDir))
+  {
+    return Err("Path traversal not allowed".to_string());
+  }
+
+  let path = if input_path.exists() {
+    input_path
+      .canonicalize()
+      .map_err(|e| format!("Invalid path: {}", e))?
+  } else {
+    input_path
+  };
+
+  if path.exists() && !path.is_dir() {
+    return Err(format!("Path {} is not a directory.", path.display()));
   }
 
   // Check writability by trying to create a temporary file
@@ -153,6 +153,8 @@ pub fn cmd_set_and_relocate_data(
 
   let items_to_relocate = vec!["pastebar-db.data", "clip-images", "clipboard-images"];
 
+  let mut moved_items: Vec<(PathBuf, PathBuf)> = Vec::new();
+
   for item_name in items_to_relocate {
     let source_path = current_data_dir.join(item_name);
     let dest_path = new_data_dir.join(item_name);
@@ -168,24 +170,24 @@ pub fn cmd_set_and_relocate_data(
     match operation.as_str() {
       "move" => {
         if source_path.is_dir() {
-          fs::rename(&source_path, &dest_path).map_err(|e| {
-            format!(
-              "Failed to move directory {} to {}: {}",
-              source_path.display(),
-              dest_path.display(),
-              e
-            )
-          })?;
+          let mut options = CopyOptions::new();
+          options.overwrite = true;
+          copy(&source_path, &dest_path, &options)
+            .map_err(|e| format!("Failed to copy directory: {}", e))?;
+          if let Err(e) = fs::remove_dir_all(&source_path) {
+            let _ = fs_extra::dir::remove(&dest_path);
+            rollback_moves(&moved_items);
+            return Err(format!("Failed to remove original directory: {}", e));
+          }
         } else {
-          fs::rename(&source_path, &dest_path).map_err(|e| {
-            format!(
-              "Failed to move file {} to {}: {}",
-              source_path.display(),
-              dest_path.display(),
-              e
-            )
-          })?;
+          fs::copy(&source_path, &dest_path).map_err(|e| format!("Failed to copy file: {}", e))?;
+          if let Err(e) = fs::remove_file(&source_path) {
+            let _ = fs::remove_file(&dest_path);
+            rollback_moves(&moved_items);
+            return Err(format!("Failed to remove original file: {}", e));
+          }
         }
+        moved_items.push((source_path.clone(), dest_path.clone()));
       }
       "copy" => {
         if source_path.is_dir() {
@@ -205,6 +207,7 @@ pub fn cmd_set_and_relocate_data(
   }
 
   user_settings_service::set_custom_db_path(&new_parent_dir_path)?;
+  crate::db::reinitialize_connection_pool();
 
   Ok(format!(
     "Data successfully {} to {}. Please restart the application.",
@@ -218,6 +221,7 @@ pub fn cmd_set_and_relocate_data(
 pub fn cmd_revert_to_default_data_location() -> Result<String, String> {
   // Simply remove the custom database path setting
   remove_custom_db_path()?;
+  crate::db::reinitialize_connection_pool();
 
   Ok("Custom database location setting removed successfully.".to_string())
 }
