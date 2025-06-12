@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api'
 import { open } from '@tauri-apps/api/dialog'
+import { type as getOsType } from '@tauri-apps/api/os'
 import { settingsStoreAtom, uiStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
 import {
@@ -137,9 +138,15 @@ export default function BackupRestoreSettings() {
   const handleCreateBackup = async () => {
     setIsCreatingBackup(true)
     try {
-      const backupPath = await invoke<string>('create_backup', {
+      let backupPath = await invoke<string>('create_backup', {
         includeImages,
       })
+
+      // Normalize path for Windows display
+      const osType = await getOsType()
+      if (osType === 'Windows_NT' && backupPath.startsWith('\\\\?\\')) {
+        backupPath = backupPath.substring(4)
+      }
 
       toast({
         id: 'backup-create-success',

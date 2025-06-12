@@ -8,7 +8,7 @@ Restore Data: Restaurar Datos
 Restore from File...: Restaurar desde Archivo...
 Select backup file: Seleccionar archivo de copia de seguridad
 Available Backups: Copias de Seguridad Disponibles
-Total backup space {{size}}: 'Espacio total de copia s: {{size}}'
+Total backup space {{size}}: 'Espacio total de respaldo: {{size}}'
 No backups found: No se encontraron copias de seguridad
 Restore: Restaurar
 Delete: Eliminar
