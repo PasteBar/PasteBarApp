@@ -11,6 +11,7 @@ export type ToasterToast = {
   description?: React.ReactNode
   open?: boolean
   className?: string
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'destructive' | 'info' | null
   onOpenChange?: (open: boolean) => void
   duration?: number
   onDismiss?: () => void

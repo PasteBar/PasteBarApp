@@ -1,3 +1,4 @@
+pub(crate) mod backup_restore_commands;
 pub(crate) mod clipboard_commands;
 pub(crate) mod collections_commands;
 pub(crate) mod download_update;

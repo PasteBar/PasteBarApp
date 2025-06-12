@@ -101,6 +101,7 @@ Enter Passcode: Enter Passcode
 Enter Password: Enter Password
 Enter Recovery Password: Enter Recovery Password
 Enter passcode or password to unlock: Enter passcode or password to unlock
+Error: Error
 Errors:
   Error loading link: Error loading link
   Cant save to file: Cant save to file
@@ -237,6 +238,7 @@ Set: Set
 Set Password: Set Password
 Show Large View: Show Large View
 Show all: Show all
+Size: Size
 Source: Source
 Split History Window: Split History Window
 Star: Star

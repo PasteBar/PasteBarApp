@@ -90,6 +90,23 @@ export default function AppSettingsPage() {
                 </NavLink>
 
                 <NavLink
+                  to="/app-settings/backup-restore"
+                  replace
+                  id="app-settings-backup-restore_tour"
+                >
+                  {({ isActive }) => (
+                    <Text
+                      className={`pr-5 text-right py-3 text-lg justify-end items-center animate fade-in transition-fonts duration-100 dark:!text-slate-400 ${
+                        isActive &&
+                        '!font-bold text-[19px] dark:!text-slate-300 !_text-slate-600'
+                      }`}
+                    >
+                      {t('Backup and Restore', { ns: 'backuprestore' })}
+                    </Text>
+                  )}
+                </NavLink>
+
+                <NavLink
                   to="/app-settings/security"
                   replace
                   id="app-settings-security_tour"

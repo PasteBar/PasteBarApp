@@ -521,7 +521,7 @@ div.note-content.release-notes {
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 100% 50%;
+    --destructive: 0 50% 50%;
     --destructive-foreground: 210 40% 98%;
 
     --ring: 215 20.2% 65.1%;
@@ -903,4 +903,8 @@ pre.code-editor-pre .token-line {
 .rsme-embed .twitter-tweet {
   overflow: hidden;
   border-radius: 13px;
+}
+
+.word-break {
+  word-break: break-word;
 }

@@ -1,0 +1,43 @@
+Auto Backup on Restore: Авто Бекап при Відновленні
+Backup and Restore: Резервне копіювання та відновлення
+Browse: Переглянути
+Create Backup: Створити резервну копію
+Include images in backup: Включити зображення в резервну копію
+Backup Now: Створити резервну копію зараз
+Restore Data: Відновити дані
+Restore from File...: Відновити з файлу...
+Select backup file: Вибрати файл резервної копії
+Available Backups: Доступні резервні копії
+Total backup space {{size}}: 'Загальний розмір резервних копій: {{size}}'
+No backups found: Резервні копії не знайдені
+Restore: Відновити
+Delete: Видалити
+Create a backup of your data?: Створити резервну копію ваших даних?
+Backup created successfully: Резервну копію успішно створено
+Move to another location?: Перемістити в інше місце?
+This will replace all current data. Are you sure?: Це замінить всі поточні дані. Ви впевнені?
+Restore from "{{filename}}"? This will replace all current data.: Відновити з {{filename}}? Це замінить всі поточні дані.
+Delete this backup? This action cannot be undone.: Видалити цю резервну копію? Цю дію неможливо скасувати.
+Restore completed. The application will restart.: Відновлення завершено. Додаток перезапуститься.
+Creating backup...: Створення резервної копії...
+Restoring backup...: Відновлення резервної копії...
+Backup deleted successfully: Резервну копію успішно видалено
+Failed to delete backup: Не вдалося видалити резервну копію
+Invalid backup file: Недійсний файл резервної копії
+The selected file is not a valid PasteBar backup: Вибраний файл не є дійсною резервною копією PasteBar
+Created: Створено
+Size: Розмір
+Failed to load backup list: Не вдалося завантажити список резервних копій
+Failed to create backup: Не вдалося створити резервну копію
+Restored from {{filename}}: Відновлено з {{filename}}
+Failed to restore backup: Не вдалося відновити резервну копію
+Backup Files: Файли резервних копій
+selected file: вибраний файл
+Failed to select backup file: Не вдалося вибрати файл резервної копії
+Failed to open backup folder: Не вдалося відкрити папку резервних копій
+This will create a backup file containing your database: Це створить файл резервної копії, що містить вашу базу даних
+and images: та зображення
+Loading backups...: Завантаження резервних копій...
+will be permanently deleted.: буде видалено назавжди.
+This action cannot be undone. All current data will be replaced with the backup data.: Цю дію неможливо скасувати. Всі поточні дані будуть замінені даними з резервної копії.
+Restoring a backup will automatically restart the application.: Відновлення резервної копії автоматично перезапустить додаток.

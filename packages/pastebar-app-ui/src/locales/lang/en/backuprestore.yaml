@@ -1,0 +1,46 @@
+Auto Backup on Restore: Auto Backup on Restore
+Available Backups: Available Backups
+Backup Files: Backup Files
+Backup Now: Backup Now
+Backup and Restore: Backup and Restore
+Backup created successfully: Backup created successfully
+Backup deleted successfully: Backup deleted successfully
+Backup on Restore: Backup on Restore
+Browse: Browse
+Create Backup: Create Backup
+Create a backup of your data?: Create a backup of your data?
+Created: Created
+Creating backup...: Creating backup...
+Delete: Delete
+Delete this backup? This action cannot be undone.: Delete this backup? This action cannot be undone.
+Failed to create backup: Failed to create backup
+Failed to delete backup: Failed to delete backup
+Failed to load backup list: Failed to load backup list
+Failed to open backup folder: Failed to open backup folder
+Failed to restore backup: Failed to restore backup
+Failed to select backup file: Failed to select backup file
+Include images in backup: Include images in backup
+Invalid backup file: Invalid backup file
+Loading backups...: Loading backups...
+Move to another location?: Move to another location?
+No backups found: No backups found
+Restore: Restore
+Restore Data: Restore Data
+Restore completed. The application will restart.: Restore completed. The application will restart.
+Restore from "{{filename}}"? This will replace all current data.: Restore from {{filename}}? This will replace all current data.
+Restore from File...: Restore from File...
+Restore from {{filename}}? This will replace all current data.: Restore from {{filename}}? This will replace all current data.
+Restored from {{filename}}: Restored from {{filename}}
+Restoring a backup will automatically restart the application.: Restoring a backup will automatically restart the application.
+Restoring backup...: Restoring backup...
+Restoring...: Restoring...
+Select backup file: Select backup file
+Size: Size
+The selected file is not a valid PasteBar backup: The selected file is not a valid PasteBar backup
+This action cannot be undone. All current data will be replaced with the backup data.: This action cannot be undone. All current data will be replaced with the backup data.
+This will create a backup file containing your database: This will create a backup file containing your database
+This will replace all current data. Are you sure?: This will replace all current data. Are you sure?
+Total backup space {{size}}: 'Total backup space: {{size}}'
+and images: and images
+selected file: selected file
+will be permanently deleted.: will be permanently deleted.

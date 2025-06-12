@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 local.pastebar.*
 safelist.txt
+pastebar-data-backup*
 
 clipboard-images/**/*
 clip-images/**/*

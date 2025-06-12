@@ -1,0 +1,43 @@
+Backup and Restore: Copia de Seguridad y Restauración
+Auto Backup on Restore: Copia Automática al Restaurar
+Browse: Explorar
+Create Backup: Crear Copia de Seguridad
+Include images in backup: Incluir imágenes en la copia de seguridad
+Backup Now: Crear Copia Ahora
+Restore Data: Restaurar Datos
+Restore from File...: Restaurar desde Archivo...
+Select backup file: Seleccionar archivo de copia de seguridad
+Available Backups: Copias de Seguridad Disponibles
+Total backup space {{size}}: 'Espacio total de respaldo: {{size}}'
+No backups found: No se encontraron copias de seguridad
+Restore: Restaurar
+Delete: Eliminar
+Create a backup of your data?: ¿Crear una copia de seguridad de tus datos?
+Backup created successfully: Copia de seguridad creada exitosamente
+Move to another location?: ¿Mover a otra ubicación?
+This will replace all current data. Are you sure?: Esto reemplazará todos los datos actuales. ¿Estás seguro?
+Restore from "{{filename}}"? This will replace all current data.: ¿Restaurar desde {{filename}}? Esto reemplazará todos los datos actuales.
+Delete this backup? This action cannot be undone.: ¿Eliminar esta copia de seguridad? Esta acción no se puede deshacer.
+Restore completed. The application will restart.: Restauración completada. La aplicación se reiniciará.
+Creating backup...: Creando copia de seguridad...
+Restoring backup...: Restaurando copia de seguridad...
+Backup deleted successfully: Copia de seguridad eliminada exitosamente
+Failed to delete backup: Error al eliminar la copia de seguridad
+Invalid backup file: Archivo de copia de seguridad inválido
+The selected file is not a valid PasteBar backup: El archivo seleccionado no es una copia de seguridad válida de PasteBar
+Created: Creado
+Size: Tamaño
+Failed to load backup list: Error al cargar la lista de copias de seguridad
+Failed to create backup: Error al crear la copia de seguridad
+Restored from {{filename}}: Restaurado desde {{filename}}
+Failed to restore backup: Error al restaurar la copia de seguridad
+Backup Files: Archivos de Copia de Seguridad
+selected file: archivo seleccionado
+Failed to select backup file: Error al seleccionar el archivo de copia de seguridad
+Failed to open backup folder: Error al abrir la carpeta de copia de seguridad
+This will create a backup file containing your database: Esto creará un archivo de copia de seguridad que contiene tu base de datos
+and images: e imágenes
+Loading backups...: Cargando copias de seguridad...
+will be permanently deleted.: será eliminado permanentemente.
+This action cannot be undone. All current data will be replaced with the backup data.: Esta acción no se puede deshacer. Todos los datos actuales serán reemplazados con los datos de la copia de seguridad.
+Restoring a backup will automatically restart the application.: Restaurar una copia de seguridad reiniciará automáticamente la aplicación.

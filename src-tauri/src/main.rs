@@ -52,6 +52,7 @@ use crate::services::settings_service::get_all_settings;
 use crate::services::translations::translations::Translations;
 use crate::services::utils::ensure_url_or_email_prefix;
 use crate::services::utils::remove_special_bbcode_tags;
+use commands::backup_restore_commands;
 use commands::clipboard_commands;
 use commands::collections_commands;
 use commands::download_update;
@@ -1102,6 +1103,11 @@ async fn main() {
       app_ready,
       get_app_settings,
       update_setting,
+      backup_restore_commands::create_backup,
+      backup_restore_commands::list_backups,
+      backup_restore_commands::restore_backup,
+      backup_restore_commands::delete_backup,
+      backup_restore_commands::get_data_paths,
       tabs_commands::delete_tab,
       tabs_commands::create_tab,
       tabs_commands::update_tab,
