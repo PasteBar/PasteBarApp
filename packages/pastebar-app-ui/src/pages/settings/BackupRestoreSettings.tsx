@@ -310,18 +310,62 @@ export default function BackupRestoreSettings() {
     }
   }
 
-  const handleBrowseBackupFolder = async (backupPath: string) => {
+  const handleBrowseBackupFolder = async (backupFilePath: string) => {
     try {
-      // Extract directory from the backup file path
-      const backupDir = backupPath.substring(
-        0,
-        backupPath.lastIndexOf('/') || backupPath.lastIndexOf('\\')
-      )
-      await invoke('open_path_or_app', { path: backupDir })
+      let dirPath = ''
+      const lastSlash = backupFilePath.lastIndexOf('/')
+      const lastBackslash = backupFilePath.lastIndexOf('\\')
+      const separatorIndex = Math.max(lastSlash, lastBackslash)
+
+      if (separatorIndex > -1) {
+        dirPath = backupFilePath.substring(0, separatorIndex)
+      } else {
+        console.error('Could not determine directory from backup path:', backupFilePath)
+        toast({
+          id: 'backup-open-error-no-dir',
+          title: t('Error', { ns: 'common' }),
+          duration: 3000,
+          description: (
+            <Box className="word-break">
+              {t('Could not determine backup folder location from path {{path}}', {
+                ns: 'backuprestore',
+                path: backupFilePath,
+              })}
+            </Box>
+          ),
+          variant: 'destructive',
+        })
+        return
+      }
+
+      const osType = await getOsType()
+      if (osType === 'Windows_NT' && dirPath.startsWith('\\\\?\\')) {
+        dirPath = dirPath.substring(4)
+      }
+
+      if (!dirPath) {
+        console.error('Derived directory path is empty for backup path:', backupFilePath)
+        toast({
+          id: 'backup-open-error-empty-dir',
+          title: t('Error', { ns: 'common' }),
+          duration: 3000,
+          description: (
+            <Box className="word-break">
+              {t('Failed to derive a valid backup folder location.', {
+                ns: 'backuprestore',
+              })}
+            </Box>
+          ),
+          variant: 'destructive',
+        })
+        return
+      }
+
+      await invoke('open_path_or_app', { path: dirPath })
     } catch (error) {
       console.error('Failed to open backup folder:', error)
       toast({
-        id: 'backup-open-error',
+        id: 'backup-open-error', // Existing ID for this general error
         title: t('Error', { ns: 'common' }),
         duration: 3000,
         description: (
