@@ -1,0 +1,27 @@
+Backup and Restore: Backup and Restore
+Create Backup: Create Backup
+Include images in backup: Include images in backup
+Backup Now: Backup Now
+Restore Data: Restore Data
+Restore from File...: Restore from File...
+Select backup file: Select backup file
+Available Backups: Available Backups
+Total backup space: "{{size}}": Total backup space: {{size}}
+No backups found: No backups found
+Restore: Restore
+Delete: Delete
+Create a backup of your data?: Create a backup of your data?
+Backup created successfully: Backup created successfully
+Move to another location?: Move to another location?
+This will replace all current data. Are you sure?: This will replace all current data. Are you sure?
+Restore from "{{filename}}"? This will replace all current data.: Restore from {{filename}}? This will replace all current data.
+Delete this backup? This action cannot be undone.: Delete this backup? This action cannot be undone.
+Restore completed. The application will restart.: Restore completed. The application will restart.
+Creating backup...: Creating backup...
+Restoring backup...: Restoring backup...
+Backup deleted successfully: Backup deleted successfully
+Failed to delete backup: Failed to delete backup
+Invalid backup file: Invalid backup file
+The selected file is not a valid PasteBar backup: The selected file is not a valid PasteBar backup
+Created: Created
+Size: Size

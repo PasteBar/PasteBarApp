@@ -1,0 +1,27 @@
+Backup and Restore: Резервное копирование и восстановление
+Create Backup: Создать резервную копию
+Include images in backup: Включить изображения в резервную копию
+Backup Now: Создать резервную копию сейчас
+Restore Data: Восстановить данные
+Restore from File...: Восстановить из файла...
+Select backup file: Выбрать файл резервной копии
+Available Backups: Доступные резервные копии
+Total backup space: "{{size}}": Общий размер резервных копий: {{size}}
+No backups found: Резервные копии не найдены
+Restore: Восстановить
+Delete: Удалить
+Create a backup of your data?: Создать резервную копию ваших данных?
+Backup created successfully: Резервная копия успешно создана
+Move to another location?: Переместить в другое место?
+This will replace all current data. Are you sure?: Это заменит все текущие данные. Вы уверены?
+Restore from "{{filename}}"? This will replace all current data.: Восстановить из {{filename}}? Это заменит все текущие данные.
+Delete this backup? This action cannot be undone.: Удалить эту резервную копию? Это действие нельзя отменить.
+Restore completed. The application will restart.: Восстановление завершено. Приложение перезапустится.
+Creating backup...: Создание резервной копии...
+Restoring backup...: Восстановление резервной копии...
+Backup deleted successfully: Резервная копия успешно удалена
+Failed to delete backup: Не удалось удалить резервную копию
+Invalid backup file: Недействительный файл резервной копии
+The selected file is not a valid PasteBar backup: Выбранный файл не является действительной резервной копией PasteBar
+Created: Создано
+Size: Размер

@@ -1,0 +1,27 @@
+Backup and Restore: Copia de Seguridad y Restauración
+Create Backup: Crear Copia de Seguridad
+Include images in backup: Incluir imágenes en la copia de seguridad
+Backup Now: Crear Copia Ahora
+Restore Data: Restaurar Datos
+Restore from File...: Restaurar desde Archivo...
+Select backup file: Seleccionar archivo de copia de seguridad
+Available Backups: Copias de Seguridad Disponibles
+Total backup space: "{{size}}": Espacio total de copias: {{size}}
+No backups found: No se encontraron copias de seguridad
+Restore: Restaurar
+Delete: Eliminar
+Create a backup of your data?: ¿Crear una copia de seguridad de tus datos?
+Backup created successfully: Copia de seguridad creada exitosamente
+Move to another location?: ¿Mover a otra ubicación?
+This will replace all current data. Are you sure?: Esto reemplazará todos los datos actuales. ¿Estás seguro?
+Restore from "{{filename}}"? This will replace all current data.: ¿Restaurar desde {{filename}}? Esto reemplazará todos los datos actuales.
+Delete this backup? This action cannot be undone.: ¿Eliminar esta copia de seguridad? Esta acción no se puede deshacer.
+Restore completed. The application will restart.: Restauración completada. La aplicación se reiniciará.
+Creating backup...: Creando copia de seguridad...
+Restoring backup...: Restaurando copia de seguridad...
+Backup deleted successfully: Copia de seguridad eliminada exitosamente
+Failed to delete backup: Error al eliminar la copia de seguridad
+Invalid backup file: Archivo de copia de seguridad inválido
+The selected file is not a valid PasteBar backup: El archivo seleccionado no es una copia de seguridad válida de PasteBar
+Created: Creado
+Size: Tamaño

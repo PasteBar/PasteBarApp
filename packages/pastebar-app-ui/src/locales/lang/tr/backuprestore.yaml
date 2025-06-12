@@ -1,0 +1,27 @@
+Backup and Restore: Yedekleme ve Geri Yükleme
+Create Backup: Yedek Oluştur
+Include images in backup: Yedekte görselleri dahil et
+Backup Now: Şimdi Yedekle
+Restore Data: Verileri Geri Yükle
+Restore from File...: Dosyadan Geri Yükle...
+Select backup file: Yedek dosyası seç
+Available Backups: Mevcut Yedekler
+Total backup space: "{{size}}": Toplam yedek alanı: {{size}}
+No backups found: Yedek bulunamadı
+Restore: Geri Yükle
+Delete: Sil
+Create a backup of your data?: Verilerinizin bir yedeğini oluşturmak istiyor musunuz?
+Backup created successfully: Yedek başarıyla oluşturuldu
+Move to another location?: Başka bir konuma taşı?
+This will replace all current data. Are you sure?: Bu, mevcut tüm verileri değiştirecek. Emin misiniz?
+Restore from "{{filename}}"? This will replace all current data.: {{filename}} dosyasından geri yüklensin mi? Bu, mevcut tüm verileri değiştirecek.
+Delete this backup? This action cannot be undone.: Bu yedeği sil? Bu eylem geri alınamaz.
+Restore completed. The application will restart.: Geri yükleme tamamlandı. Uygulama yeniden başlatılacak.
+Creating backup...: Yedek oluşturuluyor...
+Restoring backup...: Yedek geri yükleniyor...
+Backup deleted successfully: Yedek başarıyla silindi
+Failed to delete backup: Yedek silinemedi
+Invalid backup file: Geçersiz yedek dosyası
+The selected file is not a valid PasteBar backup: Seçilen dosya geçerli bir PasteBar yedeği değil
+Created: Oluşturulma
+Size: Boyut

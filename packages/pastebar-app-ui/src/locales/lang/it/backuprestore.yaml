@@ -1,0 +1,27 @@
+Backup and Restore: Backup e Ripristino
+Create Backup: Crea Backup
+Include images in backup: Includi immagini nel backup
+Backup Now: Crea Backup Ora
+Restore Data: Ripristina Dati
+Restore from File...: Ripristina da File...
+Select backup file: Seleziona file di backup
+Available Backups: Backup Disponibili
+Total backup space: "{{size}}": Spazio totale backup: {{size}}
+No backups found: Nessun backup trovato
+Restore: Ripristina
+Delete: Elimina
+Create a backup of your data?: Creare un backup dei tuoi dati?
+Backup created successfully: Backup creato con successo
+Move to another location?: Spostare in un'altra posizione?
+This will replace all current data. Are you sure?: Questo sostituirà tutti i dati attuali. Sei sicuro?
+Restore from "{{filename}}"? This will replace all current data.: Ripristinare da {{filename}}? Questo sostituirà tutti i dati attuali.
+Delete this backup? This action cannot be undone.: Eliminare questo backup? Questa azione non può essere annullata.
+Restore completed. The application will restart.: Ripristino completato. L'applicazione si riavvierà.
+Creating backup...: Creazione backup...
+Restoring backup...: Ripristino backup...
+Backup deleted successfully: Backup eliminato con successo
+Failed to delete backup: Impossibile eliminare il backup
+Invalid backup file: File di backup non valido
+The selected file is not a valid PasteBar backup: Il file selezionato non è un backup PasteBar valido
+Created: Creato
+Size: Dimensione

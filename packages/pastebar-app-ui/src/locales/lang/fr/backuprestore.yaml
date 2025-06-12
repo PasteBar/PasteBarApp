@@ -1,0 +1,27 @@
+Backup and Restore: Sauvegarde et Restauration
+Create Backup: Créer une Sauvegarde
+Include images in backup: Inclure les images dans la sauvegarde
+Backup Now: Sauvegarder Maintenant
+Restore Data: Restaurer les Données
+Restore from File...: Restaurer depuis un Fichier...
+Select backup file: Sélectionner le fichier de sauvegarde
+Available Backups: Sauvegardes Disponibles
+Total backup space: "{{size}}": Espace total des sauvegardes: {{size}}
+No backups found: Aucune sauvegarde trouvée
+Restore: Restaurer
+Delete: Supprimer
+Create a backup of your data?: Créer une sauvegarde de vos données?
+Backup created successfully: Sauvegarde créée avec succès
+Move to another location?: Déplacer vers un autre emplacement?
+This will replace all current data. Are you sure?: Ceci remplacera toutes les données actuelles. Êtes-vous sûr?
+Restore from "{{filename}}"? This will replace all current data.: Restaurer depuis {{filename}}? Ceci remplacera toutes les données actuelles.
+Delete this backup? This action cannot be undone.: Supprimer cette sauvegarde? Cette action ne peut pas être annulée.
+Restore completed. The application will restart.: Restauration terminée. L'application va redémarrer.
+Creating backup...: Création de la sauvegarde...
+Restoring backup...: Restauration de la sauvegarde...
+Backup deleted successfully: Sauvegarde supprimée avec succès
+Failed to delete backup: Échec de la suppression de la sauvegarde
+Invalid backup file: Fichier de sauvegarde invalide
+The selected file is not a valid PasteBar backup: Le fichier sélectionné n'est pas une sauvegarde PasteBar valide
+Created: Créé
+Size: Taille
