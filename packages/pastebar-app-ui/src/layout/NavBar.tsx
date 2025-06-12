@@ -191,6 +191,8 @@ export function NavBar() {
     setIsShowDisabledCollectionsOnNavBarMenu,
     isShowNavBarItemsOnHoverOnly,
     isHideCollectionsOnNavBar,
+    isImageCaptureDisabled,
+    setIsImageCaptureDisabled,
   } = useAtomValue(settingsStoreAtom)
 
   const {
@@ -641,6 +643,23 @@ export function NavBar() {
                       <MenubarShortcut className="ml-auto">
                         <Shortcut keys="CTRL+A" />
                       </MenubarShortcut>
+                    </MenubarCheckboxItem>
+                    <MenubarCheckboxItem
+                      checked={!isImageCaptureDisabled}
+                      onClick={e => {
+                        e.preventDefault()
+                        setIsImageCaptureDisabled(!isImageCaptureDisabled)
+                      }}
+                    >
+                      <Text
+                        className={`mr-2 ${
+                          isImageCaptureDisabled
+                            ? 'text-slate-900/50'
+                            : 'text-slate-800'
+                        }`}
+                      >
+                        {t('Enable Image Capture', { ns: 'history' })}
+                      </Text>
                     </MenubarCheckboxItem>
                     <MenubarSeparator />
                     <MenubarItem

@@ -182,3 +182,38 @@ Web Scraping and Parsing: Web Kazıma ve Ayrıştırma
 Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Aşağıda listelenen kelimeler veya cümleler kopyalanan metinde bulunursa pano geçmişine kaydedilmeyecektir. Büyük/küçük harf duyarlı değildir.
 passcode reset: parolayı sıfırla
 password reset: şifreyi sıfırla
+Apply and Restart: Uygula ve Yeniden Başlat
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: '"{{path}}" yeni veri klasörü olarak ayarlamak istediğinizden emin misiniz? Uygulama yeniden başlayacak.'
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: 'Veritabanını "{{path}}" konumuna {{operation}} yapmak istediğinizden emin misiniz? Uygulama yeniden başlayacak.'
+Change Custom Data Folder...: Özel Veri Klasörünü Değiştir...
+Change Selected Folder...: Seçili Klasörü Değiştir...
+Changing the database location requires an application restart to take effect.: Veritabanı konumunu değiştirmek, etkili olması için uygulamanın yeniden başlatılmasını gerektirir.
+ConfirmRevertToDefaultDbPathMessage: Varsayılan veri konumuna geri dönmek istediğinizden emin misiniz? Uygulama verileriniz varsayılan yola taşınacak.
+Copy data: Veriyi kopyala
+Current data folder: Mevcut veri klasörü
+Custom Application Data Location: Özel Uygulama Veri Konumu
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: Özel veri konumu aktif. Değiştirebilir veya varsayılan konuma geri dönebilirsiniz. Değişiklikler uygulama yeniden başlatma gerektirir.
+Default: Varsayılan
+Enable custom data location to store application data in a directory of your choice instead of the default location.: Uygulama verilerini varsayılan konum yerine seçtiğiniz bir dizinde depolamak için özel veri konumunu etkinleştirin.
+Failed to apply custom database location.: Özel veritabanı konumu uygulanamadı.
+Failed to create directory. Please check permissions and try again.: Dizin oluşturulamadı. Lütfen izinleri kontrol edin ve tekrar deneyin.
+Failed to revert to default database location.: Varsayılan veritabanı konumuna geri dönülemedi.
+Found existing "pastebar-data" folder. The application will use this folder to store data.: Mevcut "pastebar-data" klasörü bulundu. Uygulama verileri depolamak için bu klasörü kullanacak.
+Invalid directory selected.: Geçersiz dizin seçildi.
+Operation when applying new path: Yeni yol uygulanırken işlem
+Please select a directory first.: Lütfen önce bir dizin seçin.
+Please select a new directory different from the current one.: Lütfen mevcut olandan farklı yeni bir dizin seçin.
+Revert to Default: Varsayılana Dön
+Select Data Folder: Veri Klasörü Seç
+Select Data Folder...: Veri Klasörü Seç...
+Select a custom location to store your application data instead of the default location.: Uygulama verilerinizi varsayılan konum yerine depolamak için özel bir konum seçin.
+Selected data folder: Seçili veri klasörü
+Selected new data folder for change: Değişiklik için seçili yeni veri klasörü
+Setting a custom database location requires an application restart to take effect.: Özel veritabanı konumu ayarlamak, etkili olması için uygulama yeniden başlatması gerektirir.
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: Seçili klasör boş değil ve PasteBar veri dosyalarını içermiyor. Verileri depolamak için "pastebar-data" alt klasörü oluşturmak istiyor musunuz?
+This folder already contains PasteBar data. The application will use this existing data after restart.: Bu klasör zaten PasteBar verileri içeriyor. Uygulama yeniden başlatıldıktan sonra mevcut verileri kullanacak.
+Use new location: Yeni konumu kullan
+An error occurred during directory processing.: Dizin işleme sırasında bir hata oluştu.
+An error occurred during directory selection or setup.: Dizin seçimi veya kurulumu sırasında bir hata oluştu.
+Disable Image Capture: Görüntü Yakalamayı Devre Dışı Bırak
+Disable capturing and storing images from clipboard: Panodan görüntü yakalama ve depolamayı devre dışı bırak

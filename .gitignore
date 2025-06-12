@@ -12,6 +12,7 @@ safelist.txt
 clipboard-images/**/*
 clip-images/**/*
 src-tauri/http-cacache/**/*
+pastebar_settings.yaml
 
 node_modules
 packages/dist-ui/**/*

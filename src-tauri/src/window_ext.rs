@@ -39,11 +39,32 @@ impl<R: Runtime> WindowToolBar for Window<R> {
       let miniaturize = window.standardWindowButton_(NSWindowButton::NSWindowMiniaturizeButton);
       let zoom = window.standardWindowButton_(NSWindowButton::NSWindowZoomButton);
 
-      window
-        .standardWindowButton_(NSWindowButton::NSWindowDocumentIconButton)
-        .setCanHide_(cocoa::base::YES);
+      // Check if standard buttons exist
+      if close.is_null() || miniaturize.is_null() || zoom.is_null() {
+        eprintln!("Warning: Window buttons are null, skipping traffic light positioning");
+        return;
+      }
 
-      let title_bar_container_view = close.superview().superview();
+      let document_icon = window.standardWindowButton_(NSWindowButton::NSWindowDocumentIconButton);
+      if !document_icon.is_null() {
+        let mut doc_rect: NSRect = NSView::frame(document_icon);
+        doc_rect.origin.x = -200.0; // Move it off-screen
+                                    // document_icon.setFrameOrigin(doc_rect.origin);
+                                    // document_icon.setCanHide_(cocoa::base::YES);
+      }
+
+      // Check superviews exist
+      let superview = close.superview();
+      if superview.is_null() {
+        eprintln!("Warning: Close button superview is null");
+        return;
+      }
+
+      let title_bar_container_view = superview.superview();
+      if title_bar_container_view.is_null() {
+        eprintln!("Warning: Title bar container view is null");
+        return;
+      }
 
       let close_rect: NSRect = msg_send![close, frame];
       let button_height = close_rect.size.height;

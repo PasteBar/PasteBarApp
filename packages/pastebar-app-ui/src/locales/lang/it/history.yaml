@@ -11,6 +11,7 @@ Confirm Clear All History: Conferma Cancellazione di Tutta la Cronologia
 Do you really want to remove ALL clipboard history items?: Vuoi davvero rimuovere TUTTI gli elementi della cronologia degli appunti?
 Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Vuoi rimuovere gli elementi della cronologia degli appunti più vecchi di {{olderThen}} {{durationType}}
 Enable Capture History: Abilita Cattura Cronologia
+Enable Image Capture: Abilita Cattura Immagini
 Filters:
   App Filters: Filtri App
   Audio: Audio

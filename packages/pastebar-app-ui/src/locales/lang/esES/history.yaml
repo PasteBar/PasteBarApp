@@ -11,6 +11,7 @@ Confirm Clear All History: Confirmar Borrar Todo el Historial
 Do you really want to remove ALL clipboard history items?: ¿Realmente quieres eliminar TODOS los elementos del historial?
 Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: ¿Quieres eliminar los elementos del historial más antiguos que {{olderThen}} {{durationType}}?
 Enable Capture History: Habilitar Captura de Historial
+Enable Image Capture: Habilitar Captura de Imágenes
 Filters:
   App Filters: Filtros de App
   Audio: Audio

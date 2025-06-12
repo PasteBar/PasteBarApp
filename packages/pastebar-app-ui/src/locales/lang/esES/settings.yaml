@@ -179,3 +179,38 @@ Web Scraping and Parsing: Web Scraping y Análisis
 Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Las palabras o frases listadas abajo no serán capturadas en el historial del portapapeles si se encuentran en el texto copiado. No distingue mayúsculas y minúsculas.
 passcode reset: restablecimiento de código
 password reset: restablecimiento de contraseña
+Apply and Restart: Aplicar y Reiniciar
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: ¿Estás seguro de que quieres establecer "{{path}}" como la nueva carpeta de datos? La aplicación se reiniciará.
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: ¿Estás seguro de que quieres {{operation}} la base de datos a "{{path}}"? La aplicación se reiniciará.
+Change Custom Data Folder...: Cambiar Carpeta de Datos Personalizada...
+Change Selected Folder...: Cambiar Carpeta Seleccionada...
+Changing the database location requires an application restart to take effect.: Cambiar la ubicación de la base de datos requiere reiniciar la aplicación para que surta efecto.
+ConfirmRevertToDefaultDbPathMessage: ¿Estás seguro de que quieres revertir a la ubicación de datos predeterminada? Los datos de tu aplicación se moverán a la ruta predeterminada.
+Copy data: Copiar datos
+Current data folder: Carpeta de datos actual
+Custom Application Data Location: Ubicación de Datos de Aplicación Personalizada
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: La ubicación de datos personalizada está activa. Puedes cambiarla o revertir a la ubicación predeterminada. Los cambios requieren reiniciar la aplicación.
+Default: Predeterminado
+Enable custom data location to store application data in a directory of your choice instead of the default location.: Habilitar ubicación de datos personalizada para almacenar datos de la aplicación en un directorio de tu elección en lugar de la ubicación predeterminada.
+Failed to apply custom database location.: Error al aplicar la ubicación de base de datos personalizada.
+Failed to create directory. Please check permissions and try again.: Error al crear directorio. Por favor verifica los permisos e intenta de nuevo.
+Failed to revert to default database location.: Error al revertir a la ubicación de base de datos predeterminada.
+Found existing "pastebar-data" folder. The application will use this folder to store data.: Se encontró una carpeta "pastebar-data" existente. La aplicación usará esta carpeta para almacenar datos.
+Invalid directory selected.: Directorio seleccionado inválido.
+Operation when applying new path: Operación al aplicar nueva ruta
+Please select a directory first.: Por favor selecciona un directorio primero.
+Please select a new directory different from the current one.: Por favor selecciona un directorio nuevo diferente al actual.
+Revert to Default: Revertir a Predeterminado
+Select Data Folder: Seleccionar Carpeta de Datos
+Select Data Folder...: Seleccionar Carpeta de Datos...
+Select a custom location to store your application data instead of the default location.: Selecciona una ubicación personalizada para almacenar los datos de tu aplicación en lugar de la ubicación predeterminada.
+Selected data folder: Carpeta de datos seleccionada
+Selected new data folder for change: Nueva carpeta de datos seleccionada para cambio
+Setting a custom database location requires an application restart to take effect.: Establecer una ubicación de base de datos personalizada requiere reiniciar la aplicación para que surta efecto.
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: La carpeta seleccionada no está vacía y no contiene archivos de datos de PasteBar. ¿Quieres crear una subcarpeta "pastebar-data" para almacenar los datos?
+This folder already contains PasteBar data. The application will use this existing data after restart.: Esta carpeta ya contiene datos de PasteBar. La aplicación usará estos datos existentes después del reinicio.
+Use new location: Usar nueva ubicación
+An error occurred during directory processing.: Ocurrió un error durante el procesamiento del directorio.
+An error occurred during directory selection or setup.: Ocurrió un error durante la selección o configuración del directorio.
+Disable Image Capture: Deshabilitar Captura de Imágenes
+Disable capturing and storing images from clipboard: Deshabilitar la captura y almacenamiento de imágenes del portapapeles

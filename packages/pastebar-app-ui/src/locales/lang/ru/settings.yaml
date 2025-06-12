@@ -165,3 +165,38 @@ Web Scraping and Parsing: Веб-скрейпинг и анализ
 Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: Слова или предложения, перечисленные ниже, не будут захватываться в историю буфера обмена, если они будут найдены в скопированном тексте. Без учета регистра.
 passcode reset: сброс кода доступа
 password reset: сброс пароля
+Apply and Restart: Применить и перезапустить
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: Вы уверены, что хотите установить "{{path}}" как новую папку данных? Приложение будет перезапущено.
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: Вы уверены, что хотите {{operation}} базу данных в "{{path}}"? Приложение будет перезапущено.
+Change Custom Data Folder...: Изменить пользовательскую папку данных...
+Change Selected Folder...: Изменить выбранную папку...
+Changing the database location requires an application restart to take effect.: Изменение расположения базы данных требует перезапуска приложения для вступления в силу.
+ConfirmRevertToDefaultDbPathMessage: Вы уверены, что хотите вернуться к расположению данных по умолчанию? Данные вашего приложения будут перемещены в путь по умолчанию.
+Copy data: Копировать данные
+Current data folder: Текущая папка данных
+Custom Application Data Location: Пользовательское расположение данных приложения
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: Пользовательское расположение данных активно. Вы можете изменить его или вернуться к расположению по умолчанию. Изменения требуют перезапуска приложения.
+Default: По умолчанию
+Enable custom data location to store application data in a directory of your choice instead of the default location.: Включить пользовательское расположение данных для хранения данных приложения в выбранной вами директории вместо расположения по умолчанию.
+Failed to apply custom database location.: Не удалось применить пользовательское расположение базы данных.
+Failed to create directory. Please check permissions and try again.: Не удалось создать директорию. Проверьте разрешения и попробуйте снова.
+Failed to revert to default database location.: Не удалось вернуться к расположению базы данных по умолчанию.
+Found existing "pastebar-data" folder. The application will use this folder to store data.: Найдена существующая папка "pastebar-data". Приложение будет использовать эту папку для хранения данных.
+Invalid directory selected.: Выбрана недопустимая директория.
+Operation when applying new path: Операция при применении нового пути
+Please select a directory first.: Пожалуйста, сначала выберите директорию.
+Please select a new directory different from the current one.: Пожалуйста, выберите новую директорию, отличную от текущей.
+Revert to Default: Вернуться к умолчанию
+Select Data Folder: Выбрать папку данных
+Select Data Folder...: Выбрать папку данных...
+Select a custom location to store your application data instead of the default location.: Выберите пользовательское расположение для хранения данных приложения вместо расположения по умолчанию.
+Selected data folder: Выбранная папка данных
+Selected new data folder for change: Выбранная новая папка данных для изменения
+Setting a custom database location requires an application restart to take effect.: Установка пользовательского расположения базы данных требует перезапуска приложения для вступления в силу.
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: Выбранная папка не пуста и не содержит файлов данных PasteBar. Хотите создать подпапку "pastebar-data" для хранения данных?
+This folder already contains PasteBar data. The application will use this existing data after restart.: Эта папка уже содержит данные PasteBar. Приложение будет использовать эти существующие данные после перезапуска.
+Use new location: Использовать новое расположение
+An error occurred during directory processing.: Произошла ошибка при обработке директории.
+An error occurred during directory selection or setup.: Произошла ошибка при выборе или настройке директории.
+Disable Image Capture: Отключить Захват Изображений
+Disable capturing and storing images from clipboard: Отключить захват и сохранение изображений из буфера обмена

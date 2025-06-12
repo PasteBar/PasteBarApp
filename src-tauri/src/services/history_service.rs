@@ -32,7 +32,7 @@ use std::path::{Path, PathBuf};
 
 use std::io::Cursor;
 
-use crate::db::APP_CONSTANTS;
+use crate::db::{self, APP_CONSTANTS};
 use crate::schema::clipboard_history;
 use crate::schema::clipboard_history::dsl::*;
 use crate::schema::link_metadata;
@@ -187,6 +187,13 @@ impl ClipboardHistoryWithMetaData {
     process_history_item(&mut history_with_metadata, auto_mask_words_list);
     history_with_metadata
   }
+
+  /// Transforms the image_path_full_res field from relative to absolute path for frontend consumption
+  pub fn transform_image_path_for_frontend(&mut self) {
+    if let Some(ref mut path) = self.image_path_full_res {
+      *path = crate::db::to_absolute_image_path(path);
+    }
+  }
 }
 
 pub fn get_source_apps_list() -> Result<Vec<Option<String>>, Error> {
@@ -226,11 +233,7 @@ pub fn add_clipboard_history_from_image(
   let _history_id = nanoid!().to_string();
   let folder_name = &_history_id[..3];
 
-  let base_dir = if cfg!(debug_assertions) {
-    &APP_CONSTANTS.get().unwrap().app_dev_data_dir
-  } else {
-    &APP_CONSTANTS.get().unwrap().app_data_dir
-  };
+  let base_dir = db::get_clipboard_images_dir();
 
   let (_image_width, _image_height) = image.dimensions();
 
@@ -279,16 +282,21 @@ pub fn add_clipboard_history_from_image(
       ))
       .execute(connection);
   } else {
-    let folder_path = base_dir.join("clipboard-images").join(folder_name);
+    let folder_path = base_dir.join(folder_name);
     ensure_dir_exists(&folder_path);
 
     let image_file_name = folder_path.join(format!("{}.png", &_history_id));
     let _ = image.save(&image_file_name);
 
+    // Convert absolute path to relative path before storing
+    let relative_image_path = image_file_name.to_str()
+      .map(|path| db::to_relative_image_path(path))
+      .unwrap_or_default();
+    
     let new_history = create_new_history(
       _history_id,
       _image_data_low_res,
-      image_file_name,
+      PathBuf::from(relative_image_path),
       image_hash_string,
       _preview_height.try_into().unwrap(),
       _image_height.try_into().unwrap(),
@@ -565,18 +573,25 @@ pub fn get_pinned_clipboard_histories(
   auto_mask_words_list: Vec<String>,
 ) -> Result<Vec<ClipboardHistoryWithMetaData>, Error> {
   let connection = &mut establish_pool_db_connection();
-  let histories = clipboard_history
+  let query_results = clipboard_history
     .left_join(
       link_metadata_dsl.on(link_metadata::history_id.eq(clipboard_history::history_id.nullable())),
     )
     .limit(20)
     .filter(is_pinned.eq(true))
-    .load::<(ClipboardHistory, Option<LinkMetadata>)>(connection)?
+    .load::<(ClipboardHistory, Option<LinkMetadata>)>(connection)?;
+
+  let mut histories: Vec<ClipboardHistoryWithMetaData> = query_results
     .into_iter()
     .map(|(history, link_metadata)| {
       ClipboardHistoryWithMetaData::from(history, link_metadata, &auto_mask_words_list)
     })
     .collect();
+
+  // Transform image paths for frontend consumption
+  for history in &mut histories {
+    history.transform_image_path_for_frontend();
+  }
 
   Ok(histories)
 }
@@ -591,19 +606,26 @@ pub fn get_clipboard_histories(
 
   let connection = &mut establish_pool_db_connection();
 
-  let histories: Vec<ClipboardHistoryWithMetaData> = clipboard_history
+  let query_results = clipboard_history
     .left_join(
       link_metadata_dsl.on(link_metadata::history_id.eq(clipboard_history::history_id.nullable())),
     )
     .order(updated_date.desc())
     .limit(limit)
     .offset(offset)
-    .load::<(ClipboardHistory, Option<LinkMetadata>)>(connection)?
+    .load::<(ClipboardHistory, Option<LinkMetadata>)>(connection)?;
+
+  let mut histories: Vec<ClipboardHistoryWithMetaData> = query_results
     .into_iter()
     .map(|(history, link_metadata)| {
       ClipboardHistoryWithMetaData::from(history, link_metadata, &auto_mask_words_list)
     })
     .collect();
+
+  // Transform image paths for frontend consumption
+  for history in &mut histories {
+    history.transform_image_path_for_frontend();
+  }
 
   Ok(histories)
 }
@@ -611,10 +633,15 @@ pub fn get_clipboard_histories(
 pub fn get_clipboard_history_by_id(history_id_value: &String) -> Option<ClipboardHistory> {
   let connection = &mut establish_pool_db_connection();
 
-  clipboard_history
+  let mut result = clipboard_history
     .find(history_id_value)
     .first::<ClipboardHistory>(connection)
-    .ok()
+    .ok()?;
+
+  // Transform image path for frontend consumption
+  result.transform_image_path_for_frontend();
+  
+  Some(result)
 }
 
 pub fn delete_clipboard_history_older_than(age: Duration) -> Result<String, diesel::result::Error> {
@@ -712,13 +739,7 @@ pub fn delete_recent_clipboard_history(
 pub fn delete_all_clipboard_histories() -> String {
   let connection = &mut establish_pool_db_connection();
 
-  let base_dir = if cfg!(debug_assertions) {
-    &APP_CONSTANTS.get().unwrap().app_dev_data_dir
-  } else {
-    &APP_CONSTANTS.get().unwrap().app_data_dir
-  };
-
-  let folder_path = base_dir.join("clipboard-images");
+  let folder_path = db::get_clipboard_images_dir();
 
   let _ = remove_dir_if_exists(&folder_path);
 
@@ -877,15 +898,22 @@ pub fn find_clipboard_histories_by_value_or_filter(
     }
   }
 
-  let histories = query_builder
+  let query_results = query_builder
     .order(updated_date.desc())
     .limit(max_results)
-    .load::<(ClipboardHistory, Option<LinkMetadata>)>(connection)?
+    .load::<(ClipboardHistory, Option<LinkMetadata>)>(connection)?;
+
+  let mut histories: Vec<ClipboardHistoryWithMetaData> = query_results
     .into_iter()
     .map(|(history, link_metadata)| {
       ClipboardHistoryWithMetaData::from(history, link_metadata, &auto_mask_words_list)
     })
-    .collect::<Vec<ClipboardHistoryWithMetaData>>();
+    .collect();
+
+  // Transform image paths for frontend consumption
+  for history in &mut histories {
+    history.transform_image_path_for_frontend();
+  }
 
   Ok(histories)
 }

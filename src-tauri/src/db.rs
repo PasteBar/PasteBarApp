@@ -4,12 +4,14 @@ use serde::Serialize;
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
+use std::sync::RwLock;
 use std::time::Duration;
 
 use diesel::connection::SimpleConnection;
 use diesel::prelude::*;
 use diesel::r2d2 as diesel_r2d2;
 
+use crate::services::user_settings_service::load_user_config;
 use diesel::sqlite::SqliteConnection;
 
 // use diesel::connection::{set_default_instrumentation, Instrumentation, InstrumentationEvent};
@@ -38,7 +40,7 @@ pub struct ConnectionOptions {
 }
 
 lazy_static! {
-  pub static ref DB_POOL_CONNECTION: Pool = init_connection_pool();
+  pub static ref DB_POOL_CONNECTION: RwLock<Pool> = RwLock::new(init_connection_pool());
 }
 
 impl diesel::r2d2::CustomizeConnection<SqliteConnection, diesel::r2d2::Error>
@@ -61,7 +63,7 @@ impl diesel::r2d2::CustomizeConnection<SqliteConnection, diesel::r2d2::Error>
   }
 }
 
-fn adjust_canonicalization<P: AsRef<Path>>(p: P) -> String {
+pub fn adjust_canonicalization<P: AsRef<Path>>(p: P) -> String {
   const VERBATIM_PREFIX: &str = r#"\\?\"#;
   let p = p.as_ref().display().to_string();
   if p.starts_with(VERBATIM_PREFIX) {
@@ -89,6 +91,12 @@ fn init_connection_pool() -> Pool {
     }))
     .build(manager)
     .expect("Failed to create db pool.")
+}
+
+pub fn reinitialize_connection_pool() {
+  let new_pool = init_connection_pool();
+  let mut pool_lock = DB_POOL_CONNECTION.write().unwrap();
+  *pool_lock = new_pool;
 }
 
 pub fn init(app: &mut tauri::App) {
@@ -181,6 +189,8 @@ pub fn establish_pool_db_connection(
   });
 
   DB_POOL_CONNECTION
+    .read()
+    .unwrap()
     .get()
     .unwrap_or_else(|_| panic!("Error connecting to db pool"))
 }
@@ -216,40 +226,163 @@ fn db_file_exists() -> bool {
   Path::new(&db_path).exists()
 }
 
-fn get_db_path() -> String {
-  if cfg!(debug_assertions) {
-    let app_dir = APP_CONSTANTS.get().unwrap().app_dev_data_dir.clone();
-    let path = if cfg!(target_os = "macos") {
-      format!(
-        "{}/local.pastebar-db.data",
-        adjust_canonicalization(app_dir)
-      )
-    } else if cfg!(target_os = "windows") {
-      format!(
-        "{}\\local.pastebar-db.data",
-        adjust_canonicalization(app_dir)
-      )
-    } else {
-      format!(
-        "{}/local.pastebar-db.data",
-        adjust_canonicalization(app_dir)
-      )
-    };
-
-    path
+/// Returns the base directory for application data.
+/// This will be a `pastebar-data` subdirectory if a custom path is set.
+pub fn get_data_dir() -> PathBuf {
+  let user_config = load_user_config();
+  if let Some(custom_path_str) = user_config.custom_db_path {
+    PathBuf::from(custom_path_str)
   } else {
+    get_default_data_dir()
+  }
+}
+
+/// Returns the default application data directory.
+pub fn get_default_data_dir() -> PathBuf {
+  if cfg!(debug_assertions) {
+    APP_CONSTANTS.get().unwrap().app_dev_data_dir.clone()
+  } else {
+    APP_CONSTANTS.get().unwrap().app_data_dir.clone()
+  }
+}
+
+pub fn get_db_path() -> String {
+  let filename = if cfg!(debug_assertions) {
+    "local.pastebar-db.data"
+  } else {
+    "pastebar-db.data"
+  };
+
+  let db_path = get_data_dir().join(filename);
+  db_path.to_string_lossy().into_owned()
+}
+
+/// Returns the path to the `clip-images` directory.
+pub fn get_clip_images_dir() -> PathBuf {
+  get_data_dir().join("clip-images")
+}
+
+/// Returns the path to the `clipboard-images` directory.
+pub fn get_clipboard_images_dir() -> PathBuf {
+  get_data_dir().join("clipboard-images")
+}
+
+/// Returns the default database file path as a string.
+pub fn get_default_db_path_string() -> String {
+  let db_path = get_default_data_dir().join("pastebar-db.data");
+  db_path.to_string_lossy().into_owned()
+}
+
+/// Converts an absolute image path to a relative path with {{base_folder}} placeholder
+pub fn to_relative_image_path(absolute_path: &str) -> String {
+  let data_dir = get_data_dir();
+  let data_dir_str = data_dir.to_string_lossy();
+
+  if absolute_path.starts_with(&data_dir_str.as_ref()) {
+    // Remove the data directory prefix and replace with placeholder
+    let relative_path = absolute_path
+      .strip_prefix(&data_dir_str.as_ref())
+      .unwrap_or(absolute_path)
+      .trim_start_matches('/')
+      .trim_start_matches('\\');
+    format!("{{{{base_folder}}}}/{}", relative_path)
+  } else {
+    // If path doesn't start with data dir, return as is
+    absolute_path.to_string()
+  }
+}
+
+/// Converts a relative image path with {{base_folder}} placeholder to absolute path
+pub fn to_absolute_image_path(relative_path: &str) -> String {
+  if relative_path.starts_with("{{base_folder}}") {
+    let data_dir = get_data_dir();
+    let path_without_placeholder = relative_path
+      .strip_prefix("{{base_folder}}")
+      .unwrap_or(relative_path)
+      .trim_start_matches('/')
+      .trim_start_matches('\\');
+    data_dir
+      .join(path_without_placeholder)
+      .to_string_lossy()
+      .into_owned()
+  } else {
+    // If path doesn't have placeholder, return as is
+    relative_path.to_string()
+  }
+}
+
+fn can_access_or_create(db_path: &str) -> bool {
+  let path = std::path::Path::new(db_path);
+
+  if let Some(parent) = path.parent() {
+    if let Err(e) = std::fs::create_dir_all(parent) {
+      eprintln!(
+        "Failed to create parent directory '{}': {}",
+        parent.display(),
+        e
+      );
+      return false;
+    }
+  }
+
+  match std::fs::OpenOptions::new()
+    .read(true)
+    .write(true)
+    .create(true)
+    .open(&path)
+  {
+    Ok(_file) => true,
+    Err(e) => {
+      eprintln!("Failed to open custom DB path '{}': {}", db_path, e);
+      false
+    }
+  }
+}
+
+pub fn get_config_file_path() -> PathBuf {
+  if cfg!(debug_assertions) {
+    let app_dir = APP_CONSTANTS
+      .get()
+      .expect("APP_CONSTANTS not initialized")
+      .app_dev_data_dir
+      .clone();
+    if cfg!(target_os = "macos") {
+      PathBuf::from(format!(
+        "{}/pastebar_settings.yaml",
+        adjust_canonicalization(app_dir)
+      ))
+    } else if cfg!(target_os = "windows") {
+      PathBuf::from(format!(
+        "{}\\pastebar_settings.yaml",
+        adjust_canonicalization(app_dir)
+      ))
+    } else {
+      PathBuf::from(format!(
+        "{}/pastebar_settings.yaml",
+        adjust_canonicalization(app_dir)
+      ))
+    }
+  } else {
+    // Release mode
     let app_data_dir = APP_CONSTANTS.get().unwrap().app_data_dir.clone();
     let data_dir = app_data_dir.as_path();
 
-    let path = if cfg!(target_os = "macos") {
-      format!("{}/pastebar-db.data", adjust_canonicalization(data_dir))
+    if cfg!(target_os = "macos") {
+      PathBuf::from(format!(
+        "{}/pastebar_settings.yaml",
+        adjust_canonicalization(data_dir)
+      ))
     } else if cfg!(target_os = "windows") {
-      format!("{}\\pastebar-db.data", adjust_canonicalization(data_dir))
+      PathBuf::from(format!(
+        "{}\\pastebar_settings.yaml",
+        adjust_canonicalization(data_dir)
+      ))
     } else {
-      format!("{}/pastebar-db.data", adjust_canonicalization(data_dir))
-    };
-
-    path
+      PathBuf::from(format!(
+        "{}/pastebar_settings.yaml",
+        adjust_canonicalization(data_dir)
+      ))
+    }
   }
 }
 
