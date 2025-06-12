@@ -215,3 +215,5 @@ This folder already contains PasteBar data. The application will use this existi
 Use new location: Yeni konumu kullan
 An error occurred during directory processing.: Dizin işleme sırasında bir hata oluştu.
 An error occurred during directory selection or setup.: Dizin seçimi veya kurulumu sırasında bir hata oluştu.
+Disable Image Capture: Görüntü Yakalamayı Devre Dışı Bırak
+Disable capturing and storing images from clipboard: Panodan görüntü yakalama ve depolamayı devre dışı bırak

@@ -215,3 +215,5 @@ This folder already contains PasteBar data. The application will use this existi
 Use new location: Utiliser le nouvel emplacement
 An error occurred during directory processing.: Une erreur s'est produite lors du traitement du répertoire.
 An error occurred during directory selection or setup.: Une erreur s'est produite lors de la sélection ou configuration du répertoire.
+Disable Image Capture: Désactiver la Capture d'Images
+Disable capturing and storing images from clipboard: Désactiver la capture et le stockage d'images depuis le presse-papiers

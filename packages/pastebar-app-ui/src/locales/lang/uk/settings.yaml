@@ -198,3 +198,5 @@ This folder already contains PasteBar data. The application will use this existi
 Use new location: Використовувати нове розташування
 An error occurred during directory processing.: Сталася помилка під час обробки директорії.
 An error occurred during directory selection or setup.: Сталася помилка під час вибору або налаштування директорії.
+Disable Image Capture: Вимкнути Захоплення Зображень
+Disable capturing and storing images from clipboard: Вимкнути захоплення та збереження зображень з буферу обміну
