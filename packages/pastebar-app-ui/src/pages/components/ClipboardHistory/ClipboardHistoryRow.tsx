@@ -235,7 +235,7 @@ export function ClipboardHistoryRowComponent({
         block: 'center',
       })
     }
-  }, [isKeyboardSelected, rowKeyboardRef.current, isScrolling])
+  }, [isKeyboardSelected, isScrolling])
 
   useEffect(() => {
     requestAnimationFrame(() => {
