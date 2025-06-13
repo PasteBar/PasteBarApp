@@ -1,4 +1,5 @@
-# InputBot [![docs link](https://docs.rs/inputbot/badge.svg)](https://docs.rs/inputbot) [![crates.io version](https://img.shields.io/crates/v/inputbot.svg)](https://crates.io/crates/inputbot) 
+# InputBot [![docs link](https://docs.rs/inputbot/badge.svg)](https://docs.rs/inputbot) [![crates.io version](https://img.shields.io/crates/v/inputbot.svg)](https://crates.io/crates/inputbot)
+
 Cross-platform (Windows & Linux) library for simulating keyboard/mouse input events and registering global input device event handlers.
 
 Allows writing automation programs that collapse long action-sequences into single key-presses.
@@ -15,7 +16,7 @@ use inputbot::{KeySequence, KeybdKey::*, MouseButton::*};
 use std::{thread::sleep, time::Duration};
 
 fn main() {
-    // Bind the number 1 key your keyboard to a function that types 
+    // Bind the number 1 key your keyboard to a function that types
     // "Hello, world!" when pressed.
     Numrow1Key.bind(|| KeySequence("Hello, world!").send());
 
@@ -34,7 +35,7 @@ fn main() {
 }
 ```
 
-*NOTE: The README and examples are based off the `develop` branch of InputBot. If a feature is not working, you are probably using the version from crates.io. If you want to use the latest build, add this to your Cargo.toml:*
+_NOTE: The README and examples are based off the `develop` branch of InputBot. If a feature is not working, you are probably using the version from crates.io. If you want to use the latest build, add this to your Cargo.toml:_
 
 ```toml
 [dependencies]
@@ -47,10 +48,10 @@ Check out **[examples](/examples)** for comprehensive examples on how to use eac
 
 ### Debian or Ubuntu based distros
 
-* **libx11-dev**
-* **libxtst-dev**
-* **libudev-dev**
-* **libinput-dev**
+- **libx11-dev**
+- **libxtst-dev**
+- **libudev-dev**
+- **libinput-dev**
 
 **Note:** libinput requires InputBot to be run with sudo on Linux - `sudo ./target/debug/<program name>`.
 

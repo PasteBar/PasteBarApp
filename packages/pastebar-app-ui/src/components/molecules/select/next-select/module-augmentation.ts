@@ -1,19 +1,19 @@
-import { ComponentProps } from "react"
-import { GroupBase } from "react-select"
+import { ComponentProps } from 'react'
+import { GroupBase } from 'react-select'
 
-export type SelectSize = "sm" | "md"
+export type SelectSize = 'sm' | 'md'
 
-type SelectComponent = "control" | "inner_control" | "menu"
+type SelectComponent = 'control' | 'inner_control' | 'menu'
 
 type SelectComponentStyles = Partial<
-  Record<SelectComponent, ComponentProps<"div">["className"]>
+  Record<SelectComponent, ComponentProps<'div'>['className']>
 >
 
-declare module "react-select/dist/declarations/src/Select" {
+declare module 'react-select/dist/declarations/src/Select' {
   export interface Props<
     Option,
     IsMulti extends boolean,
-    Group extends GroupBase<Option>
+    Group extends GroupBase<Option>,
   > {
     /**
      * An optional label to display above the select.

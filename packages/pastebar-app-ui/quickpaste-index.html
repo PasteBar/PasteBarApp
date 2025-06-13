@@ -1,28 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <!-- react-debugger, run on dev: npx react-devtools -->
     <!-- <script src="http://localhost:8097"></script> -->
-    <link rel="preload" href="src/assets/SourceCodePro-Regular.otf.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="src/assets/SourceCodePro-Regular.otf.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PasteBar App</title>
   </head>
   <body class="bg-transparent">
     <div id="root"></div>
     <script>
-      window.isHistoryWindow = false;
-      window.isQuickPasteWindow = true;
-      window.isMainWindow = false;
+      window.isHistoryWindow = false
+      window.isQuickPasteWindow = true
+      window.isMainWindow = false
     </script>
     <script type="module" src="src/quickpaste-main.tsx"></script>
     <script>
       function handleDrop(e) {
-        e.preventDefault();
+        e.preventDefault()
       }
-      
-      window.addEventListener("dragover", handleDrop, false);
-      window.addEventListener("drop", handleDrop, false);
+
+      window.addEventListener('dragover', handleDrop, false)
+      window.addEventListener('drop', handleDrop, false)
     </script>
   </body>
 </html>

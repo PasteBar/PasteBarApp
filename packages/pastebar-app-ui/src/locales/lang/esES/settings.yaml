@@ -1,7 +1,6 @@
-"<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.": Se ha establecido un código de <strong>{{screenLockPassCodeLength}}</strong> dígitos.
+'<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.': Se ha establecido un código de <strong>{{screenLockPassCodeLength}}</strong> dígitos.
 Activation Success: Activación Exitosa
-? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
-: Añade una estrella al texto copiado cuando lo copias dos veces en 1 segundo. Esto te permite añadir rápidamente texto o enlaces copiados a tus favoritos y encontrarlos fácilmente en el historial del portapapeles.
+Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.: Añade una estrella al texto copiado cuando lo copias dos veces en 1 segundo. Esto te permite añadir rápidamente texto o enlaces copiados a tus favoritos y encontrarlos fácilmente en el historial del portapapeles.
 Add an unlimited number of tabs within each collection for better organization and easy access.: Añade un número ilimitado de pestañas en cada colección para una mejor organización y fácil acceso.
 'Add an unlimited number of tabs within each collection for better organization and easy access.                                ': 'Añade un número ilimitado de pestañas en cada colección para una mejor organización y fácil acceso.                                '
 Advanced settings: Ajustes avanzados
@@ -25,8 +24,7 @@ Auto-Star on Double Copy: Estrella Auto al Copiar Dos Veces
 Auto-Trim Spaces on Capture: Recortar espacios automáticamente al capturar
 Auto-Update on Capture: Actualización Auto al Capturar
 Auto-delete clipboard history after: Borrar auto el historial después de
-? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
-: Crea automáticamente una vista previa de tarjeta de enlace en el historial. Esto permite ver rápidamente detalles del sitio web sin abrir o pegar el enlace.
+Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.: Crea automáticamente una vista previa de tarjeta de enlace en el historial. Esto permite ver rápidamente detalles del sitio web sin abrir o pegar el enlace.
 Back: Atrás
 Capture History: Capturar Historial
 Capture History Text Length Limits: Límites de Longitud del Texto del Historial de Captura
@@ -44,8 +42,7 @@ Create an unlimited number of collections to organize your clips and menus.: Cre
 Custom: Personalizado
 Custom themes: Temas personalizados
 Decrease UI Font Size: Disminuir Tamaño de Fuente
-? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
-: Muestra el interruptor de captura del historial en la pantalla bloqueada. Esto te permite controlar la configuración de captura directamente desde la pantalla de bloqueo.
+Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.: Muestra el interruptor de captura del historial en la pantalla bloqueada. Esto te permite controlar la configuración de captura directamente desde la pantalla de bloqueo.
 Display disabled collections name on the navigation bar collections menu: Mostrar nombre de colecciones deshabilitadas en el menú de colecciones de la barra de navegación
 Display disabled collections name on the navigation bar under collections menu: Mostrar nombre de colecciones deshabilitadas en la barra de navegación bajo el menú de colecciones
 Display full name of selected collection on the navigation bar: Mostrar nombre completo de la colección seleccionada en la barra de navegación
@@ -129,8 +126,7 @@ Recovery password is set.: La contraseña de recuperación está configurada.
 Refresh Application UI: Actualizar UI de la Aplicación
 Refresh UI: Actualizar UI
 Require Screen Unlock at Application Start: Requerir Desbloqueo de Pantalla al Iniciar la Aplicación
-? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
-: Requerir desbloqueo de pantalla al iniciar la aplicación para mejorar la seguridad. Esta configuración asegura que solo usuarios autorizados puedan acceder a la aplicación, protegiendo tus datos de acceso no autorizado desde el inicio.
+Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.: Requerir desbloqueo de pantalla al iniciar la aplicación para mejorar la seguridad. Esta configuración asegura que solo usuarios autorizados puedan acceder a la aplicación, protegiendo tus datos de acceso no autorizado desde el inicio.
 Reset Font Size: Restablecer Tamaño de Fuente
 Run Terminal or Shell Commands: Ejecutar Comandos de Terminal o Shell
 Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Extrae y analiza sitios web o respuestas de API utilizando herramientas integradas de web scraping y copia los datos extraídos al portapapeles.
@@ -144,8 +140,7 @@ Settings: Ajustes
 Show Clipboard History Capture Control on Lock Screen: Mostrar Control de Captura del Historial del Portapapeles en Pantalla Bloqueada
 Show Disable History Capture When Screen Locked: Mostrar Desactivar Captura de Historial Cuando la Pantalla está Bloqueada
 Show Disabled Collections: Mostrar Colecciones Deshabilitadas
-? Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
-: Mostrar interruptor de captura del historial del portapapeles cuando la pantalla de la aplicación está bloqueada. Esto te permite controlar la configuración de captura del historial desde la pantalla bloqueada de la aplicación.
+Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.: Mostrar interruptor de captura del historial del portapapeles cuando la pantalla de la aplicación está bloqueada. Esto te permite controlar la configuración de captura del historial desde la pantalla bloqueada de la aplicación.
 Show collection name on the navbar: Mostrar nombre de colección en la barra de navegación
 Show disabled collections on the navbar list: Mostrar colecciones deshabilitadas en la lista de la barra de navegación
 Skip auto start prompt on app launch: Omitir solicitud de inicio automático al lanzar la aplicación
@@ -155,12 +150,9 @@ Swap Panels Layout: Intercambiar Diseño de Paneles
 Switch the layout position of panels in Clipboard History and Paste Menu views: Cambiar la posición del diseño de los paneles en las vistas de Historial del Portapapeles y Menú de Pegado
 Thank you again for using PasteBar.: Gracias de nuevo por usar PasteBar.
 Thank you for testing! 🙌: ¡Gracias por probar! 🙌
-? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
-: Esta opción te permite controlar la visualización y el tiempo de las notas emergentes en los clips. Puedes elegir mostrar notas instantáneamente o con un retraso para evitar ventanas emergentes no deseadas.
-? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
-: Esta opción te permite personalizar el ancho y alto máximos de la ventana emergente que muestra las notas de los clips, asegurando que se ajuste cómodamente dentro del tamaño deseado.
-? This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
-: Esta opción te permite personalizar la longitud mínima y máxima del texto que puede ser capturado en el historial del portapapeles. Establecer cualquiera de los valores en 0 hace que ese límite sea ilimitado.
+This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.: Esta opción te permite controlar la visualización y el tiempo de las notas emergentes en los clips. Puedes elegir mostrar notas instantáneamente o con un retraso para evitar ventanas emergentes no deseadas.
+This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.: Esta opción te permite personalizar el ancho y alto máximos de la ventana emergente que muestra las notas de los clips, asegurando que se ajuste cómodamente dentro del tamaño deseado.
+This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.: Esta opción te permite personalizar la longitud mínima y máxima del texto que puede ser capturado en el historial del portapapeles. Establecer cualquiera de los valores en 0 hace que ese límite sea ilimitado.
 To downgrade your current version, please visit: Para degradar tu versión actual, por favor visita
 'To downgrade, please visit: ': 'Para degradar, por favor visita: '
 To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: Para garantizar la mejor precisión de detección, por favor selecciona hasta 7 idiomas. Limitar las opciones mejora la precisión.

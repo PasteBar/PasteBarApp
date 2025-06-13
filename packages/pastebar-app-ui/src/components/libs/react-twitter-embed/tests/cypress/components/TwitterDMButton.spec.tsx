@@ -1,31 +1,32 @@
-import { mount } from '@cypress/react';
-import React from 'react';
-import TwitterDMButton from '../../../components/TwitterDMButton';
+import React from 'react'
+import { mount } from '@cypress/react'
+
+import TwitterDMButton from '../../../components/TwitterDMButton'
 
 describe('Twitter DM Button', () => {
   it('should render direct message button with id', () => {
-    mount(<TwitterDMButton id={1364031673} />);
-    cy.wait(1500);
-    cy.getIframeBody().contains('Message');
-  });
+    mount(<TwitterDMButton id={1364031673} />)
+    cy.wait(1500)
+    cy.getIframeBody().contains('Message')
+  })
 
   it('should render direct message button with id and options', () => {
-    mount(<TwitterDMButton id={1364031673} options={{ size: 'large' }} />);
-    cy.wait(1500);
-    cy.getIframeBody().contains('Message');
-  });
+    mount(<TwitterDMButton id={1364031673} options={{ size: 'large' }} />)
+    cy.wait(1500)
+    cy.getIframeBody().contains('Message')
+  })
 
   it('should render direct message button with id and options', () => {
     mount(
       <TwitterDMButton
         id={1364031673}
-        placeholder='Loading'
+        placeholder="Loading"
         options={{ size: 'large' }}
       />
-    );
-    cy.wait(1500);
-    cy.getIframeBody().contains('Message');
-  });
+    )
+    cy.wait(1500)
+    cy.getIframeBody().contains('Message')
+  })
 
   it('should render direct message button with custom placeholder', () => {
     mount(
@@ -37,7 +38,7 @@ describe('Twitter DM Button', () => {
               padding: 10,
               margin: 10,
               backgroundColor: 'red',
-              color: 'white'
+              color: 'white',
             }}
           >
             Hello I am custom placeholder
@@ -45,17 +46,17 @@ describe('Twitter DM Button', () => {
         }
         options={{ size: 'large' }}
       />
-    );
-    cy.contains('Hello I am custom placeholder');
-    cy.wait(1500);
-    cy.getIframeBody().contains('Message');
-  });
+    )
+    cy.contains('Hello I am custom placeholder')
+    cy.wait(1500)
+    cy.getIframeBody().contains('Message')
+  })
 
   it('should render direct message button with onLoad action', () => {
-    const callback = cy.stub();
-    mount(<TwitterDMButton id={1364031673} onLoad={callback} />);
-    cy.wait(1500);
-    cy.getIframeBody().contains('Message');
-    cy.waitUntil(() => expect(callback.callCount).to.eq(1));
-  });
-});
+    const callback = cy.stub()
+    mount(<TwitterDMButton id={1364031673} onLoad={callback} />)
+    cy.wait(1500)
+    cy.getIframeBody().contains('Message')
+    cy.waitUntil(() => expect(callback.callCount).to.eq(1))
+  })
+})

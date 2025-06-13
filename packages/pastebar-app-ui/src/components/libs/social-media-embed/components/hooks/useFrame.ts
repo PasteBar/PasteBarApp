@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 
 /**
  * Specifies a frame's [browser APIs](https://developer.mozilla.org/en-US/docs/Web/API),
  * such as `window` and `document`.
  */
 export interface Frame {
-  window?: Window;
-  document?: Document;
+  window?: Window
+  document?: Document
 }
 
 /**
@@ -21,11 +21,11 @@ export interface Frame {
 export const useFrame = (frame?: Frame) => {
   return React.useMemo(() => {
     if (frame) {
-      return frame;
+      return frame
     }
     return {
       document: typeof document !== 'undefined' ? document : undefined,
       window: typeof window !== 'undefined' ? window : undefined,
-    };
-  }, [frame]);
-};
+    }
+  }, [frame])
+}

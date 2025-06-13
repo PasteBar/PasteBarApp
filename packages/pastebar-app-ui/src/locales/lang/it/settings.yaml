@@ -1,7 +1,6 @@
-"<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.": È stato impostato un codice di accesso di <strong>{{screenLockPassCodeLength}}</strong> cifre.
+'<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.': È stato impostato un codice di accesso di <strong>{{screenLockPassCodeLength}}</strong> cifre.
 Activation Success: Attivazione Riuscita
-? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
-: Aggiungi una stella al testo copiato quando lo copi due volte in 1 secondo. Questo ti permette di aggiungere rapidamente testo o link copiati ai tuoi preferiti e trovarli facilmente nella cronologia degli appunti.
+Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.: Aggiungi una stella al testo copiato quando lo copi due volte in 1 secondo. Questo ti permette di aggiungere rapidamente testo o link copiati ai tuoi preferiti e trovarli facilmente nella cronologia degli appunti.
 Add an unlimited number of tabs within each collection for better organization and easy access.: Aggiungi un numero illimitato di schede all\'interno di ogni collezione per una migliore organizzazione e un facile accesso.
 Advanced settings: Impostazioni avanzate
 Already Active: Già Attivo
@@ -24,8 +23,7 @@ Auto-Star on Double Copy: Stella Automatica al Doppio Copia
 Auto-Update on Capture: Aggiornamento Automatico alla Cattura
 Auto-Trim Spaces on Capture: Rimozione automatica degli spazi alla cattura
 Auto-delete clipboard history after: Elimina automaticamente la cronologia degli appunti dopo
-? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
-: Crea automaticamente l'anteprima della scheda link nella cronologia degli appunti. Questo permette di visualizzare rapidamente i dettagli del sito web senza aprire o incollare il link.
+Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.: Crea automaticamente l'anteprima della scheda link nella cronologia degli appunti. Questo permette di visualizzare rapidamente i dettagli del sito web senza aprire o incollare il link.
 Back: Indietro
 Capture History: Cattura Cronologia
 Capture History Text Length Limits: Limiti di Lunghezza del Testo della Cronologia degli Appunti
@@ -43,8 +41,7 @@ Create an unlimited number of collections to organize your clips and menus.: Cre
 Custom: Personalizzato
 Custom themes: Temi personalizzati
 Decrease UI Font Size: Diminuisci Dimensione Carattere UI
-? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
-: Mostra l'interruttore di cattura della cronologia degli appunti sulla schermata di blocco dell'applicazione. Questo ti permette di controllare le impostazioni di cattura della cronologia direttamente dalla schermata di blocco.
+Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.: Mostra l'interruttore di cattura della cronologia degli appunti sulla schermata di blocco dell'applicazione. Questo ti permette di controllare le impostazioni di cattura della cronologia direttamente dalla schermata di blocco.
 Display disabled collections name on the navigation bar collections menu: Mostra il nome delle collezioni disabilitate nel menu delle collezioni della barra di navigazione
 Display disabled collections name on the navigation bar under collections menu: Mostra il nome delle collezioni disabilitate nella barra di navigazione sotto il menu delle collezioni
 Display full name of selected collection on the navigation bar: Mostra il nome completo della collezione selezionata nella barra di navigazione
@@ -128,26 +125,22 @@ Recovery password is set.: La password di recupero è impostata.
 Refresh Application UI: Aggiorna l'Interfaccia Utente dell'Applicazione
 Refresh UI: Aggiorna UI
 Require Screen Unlock at Application Start: Richiedi Sblocco Schermo all'Avvio dell'Applicazione
-? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
-: Richiedi lo sblocco dello schermo all'avvio dell'applicazione per migliorare la sicurezza. Questa impostazione garantisce che solo gli utenti autorizzati possano accedere all'applicazione, proteggendo i tuoi dati da accessi non autorizzati fin dall'inizio.
+Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.: Richiedi lo sblocco dello schermo all'avvio dell'applicazione per migliorare la sicurezza. Questa impostazione garantisce che solo gli utenti autorizzati possano accedere all'applicazione, proteggendo i tuoi dati da accessi non autorizzati fin dall'inizio.
 Reset Font Size: Reimposta Dimensione Carattere
 Run Terminal or Shell Commands: Esegui Comandi Terminale o Shell
 Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Estrai e analizza siti web o risposte API utilizzando strumenti di web scraping integrati e copia i dati estratti negli appunti.
-? 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
-: 'Estrai e analizza siti web o risposte API utilizzando strumenti di web scraping integrati e copia i dati estratti negli appunti.                                '
+'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                ': 'Estrai e analizza siti web o risposte API utilizzando strumenti di web scraping integrati e copia i dati estratti negli appunti.                                '
 Security: Sicurezza
 Security Settings: Impostazioni di Sicurezza
 Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Invia richieste HTTP a API o servizi web e copia i dati di risposta negli appunti.
 Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Le parole o frasi sensibili elencate di seguito verranno automaticamente mascherate se trovate nel testo copiato. Non sensibile alle maiuscole/minuscole.
 Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Imposta un codice di accesso per sbloccare lo schermo bloccato e proteggere i tuoi dati da accessi non autorizzati.
-? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
-: Imposta una password di recupero per reimpostare facilmente il codice di accesso della schermata di blocco se dimenticato. La tua password sarà memorizzata in modo sicuro nell'archivio del sistema operativo del tuo dispositivo.
+Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.: Imposta una password di recupero per reimpostare facilmente il codice di accesso della schermata di blocco se dimenticato. La tua password sarà memorizzata in modo sicuro nell'archivio del sistema operativo del tuo dispositivo.
 Settings: Impostazioni
 Show Clipboard History Capture Control on Lock Screen: Mostra il Controllo di Cattura della Cronologia degli Appunti sulla Schermata di Blocco
 Show Disable History Capture When Screen Locked: Mostra Disabilita Cattura Cronologia Quando lo Schermo è Bloccato
 Show Disabled Collections: Mostra Collezioni Disabilitate
-? Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
-: Mostra l'interruttore di cattura della cronologia degli appunti quando lo schermo dell'applicazione è bloccato. Questo ti permette di controllare le impostazioni di cattura della cronologia dalla schermata di blocco dell'applicazione.
+Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.: Mostra l'interruttore di cattura della cronologia degli appunti quando lo schermo dell'applicazione è bloccato. Questo ti permette di controllare le impostazioni di cattura della cronologia dalla schermata di blocco dell'applicazione.
 Show collection name on the navbar: Mostra il nome della collezione sulla barra di navigazione
 Show disabled collections on the navbar list: Mostra le collezioni disabilitate nella lista della barra di navigazione
 Skip auto start prompt on app launch: Salta il prompt di avvio automatico all'avvio dell'app
@@ -157,12 +150,9 @@ Swap Panels Layout: Scambia Layout dei Pannelli
 Switch the layout position of panels in Clipboard History and Paste Menu views: Cambia la posizione del layout dei pannelli nelle viste Cronologia Appunti e Menu Incolla
 Thank you again for using PasteBar.: Grazie ancora per utilizzare PasteBar.
 Thank you for testing! 🙌: Grazie per il test! 🙌
-? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
-: Questa opzione ti permette di controllare la visualizzazione e la tempistica delle note al passaggio del mouse sui clip. Puoi scegliere di mostrare le note istantaneamente o con un ritardo per prevenire popup indesiderati.
-? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
-: Questa opzione ti permette di personalizzare la larghezza e l'altezza massima del popup che mostra le note dei clip, assicurando che si adatti comodamente alla dimensione desiderata.
-? This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
-: Questa opzione ti permette di personalizzare la lunghezza minima e massima del testo che può essere catturato nella cronologia degli appunti. Impostare uno dei due valori su 0 rende quel limite illimitato.
+This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.: Questa opzione ti permette di controllare la visualizzazione e la tempistica delle note al passaggio del mouse sui clip. Puoi scegliere di mostrare le note istantaneamente o con un ritardo per prevenire popup indesiderati.
+This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.: Questa opzione ti permette di personalizzare la larghezza e l'altezza massima del popup che mostra le note dei clip, assicurando che si adatti comodamente alla dimensione desiderata.
+This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.: Questa opzione ti permette di personalizzare la lunghezza minima e massima del testo che può essere catturato nella cronologia degli appunti. Impostare uno dei due valori su 0 rende quel limite illimitato.
 To downgrade your current version, please visit: Per tornare a una versione precedente, visita
 'To downgrade, please visit: ': 'Per tornare a una versione precedente, visita: '
 To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: Per garantire la migliore precisione di rilevamento, seleziona fino a 7 lingue. Limitare le scelte migliora la precisione.

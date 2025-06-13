@@ -11,6 +11,7 @@ import {
   creatingClipItemBoardId,
   isCreatingMenuItem,
   newClipItemId,
+  settingsStoreAtom,
   showClipsMoveOnBoardId,
   showDeleteClipConfirmationId,
   showEditClipId,
@@ -18,7 +19,6 @@ import {
   showLargeViewClipId,
   showLinkedMenuId,
   uiStoreAtom,
-  settingsStoreAtom,
 } from '~/store'
 import { useAtomValue } from 'jotai'
 import {
@@ -83,7 +83,7 @@ import { useSignal } from '~/hooks/use-signal'
 import { BOARD } from '../../Dashboard'
 import { Board } from '../Board'
 import { Clip } from '../ClipCard'
-import { shouldShowNoteIcon, getNoteOptions, parseItemOptions } from '../utils'
+import { getNoteOptions, parseItemOptions, shouldShowNoteIcon } from '../utils'
 
 interface ClipsCardContextMenuProps {
   itemId: UniqueIdentifier
@@ -1205,13 +1205,16 @@ export default function ClipsCardContextMenuComponent({
                   <ContextMenuCheckboxItem
                     checked={(() => {
                       const currentOptions = parseItemOptions(itemOptions)
-                      return !currentOptions.noteOptions || Object.keys(currentOptions.noteOptions).length === 0
+                      return (
+                        !currentOptions.noteOptions ||
+                        Object.keys(currentOptions.noteOptions).length === 0
+                      )
                     })()}
-                    onSelect={(e) => {
+                    onSelect={e => {
                       e.preventDefault()
                       const currentOptions = parseItemOptions(itemOptions)
                       const { noteOptions, ...otherOptions } = currentOptions
-                      
+
                       updateItemById({
                         updatedItem: {
                           itemOptions: JSON.stringify(otherOptions),
@@ -1223,14 +1226,27 @@ export default function ClipsCardContextMenuComponent({
                     {t('Use Global Setting', { ns: 'contextMenus' })}
                   </ContextMenuCheckboxItem>
                   <ContextMenuCheckboxItem
-                    checked={shouldShowNoteIcon(description, itemOptions, { isNoteIconsEnabled, defaultNoteIconType })}
-                    className={shouldShowNoteIcon(description, itemOptions, { isNoteIconsEnabled, defaultNoteIconType }) ? 'font-semibold' : ''}
-                    onSelect={(e) => {
+                    checked={shouldShowNoteIcon(description, itemOptions, {
+                      isNoteIconsEnabled,
+                      defaultNoteIconType,
+                    })}
+                    className={
+                      shouldShowNoteIcon(description, itemOptions, {
+                        isNoteIconsEnabled,
+                        defaultNoteIconType,
+                      })
+                        ? 'font-semibold'
+                        : ''
+                    }
+                    onSelect={e => {
                       e.preventDefault()
                       const currentOptions = parseItemOptions(itemOptions)
                       const currentNoteOptions = currentOptions.noteOptions || {}
-                      const newShowIcon = !shouldShowNoteIcon(description, itemOptions, { isNoteIconsEnabled, defaultNoteIconType })
-                      
+                      const newShowIcon = !shouldShowNoteIcon(description, itemOptions, {
+                        isNoteIconsEnabled,
+                        defaultNoteIconType,
+                      })
+
                       updateItemById({
                         updatedItem: {
                           itemOptions: JSON.stringify({
@@ -1247,44 +1263,83 @@ export default function ClipsCardContextMenuComponent({
                   >
                     {t('Show Note Icon', { ns: 'contextMenus' })}
                   </ContextMenuCheckboxItem>
-                  
-                  {shouldShowNoteIcon(description, itemOptions, { isNoteIconsEnabled, defaultNoteIconType }) && (
+
+                  {shouldShowNoteIcon(description, itemOptions, {
+                    isNoteIconsEnabled,
+                    defaultNoteIconType,
+                  }) && (
                     <ContextMenuSub>
                       <ContextMenuSubTrigger className="flex items-center justify-center">
                         {(() => {
-                          const iconType = getNoteOptions(itemOptions, { isNoteIconsEnabled, defaultNoteIconType }).iconType
+                          const iconType = getNoteOptions(itemOptions, {
+                            isNoteIconsEnabled,
+                            defaultNoteIconType,
+                          }).iconType
                           const iconMap = {
-                            MessageSquareText: <MessageSquareText size={16} className="ml-1 mr-2" />,
+                            MessageSquareText: (
+                              <MessageSquareText size={16} className="ml-1 mr-2" />
+                            ),
                             FileText: <FileText size={16} className="ml-1 mr-2" />,
-                            BookOpenText: <BookOpenText size={16} className="ml-1 mr-2" />,
+                            BookOpenText: (
+                              <BookOpenText size={16} className="ml-1 mr-2" />
+                            ),
                             Contact: <Contact size={16} className="ml-1 mr-2" />,
                             NotebookPen: <NotebookPen size={16} className="ml-1 mr-2" />,
                           }
-                          return iconMap[iconType as keyof typeof iconMap] || <MessageSquareText size={16} className="ml-1 mr-2" />
+                          return (
+                            iconMap[iconType as keyof typeof iconMap] || (
+                              <MessageSquareText size={16} className="ml-1 mr-2" />
+                            )
+                          )
                         })()}
                         {t('Icon Type', { ns: 'contextMenus' })} ...
                       </ContextMenuSubTrigger>
                       <ContextMenuSubContent>
                         {[
-                          { name: 'MessageSquareText', labelKey: 'Note Icon Types Message', icon: MessageSquareText },
-                          { name: 'FileText', labelKey: 'Note Icon Types File', icon: FileText },
-                          { name: 'BookOpenText', labelKey: 'Note Icon Types Book', icon: BookOpenText },
-                          { name: 'Contact', labelKey: 'Note Icon Types Contact', icon: Contact },
-                          { name: 'NotebookPen', labelKey: 'Note Icon Types Notebook', icon: NotebookPen },
+                          {
+                            name: 'MessageSquareText',
+                            labelKey: 'Note Icon Types Message',
+                            icon: MessageSquareText,
+                          },
+                          {
+                            name: 'FileText',
+                            labelKey: 'Note Icon Types File',
+                            icon: FileText,
+                          },
+                          {
+                            name: 'BookOpenText',
+                            labelKey: 'Note Icon Types Book',
+                            icon: BookOpenText,
+                          },
+                          {
+                            name: 'Contact',
+                            labelKey: 'Note Icon Types Contact',
+                            icon: Contact,
+                          },
+                          {
+                            name: 'NotebookPen',
+                            labelKey: 'Note Icon Types Notebook',
+                            icon: NotebookPen,
+                          },
                         ].map(iconType => {
-                          const isSelected = getNoteOptions(itemOptions, { isNoteIconsEnabled, defaultNoteIconType }).iconType === iconType.name
+                          const isSelected =
+                            getNoteOptions(itemOptions, {
+                              isNoteIconsEnabled,
+                              defaultNoteIconType,
+                            }).iconType === iconType.name
                           const IconComponent = iconType.icon
-                          
+
                           return isSelected ? (
                             <ContextMenuCheckboxItem
                               key={iconType.name}
                               checked={true}
                               className="font-semibold"
-                              onSelect={(e) => {
+                              onSelect={e => {
                                 e.preventDefault()
                                 const currentOptions = parseItemOptions(itemOptions)
-                                const currentNoteOptions = currentOptions.noteOptions || {}
-                                
+                                const currentNoteOptions =
+                                  currentOptions.noteOptions || {}
+
                                 updateItemById({
                                   updatedItem: {
                                     itemOptions: JSON.stringify({
@@ -1307,8 +1362,9 @@ export default function ClipsCardContextMenuComponent({
                               key={iconType.name}
                               onSelect={() => {
                                 const currentOptions = parseItemOptions(itemOptions)
-                                const currentNoteOptions = currentOptions.noteOptions || {}
-                                
+                                const currentNoteOptions =
+                                  currentOptions.noteOptions || {}
+
                                 updateItemById({
                                   updatedItem: {
                                     itemOptions: JSON.stringify({
@@ -1338,7 +1394,6 @@ export default function ClipsCardContextMenuComponent({
             )}
           </ContextMenuSubContent>
         </ContextMenuSub>
-
 
         {isPinnedBoard ? (
           <ContextMenuItem

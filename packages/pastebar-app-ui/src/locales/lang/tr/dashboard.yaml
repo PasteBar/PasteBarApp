@@ -29,7 +29,7 @@ Add to Board: Panoya Ekle
 Add {{type}}: Ekle {{type}}
 All field labels must be unique to ensure they are correctly used within the template.: Şablonda doğru şekilde kullanılabilmesi için tüm alan etiketlerinin benzersiz olması gerekir.
 Are you sure you want to delete <strong>{{boardName}}</strong> board?: Bu panoyu silmek istediğinizden eminmisiniz? <strong>{{boardName}}</strong>
-Are you sure you want to delete <strong>{{tabName}}</strong> tab?:  Bu sekmeyi silmek istediğinizden eminmisiniz? <strong>{{tabName}}</strong>
+Are you sure you want to delete <strong>{{tabName}}</strong> tab?: Bu sekmeyi silmek istediğinizden eminmisiniz? <strong>{{tabName}}</strong>
 Are you sure you want to delete?: Silmek istediğinizden eminmisiniz?
 Are you sure you want to remove image from the clip?: Klipten resmi kaldırmak istediğinizden eminmisiniz?
 Auth: Yetkilendirme
@@ -38,7 +38,7 @@ Basic Auth: Temel Kimlik Doğrulama
 Basic Password: Temel Şifre
 Basic Username: Temel Kullanıcı Adı
 Bearer Token: Taşıyıcı Jeton
-Board Layout Height: Pano Düzeni Yüksekliği    
+Board Layout Height: Pano Düzeni Yüksekliği
 Board Layout Split: Pano Düzeni Bölünmesi
 Board Menu: Pano Menü
 Board is Not Empty: Pano Boş Değil

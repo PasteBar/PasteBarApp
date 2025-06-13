@@ -6,5 +6,5 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.mts", "src/lib/i18n-vite-loaded/loader.ts"],
+  "include": ["vite.config.mts", "src/lib/i18n-vite-loaded/loader.ts"]
 }

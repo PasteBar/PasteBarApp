@@ -2,8 +2,7 @@
 ' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': ' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.'
 About PasteBar: About PasteBar
 Action Menu: Action Menu
-? Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
-: Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
+Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template: Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
 Add Clip: Add Clip
 Add First Option: Add First Option
 Add Link Card: Add Link Card
@@ -108,8 +107,7 @@ Errors:
   Something went wrong! {{err}} Please try again.: Something went wrong! {{err}} Please try again.
 Expand Edit: Expand Edit
 Expires on {{proExpiresOn}}: Expires on {{proExpiresOn}}
-? Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
-: Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
 Field is not found in the template: Field is not found in the template
 Find Clip: Find Clip
 Find History: Find History
@@ -174,8 +172,7 @@ Pasted: Pasted
 Path: Path
 Pause: Pause
 Pause Playing: Pause Playing
-? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
-: 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.': 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
 Pin Selected: Pin Selected
 Pinned: Pinned
 Play: Play
@@ -341,8 +338,7 @@ View Edit: View Edit
 Views:
   Paste Menu: Paste Menu
 We apologize but you found a bug. Please report this issue to us and try again: We apologize but you found a bug. Please report this issue to us and try again
-? We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
-: We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
+We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.: We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
 Yes: Yes
 Yes, activate: Yes, activate
 chars: chars

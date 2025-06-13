@@ -1,6 +1,7 @@
-import { ReactDatePickerCustomHeaderProps } from "react-datepicker"
-import NativeSelect from "../../molecules/native-select"
-import { getYearRange, monthNames } from "./utils"
+import { ReactDatePickerCustomHeaderProps } from 'react-datepicker'
+
+import NativeSelect from '../../molecules/native-select'
+import { getYearRange, monthNames } from './utils'
 
 const CustomHeader = ({
   date,
@@ -16,9 +17,9 @@ const CustomHeader = ({
       <div className="flex flex-1 items-center justify-end gap-3">
         <NativeSelect
           defaultValue={monthName}
-          onValueChange={(v) => changeMonth(monthNames.indexOf(v))}
+          onValueChange={v => changeMonth(monthNames.indexOf(v))}
         >
-          {monthNames.map((month) => (
+          {monthNames.map(month => (
             <NativeSelect.Item key={month} value={month}>
               {month}
             </NativeSelect.Item>
@@ -28,9 +29,9 @@ const CustomHeader = ({
       <div className="flex flex-1 items-center justify-start gap-3">
         <NativeSelect
           defaultValue={year.toString()}
-          onValueChange={(v) => changeYear(parseInt(v, 10))}
+          onValueChange={v => changeYear(parseInt(v, 10))}
         >
-          {getYearRange().map((year) => (
+          {getYearRange().map(year => (
             <NativeSelect.Item key={year} value={year.toString()}>
               {year.toString()}
             </NativeSelect.Item>

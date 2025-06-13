@@ -1,14 +1,15 @@
-import React from "react"
-import IconProps from "../types/icon-type"
+import React from 'react'
+
+import IconProps from '../types/icon-type'
 
 type IBellNotiIconProps = IconProps & {
   accentColor?: string
 }
 
 const BellNotiIcon: React.FC<IBellNotiIconProps> = ({
-  size = "24px",
-  color = "currentColor",
-  accentColor = "#F43F5E",
+  size = '24px',
+  color = 'currentColor',
+  accentColor = '#F43F5E',
   ...attributes
 }) => {
   return (

@@ -4,6 +4,10 @@ import { relaunch } from '@tauri-apps/api/process'
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater'
 import { semverCompare } from '~/libs/utils'
 import i18n from '~/locales'
+import {
+  NOTE_ICON_TYPES,
+  NoteIconType,
+} from '~/pages/components/Dashboard/components/utils'
 import dayjs from 'dayjs'
 import { atomWithStore } from 'jotai-zustand'
 import { createStore } from 'zustand/vanilla'
@@ -88,7 +92,7 @@ type Settings = {
   isImageCaptureDisabled: boolean
   isMenuItemCopyOnlyEnabled: boolean
   isNoteIconsEnabled: boolean
-  defaultNoteIconType: string
+  defaultNoteIconType: NoteIconType
 }
 
 type Constants = {
@@ -166,7 +170,7 @@ export interface SettingsStoreState {
   setIsImageCaptureDisabled: (isEnabled: boolean) => void
   setIsMenuItemCopyOnlyEnabled: (isEnabled: boolean) => void
   setIsNoteIconsEnabled: (isEnabled: boolean) => void
-  setDefaultNoteIconType: (iconType: string) => void
+  setDefaultNoteIconType: (iconType: NoteIconType) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -254,7 +258,7 @@ const initialState: SettingsStoreState & Settings = {
   isImageCaptureDisabled: false,
   isMenuItemCopyOnlyEnabled: false,
   isNoteIconsEnabled: true,
-  defaultNoteIconType: 'MessageSquareText',
+  defaultNoteIconType: NOTE_ICON_TYPES.MESSAGE,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -628,10 +632,20 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
     return get().updateSetting('isMenuItemCopyOnlyEnabled', isEnabled)
   },
   setIsNoteIconsEnabled: async (isEnabled: boolean) => {
-    return get().updateSetting('isNoteIconsEnabled', isEnabled)
+    try {
+      return get().updateSetting('isNoteIconsEnabled', isEnabled)
+    } catch (error) {
+      console.error('Failed to update note icons enabled setting:', error)
+      throw error
+    }
   },
-  setDefaultNoteIconType: async (iconType: string) => {
-    return get().updateSetting('defaultNoteIconType', iconType)
+  setDefaultNoteIconType: async (iconType: NoteIconType) => {
+    try {
+      return get().updateSetting('defaultNoteIconType', iconType)
+    } catch (error) {
+      console.error('Failed to update default note icon type setting:', error)
+      throw error
+    }
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

@@ -1,9 +1,10 @@
-import React from "react"
-import IconProps from "../types/icon-type"
+import React from 'react'
+
+import IconProps from '../types/icon-type'
 
 const SwatchIcon: React.FC<IconProps> = ({
-  size = "24px",
-  color = "currentColor",
+  size = '24px',
+  color = 'currentColor',
   ...attributes
 }) => {
   return (

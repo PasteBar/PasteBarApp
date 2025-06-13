@@ -1,15 +1,16 @@
-import type { MutableRefObject, ReactElement, RefAttributes } from "react"
-import { forwardRef } from "react"
-import type { GroupBase, SelectInstance } from "react-select"
-import type { CreatableProps } from "react-select/creatable"
-import CreatableReactSelect from "react-select/creatable"
-import { AdjacentContainer } from "../components"
-import { useSelectProps } from "../use-select-props"
+import type { MutableRefObject, ReactElement, RefAttributes } from 'react'
+import { forwardRef } from 'react'
+import type { GroupBase, SelectInstance } from 'react-select'
+import type { CreatableProps } from 'react-select/creatable'
+import CreatableReactSelect from 'react-select/creatable'
+
+import { AdjacentContainer } from '../components'
+import { useSelectProps } from '../use-select-props'
 
 export type CreatableSelectComponent = <
   Option = unknown,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 >(
   props: CreatableProps<Option, IsMulti, Group> &
     RefAttributes<SelectInstance<Option, IsMulti, Group>>
@@ -26,11 +27,7 @@ const CreatableSelect = forwardRef(
     const { label, helperText, required, ...rest } = useSelectProps(props)
 
     return (
-      <AdjacentContainer
-        label={label}
-        helperText={helperText}
-        required={required}
-      >
+      <AdjacentContainer label={label} helperText={helperText} required={required}>
         <CreatableReactSelect ref={ref} {...rest} />
       </AdjacentContainer>
     )

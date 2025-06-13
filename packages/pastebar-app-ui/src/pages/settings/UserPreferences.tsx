@@ -47,6 +47,7 @@ import {
 
 import md from '~/store/example.md?raw'
 
+import { NoteIconType } from '../components/Dashboard/components/utils'
 import CustomDatabaseLocationSettings from './CustomDatabaseLocationSettings'
 
 export default function UserPreferences() {
@@ -546,7 +547,8 @@ export default function UserPreferences() {
                 <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card
                     className={`${
-                      !isMenuItemCopyOnlyEnabled && 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                      !isMenuItemCopyOnlyEnabled &&
+                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
                     }`}
                   >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
@@ -563,7 +565,10 @@ export default function UserPreferences() {
                     </CardHeader>
                     <CardContent>
                       <Text className="text-sm text-muted-foreground">
-                        {t('When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.', { ns: 'settings2' })}
+                        {t(
+                          'When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.',
+                          { ns: 'settings2' }
+                        )}
                       </Text>
                     </CardContent>
                   </Card>
@@ -1095,13 +1100,21 @@ export default function UserPreferences() {
                                 labelKey: 'Note Icon Types Message',
                                 icon: MessageSquareText,
                               },
-                              { value: 'FileText', labelKey: 'Note Icon Types File', icon: FileText },
+                              {
+                                value: 'FileText',
+                                labelKey: 'Note Icon Types File',
+                                icon: FileText,
+                              },
                               {
                                 value: 'BookOpenText',
                                 labelKey: 'Note Icon Types Book',
                                 icon: BookOpenText,
                               },
-                              { value: 'Contact', labelKey: 'Note Icon Types Contact', icon: Contact },
+                              {
+                                value: 'Contact',
+                                labelKey: 'Note Icon Types Contact',
+                                icon: Contact,
+                              },
                               {
                                 value: 'NotebookPen',
                                 labelKey: 'Note Icon Types Notebook',
@@ -1113,7 +1126,7 @@ export default function UserPreferences() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => {
-                                  setDefaultNoteIconType(option.value)
+                                  setDefaultNoteIconType(option.value as NoteIconType)
                                 }}
                                 className={`text-sm font-normal bg-slate-50 dark:bg-slate-950 ${
                                   defaultNoteIconType === option.value
@@ -1127,7 +1140,10 @@ export default function UserPreferences() {
                             ))}
                           </Flex>
                           <Text className="text-xs text-muted-foreground mt-2">
-                            {t('This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.', { ns: 'settings2' })}
+                            {t(
+                              'This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.',
+                              { ns: 'settings2' }
+                            )}
                           </Text>
                         </Box>
                       )}

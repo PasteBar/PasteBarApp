@@ -1,13 +1,14 @@
-import isEqual from "lodash/isEqual"
-import { useEffect, useState } from "react"
-import { ActionMeta, GroupBase, OnChangeValue, Props } from "react-select"
-import BaseComponents from "./components"
-import { formatOptionLabel, hasLabel } from "./utils"
+import { useEffect, useState } from 'react'
+import isEqual from 'lodash/isEqual'
+import { ActionMeta, GroupBase, OnChangeValue, Props } from 'react-select'
+
+import BaseComponents from './components'
+import { formatOptionLabel, hasLabel } from './utils'
 
 export const useSelectProps = <
   Option,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 >({
   components = {},
   isMulti,
@@ -27,7 +28,7 @@ export const useSelectProps = <
     const tmp = values || []
 
     const unselectedOptions = stateOptions.filter(
-      (option) => !tmp.find((op) => isEqual(op, option))
+      option => !tmp.find(op => isEqual(op, option))
     )
 
     const orderedNewOptions = tmp.sort((a, b) => {
@@ -66,7 +67,7 @@ export const useSelectProps = <
     label,
     components: { ...BaseComponents, ...components },
     styles: {
-      menuPortal: (base) => ({ ...base, zIndex: 60 }),
+      menuPortal: base => ({ ...base, zIndex: 60 }),
       ...styles,
     },
     isMulti,
@@ -74,8 +75,8 @@ export const useSelectProps = <
     closeMenuOnSelect:
       closeMenuOnSelect !== undefined ? closeMenuOnSelect : isMulti !== true,
     hideSelectedOptions,
-    menuPosition: "fixed",
-    maxMenuHeight: size === "sm" ? 154 : 188,
+    menuPosition: 'fixed',
+    maxMenuHeight: size === 'sm' ? 154 : 188,
     formatOptionLabel,
     size,
     options: stateOptions,

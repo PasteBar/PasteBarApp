@@ -91,7 +91,7 @@ import { ClipEditName } from './ClipEdit'
 import { ClipEditContent } from './ClipEditContent'
 import ClipIcon from './ClipIcon'
 import ClipsCardContextMenu from './context-menus/ClipsCardContextMenu'
-import { getNoteOptions, shouldShowNoteIcon } from './utils'
+import { getNoteIconComponent, getNoteOptions, shouldShowNoteIcon } from './utils'
 
 export type ClipType = 'clip'
 export type ClipDropZoneType = 'clip::dropzone'
@@ -105,20 +105,6 @@ export const ClipFormKeyPress = [
   'TabEnter',
   'TabTabEnter',
 ] as const
-
-const getNoteIconComponent = (iconType: string | undefined) => {
-  const iconMap = {
-    MessageSquareText,
-    FileText,
-    BookOpenText,
-    Contact,
-    NotebookPen,
-  }
-  return (
-    iconMap[(iconType || 'MessageSquareText') as keyof typeof iconMap] ||
-    MessageSquareText
-  )
-}
 
 export type ClipFormTemplateOptions = {
   templateOptions: {
@@ -555,6 +541,29 @@ export function ClipCard({
     [clip.description, isDragPreview, isClipNotesHoverCardsEnabled, isEditing]
   )
 
+  const shouldShowNoteIconResult = useMemo(
+    () =>
+      shouldShowNoteIcon(clip.description, clip.itemOptions, {
+        isNoteIconsEnabled,
+        defaultNoteIconType,
+      }),
+    [clip.description, clip.itemOptions, isNoteIconsEnabled, defaultNoteIconType]
+  )
+
+  const noteOptions = useMemo(
+    () =>
+      getNoteOptions(clip.itemOptions, {
+        isNoteIconsEnabled,
+        defaultNoteIconType,
+      }),
+    [clip.itemOptions, isNoteIconsEnabled, defaultNoteIconType]
+  )
+
+  const NoteIconComponent = useMemo(
+    () => getNoteIconComponent(noteOptions.iconType),
+    [noteOptions.iconType]
+  )
+
   return (
     <ContextMenu
       onOpenChange={isOpen => {
@@ -831,10 +840,7 @@ export function ClipCard({
                           ) : (
                             clipName
                           )}
-                          {shouldShowNoteIcon(clip.description, clip.itemOptions, {
-                            isNoteIconsEnabled,
-                            defaultNoteIconType,
-                          }) && (
+                          {shouldShowNoteIconResult && (
                             <ToolTipNotes
                               text={clip.description}
                               isDisabled={isDragPreview}
@@ -847,29 +853,16 @@ export function ClipCard({
                               maxHeight={clipNotesMaxHeight}
                               asChild
                             >
-                              {(() => {
-                                const NoteIcon = getNoteIconComponent(
-                                  getNoteOptions(clip.itemOptions, {
-                                    isNoteIconsEnabled,
-                                    defaultNoteIconType,
-                                  }).iconType
-                                )
-                                return (
-                                  <NoteIcon
-                                    size={16}
-                                    className="opacity-70 hover:opacity-100 ml-1.5 hover:text-yellow-600"
-                                  />
-                                )
-                              })()}
+                              <NoteIconComponent
+                                size={16}
+                                className="opacity-70 hover:opacity-100 ml-1.5 hover:text-yellow-600"
+                              />
                             </ToolTipNotes>
                           )}
                         </div>
                         {clip.description &&
                           isShowDetails &&
-                          !shouldShowNoteIcon(clip.description, clip.itemOptions, {
-                            isNoteIconsEnabled,
-                            defaultNoteIconType,
-                          }) && (
+                          !shouldShowNoteIconResult && (
                             <ToolTipNotes
                               text={clip.description}
                               isDisabled={isDragPreview}

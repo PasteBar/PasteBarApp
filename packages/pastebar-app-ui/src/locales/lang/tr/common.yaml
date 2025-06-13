@@ -1,8 +1,7 @@
 ' No': ' Hayır'
 About PasteBar: PasteBar Hakkında
 Action Menu: Eylem Menüsü
-? Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
-: Şablona <b>{{Clipboard}}</b> alanı ekleyin. Bu, metni panoya kopyalamanıza ve şablona eklenmesine olanak tanır
+Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template: Şablona <b>{{Clipboard}}</b> alanı ekleyin. Bu, metni panoya kopyalamanıza ve şablona eklenmesine olanak tanır
 Add Clip: Klip Ekle
 Add First Option: Ilk Seçeneği Ekle
 Add Link Card: Bağlantı Kartı Ekle
@@ -105,8 +104,7 @@ Errors:
   Something went wrong! {{err}} Please try again.: Bir şeyler ters gitti! {{err}} Lütfen tekrar deneyin.
 Expand Edit: Düzenlemeyi genişlet
 Expires on {{proExpiresOn}}: Sona erme tarihi {{proExpiresOn}}
-? Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
-: Şablonda <b>{{Clipboard}}</b> alanı bulundu. Bu, metni panoya kopyalamanıza olanak tanır ve şablona eklenir
+Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: Şablonda <b>{{Clipboard}}</b> alanı bulundu. Bu, metni panoya kopyalamanıza olanak tanır ve şablona eklenir
 Field is not found in the template: Alan şablonda bulunamadı
 Find Clip: Klipi Bul
 Find History: Geçmişi Bul
@@ -171,8 +169,7 @@ Pasted: Yapıştırıldı
 Path: Yol
 Pause: Duraklat
 Pause Playing: Oynatmayı Duraklat
-? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
-: 'İzin Kontrolü Başarısız: PasteBar Erişilebilirlik ayarlarına başarıyla eklenemedi. Lütfen gerekli izinleri verin ve tekrar Tamamlandı`ya tıklayın.'
+'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.': 'İzin Kontrolü Başarısız: PasteBar Erişilebilirlik ayarlarına başarıyla eklenemedi. Lütfen gerekli izinleri verin ve tekrar Tamamlandı`ya tıklayın.'
 Pin Selected: Pin Seçildi
 Pinned: Sabitlendi
 Play: Oynat
@@ -337,7 +334,7 @@ View Edit: Görüntüle Düzenle
 Views:
   Paste Menu: Yapıştır Menüsü
 We apologize but you found a bug. Please report this issue to us and try again: Özür dileriz ancak bir hata buldunuz. Lütfen bu sorunu bize bildirin ve tekrar deneyin
-"We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.": "Bu dosyanın güvenliğini doğrulayamadık. ID3 etiketi doğrulaması ve bütünlük kontrolü başarısız oldu. MP3 dosyaları potansiyel olarak kötü amaçlı yazılım içerebilir. Lütfen dikkatli olun."
+"We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.": 'Bu dosyanın güvenliğini doğrulayamadık. ID3 etiketi doğrulaması ve bütünlük kontrolü başarısız oldu. MP3 dosyaları potansiyel olarak kötü amaçlı yazılım içerebilir. Lütfen dikkatli olun.'
 Yes: Evet
 Yes, activate: Evet, etkinleştir
 chars: karakterler

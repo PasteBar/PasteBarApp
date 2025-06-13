@@ -1,59 +1,60 @@
-import { mount } from '@cypress/react';
-import React from 'react';
-import TwitterShareButton from '../../../components/TwitterShareButton';
+import React from 'react'
+import { mount } from '@cypress/react'
+
+import TwitterShareButton from '../../../components/TwitterShareButton'
 
 describe('Twitter Share Button', () => {
   it('should render Share button with url', () => {
     mount(
       <TwitterShareButton
-        url='https://facebook.com/saurabhnemade'
+        url="https://facebook.com/saurabhnemade"
         options={{ text: '#reactjs is awesome', via: 'saurabhnemade' }}
       />
-    );
-    cy.wait(4000);
-    cy.getIframeBody().contains('Tweet');
-  });
+    )
+    cy.wait(4000)
+    cy.getIframeBody().contains('Tweet')
+  })
 
   it('should render Share button with large', () => {
     mount(
       <TwitterShareButton
-        url='https://facebook.com/saurabhnemade'
+        url="https://facebook.com/saurabhnemade"
         options={{
           text: '#reactjs is awesome',
           via: 'saurabhnemade',
-          size: 'large'
+          size: 'large',
         }}
       />
-    );
-    cy.wait(1500);
-    cy.getIframeBody().contains('Tweet');
-  });
+    )
+    cy.wait(1500)
+    cy.getIframeBody().contains('Tweet')
+  })
 
   it('should render Share button with placeholder', () => {
     mount(
       <TwitterShareButton
-        url='https://facebook.com/saurabhnemade'
+        url="https://facebook.com/saurabhnemade"
         options={{
           text: '#reactjs is awesome',
           via: 'saurabhnemade',
-          size: 'large'
+          size: 'large',
         }}
-        placeholder='Loading'
+        placeholder="Loading"
       />
-    );
-    cy.contains('Loading');
-    cy.wait(1500);
-    cy.getIframeBody().contains('Tweet');
-  });
+    )
+    cy.contains('Loading')
+    cy.wait(1500)
+    cy.getIframeBody().contains('Tweet')
+  })
 
   it('should render Share button with placeholder', () => {
     mount(
       <TwitterShareButton
-        url='https://facebook.com/saurabhnemade'
+        url="https://facebook.com/saurabhnemade"
         options={{
           text: '#reactjs is awesome',
           via: 'saurabhnemade',
-          size: 'large'
+          size: 'large',
         }}
         placeholder={
           <div
@@ -61,34 +62,34 @@ describe('Twitter Share Button', () => {
               padding: 10,
               margin: 10,
               backgroundColor: 'red',
-              color: 'white'
+              color: 'white',
             }}
           >
             Hello I am custom placeholder
           </div>
         }
       />
-    );
-    cy.contains('Hello I am custom placeholder');
-    cy.wait(1500);
-    cy.getIframeBody().contains('Tweet');
-  });
+    )
+    cy.contains('Hello I am custom placeholder')
+    cy.wait(1500)
+    cy.getIframeBody().contains('Tweet')
+  })
 
   it('should render Share button with onLoad', () => {
-    const callback = cy.stub();
+    const callback = cy.stub()
     mount(
       <TwitterShareButton
-        url='https://facebook.com/saurabhnemade'
+        url="https://facebook.com/saurabhnemade"
         options={{
           text: '#reactjs is awesome',
           via: 'saurabhnemade',
-          size: 'large'
+          size: 'large',
         }}
         onLoad={callback}
       />
-    );
-    cy.wait(1500);
-    cy.getIframeBody().contains('Tweet');
-    cy.waitUntil(() => expect(callback.callCount).to.eq(1));
-  });
-});
+    )
+    cy.wait(1500)
+    cy.getIframeBody().contains('Tweet')
+    cy.waitUntil(() => expect(callback.callCount).to.eq(1))
+  })
+})

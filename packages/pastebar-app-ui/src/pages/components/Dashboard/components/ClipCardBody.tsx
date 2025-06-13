@@ -163,7 +163,7 @@ export function ClipCardBody({
     }
   }, [requestOptions])
 
-  const textValue: string = value || '';
+  const textValue: string = value || ''
 
   useEffect(() => {
     if (isExpanded.value) {

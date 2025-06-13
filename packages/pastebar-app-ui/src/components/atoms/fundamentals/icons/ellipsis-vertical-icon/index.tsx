@@ -1,8 +1,8 @@
-import IconProps from "../types/icon-type"
+import IconProps from '../types/icon-type'
 
 const EllipsisVerticalIcon = ({
   size = 20,
-  color = "currentColor",
+  color = 'currentColor',
   ...attributes
 }: IconProps) => {
   return (

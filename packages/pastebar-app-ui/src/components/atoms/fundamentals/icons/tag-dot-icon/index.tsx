@@ -1,14 +1,15 @@
-import React from "react"
-import IconProps from "../types/icon-type"
+import React from 'react'
+
+import IconProps from '../types/icon-type'
 
 type TagDotIconProps = IconProps & {
   outerColor: string
 }
 
 const TagDotIcon: React.FC<TagDotIconProps> = ({
-  size = "24px",
-  color = "#E5484D",
-  outerColor = "transparent",
+  size = '24px',
+  color = '#E5484D',
+  outerColor = 'transparent',
   ...attributes
 }) => {
   return (

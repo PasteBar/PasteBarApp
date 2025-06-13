@@ -1,85 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PasteBar Drop Zone</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-    overscroll-behavior: none;
-    overflow: hidden;
-    user-select: none;
-    font-family:
-      Inter,
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      'Roboto',
-      'Oxygen',
-      'Ubuntu',
-      'Cantarell',
-      'Fira Sans',
-      'Droid Sans',
-      'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-feature-settings:
-      'rlig' 1,
-      'calt' 1;
-  }
-
-  .drop-zone.hover {
-    background-color: #e0e0e0; /* Light gray background when hovering */
-    border-color: #0088cc; /* Change border color */
-    color: #0088cc; /* Change text color */
-  }
-
-  .drop-zone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 12px;
-    padding: 12px;
-    border: 2px dashed #cccccc;
-    border-radius: 12px;
-    height: calc(100% - 24px);
-    width: calc(100% - 24px);
-    text-align: center;
-    box-sizing: border-box;
-    color: #555555;
-  }
-
-  .drop-zone-text {
-    font-size: 24px;
-    pointer-events: none;
-    font-weight: bold;
-  }
-  </style>
-</head>
-<body>
-  <div class="drop-zone" id="droptarget">
-    <div class="drop-zone-text">Drag and drop an app, file or folder</div>
-  </div>
-
-  <script>
-    const target = document.getElementById("droptarget");
-    target.addEventListener("dragenter", (event) => {
-      if (event.target.classList.contains("drop-zone")) {
-        target.classList.add("hover");
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PasteBar Drop Zone</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
       }
-    });
 
-    target.addEventListener("dragleave", (event) => {
-        target.classList.remove("hover");
-    });
-  </script>
-</body>
+      body {
+        overscroll-behavior: none;
+        overflow: hidden;
+        user-select: none;
+        font-family:
+          Inter,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          'Roboto',
+          'Oxygen',
+          'Ubuntu',
+          'Cantarell',
+          'Fira Sans',
+          'Droid Sans',
+          'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-feature-settings:
+          'rlig' 1,
+          'calt' 1;
+      }
+
+      .drop-zone.hover {
+        background-color: #e0e0e0; /* Light gray background when hovering */
+        border-color: #0088cc; /* Change border color */
+        color: #0088cc; /* Change text color */
+      }
+
+      .drop-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 12px;
+        padding: 12px;
+        border: 2px dashed #cccccc;
+        border-radius: 12px;
+        height: calc(100% - 24px);
+        width: calc(100% - 24px);
+        text-align: center;
+        box-sizing: border-box;
+        color: #555555;
+      }
+
+      .drop-zone-text {
+        font-size: 24px;
+        pointer-events: none;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="drop-zone" id="droptarget">
+      <div class="drop-zone-text">Drag and drop an app, file or folder</div>
+    </div>
+
+    <script>
+      const target = document.getElementById('droptarget')
+      target.addEventListener('dragenter', event => {
+        if (event.target.classList.contains('drop-zone')) {
+          target.classList.add('hover')
+        }
+      })
+
+      target.addEventListener('dragleave', event => {
+        target.classList.remove('hover')
+      })
+    </script>
+  </body>
 </html>

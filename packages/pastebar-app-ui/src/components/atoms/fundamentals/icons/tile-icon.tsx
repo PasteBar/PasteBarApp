@@ -1,9 +1,10 @@
-import React from "react"
-import IconProps from "./types/icon-type"
+import React from 'react'
+
+import IconProps from './types/icon-type'
 
 const TileIcon: React.FC<IconProps> = ({
-  size = "20px",
-  color = "currentColor",
+  size = '20px',
+  color = 'currentColor',
   ...attributes
 }) => {
   return (

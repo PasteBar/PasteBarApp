@@ -1,241 +1,241 @@
 HISTORY_PANEL_TOUR:
-- element: '#side-panel_tour'
-  popover:
-    title: Pannello Cronologia Appunti
-    description: Questo pannello mostra la cronologia degli appunti copiati per un facile accesso successivo. Scorri la tua cronologia, cerca contenuti o filtra per tipo. Puoi ridimensionare questo pannello per una visualizzazione personalizzata.
-    prefferedSide: right
-- element: '#history-find_tour'
-  popover:
-    title: Trova e Filtra Cronologia
-    description: Usa la ricerca per trovare rapidamente elementi specifici nella tua cronologia degli appunti. Filtra i risultati per tipo (testo, immagini o link) per localizzare facilmente ciò di cui hai bisogno. Copia di nuovo un elemento trovato o salvalo nella bacheca.
-    prefferedSide: bottom
-    alignment: center
-- element: '#history-list_tour .history-item'
-  popover:
-    title: Elemento Cronologia Appunti
-    description: Ogni elemento nella tua Cronologia Appunti rappresenta un contenuto che hai copiato in precedenza. <b>Fai doppio clic</b> su un elemento o clicca sull'icona per copiarlo di nuovo negli appunti. <b>Premi e trascina</b> per creare un clip salvato nel pannello della bacheca. <b>Fai clic con il tasto destro</b> su un elemento per altre opzioni nel menu contestuale.
-    prefferedSide: right
-- element: '#tabs-history_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: Schede di Navigazione Cronologia/Menu
-    description: Passa tra le viste Cronologia Appunti e Menu Incolla per una facile gestione e accesso ai tuoi contenuti.
-    alignment: center
-    prefferedSide: top
-- element: '#history-menu-button_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: Menu Elementi Selezionati della Cronologia
-    description: Usa questo menu per gestire gli elementi selezionati nella tua Cronologia Appunti. Puoi <b>selezionare più elementi</b>, deselezionare tutto, aggiungere alla bacheca, eliminare o cancellare la cronologia per date specifiche.
-    alignment: end
-    prefferedSide: right
-- element: .panel-resize_tour
-  popover:
-    title: Vista Pannello Ridimensionabile
-    description: Personalizza il tuo spazio di lavoro ridimensionando la vista del pannello in base alle tue preferenze. <b>Passa il mouse</b> sul bordo del pannello fino a quando non appare il cursore di ridimensionamento, quindi <b>clicca e trascina</b> per regolare la dimensione del pannello.
-    prefferedSide: right
+  - element: '#side-panel_tour'
+    popover:
+      title: Pannello Cronologia Appunti
+      description: Questo pannello mostra la cronologia degli appunti copiati per un facile accesso successivo. Scorri la tua cronologia, cerca contenuti o filtra per tipo. Puoi ridimensionare questo pannello per una visualizzazione personalizzata.
+      prefferedSide: right
+  - element: '#history-find_tour'
+    popover:
+      title: Trova e Filtra Cronologia
+      description: Usa la ricerca per trovare rapidamente elementi specifici nella tua cronologia degli appunti. Filtra i risultati per tipo (testo, immagini o link) per localizzare facilmente ciò di cui hai bisogno. Copia di nuovo un elemento trovato o salvalo nella bacheca.
+      prefferedSide: bottom
+      alignment: center
+  - element: '#history-list_tour .history-item'
+    popover:
+      title: Elemento Cronologia Appunti
+      description: Ogni elemento nella tua Cronologia Appunti rappresenta un contenuto che hai copiato in precedenza. <b>Fai doppio clic</b> su un elemento o clicca sull'icona per copiarlo di nuovo negli appunti. <b>Premi e trascina</b> per creare un clip salvato nel pannello della bacheca. <b>Fai clic con il tasto destro</b> su un elemento per altre opzioni nel menu contestuale.
+      prefferedSide: right
+  - element: '#tabs-history_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Schede di Navigazione Cronologia/Menu
+      description: Passa tra le viste Cronologia Appunti e Menu Incolla per una facile gestione e accesso ai tuoi contenuti.
+      alignment: center
+      prefferedSide: top
+  - element: '#history-menu-button_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Menu Elementi Selezionati della Cronologia
+      description: Usa questo menu per gestire gli elementi selezionati nella tua Cronologia Appunti. Puoi <b>selezionare più elementi</b>, deselezionare tutto, aggiungere alla bacheca, eliminare o cancellare la cronologia per date specifiche.
+      alignment: end
+      prefferedSide: right
+  - element: .panel-resize_tour
+    popover:
+      title: Vista Pannello Ridimensionabile
+      description: Personalizza il tuo spazio di lavoro ridimensionando la vista del pannello in base alle tue preferenze. <b>Passa il mouse</b> sul bordo del pannello fino a quando non appare il cursore di ridimensionamento, quindi <b>clicca e trascina</b> per regolare la dimensione del pannello.
+      prefferedSide: right
 
-DASHBOARD_CLIPS_TOUR:    
-- element: .clips-dashboard-panel_tour
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: Pannello Dashboard
-    description: Questo pannello fornisce un hub centrale per organizzare e gestire i tuoi clip salvati. Crea schede e bacheche personalizzate per strutturare il tuo contenuto. <b>Trascina e rilascia</b> elementi dalla tua Cronologia Appunti per creare nuovi clip. Usa le schede per passare tra diverse categorie di bacheche.
-    prefferedSide: left
-- element: '#dashboard-tabs_tour'
-  popover:
-    title: Schede Dashboard
-    description: Crea schede personalizzate e usale per navigare attraverso diverse sezioni della tua Dashboard. Passa tra le categorie per gestire e accedere rapidamente ai tuoi clip e contenuti.
-    alignment: center
-    prefferedSide: bottom
-- element: '#dashboard-tabs-create-button_tour'
-  popover:
-    title: Crea Elementi Dashboard
-    description: Crea nuovi elementi per la tua Dashboard. Aggiungi clip, bacheche o schede personalizzate per organizzare il tuo contenuto.
-    alignment: end
-    prefferedSide: bottom
-- element: '#dashboard-tabs-context-menu_tour'
-  popover:
-    title: Menu Schede e Layout
-    description: <b>Fai clic con il tasto destro</b> sulle schede o <b>clicca sull'icona del menu</b> per organizzare il tuo layout e gestire le tue schede. Puoi modificare le schede esistenti o cambiare il layout della dashboard per adattarlo alle tue preferenze di flusso di lavoro.
-    alignment: end
-    prefferedSide: bottom
-- element: .board-panel_tour
-  popover:
-    title: Pannello Bacheca
-    description: Questo pannello bacheca ti permette di organizzare i tuoi clip salvati per un accesso rapido e facile. <b>Trascina e rilascia</b> elementi dalla tua Cronologia Appunti. Usa le bacheche per categorizzare e gestire efficacemente il tuo contenuto.
-    alignment: center
-    prefferedSide: right
-- element: .board-panel-header_tour
-  popover:
-    title: Intestazione Pannello Bacheca
-    description: <b>Fai doppio clic</b> sull'intestazione per espandere rapidamente il pannello bacheca o <b>fai clic con il tasto destro</b> per vedere altre opzioni per personalizzare e gestire la bacheca.
-    alignment: start
-    prefferedSide: right
-- element: .clip_tour
-  popover:
-    title: Elemento Clip Salvato
-    description: Accedi rapidamente al contenuto del clip salvato. <b>Fai doppio clic</b> o <b>clicca sull'icona degli appunti</b> per copiarlo. <b>Premi a lungo</b> per riordinare gli elementi, o <b>fai clic con il tasto destro</b> per altre opzioni per personalizzare e organizzare il tuo clip.
-    alignment: start
-    prefferedSide: right
-- element: .panel-resize_tour
-  popover:
-    title: Vista Pannello Ridimensionabile
-    description: Personalizza il tuo spazio di lavoro ridimensionando la vista del pannello in base alle tue preferenze. <b>Passa il mouse</b> sul bordo del pannello fino a quando non appare il cursore di ridimensionamento, quindi <b>clicca e trascina</b> per regolare la dimensione del pannello.
-    prefferedSide: right
+DASHBOARD_CLIPS_TOUR:
+  - element: .clips-dashboard-panel_tour
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Pannello Dashboard
+      description: Questo pannello fornisce un hub centrale per organizzare e gestire i tuoi clip salvati. Crea schede e bacheche personalizzate per strutturare il tuo contenuto. <b>Trascina e rilascia</b> elementi dalla tua Cronologia Appunti per creare nuovi clip. Usa le schede per passare tra diverse categorie di bacheche.
+      prefferedSide: left
+  - element: '#dashboard-tabs_tour'
+    popover:
+      title: Schede Dashboard
+      description: Crea schede personalizzate e usale per navigare attraverso diverse sezioni della tua Dashboard. Passa tra le categorie per gestire e accedere rapidamente ai tuoi clip e contenuti.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#dashboard-tabs-create-button_tour'
+    popover:
+      title: Crea Elementi Dashboard
+      description: Crea nuovi elementi per la tua Dashboard. Aggiungi clip, bacheche o schede personalizzate per organizzare il tuo contenuto.
+      alignment: end
+      prefferedSide: bottom
+  - element: '#dashboard-tabs-context-menu_tour'
+    popover:
+      title: Menu Schede e Layout
+      description: <b>Fai clic con il tasto destro</b> sulle schede o <b>clicca sull'icona del menu</b> per organizzare il tuo layout e gestire le tue schede. Puoi modificare le schede esistenti o cambiare il layout della dashboard per adattarlo alle tue preferenze di flusso di lavoro.
+      alignment: end
+      prefferedSide: bottom
+  - element: .board-panel_tour
+    popover:
+      title: Pannello Bacheca
+      description: Questo pannello bacheca ti permette di organizzare i tuoi clip salvati per un accesso rapido e facile. <b>Trascina e rilascia</b> elementi dalla tua Cronologia Appunti. Usa le bacheche per categorizzare e gestire efficacemente il tuo contenuto.
+      alignment: center
+      prefferedSide: right
+  - element: .board-panel-header_tour
+    popover:
+      title: Intestazione Pannello Bacheca
+      description: <b>Fai doppio clic</b> sull'intestazione per espandere rapidamente il pannello bacheca o <b>fai clic con il tasto destro</b> per vedere altre opzioni per personalizzare e gestire la bacheca.
+      alignment: start
+      prefferedSide: right
+  - element: .clip_tour
+    popover:
+      title: Elemento Clip Salvato
+      description: Accedi rapidamente al contenuto del clip salvato. <b>Fai doppio clic</b> o <b>clicca sull'icona degli appunti</b> per copiarlo. <b>Premi a lungo</b> per riordinare gli elementi, o <b>fai clic con il tasto destro</b> per altre opzioni per personalizzare e organizzare il tuo clip.
+      alignment: start
+      prefferedSide: right
+  - element: .panel-resize_tour
+    popover:
+      title: Vista Pannello Ridimensionabile
+      description: Personalizza il tuo spazio di lavoro ridimensionando la vista del pannello in base alle tue preferenze. <b>Passa il mouse</b> sul bordo del pannello fino a quando non appare il cursore di ridimensionamento, quindi <b>clicca e trascina</b> per regolare la dimensione del pannello.
+      prefferedSide: right
 
 MENU_TOUR:
-- element: '#side-panel_tour'
-  popover:
-    title: Pannello Menu Incolla
-    description: Questo pannello ti permette di gestire il menu di incolla nativo della barra delle applicazioni o della barra dei menu del tuo sistema. <b>Tieni premuto e trascina</b> gli elementi per riordinarli, <b>fai doppio clic</b> per rinominarli. <b>Premi</b> il tasto ALT o Command e clicca su qualsiasi elemento per selezionare più elementi.
-    prefferedSide: right
-- element: '#menu-find_tour'
-  popover:
-    title: Trova Elementi del Menu
-    description: Usa la barra di ricerca per trovare rapidamente elementi specifici del menu. Digita le parole chiave per filtrare e localizzare gli elementi di cui hai bisogno.
-    prefferedSide: bottom
-    alignment: center
-- element: div[role=treeitem]
-  popover:
-    title: Albero degli Elementi del Menu
-    description: Ogni elemento nell'albero del menu può essere riordinato individualmente o in gruppo. <b>Fai doppio clic</b> per rinominare, <b>tieni premuto e trascina</b> per riordinarlo. <b>Premi</b> il tasto ALT o Command e clicca per selezionare più elementi.
-    prefferedSide: right
-- element: '#tabs-menu_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: Schede di Navigazione Cronologia/Menu
-    description: Passa tra le viste Cronologia Appunti e Menu Incolla per una facile gestione e accesso ai tuoi contenuti.
-    alignment: center
-    prefferedSide: top
-- element: '#menu-icon-menu-button_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: Menu Incolla Elementi Selezionati
-    description: Usa questo menu per gestire più elementi del menu selezionati. Seleziona più elementi, deseleziona tutto, ricostruisci il menu nativo o elimina elementi per organizzare rapidamente il tuo menu di incolla.
-    alignment: end
-    prefferedSide: right
-- element: '#menu-main-list_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: Pannello di Gestione Menu Incolla
-    description: Questo pannello ti permette di gestire tutti gli elementi attivi del menu. Aggiungi, modifica o rimuovi elementi per personalizzare il tuo menu di incolla. Crea nuovi elementi o collega clip esistenti. <b>Fai doppio clic</b> per copiare il contenuto negli appunti e <b>fai clic con il tasto destro</b> per altre opzioni.
-    alignment: start
-    prefferedSide: left
-- element: .menu-item_tour
-  popover:
-    title: Elemento del Menu
-    description: Qui puoi gestire ogni elemento del menu individualmente. <b>Clicca</b> sull'icona di espansione per vedere il contenuto del menu. <b>Fai doppio clic</b> per copiare il contenuto negli appunti e <b>fai clic con il tasto destro</b> per vedere altre opzioni.
-    alignment: center
-    prefferedSide: bottom
-- element: '#add-menu-item__tour'
-  popover:
-    title: Aggiungi Elemento del Menu
-    description: Clicca sull'icona più e scegli la posizione in cui vuoi aggiungere il nuovo elemento, prima o dopo l'elemento di menu esistente. Puoi creare un nuovo menu, sottomenu, separatori, elementi di menu disabilitati, elementi di menu dalla cronologia recente o un collegamento a un clip salvato.
-    alignment: end
-    prefferedSide: bottom
-- element: '#toggle-inactive-menu-items_tour'
-  popover:
-    title: Attiva/Disattiva Elementi di Menu Inattivi
-    description: Clicca su questa icona per mostrare o nascondere gli elementi di menu inattivi. Questo aiuta a gestire e organizzare il tuo menu concentrandoti sugli elementi attivi quando necessario. Ottimizza il tuo menu e riordina il tuo spazio di lavoro per una migliore efficienza.
-    alignment: start
-    prefferedSide: bottom
-- element: .panel-resize_tour
-  popover:
-    title: Vista Pannello Ridimensionabile
-    description: Personalizza il tuo spazio di lavoro ridimensionando la vista del pannello in base alle tue preferenze. <b>Passa il mouse</b> sul bordo del pannello fino a quando non appare il cursore di ridimensionamento, quindi <b>clicca e trascina</b> per regolare la dimensione del pannello.
-    prefferedSide: right
+  - element: '#side-panel_tour'
+    popover:
+      title: Pannello Menu Incolla
+      description: Questo pannello ti permette di gestire il menu di incolla nativo della barra delle applicazioni o della barra dei menu del tuo sistema. <b>Tieni premuto e trascina</b> gli elementi per riordinarli, <b>fai doppio clic</b> per rinominarli. <b>Premi</b> il tasto ALT o Command e clicca su qualsiasi elemento per selezionare più elementi.
+      prefferedSide: right
+  - element: '#menu-find_tour'
+    popover:
+      title: Trova Elementi del Menu
+      description: Usa la barra di ricerca per trovare rapidamente elementi specifici del menu. Digita le parole chiave per filtrare e localizzare gli elementi di cui hai bisogno.
+      prefferedSide: bottom
+      alignment: center
+  - element: div[role=treeitem]
+    popover:
+      title: Albero degli Elementi del Menu
+      description: Ogni elemento nell'albero del menu può essere riordinato individualmente o in gruppo. <b>Fai doppio clic</b> per rinominare, <b>tieni premuto e trascina</b> per riordinarlo. <b>Premi</b> il tasto ALT o Command e clicca per selezionare più elementi.
+      prefferedSide: right
+  - element: '#tabs-menu_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Schede di Navigazione Cronologia/Menu
+      description: Passa tra le viste Cronologia Appunti e Menu Incolla per una facile gestione e accesso ai tuoi contenuti.
+      alignment: center
+      prefferedSide: top
+  - element: '#menu-icon-menu-button_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Menu Incolla Elementi Selezionati
+      description: Usa questo menu per gestire più elementi del menu selezionati. Seleziona più elementi, deseleziona tutto, ricostruisci il menu nativo o elimina elementi per organizzare rapidamente il tuo menu di incolla.
+      alignment: end
+      prefferedSide: right
+  - element: '#menu-main-list_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Pannello di Gestione Menu Incolla
+      description: Questo pannello ti permette di gestire tutti gli elementi attivi del menu. Aggiungi, modifica o rimuovi elementi per personalizzare il tuo menu di incolla. Crea nuovi elementi o collega clip esistenti. <b>Fai doppio clic</b> per copiare il contenuto negli appunti e <b>fai clic con il tasto destro</b> per altre opzioni.
+      alignment: start
+      prefferedSide: left
+  - element: .menu-item_tour
+    popover:
+      title: Elemento del Menu
+      description: Qui puoi gestire ogni elemento del menu individualmente. <b>Clicca</b> sull'icona di espansione per vedere il contenuto del menu. <b>Fai doppio clic</b> per copiare il contenuto negli appunti e <b>fai clic con il tasto destro</b> per vedere altre opzioni.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#add-menu-item__tour'
+    popover:
+      title: Aggiungi Elemento del Menu
+      description: Clicca sull'icona più e scegli la posizione in cui vuoi aggiungere il nuovo elemento, prima o dopo l'elemento di menu esistente. Puoi creare un nuovo menu, sottomenu, separatori, elementi di menu disabilitati, elementi di menu dalla cronologia recente o un collegamento a un clip salvato.
+      alignment: end
+      prefferedSide: bottom
+  - element: '#toggle-inactive-menu-items_tour'
+    popover:
+      title: Attiva/Disattiva Elementi di Menu Inattivi
+      description: Clicca su questa icona per mostrare o nascondere gli elementi di menu inattivi. Questo aiuta a gestire e organizzare il tuo menu concentrandoti sugli elementi attivi quando necessario. Ottimizza il tuo menu e riordina il tuo spazio di lavoro per una migliore efficienza.
+      alignment: start
+      prefferedSide: bottom
+  - element: .panel-resize_tour
+    popover:
+      title: Vista Pannello Ridimensionabile
+      description: Personalizza il tuo spazio di lavoro ridimensionando la vista del pannello in base alle tue preferenze. <b>Passa il mouse</b> sul bordo del pannello fino a quando non appare il cursore di ridimensionamento, quindi <b>clicca e trascina</b> per regolare la dimensione del pannello.
+      prefferedSide: right
 
 NAVBAR_TOUR:
-- element: '#navbar-panel_tour'
-  popover:
-    title: Barra di Navigazione
-    description: La barra di navigazione fornisce un accesso rapido alle funzionalità e alle impostazioni di PasteBar. Usala per passare tra le viste Cronologia Appunti e Menu Incolla, accedere alle tue collezioni, eseguire una ricerca globale, attivare/disattivare la visibilità della bacheca fissata, regolare le impostazioni e ottenere aiuto quando necessario.
-    alignment: center
-    prefferedSide: bottom
-- element: '#navbar-pastebar_tour'
-  popover:
-    title: Menu PasteBar
-    description: Il menu PasteBar fornisce un accesso rapido a funzioni e informazioni essenziali. Qui puoi controllare gli aggiornamenti, accedere alle impostazioni, bloccare lo schermo dell'app, chiudere la finestra principale o uscire dall'applicazione.
-    alignment: start
-    prefferedSide: bottom
-- element: '#navbar-view_tour'
-  popover:
-    title: Menu Visualizza
-    description: Usa il menu Visualizza per navigare nella cronologia degli appunti e nel menu incolla, regolare le opzioni, cambiare il tema colore, modificare la dimensione del carattere dell'interfaccia utente e cambiare la lingua. Accedi a impostazioni aggiuntive per un'esperienza personalizzata.
-    alignment: start
-    prefferedSide: bottom
-- element: '#navbar-collections_tour'
-  popover:
-    title: Menu Collezioni
-    description: Il Menu Collezioni ti permette di passare tra diverse collezioni di clip, bacheche e schede. Crea e personalizza ogni collezione per soddisfare le tue esigenze specifiche, come organizzare il contenuto per progetto o categoria.
-    alignment: center
-    prefferedSide: bottom
-- element: '#navbar-toggle-history-split'
-  popover:
-    title: Attiva/Disattiva Finestra Cronologia Divisa
-    description: Clicca su questa icona per aprire o chiudere la cronologia degli appunti in una finestra separata. Usa questa funzione per gestire la tua cronologia degli appunti indipendentemente dalla finestra principale.
-    alignment: center
-    preferredSide: bottom
-- element: '#navbar-search_tour'
-  popover:
-    title: Ricerca Globale
-    description: Usa la ricerca globale per trovare rapidamente clip, bacheche ed elementi di menu nella collezione attiva. Digita parole chiave per filtrare i risultati e localizzare efficacemente il contenuto di cui hai bisogno. <b>Fai doppio clic</b> su un clip per copiarlo direttamente dai risultati della ricerca.
-    alignment: center
-    prefferedSide: bottom
-- element: '#navbar-pinned_tour'
-  popover:
-    title: Attiva/Disattiva Bacheca Fissata
-    description: Clicca su questa icona per mostrare o nascondere la bacheca fissata. Usa questa funzione per mantenere organizzato il tuo spazio di lavoro e concentrarti sul contenuto più rilevante.
-    alignment: end
-    prefferedSide: bottom
-- element: '#navbar-help_tour'
-  popover:
-    title: Menu Aiuto
-    description: Accedi rapidamente a tour guidati e dimostrazioni delle funzionalità dell'interfaccia utente dal menu Aiuto. Fornisce una guida passo-passo e dimostrazioni per aiutarti a navigare e comprendere efficacemente le funzionalità e l'interfaccia utente di PasteBar.
-    alignment: end
-    prefferedSide: bottom
-- element: '#navbar-close-window_tour'
-  popover:
-    title: Chiudi Finestra Principale
-    description: Clicca sull'icona di chiusura per chiudere la finestra principale di PasteBar mantenendo la sua funzionalità disponibile dall'icona nella barra delle applicazioni o nella barra dei menu. Puoi sempre riaprire la finestra principale dell'applicazione dal menu principale.
-    alignment: end
-    prefferedSide: bottom
+  - element: '#navbar-panel_tour'
+    popover:
+      title: Barra di Navigazione
+      description: La barra di navigazione fornisce un accesso rapido alle funzionalità e alle impostazioni di PasteBar. Usala per passare tra le viste Cronologia Appunti e Menu Incolla, accedere alle tue collezioni, eseguire una ricerca globale, attivare/disattivare la visibilità della bacheca fissata, regolare le impostazioni e ottenere aiuto quando necessario.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-pastebar_tour'
+    popover:
+      title: Menu PasteBar
+      description: Il menu PasteBar fornisce un accesso rapido a funzioni e informazioni essenziali. Qui puoi controllare gli aggiornamenti, accedere alle impostazioni, bloccare lo schermo dell'app, chiudere la finestra principale o uscire dall'applicazione.
+      alignment: start
+      prefferedSide: bottom
+  - element: '#navbar-view_tour'
+    popover:
+      title: Menu Visualizza
+      description: Usa il menu Visualizza per navigare nella cronologia degli appunti e nel menu incolla, regolare le opzioni, cambiare il tema colore, modificare la dimensione del carattere dell'interfaccia utente e cambiare la lingua. Accedi a impostazioni aggiuntive per un'esperienza personalizzata.
+      alignment: start
+      prefferedSide: bottom
+  - element: '#navbar-collections_tour'
+    popover:
+      title: Menu Collezioni
+      description: Il Menu Collezioni ti permette di passare tra diverse collezioni di clip, bacheche e schede. Crea e personalizza ogni collezione per soddisfare le tue esigenze specifiche, come organizzare il contenuto per progetto o categoria.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-toggle-history-split'
+    popover:
+      title: Attiva/Disattiva Finestra Cronologia Divisa
+      description: Clicca su questa icona per aprire o chiudere la cronologia degli appunti in una finestra separata. Usa questa funzione per gestire la tua cronologia degli appunti indipendentemente dalla finestra principale.
+      alignment: center
+      preferredSide: bottom
+  - element: '#navbar-search_tour'
+    popover:
+      title: Ricerca Globale
+      description: Usa la ricerca globale per trovare rapidamente clip, bacheche ed elementi di menu nella collezione attiva. Digita parole chiave per filtrare i risultati e localizzare efficacemente il contenuto di cui hai bisogno. <b>Fai doppio clic</b> su un clip per copiarlo direttamente dai risultati della ricerca.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-pinned_tour'
+    popover:
+      title: Attiva/Disattiva Bacheca Fissata
+      description: Clicca su questa icona per mostrare o nascondere la bacheca fissata. Usa questa funzione per mantenere organizzato il tuo spazio di lavoro e concentrarti sul contenuto più rilevante.
+      alignment: end
+      prefferedSide: bottom
+  - element: '#navbar-help_tour'
+    popover:
+      title: Menu Aiuto
+      description: Accedi rapidamente a tour guidati e dimostrazioni delle funzionalità dell'interfaccia utente dal menu Aiuto. Fornisce una guida passo-passo e dimostrazioni per aiutarti a navigare e comprendere efficacemente le funzionalità e l'interfaccia utente di PasteBar.
+      alignment: end
+      prefferedSide: bottom
+  - element: '#navbar-close-window_tour'
+    popover:
+      title: Chiudi Finestra Principale
+      description: Clicca sull'icona di chiusura per chiudere la finestra principale di PasteBar mantenendo la sua funzionalità disponibile dall'icona nella barra delle applicazioni o nella barra dei menu. Puoi sempre riaprire la finestra principale dell'applicazione dal menu principale.
+      alignment: end
+      prefferedSide: bottom
 
 SETTINGS_TOUR:
-- element: '#app-settings-history_tour'
-  popover:
-    title: Impostazioni Cronologia Appunti
-    description: Regola le impostazioni della cronologia degli appunti per personalizzare il modo in cui PasteBar cattura e gestisce il contenuto copiato. Abilita o disabilita funzioni come l'aggiornamento automatico, l'aggiunta automatica ai preferiti, l'anteprima dei link, l'elenco delle parole da ignorare e il rilevamento automatico del linguaggio di programmazione per un'esperienza personalizzata.
-    alignment: start
-    prefferedSide: right
-- element: '#app-settings-collections_tour'
-  popover:
-    title: Impostazioni Gestione Collezioni
-    description: Usa la Gestione Collezioni per organizzare e personalizzare le tue collezioni. Aggiungi nuove collezioni, modifica quelle esistenti e passa tra di esse per adattarle al tuo flusso di lavoro. Gestisci efficacemente il tuo contenuto raggruppando clip, bacheche e schede correlate.
-    alignment: start
-    prefferedSide: right
-- element: '#app-settings-preferences_tour'
-  popover:
-    title: Preferenze Utente
-    description: Regola la dimensione del carattere, cambia i temi colore, modifica la lingua dell'interfaccia e configura le opzioni di avvio automatico. Scambia i layout dei pannelli, mostra i nomi delle collezioni sulla barra di navigazione e gestisci i popup delle note dei clip.
-    alignment: start
-    prefferedSide: right
-- element: '#app-settings-security_tour'
-  popover:
-    title: Impostazioni di Sicurezza
-    description: Configura le tue impostazioni di sicurezza per proteggere i tuoi dati. Imposta un codice di accesso per la schermata di blocco e una password di recupero. Controlla la cattura della cronologia degli appunti dalla schermata di blocco e abilita il blocco automatico in caso di inattività. Regola queste impostazioni per migliorare la sicurezza della tua applicazione PasteBar.
-    alignment: start
-    prefferedSide: right
-- element: '#app-settings-back_tour'
-  popover:
-    title: Torna alla Schermata Principale
-    description: Clicca per tornare dalle impostazioni alla vista principale dell'applicazione.
-    alignment: start
-    prefferedSide: right
+  - element: '#app-settings-history_tour'
+    popover:
+      title: Impostazioni Cronologia Appunti
+      description: Regola le impostazioni della cronologia degli appunti per personalizzare il modo in cui PasteBar cattura e gestisce il contenuto copiato. Abilita o disabilita funzioni come l'aggiornamento automatico, l'aggiunta automatica ai preferiti, l'anteprima dei link, l'elenco delle parole da ignorare e il rilevamento automatico del linguaggio di programmazione per un'esperienza personalizzata.
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-collections_tour'
+    popover:
+      title: Impostazioni Gestione Collezioni
+      description: Usa la Gestione Collezioni per organizzare e personalizzare le tue collezioni. Aggiungi nuove collezioni, modifica quelle esistenti e passa tra di esse per adattarle al tuo flusso di lavoro. Gestisci efficacemente il tuo contenuto raggruppando clip, bacheche e schede correlate.
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-preferences_tour'
+    popover:
+      title: Preferenze Utente
+      description: Regola la dimensione del carattere, cambia i temi colore, modifica la lingua dell'interfaccia e configura le opzioni di avvio automatico. Scambia i layout dei pannelli, mostra i nomi delle collezioni sulla barra di navigazione e gestisci i popup delle note dei clip.
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-security_tour'
+    popover:
+      title: Impostazioni di Sicurezza
+      description: Configura le tue impostazioni di sicurezza per proteggere i tuoi dati. Imposta un codice di accesso per la schermata di blocco e una password di recupero. Controlla la cattura della cronologia degli appunti dalla schermata di blocco e abilita il blocco automatico in caso di inattività. Regola queste impostazioni per migliorare la sicurezza della tua applicazione PasteBar.
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-back_tour'
+    popover:
+      title: Torna alla Schermata Principale
+      description: Clicca per tornare dalle impostazioni alla vista principale dell'applicazione.
+      alignment: start
+      prefferedSide: right

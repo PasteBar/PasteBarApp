@@ -1,9 +1,10 @@
-import React from "react"
-import IconProps from "../types/icon-type"
+import React from 'react'
+
+import IconProps from '../types/icon-type'
 
 const FastDeliveryIcon: React.FC<IconProps> = ({
-  size = "20",
-  color = "currentColor",
+  size = '20',
+  color = 'currentColor',
   ...attributes
 }) => {
   return (

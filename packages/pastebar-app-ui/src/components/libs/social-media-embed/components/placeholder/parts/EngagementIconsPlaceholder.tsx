@@ -1,10 +1,12 @@
-import classNames from 'classnames';
-import React from 'react';
-import { DivProps } from 'react-html-props';
+import React from 'react'
+import classNames from 'classnames'
+import { DivProps } from 'react-html-props'
 
 export interface EngagementIconsPlaceholderProps extends DivProps {}
 
-export const EngagementIconsPlaceholder = ({ ...divProps }: EngagementIconsPlaceholderProps) => {
+export const EngagementIconsPlaceholder = ({
+  ...divProps
+}: EngagementIconsPlaceholderProps) => {
   return (
     <div
       {...divProps}
@@ -15,8 +17,8 @@ export const EngagementIconsPlaceholder = ({ ...divProps }: EngagementIconsPlace
       <ChatBubbleIcon />
       <ShareArrowIcon />
     </div>
-  );
-};
+  )
+}
 
 export const HeartIcon = (props: DivProps) => {
   return (
@@ -51,8 +53,8 @@ export const HeartIcon = (props: DivProps) => {
         }}
       />
     </div>
-  );
-};
+  )
+}
 
 export const ChatBubbleIcon = (props: DivProps) => {
   return (
@@ -76,8 +78,8 @@ export const ChatBubbleIcon = (props: DivProps) => {
         }}
       />
     </div>
-  );
-};
+  )
+}
 
 export const ShareArrowIcon = (props: DivProps) => {
   return (
@@ -111,5 +113,5 @@ c59.905-109.171,178.724-165.463,295.204-151.033v145.035L512,253z"
         />
       </svg>
     </div>
-  );
-};
+  )
+}

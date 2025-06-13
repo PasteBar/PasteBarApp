@@ -10,11 +10,42 @@ import {
   UniqueIdentifier,
 } from '@dnd-kit/core'
 import { bbCode } from '~/libs/bbcode'
+import {
+  BookOpenText,
+  Contact,
+  FileText,
+  MessageSquareText,
+  NotebookPen,
+} from 'lucide-react'
 
 import { BOARD, CLIP, TAB } from '../Dashboard'
 import { Board, BoardDragData } from './Board'
 import { TabDragData } from './BoardTabs'
 import { Clip, ClipDragData } from './ClipCard'
+
+// Note icon constants and types
+export const NOTE_ICON_TYPES = {
+  MESSAGE: 'MessageSquareText',
+  FILE: 'FileText',
+  BOOK: 'BookOpenText',
+  CONTACT: 'Contact',
+  NOTEBOOK: 'NotebookPen',
+} as const
+
+export type NoteIconType = (typeof NOTE_ICON_TYPES)[keyof typeof NOTE_ICON_TYPES]
+
+// Icon component map for memoized note icon retrieval
+const iconMap = {
+  [NOTE_ICON_TYPES.MESSAGE]: MessageSquareText,
+  [NOTE_ICON_TYPES.FILE]: FileText,
+  [NOTE_ICON_TYPES.BOOK]: BookOpenText,
+  [NOTE_ICON_TYPES.CONTACT]: Contact,
+  [NOTE_ICON_TYPES.NOTEBOOK]: NotebookPen,
+} as const
+
+export function getNoteIconComponent(iconType: NoteIconType | undefined) {
+  return iconMap[iconType || NOTE_ICON_TYPES.MESSAGE] || MessageSquareText
+}
 
 const directions: string[] = [
   KeyboardCode.Down,
@@ -273,7 +304,7 @@ export const findBoardsById = (
 // Note options parsing and utilities
 export interface NoteOptions {
   showIcon?: boolean
-  iconType?: string
+  iconType?: NoteIconType
   iconVisibility?: 'always' | 'hover' | 'none'
   iconColor?: string
 }
@@ -283,22 +314,34 @@ export interface ItemOptions {
 }
 
 export function parseItemOptions(itemOptions: string | null | undefined): ItemOptions {
-  if (!itemOptions) {
+  if (!itemOptions?.trim()) {
     return {}
   }
 
   try {
-    return JSON.parse(itemOptions)
-  } catch {
+    const parsed = JSON.parse(itemOptions)
+    // Validate that parsed result is an object and not null
+    if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+      return parsed as ItemOptions
+    }
+    return {}
+  } catch (error) {
+    // Log error in development for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Failed to parse itemOptions JSON:', error)
+    }
     return {}
   }
 }
 
-export function getNoteOptions(itemOptions: string | null | undefined, globalSettings?: { isNoteIconsEnabled?: boolean; defaultNoteIconType?: string }): NoteOptions {
+export function getNoteOptions(
+  itemOptions: string | null | undefined,
+  globalSettings?: { isNoteIconsEnabled?: boolean; defaultNoteIconType?: NoteIconType }
+): NoteOptions {
   const parsed = parseItemOptions(itemOptions)
   return {
-    showIcon: globalSettings?.isNoteIconsEnabled ?? true, // Default to global setting or true
-    iconType: globalSettings?.defaultNoteIconType ?? 'MessageSquareText',
+    showIcon: globalSettings?.isNoteIconsEnabled ?? true,
+    iconType: globalSettings?.defaultNoteIconType ?? NOTE_ICON_TYPES.MESSAGE,
     iconVisibility: 'always',
     iconColor: 'text-yellow-600 dark:text-yellow-500',
     ...parsed.noteOptions,
@@ -308,7 +351,7 @@ export function getNoteOptions(itemOptions: string | null | undefined, globalSet
 export function shouldShowNoteIcon(
   description: string | null | undefined,
   itemOptions: string | null | undefined,
-  globalSettings?: { isNoteIconsEnabled?: boolean; defaultNoteIconType?: string }
+  globalSettings?: { isNoteIconsEnabled?: boolean; defaultNoteIconType?: NoteIconType }
 ): boolean {
   if (!description?.trim()) {
     return false
