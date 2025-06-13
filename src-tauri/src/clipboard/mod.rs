@@ -1,7 +1,6 @@
 use arboard::{Clipboard, ImageData};
 use base64::{engine::general_purpose, Engine as _};
 use clipboard_master::{CallbackResult, ClipboardHandler, Master};
-use diesel::dsl::date;
 use image::GenericImageView;
 use image::{ImageBuffer, RgbaImage};
 use std::borrow::Cow;
@@ -16,6 +15,10 @@ use tauri::{
   plugin::{Builder, TauriPlugin},
   Manager, Runtime,
 };
+
+// Windows-specific clipboard handling
+#[cfg(target_os = "windows")]
+use clipboard_win::{formats, get_clipboard};
 
 use active_win_pos_rs::get_active_window;
 
@@ -100,6 +103,7 @@ where
       Ok(active_window) => Some(active_window.app_name),
       Err(()) => None,
     };
+
     if let Ok(mut text) = clipboard_text {
       let trim_text_history = settings_map
         .get("isHistoryAutoTrimOnCaputureEnabled")
@@ -230,8 +234,8 @@ where
           ));
         }
       }
-    } else if let Ok(image_binary) = clipboard_manager.get_image_binary() {
-      // Check if image capturing is disabled
+    } else {
+      // Check if image capturing is disabled first (before accessing clipboard)
       let is_image_capture_disabled = settings_map
         .get("isImageCaptureDisabled")
         .and_then(|s| s.value_bool)
@@ -244,33 +248,36 @@ where
         return CallbackResult::Next;
       }
 
-      let mut is_app_excluded = false;
+      // Only try to get image from clipboard if capture is enabled
+      if let Ok(image_binary) = clipboard_manager.get_image_binary() {
+        let mut is_app_excluded = false;
 
-      if let Some(setting) = settings_map.get("isExclusionAppListEnabled") {
-        if let Some(value_bool) = setting.value_bool {
-          if value_bool {
-            if let Some(app_name) = &copied_from_app {
-              let exclusion_app_list: Vec<String> = settings_map
-                .get("historyExclusionAppList")
-                .and_then(|s| s.value_text.as_ref())
-                .map_or(Vec::new(), |exclusion_list_text| {
-                  exclusion_list_text.lines().map(String::from).collect()
-                });
+        if let Some(setting) = settings_map.get("isExclusionAppListEnabled") {
+          if let Some(value_bool) = setting.value_bool {
+            if value_bool {
+              if let Some(app_name) = &copied_from_app {
+                let exclusion_app_list: Vec<String> = settings_map
+                  .get("historyExclusionAppList")
+                  .and_then(|s| s.value_text.as_ref())
+                  .map_or(Vec::new(), |exclusion_list_text| {
+                    exclusion_list_text.lines().map(String::from).collect()
+                  });
 
-              is_app_excluded |= exclusion_app_list
-                .iter()
-                .any(|item| item.to_lowercase() == app_name.to_lowercase());
+                is_app_excluded |= exclusion_app_list
+                  .iter()
+                  .any(|item| item.to_lowercase() == app_name.to_lowercase());
+              }
             }
           }
         }
-      }
 
-      if !is_app_excluded {
-        do_refresh_clipboard = Some(history_service::add_clipboard_history_from_image(
-          image_binary,
-          should_auto_star_on_double_copy,
-          copied_from_app,
-        ));
+        if !is_app_excluded {
+          do_refresh_clipboard = Some(history_service::add_clipboard_history_from_image(
+            image_binary,
+            should_auto_star_on_double_copy,
+            copied_from_app,
+          ));
+        }
       }
     }
 
@@ -387,37 +394,9 @@ impl ClipboardManager {
     Ok(base64_str)
   }
 
-  pub fn get_image_binary(&self) -> Result<ImageData, String> {
-    let mut clipboard = Clipboard::new().unwrap();
-    let image_data = clipboard.get_image().map_err(|err| err.to_string())?;
-
-    // Only check for stride alignment on Windows
-    #[cfg(target_os = "windows")]
-    {
-      let bytes_per_pixel = 4; // RGBA
-      let expected_bytes_per_row = image_data.width * bytes_per_pixel;
-      let actual_bytes_per_row = image_data.bytes.len() / image_data.height;
-
-      if actual_bytes_per_row != expected_bytes_per_row {
-        // We have stride padding, need to remove it
-        let mut cleaned_bytes = Vec::with_capacity(expected_bytes_per_row * image_data.height);
-
-        for row in 0..image_data.height {
-          let row_start = row * actual_bytes_per_row;
-          let row_end = row_start + expected_bytes_per_row;
-          cleaned_bytes.extend_from_slice(&image_data.bytes[row_start..row_end]);
-        }
-
-        return Ok(ImageData {
-          width: image_data.width,
-          height: image_data.height,
-          bytes: Cow::Owned(cleaned_bytes),
-        });
-      }
-    }
-
-    // For macOS, Linux, and Windows without padding, return as-is
-    Ok(image_data)
+  pub fn get_image_binary(&self) -> Result<ImageData<'static>, String> {
+    // Use our safe image retrieval function instead of clipboard_rs
+    get_image_safe()
   }
 
   // Function 2: Returns Vec<u8> of PNG file data
@@ -469,6 +448,64 @@ impl ClipboardManager {
 
     Ok(buffer)
   }
+}
+
+// Safe image retrieval function to avoid clipboard corruption
+#[cfg(target_os = "windows")]
+fn get_image_safe() -> Result<ImageData<'static>, String> {
+  // Try PNG format first (safest) - using the correct format ID
+  let png_format = clipboard_win::register_format("PNG")
+    .map(|f| f.into())
+    .unwrap_or(0);
+  if png_format != 0 && clipboard_win::is_format_avail(png_format) {
+    match get_clipboard(formats::RawData(png_format)) {
+      Ok(png_data) => {
+        // Load PNG data directly using image crate
+        match image::load_from_memory(&png_data) {
+          Ok(img) => {
+            let rgba_img = img.to_rgba8();
+            let (width, height) = img.dimensions();
+            return Ok(ImageData {
+              width: width as usize,
+              height: height as usize,
+              bytes: Cow::Owned(rgba_img.into_raw()),
+            });
+          }
+          Err(e) => println!("PNG decode error: {}", e),
+        }
+      }
+      Err(e) => println!("PNG clipboard error: {}", e),
+    }
+  }
+
+  // Fallback to DIB format (safer than DIBV5)
+  if clipboard_win::is_format_avail(formats::CF_DIB) {
+    match get_clipboard(formats::Bitmap) {
+      Ok(bmp_data) => match image::load_from_memory(&bmp_data) {
+        Ok(img) => {
+          let rgba_img = img.to_rgba8();
+          let (width, height) = img.dimensions();
+          return Ok(ImageData {
+            width: width as usize,
+            height: height as usize,
+            bytes: Cow::Owned(rgba_img.into_raw()),
+          });
+        }
+        Err(e) => println!("BMP decode error: {}", e),
+      },
+      Err(e) => println!("BMP clipboard error: {}", e),
+    }
+  }
+
+  Err("No supported image format found in clipboard".to_string())
+}
+
+#[cfg(target_os = "macos")]
+fn get_image_safe() -> Result<ImageData<'static>, String> {
+  // For macos platforms, use arboard
+  let mut clipboard = Clipboard::new().map_err(|e| e.to_string())?;
+  let image_data = clipboard.get_image().map_err(|e| e.to_string())?;
+  Ok(image_data)
 }
 
 /// Initializes the plugin.

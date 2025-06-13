@@ -72,6 +72,7 @@ interface ClipboardHistoryRowProps {
   searchTerm?: string
   isBrokenImage?: boolean
   isCopied?: boolean
+  isKeyboardSelected?: boolean
   isPasted?: boolean
   isSaved?: boolean
   isLargeView?: boolean
@@ -138,6 +139,7 @@ export function ClipboardHistoryRowComponent({
   isWrapText = false,
   isDeleting = false,
   isOverPinned = false,
+  isKeyboardSelected = false,
   hasClipboardHistoryURLErrors = false,
   addToClipboardHistoryIdsURLErrors = () => {},
   hasGenerateLinkMetaDataInProgress = false,
@@ -259,7 +261,7 @@ export function ClipboardHistoryRowComponent({
     clipboard.isFavorite,
     clipboard.isPinned,
   ])
-  
+
   const stringValue: string = clipboard?.value ?? ''
   const hasLinkCard =
     clipboard?.isLink &&
@@ -311,23 +313,25 @@ export function ClipboardHistoryRowComponent({
 
   const pinnedTopOffsetFirst = !isPinnedTopFirst ? 'top-[-10px]' : 'top-[5px]'
   const bgToolsPanel = `${
-    !isPinnedTop && isOverPinned && !isNowItem
-      ? 'bg-orange-50 dark:!bg-transparent'
-      : isDeleting
-        ? 'bg-red-50 dark:bg-red-950/80'
-        : contextMenuOpen.value
-          ? `bg-slate-100 dark:bg-slate-900 ${
-              isNowItem ? 'bg-teal-50/80 dark:bg-sky-900/80' : ''
-            }`
-          : isCopiedOrPasted
-            ? 'dark:bg-green-950/80'
-            : isSaved
-              ? 'dark:bg-sky-950/80'
-              : isSelected
-                ? 'bg-yellow-50 dark:bg-amber-950/80'
-                : isNowItem
-                  ? 'bg-teal-50/90 dark:bg-sky-950'
-                  : 'bg-white dark:bg-slate-950/80'
+    isKeyboardSelected
+      ? 'bg-blue-50 dark:bg-blue-950/80'
+      : !isPinnedTop && isOverPinned && !isNowItem
+        ? 'bg-orange-50 dark:!bg-transparent'
+        : isDeleting
+          ? 'bg-red-50 dark:bg-red-950/80'
+          : contextMenuOpen.value
+            ? `bg-slate-100 dark:bg-slate-900 ${
+                isNowItem ? 'bg-teal-50/80 dark:bg-sky-900/80' : ''
+              }`
+            : isCopiedOrPasted
+              ? 'dark:bg-green-950/80'
+              : isSaved
+                ? 'dark:bg-sky-950/80'
+                : isSelected
+                  ? 'bg-yellow-50 dark:bg-amber-950/80'
+                  : isNowItem
+                    ? 'bg-teal-50/90 dark:bg-sky-950'
+                    : 'bg-white dark:bg-slate-950/80'
   }`
 
   return (
@@ -378,33 +382,38 @@ export function ClipboardHistoryRowComponent({
                   clipboard.updatedAt > Date.now() - MINUTE_IN_MS &&
                   !isCopiedOrPasted &&
                   !isDeleting &&
+                  !isKeyboardSelected &&
                   !isSelected
                     ? 'bg-teal-50 hover:border-slate-300 dark:bg-sky-900/40 dark:hover:border-slate-700 hover:bg-teal-50/90 hover:dark:bg-sky-950'
-                    : isDeleting && !isDragPreview
-                      ? 'border-red-400 bg-red-50 dark:bg-red-950/80 dark:border-red-900/80 dark:hover:border-red-800'
-                      : contextMenuOpen.value
-                        ? 'bg-slate-100 dark:bg-slate-950/80 border-slate-300 dark:border-slate-600'
-                        : isSaved && !isDragPreview
-                          ? 'bg-sky-50 border-sky-600 dark:bg-sky-950/80 dark:border-sky-900/80 dark:hover:border-sky-800'
-                          : isCopiedOrPasted && !isDragPreview
-                            ? `bg-green-50 border-green-600 dark:bg-green-950/80 dark:border-green-800`
-                            : isSelected
-                              ? `bg-amber-50 border-amber-300 dark:bg-amber-950/80 dark:border-amber-900/80 hover:border-amber-300/80 dark:hover:border-amber-800 hover:bg-amber-50/80 ${
-                                  isPinnedTop ? '!border dark:!bg-amber-950' : ''
-                                }`
-                              : `hover:bg-white dark:hover:bg-slate-950/80 ${
-                                  isLargeView
-                                    ? 'border-slate-500 bg-white dark:bg-slate-950 hover:dark:border-slate-500'
-                                    : `${
-                                        !isPinnedTop && isOverPinned
-                                          ? 'border-orange-300 dark:border-orange-400/80 dark:bg-orange-900/80 bg-orange-50'
-                                          : isPinnedTop
-                                            ? 'bg-slate-50 dark:!bg-slate-900 dark:hover:!bg-slate-950 hover:!border-orange-300/90 border-orange-300/50 dark:!border-orange-800/60 dark:hover:!border-orange-900'
-                                            : 'bg-slate-50 hover:border-slate-300 dark:border-slate-800'
-                                      }`
-                                } dark:hover:border-slate-700 dark:bg-slate-900 ${
-                                  isDragPreview ? 'dark:border-slate-700' : ''
-                                }`
+                    : isKeyboardSelected
+                      ? `bg-blue-50 !shadow-sm border-blue-300 dark:bg-blue-950/80 dark:border-blue-900/80 hover:border-blue-300/80 dark:hover:border-blue-800 hover:bg-blue-50/80 ${
+                          isPinnedTop ? ' dark:!bg-amber-950' : ''
+                        }`
+                      : isDeleting && !isDragPreview
+                        ? 'border-red-400 bg-red-50 dark:bg-red-950/80 dark:border-red-900/80 dark:hover:border-red-800'
+                        : contextMenuOpen.value
+                          ? 'bg-slate-100 dark:bg-slate-950/80 border-slate-300 dark:border-slate-600'
+                          : isSaved && !isDragPreview
+                            ? 'bg-sky-50 border-sky-600 dark:bg-sky-950/80 dark:border-sky-900/80 dark:hover:border-sky-800'
+                            : isCopiedOrPasted && !isDragPreview
+                              ? `bg-green-50 border-green-600 dark:bg-green-950/80 dark:border-green-800`
+                              : isSelected
+                                ? `bg-amber-50 border-amber-300 dark:bg-amber-950/80 dark:border-amber-900/80 hover:border-amber-300/80 dark:hover:border-amber-800 hover:bg-amber-50/80 ${
+                                    isPinnedTop ? '!border dark:!bg-amber-950' : ''
+                                  }`
+                                : `hover:bg-white dark:hover:bg-slate-950/80 ${
+                                    isLargeView
+                                      ? 'border-slate-500 bg-white dark:bg-slate-950 hover:dark:border-slate-500'
+                                      : `${
+                                          !isPinnedTop && isOverPinned
+                                            ? 'border-orange-300 dark:border-orange-400/80 dark:bg-orange-900/80 bg-orange-50'
+                                            : isPinnedTop
+                                              ? 'bg-slate-50 dark:!bg-slate-900 dark:hover:!bg-slate-950 hover:!border-orange-300/90 border-orange-300/50 dark:!border-orange-800/60 dark:hover:!border-orange-900'
+                                              : 'bg-slate-50 hover:border-slate-300 dark:border-slate-800'
+                                        }`
+                                  } dark:hover:border-slate-700 dark:bg-slate-900 ${
+                                    isDragPreview ? 'dark:border-slate-700' : ''
+                                  }`
                 }`}
                 onClickCapture={e => {
                   if ((isWindows && e.ctrlKey) || (e.metaKey && !isWindows)) {
