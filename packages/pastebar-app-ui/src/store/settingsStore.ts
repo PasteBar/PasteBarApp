@@ -86,6 +86,7 @@ type Settings = {
   clipTextMinLength: number
   clipTextMaxLength: number
   isImageCaptureDisabled: boolean
+  isMenuItemCopyOnlyEnabled: boolean
 }
 
 type Constants = {
@@ -161,6 +162,7 @@ export interface SettingsStoreState {
   setIsHideCollectionsOnNavBar: (isEnabled: boolean) => void
   setIsShowNavBarItemsOnHoverOnly: (isEnabled: boolean) => void
   setIsImageCaptureDisabled: (isEnabled: boolean) => void
+  setIsMenuItemCopyOnlyEnabled: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -246,6 +248,7 @@ const initialState: SettingsStoreState & Settings = {
   clipTextMinLength: 0,
   clipTextMaxLength: 5000,
   isImageCaptureDisabled: false,
+  isMenuItemCopyOnlyEnabled: false,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -303,6 +306,7 @@ const initialState: SettingsStoreState & Settings = {
   setClipTextMinLength: () => {},
   setClipTextMaxLength: () => {},
   setIsImageCaptureDisabled: () => {},
+  setIsMenuItemCopyOnlyEnabled: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -375,7 +379,8 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
         name === 'isHistoryEnabled' ||
         name === 'userSelectedLanguage' ||
         name === 'isAppLocked' ||
-        name === 'isImageCaptureDisabled'
+        name === 'isImageCaptureDisabled' ||
+        name === 'isMenuItemCopyOnlyEnabled'
       ) {
         invoke('build_system_menu')
       }
@@ -610,6 +615,9 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsImageCaptureDisabled: async (isEnabled: boolean) => {
     return get().updateSetting('isImageCaptureDisabled', isEnabled)
+  },
+  setIsMenuItemCopyOnlyEnabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isMenuItemCopyOnlyEnabled', isEnabled)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

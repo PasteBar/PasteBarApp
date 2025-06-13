@@ -718,9 +718,23 @@ async fn main() {
           debug_output(|| {
             println!("system tray received a click on item id{:?} ", item_id);
           });
+
           let w = app.get_window("main").unwrap();
           let state: tauri::State<DbItems> = app.state::<DbItems>();
           let db_items_state = state.0.lock().unwrap();
+
+          // Get the copy-only setting
+          let app_settings = app.state::<Mutex<HashMap<String, Setting>>>();
+          let settings_map = app_settings.lock().unwrap();
+          let is_copy_only = settings_map
+            .get("isMenuItemCopyOnlyEnabled")
+            .and_then(|setting| setting.value_bool)
+            .unwrap_or(false);
+
+          debug_output(|| {
+            println!("Looking for item with item_id: {:?}", item_id);
+            println!("is_copy_only: {:?}", is_copy_only);
+          });
 
           let item_opt = db_items_state.iter().find(|&item| item.item_id == item_id);
 
@@ -743,26 +757,54 @@ async fn main() {
 
                 // Convert relative path to absolute path
                 let absolute_path = db::to_absolute_image_path(&image_path);
-                let img_data = std::fs::read(&absolute_path).expect("Failed to read image from path");
+                let img_data =
+                  std::fs::read(&absolute_path).expect("Failed to read image from path");
                 let base64_image = base64::encode(&img_data);
 
                 write_image_to_clipboard(base64_image).expect("Failed to write image to clipboard");
               }
               if item.is_link.unwrap_or(false) {
                 let url = item.value.as_deref().unwrap_or("");
-                let _ = opener::open(ensure_url_or_email_prefix(url))
-                  .map_err(|e| format!("Failed to open url: {}", e));
+                if is_copy_only {
+                  // Copy URL to clipboard instead of opening it
+                  debug_output(|| {
+                    println!("Copying URL to clipboard: {}", url);
+                  });
+                  manager
+                    .write_text(url)
+                    .expect("failed to write to clipboard");
+                } else {
+                  let _ = opener::open(ensure_url_or_email_prefix(url))
+                    .map_err(|e| format!("Failed to open url: {}", e));
+                }
               } else if item.is_path.unwrap_or(false) {
                 let path = item.value.as_deref().unwrap_or("");
-                let _ = opener::open(path).map_err(|e| format!("Failed to open path: {}", e));
+                if is_copy_only {
+                  // Copy path to clipboard instead of opening it
+                  debug_output(|| {
+                    println!("Copying path to clipboard: {}", path);
+                  });
+                  manager
+                    .write_text(path)
+                    .expect("failed to write to clipboard");
+                } else {
+                  let _ = opener::open(path).map_err(|e| format!("Failed to open path: {}", e));
+                }
               } else {
                 if item.value.as_deref().unwrap_or("").is_empty() {
+                  debug_output(|| {
+                    println!("Copying item name to clipboard: {}", &item.name);
+                  });
                   manager
                     .write_text(&item.name)
                     .expect("failed to write to clipboard");
                 } else if let Some(ref item_value) = item.value {
+                  let text_to_copy = remove_special_bbcode_tags(item_value);
+                  debug_output(|| {
+                    println!("Copying item value to clipboard: {}", text_to_copy);
+                  });
                   manager
-                    .write_text(remove_special_bbcode_tags(item_value))
+                    .write_text(text_to_copy)
                     .expect("failed to write to clipboard");
                 }
               }
@@ -782,12 +824,15 @@ async fn main() {
                 return true;
               }
 
-              #[cfg(any(target_os = "windows", target_os = "macos"))]
-              if query_accessibility_permissions() {
-                VKey.press_paste();
-              } else {
-                w.show().unwrap();
-                w.emit("macosx-permissions-modal", "show").unwrap();
+              // Only auto-paste if not in copy-only mode
+              if !is_copy_only {
+                #[cfg(any(target_os = "windows", target_os = "macos"))]
+                if query_accessibility_permissions() {
+                  VKey.press_paste();
+                } else {
+                  w.show().unwrap();
+                  w.emit("macosx-permissions-modal", "show").unwrap();
+                }
               }
 
               w.emit("execMenuItemById", item_id).unwrap();
@@ -801,11 +846,23 @@ async fn main() {
                 let delay = if cfg!(target_os = "windows") { 3 } else { 0 };
 
                 rt.block_on(async {
-                  copy_paste_clip_item_from_menu(app_clone, item_id_string, delay).await;
+                  if is_copy_only {
+                    // For copy-only mode, use copy function instead of copy-paste
+                    clipboard_commands::copy_clip_item(app_clone, item_id_string, true).await;
+                  } else {
+                    copy_paste_clip_item_from_menu(app_clone, item_id_string, delay).await;
+                  }
                 });
               });
             }
           } else {
+            debug_output(|| {
+              println!(
+                "Item not found in db_items_state, checking recent history for: {:?}",
+                item_id
+              );
+            });
+
             let recent_history_state: tauri::State<DbRecentHistoryItems> =
               app.state::<DbRecentHistoryItems>();
             let db_recent_history_items_state = recent_history_state.0.lock().unwrap();
@@ -838,7 +895,8 @@ async fn main() {
 
                 // Convert relative path to absolute path
                 let absolute_path = db::to_absolute_image_path(&image_path);
-                let img_data = std::fs::read(&absolute_path).expect("Failed to read image from path");
+                let img_data =
+                  std::fs::read(&absolute_path).expect("Failed to read image from path");
                 let base64_image = base64::encode(&img_data);
 
                 write_image_to_clipboard(base64_image).expect("Failed to write image to clipboard");
@@ -867,12 +925,15 @@ async fn main() {
                 return true;
               }
 
-              #[cfg(any(target_os = "windows", target_os = "macos"))]
-              if query_accessibility_permissions() {
-                VKey.press_paste();
-              } else {
-                w.show().unwrap();
-                w.emit("macosx-permissions-modal", "show").unwrap();
+              // Only auto-paste if not in copy-only mode
+              if !is_copy_only {
+                #[cfg(any(target_os = "windows", target_os = "macos"))]
+                if query_accessibility_permissions() {
+                  VKey.press_paste();
+                } else {
+                  w.show().unwrap();
+                  w.emit("macosx-permissions-modal", "show").unwrap();
+                }
               }
 
               w.emit("execMenuItemById", item_id).unwrap();

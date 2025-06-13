@@ -194,7 +194,10 @@ export default function ClipboardHistoryPage() {
   const [selectedHistoryItems, setSelectedHistoryItems] = useState<UniqueIdentifier[]>([])
   const [showSelectHistoryItems, setShowSelectHistoryItems] = useState(false)
   const [isDragPinnedHistory, setIsDragPinnedHistory] = useState(false)
+  const keyboardSelectedItemId = useSignal<UniqueIdentifier | null>(null)
+  const navigatedWithCtrl = useSignal(false)
   const {
+    isScrolling,
     setIsScrolling,
     isShowHistoryPinned,
     setIsShowHistoryPinned,
@@ -227,6 +230,7 @@ export default function ClipboardHistoryPage() {
 
   const isPinnedPanelHovering = useSignal(false)
   const isPinnedPanelKeepOpen = useSignal(false)
+  const isCtrlReleased = useSignal(false)
 
   const { showConfirmation, hoveringHistoryIdDelete } = useDeleteConfirmationTimer({
     hoveringHistoryRowId,
@@ -382,6 +386,81 @@ export default function ClipboardHistoryPage() {
     }
   )
 
+  useHotkeys(
+    ['ctrl+enter', 'meta+enter'],
+    e => {
+      e.preventDefault()
+      const itemToCopy = keyboardSelectedItemId.value
+        ? keyboardSelectedItemId.value
+        : clipboardHistory[0]?.historyId
+      if (itemToCopy) {
+        setCopiedItem(itemToCopy)
+      }
+    },
+    { enableOnFormTags: ['input'] }
+  )
+
+  useHotkeys(
+    ['ctrl+arrowdown', 'meta+arrowdown'],
+    e => {
+      e.preventDefault()
+      const currentItemIndex = clipboardHistory.findIndex(
+        item => item.historyId === keyboardSelectedItemId.value
+      )
+      const nextItem = clipboardHistory[currentItemIndex + 1]
+      if (nextItem) {
+        keyboardSelectedItemId.value = nextItem.historyId
+      }
+    },
+    { enableOnFormTags: ['input'] }
+  )
+
+  useHotkeys(
+    ['ctrl+arrowup', 'meta+arrowup'],
+    e => {
+      e.preventDefault()
+      const currentItemIndex = clipboardHistory.findIndex(
+        item => item.historyId === keyboardSelectedItemId.value
+      )
+      const prevItem = clipboardHistory[currentItemIndex - 1]
+      if (prevItem) {
+        keyboardSelectedItemId.value = prevItem.historyId
+      }
+    },
+    { enableOnFormTags: ['input'] }
+  )
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Control' || e.key === 'Meta') {
+        if (isCtrlReleased.value) {
+          keyboardSelectedItemId.value = clipboardHistory[0]?.historyId
+          isCtrlReleased.value = false
+        }
+        navigatedWithCtrl.value = true
+      }
+    }
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Control' || e.key === 'Meta') {
+        isCtrlReleased.value = true
+        keyboardSelectedItemId.value = null
+        navigatedWithCtrl.value = false
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
+  }, [clipboardHistory])
+
+  useEffect(() => {
+    if (keyboardSelectedItemId.value) {
+      hoveringHistoryRowId.value = keyboardSelectedItemId.value
+    }
+  }, [keyboardSelectedItemId.value])
+
   useEffect(() => {
     const listenToClipboardUnlisten = listen(
       'clipboard://clipboard-monitor/update',
@@ -415,6 +494,18 @@ export default function ClipboardHistoryPage() {
   }, [])
 
   useEffect(() => {
+    if (isCtrlReleased.value) {
+      hoveringHistoryRowId.value = null
+      keyboardSelectedItemId.value = null
+    }
+  }, [isCtrlReleased.value])
+
+  useEffect(() => {
+    if (copiedItem || pastedItem) {
+      isCtrlReleased.value = true
+      keyboardSelectedItemId.value = null
+      navigatedWithCtrl.value = false
+    }
     if (copiedItem && selectedHistoryItems.includes(copiedItem)) {
       setSelectedHistoryItems(prev => prev.filter(item => item !== copiedItem))
     }
@@ -1615,6 +1706,7 @@ export default function ClipboardHistoryPage() {
 
                                           return (
                                             <ClipboardHistoryRow
+                                              isScrolling={isScrolling}
                                               isLargeView={
                                                 historyId === showLargeViewHistoryId.value
                                               }
@@ -1661,6 +1753,9 @@ export default function ClipboardHistoryPage() {
                                                   : undefined
                                               }
                                               isPasted={historyId === pastedItemValue}
+                                              isKeyboardSelected={
+                                                historyId === keyboardSelectedItemId.value
+                                              }
                                               isCopied={historyId === copiedItemValue}
                                               isSaved={historyId === savingItem}
                                               setSavingItem={setSavingItem}
