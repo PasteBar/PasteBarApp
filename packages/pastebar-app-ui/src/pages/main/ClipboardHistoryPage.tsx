@@ -197,6 +197,7 @@ export default function ClipboardHistoryPage() {
   const keyboardSelectedItemId = useSignal<UniqueIdentifier | null>(null)
   const navigatedWithCtrl = useSignal(false)
   const {
+    isScrolling,
     setIsScrolling,
     isShowHistoryPinned,
     setIsShowHistoryPinned,
@@ -1705,6 +1706,7 @@ export default function ClipboardHistoryPage() {
 
                                           return (
                                             <ClipboardHistoryRow
+                                              isScrolling={isScrolling}
                                               isLargeView={
                                                 historyId === showLargeViewHistoryId.value
                                               }

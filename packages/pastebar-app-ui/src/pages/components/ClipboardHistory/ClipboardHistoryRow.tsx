@@ -76,6 +76,7 @@ interface ClipboardHistoryRowProps {
   isPasted?: boolean
   isSaved?: boolean
   isLargeView?: boolean
+  isScrolling?: boolean
   isPinnedTop?: boolean
   isPinnedTopFirst?: boolean
   isDisabledPinnedMoveUp?: boolean
@@ -140,6 +141,7 @@ export function ClipboardHistoryRowComponent({
   isDeleting = false,
   isOverPinned = false,
   isKeyboardSelected = false,
+  isScrolling = false,
   hasClipboardHistoryURLErrors = false,
   addToClipboardHistoryIdsURLErrors = () => {},
   hasGenerateLinkMetaDataInProgress = false,
@@ -179,6 +181,7 @@ export function ClipboardHistoryRowComponent({
 }: ClipboardHistoryRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
+  const rowKeyboardRef = useRef<HTMLDivElement>(null)
   const contextMenuButtonRef = useRef<HTMLDivElement>(null)
   const contextMenuTriggerRef = useRef<HTMLDivElement>(null)
   const isCopiedOrPasted = isCopied || isPasted || isSaved
@@ -225,6 +228,14 @@ export function ClipboardHistoryRowComponent({
     showTimeAgo,
     index,
   ])
+
+  useEffect(() => {
+    if (isKeyboardSelected && rowKeyboardRef.current && !isScrolling) {
+      rowKeyboardRef.current.scrollIntoView({
+        block: 'center',
+      })
+    }
+  }, [isKeyboardSelected, rowKeyboardRef.current, isScrolling])
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -355,7 +366,7 @@ export function ClipboardHistoryRowComponent({
       }
       {...(isSelected || isHovering ? listeners : {})}
     >
-      <Box ref={rowRef}>
+      <Box ref={rowRef} tabIndex={0} role="option" aria-selected={isKeyboardSelected}>
         {showTimeAgo && (
           <Box
             className={`flex justify-center text-gray-400 text-xs ${
@@ -375,9 +386,15 @@ export function ClipboardHistoryRowComponent({
           <ContextMenuTrigger
             ref={isHovering || isSelected ? contextMenuTriggerRef : null}
           >
-            <Box className="relative select-none history-item">
+            <Box
+              className="relative select-none history-item focus:outline-none"
+              ref={rowKeyboardRef}
+              tabIndex={0}
+              role="option"
+              aria-selected={isKeyboardSelected}
+            >
               <Box
-                className={`rounded-md justify-start duration-300 relative px-3 py-1 hover:shadow-sm shadow-none border-2 flex flex-col ${
+                className={`rounded-md justify-start duration-300 relative px-3 py-1 hover:shadow-sm my-0.5 shadow-none border-2 flex flex-col ${
                   index === 0 &&
                   clipboard.updatedAt > Date.now() - MINUTE_IN_MS &&
                   !isCopiedOrPasted &&
