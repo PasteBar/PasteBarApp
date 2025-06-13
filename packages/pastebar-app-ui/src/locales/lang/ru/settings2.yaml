@@ -1,24 +1,27 @@
-App restart required: Требуется перезапуск
+App restart required: Требуется перезапуск приложения
 Application Starts with Main Window Hidden: Приложение запускается со скрытым главным окном
 Change: Изменить
+Copy only from menu items: Копировать только из элементов меню
 Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Отображать элементы панели навигации только при наведении мыши для минимизации видимых элементов интерфейса
-Global System OS Hotkeys: Глобальные горячие клавиши операционной системы
+Global System OS Hotkeys: Глобальные системные горячие клавиши
 Hide Collections Navbar: Скрыть панель коллекций
-Hide collections menu dropdown on the navigation bar: Скрыть меню коллекций на панели навигации
+Hide collections menu dropdown on the navigation bar: Скрыть выпадающее меню коллекций на панели навигации
 Hide collections menu on the navbar: Скрыть меню коллекций на панели навигации
-Hide the App Dock Icon: Скрыть значок приложения в Dock
+Hide the App Dock Icon: Скрыть иконку приложения в Dock
 ? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
-: Держать главное окно приложения скрытым при перезапуске. Вы можете открыть его снова, используя меню бар или панель задач, или же с помощью глобальных горячих клавиш.
+: Держать главное окно приложения скрытым при перезапуске. Вы можете открыть его через меню в строке меню или панели задач, или используя глобальные горячие клавиши.
 No keys set: Клавиши не установлены
+PasteBar Quick Paste: Быстрая вставка PasteBar
 Press keys: Нажмите клавиши
-? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
-: Удалить значок приложения PasteBar из Dock macOS, сохраняя работу приложения в фоновом режиме. Приложение остается доступным через значок в строке меню. Для применения изменений требуется перезапуск приложения.
-Set: Установить
-Set system OS hotkeys to show/hide the main app window and quick paste window: Установить горячие клавиши ОС для показа/скрытия главного окна приложения и окна быстрой вставки
-Show Navbar Items Hover: Показывать элементы панели навигации при наведении
-Show collections menu on the navbar: Показать меню коллекций на панели навигации
-Show navbar elements on hover only: Показывать элементы панели навигации только при наведении
-Show/Hide Main App Window: Показать/Скрыть главное окно приложения
-Show/Hide Quick Paste Window: Показать/Скрыть окно быстрой вставки
 Quick Paste Window: Окно быстрой вставки
-PasteBar Quick Paste: PasteBar Быстрая Вставка 
+? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
+: Удалить иконку PasteBar из macOS Dock, оставляя приложение запущенным в фоне. Приложение остается доступным через иконку в строке меню. Требуется перезапуск приложения.
+Set: Установить
+Set system OS hotkeys to show/hide the main app window and quick paste window: Установить системные горячие клавиши для показа/скрытия главного окна и окна быстрой вставки
+Show Navbar Items Hover: Показывать элементы панели при наведении
+Show collections menu on the navbar: Показывать меню коллекций на панели навигации
+Show navbar elements on hover only: Показывать элементы панели только при наведении
+Show/Hide Main App Window: Показать/Скрыть главное окно
+Show/Hide Quick Paste Window: Показать/Скрыть окно быстрой вставки
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: При включении нажатие на элементы меню будет только копировать содержимое в буфер обмена вместо автоматической вставки. Это дает вам больше контроля над тем, когда и где вставляется содержимое.
