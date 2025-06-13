@@ -1,7 +1,8 @@
 name: Build Test and Version Bump
-on:
-  push:
-    branches: [ "main" ]
+on: 
+  workflow_dispatch:
+  #  push:
+  # branches: [ "main" ]
 jobs:
   version-bump:
     runs-on: ubuntu-latest
