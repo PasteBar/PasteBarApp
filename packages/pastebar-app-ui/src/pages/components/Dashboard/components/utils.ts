@@ -269,3 +269,51 @@ export const findBoardsById = (
 
   return searchTree(tree)
 }
+
+// Note options parsing and utilities
+export interface NoteOptions {
+  showIcon?: boolean
+  iconType?: string
+  iconVisibility?: 'always' | 'hover' | 'none'
+  iconColor?: string
+}
+
+export interface ItemOptions {
+  noteOptions?: NoteOptions
+}
+
+export function parseItemOptions(itemOptions: string | null | undefined): ItemOptions {
+  if (!itemOptions) {
+    return {}
+  }
+
+  try {
+    return JSON.parse(itemOptions)
+  } catch {
+    return {}
+  }
+}
+
+export function getNoteOptions(itemOptions: string | null | undefined, globalSettings?: { isNoteIconsEnabled?: boolean; defaultNoteIconType?: string }): NoteOptions {
+  const parsed = parseItemOptions(itemOptions)
+  return {
+    showIcon: globalSettings?.isNoteIconsEnabled ?? true, // Default to global setting or true
+    iconType: globalSettings?.defaultNoteIconType ?? 'MessageSquareText',
+    iconVisibility: 'always',
+    iconColor: 'text-yellow-600 dark:text-yellow-500',
+    ...parsed.noteOptions,
+  }
+}
+
+export function shouldShowNoteIcon(
+  description: string | null | undefined,
+  itemOptions: string | null | undefined,
+  globalSettings?: { isNoteIconsEnabled?: boolean; defaultNoteIconType?: string }
+): boolean {
+  if (!description?.trim()) {
+    return false
+  }
+
+  const noteOptions = getNoteOptions(itemOptions, globalSettings)
+  return noteOptions.showIcon === true
+}

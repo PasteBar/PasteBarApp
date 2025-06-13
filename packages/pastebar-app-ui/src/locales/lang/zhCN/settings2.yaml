@@ -22,3 +22,7 @@ Show/Hide Main App Window: 显示/隐藏主应用窗口
 Show/Hide Quick Paste Window: 显示/隐藏快速粘贴窗口
 Quick Paste Window: 快速粘贴窗口
 PasteBar Quick Paste: PasteBar 快速粘贴
+Show Note Icons on Clips: 在剪辑上显示笔记图标
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: 在有笔记的剪辑上显示持久图标，以改善视觉组织并使笔记更容易发现。
+Default Note Icon Type: 默认笔记图标类型
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: 这设置了有笔记的新剪辑的默认图标类型。您可以通过上下文菜单自定义单个剪辑。

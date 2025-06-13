@@ -86,6 +86,8 @@ type Settings = {
   clipTextMinLength: number
   clipTextMaxLength: number
   isImageCaptureDisabled: boolean
+  isNoteIconsEnabled: boolean
+  defaultNoteIconType: string
 }
 
 type Constants = {
@@ -161,6 +163,8 @@ export interface SettingsStoreState {
   setIsHideCollectionsOnNavBar: (isEnabled: boolean) => void
   setIsShowNavBarItemsOnHoverOnly: (isEnabled: boolean) => void
   setIsImageCaptureDisabled: (isEnabled: boolean) => void
+  setIsNoteIconsEnabled: (isEnabled: boolean) => void
+  setDefaultNoteIconType: (iconType: string) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -246,6 +250,8 @@ const initialState: SettingsStoreState & Settings = {
   clipTextMinLength: 0,
   clipTextMaxLength: 5000,
   isImageCaptureDisabled: false,
+  isNoteIconsEnabled: true,
+  defaultNoteIconType: 'MessageSquareText',
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -303,6 +309,8 @@ const initialState: SettingsStoreState & Settings = {
   setClipTextMinLength: () => {},
   setClipTextMaxLength: () => {},
   setIsImageCaptureDisabled: () => {},
+  setIsNoteIconsEnabled: () => {},
+  setDefaultNoteIconType: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -610,6 +618,12 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsImageCaptureDisabled: async (isEnabled: boolean) => {
     return get().updateSetting('isImageCaptureDisabled', isEnabled)
+  },
+  setIsNoteIconsEnabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isNoteIconsEnabled', isEnabled)
+  },
+  setDefaultNoteIconType: async (iconType: string) => {
+    return get().updateSetting('defaultNoteIconType', iconType)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

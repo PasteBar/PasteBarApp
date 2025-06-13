@@ -21,3 +21,7 @@ Show collections menu on the navbar: Afficher le menu des collections dans la ba
 Show navbar elements on hover only: Afficher les éléments de la barre de navigation uniquement au survol
 Show/Hide Main App Window: Afficher/Masquer la fenêtre principale de l'application
 Show/Hide Quick Paste Window: Afficher/masquer la fenêtre de collage rapide
+Show Note Icons on Clips: Afficher les icônes de notes sur les clips
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Afficher des icônes persistantes sur les clips qui ont des notes pour améliorer l'organisation visuelle et faciliter la découverte des notes.
+Default Note Icon Type: Type d'icône de note par défaut
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Cela définit le type d'icône par défaut pour les nouveaux clips avec des notes. Vous pouvez personnaliser les clips individuels via le menu contextuel.

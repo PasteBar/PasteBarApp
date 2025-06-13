@@ -22,3 +22,7 @@ Show collections menu on the navbar: Gezinme çubuğunda koleksiyonlar menüsün
 Show navbar elements on hover only: Navigasyon çubuğu öğelerini yalnızca üzerine gelindiğinde göster.
 Show/Hide Main App Window: Ana Uygulama Penceresini Göster/Gizle
 Show/Hide Quick Paste Window: Hızlı Yapıştır Penceresini Göster/Gizle
+Show Note Icons on Clips: Kliplerde not simgelerini göster
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Görsel organizasyonu iyileştirmek ve notları keşfetmeyi kolaylaştırmak için notları olan kliplerde kalıcı simgeler görüntüle.
+Default Note Icon Type: Varsayılan not simgesi türü
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Bu, notları olan yeni klipler için varsayılan simge türünü ayarlar. Bağlam menüsü aracılığıyla bireysel klipleri özelleştirebilirsiniz.

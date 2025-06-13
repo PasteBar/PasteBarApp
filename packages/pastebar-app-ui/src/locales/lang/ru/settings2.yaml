@@ -21,4 +21,8 @@ Show navbar elements on hover only: Показывать элементы пан
 Show/Hide Main App Window: Показать/Скрыть главное окно приложения
 Show/Hide Quick Paste Window: Показать/Скрыть окно быстрой вставки
 Quick Paste Window: Окно быстрой вставки
-PasteBar Quick Paste: PasteBar Быстрая Вставка 
+PasteBar Quick Paste: PasteBar Быстрая Вставка
+Show Note Icons on Clips: Показывать значки заметок на клипах
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Отображать постоянные значки на клипах с заметками для улучшения визуальной организации и облегчения поиска заметок.
+Default Note Icon Type: Тип значка заметки по умолчанию
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Это устанавливает тип значка по умолчанию для новых клипов с заметками. Вы можете настроить отдельные клипы через контекстное меню.

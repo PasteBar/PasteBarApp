@@ -22,3 +22,7 @@ Show/Hide Main App Window: Показати/Приховати головне в
 Show/Hide Quick Paste Window: Показати/Приховати вікно швидкої вставки
 Quick Paste Window: Вікно швидкої вставки
 PasteBar Quick Paste: PasteBar Швидка Вставка
+Show Note Icons on Clips: Показувати іконки заміток на кліпах
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Відображати постійні іконки на кліпах з замітками для покращення візуальної організації та полегшення пошуку заміток.
+Default Note Icon Type: Тип іконки замітки за замовчуванням
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Це встановлює тип іконки за замовчуванням для нових кліпів з замітками. Ви можете налаштувати окремі кліпи через контекстне меню.

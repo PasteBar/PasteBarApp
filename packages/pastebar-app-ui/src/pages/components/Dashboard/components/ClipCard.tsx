@@ -22,19 +22,24 @@ import {
   hoveringClipIdBoardId,
   isDeletingSelectedClips,
   isKeyAltPressed,
+  settingsStoreAtom,
   showClipFindKeyPressed,
   showLargeViewClipId,
   showLinkedClipId,
 } from '~/store'
 import { cva } from 'class-variance-authority'
+import { useAtomValue } from 'jotai'
 import linkifyIt from 'linkify-it'
 import {
+  BookOpenText,
   Check,
   Clipboard,
   ClipboardPaste,
+  Contact,
   Dot,
   FileMusic,
   FilePenLine,
+  FileText,
   Grip,
   Locate,
   MessageSquareText,
@@ -43,11 +48,11 @@ import {
   MoveLeft,
   MoveRight,
   Music,
+  NotebookPen,
   Search,
   Star,
   TerminalSquare,
   TextCursorInput,
-  Volume2,
   X,
   ZoomIn,
   ZoomOut,
@@ -86,6 +91,7 @@ import { ClipEditName } from './ClipEdit'
 import { ClipEditContent } from './ClipEditContent'
 import ClipIcon from './ClipIcon'
 import ClipsCardContextMenu from './context-menus/ClipsCardContextMenu'
+import { getNoteOptions, shouldShowNoteIcon } from './utils'
 
 export type ClipType = 'clip'
 export type ClipDropZoneType = 'clip::dropzone'
@@ -99,6 +105,20 @@ export const ClipFormKeyPress = [
   'TabEnter',
   'TabTabEnter',
 ] as const
+
+const getNoteIconComponent = (iconType: string | undefined) => {
+  const iconMap = {
+    MessageSquareText,
+    FileText,
+    BookOpenText,
+    Contact,
+    NotebookPen,
+  }
+  return (
+    iconMap[(iconType || 'MessageSquareText') as keyof typeof iconMap] ||
+    MessageSquareText
+  )
+}
 
 export type ClipFormTemplateOptions = {
   templateOptions: {
@@ -351,6 +371,7 @@ export function ClipCard({
   setSelectedItemId = () => {},
 }: ClipCardProps) {
   const { t } = useTranslation()
+  const { isNoteIconsEnabled, defaultNoteIconType } = useAtomValue(settingsStoreAtom)
   const contextMenuOpen = useSignal(false)
   const isExpanded = useSignal(false)
   const isSearch = useSignal(false)
@@ -745,90 +766,129 @@ export function ClipCard({
                         maxHeight={clipNotesMaxHeight}
                         asChild
                       >
-                        {arrLinks && arrLinks.length === 1 && clip.isLink ? (
-                          <span
-                            onClick={e => {
-                              if (e.shiftKey || copyDisabled) {
-                                e.preventDefault()
-                                return
-                              }
-                              open(ensureUrlPrefix(arrLinks[0]))
-                            }}
-                            title={arrLinks[0]}
-                            className="underline decoration-slate-400 hover:decoration-blue-700 hover:text-blue-700 dark:hover:decoration-blue-400 dark:hover:text-blue-400 cursor-pointer"
-                          >
-                            {clipName}
-                          </span>
-                        ) : clip.isLink && clip.value ? (
-                          <span
-                            onClick={e => {
-                              if (e.shiftKey) {
-                                e.preventDefault()
-                                return
-                              }
-                              const linkify = linkifyIt()
-                              const matches = linkify.match(clip.value ?? '')
-                              if (matches && matches.length === 1) {
-                                open(ensureUrlPrefix(matches[0].raw))
-                              } else {
-                                message(
-                                  t('Provided link {{clipValue}} might be invalid!', {
-                                    ns: 'common',
-                                    clipValue: clip.value,
-                                  }),
-                                  'Warning'
+                        <div className="flex items-center">
+                          {arrLinks && arrLinks.length === 1 && clip.isLink ? (
+                            <span
+                              onClick={e => {
+                                if (e.shiftKey || copyDisabled) {
+                                  e.preventDefault()
+                                  return
+                                }
+                                open(ensureUrlPrefix(arrLinks[0]))
+                              }}
+                              title={arrLinks[0]}
+                              className="underline decoration-slate-400 hover:decoration-blue-700 hover:text-blue-700 dark:hover:decoration-blue-400 dark:hover:text-blue-400 cursor-pointer"
+                            >
+                              {clipName}
+                            </span>
+                          ) : clip.isLink && clip.value ? (
+                            <span
+                              onClick={e => {
+                                if (e.shiftKey) {
+                                  e.preventDefault()
+                                  return
+                                }
+                                const linkify = linkifyIt()
+                                const matches = linkify.match(clip.value ?? '')
+                                if (matches && matches.length === 1) {
+                                  open(ensureUrlPrefix(matches[0].raw))
+                                } else {
+                                  message(
+                                    t('Provided link {{clipValue}} might be invalid!', {
+                                      ns: 'common',
+                                      clipValue: clip.value,
+                                    }),
+                                    'Warning'
+                                  )
+                                }
+                              }}
+                              title={clip.value}
+                              className="underline decoration-slate-400 hover:decoration-blue-700 hover:text-blue-700 dark:hover:decoration-blue-400 dark:hover:text-blue-400 cursor-pointer"
+                            >
+                              {clipName}
+                            </span>
+                          ) : clip.isPath && clip.value ? (
+                            <span
+                              onClick={async () => {
+                                try {
+                                  await invoke('check_path', { path: clip.value })
+                                  await invoke('open_path_or_app', { path: clip.value })
+                                } catch (err) {
+                                  message(
+                                    t('Provided path {{clipValue}} might be invalid!', {
+                                      ns: 'common',
+                                      clipValue: clip.value,
+                                    }),
+                                    'Warning'
+                                  )
+                                }
+                              }}
+                              title={clip.value}
+                              className="underline decoration-slate-400 hover:decoration-blue-700 hover:text-blue-700 dark:hover:decoration-blue-400 dark:hover:text-blue-400 cursor-pointer"
+                            >
+                              {clipName}
+                            </span>
+                          ) : (
+                            clipName
+                          )}
+                          {shouldShowNoteIcon(clip.description, clip.itemOptions, {
+                            isNoteIconsEnabled,
+                            defaultNoteIconType,
+                          }) && (
+                            <ToolTipNotes
+                              text={clip.description}
+                              isDisabled={isDragPreview}
+                              side="right"
+                              isDark={isDark}
+                              delayDuration={300}
+                              align="end"
+                              sideOffset={10}
+                              maxWidth={clipNotesMaxWidth}
+                              maxHeight={clipNotesMaxHeight}
+                              asChild
+                            >
+                              {(() => {
+                                const NoteIcon = getNoteIconComponent(
+                                  getNoteOptions(clip.itemOptions, {
+                                    isNoteIconsEnabled,
+                                    defaultNoteIconType,
+                                  }).iconType
                                 )
-                              }
-                            }}
-                            title={clip.value}
-                            className="underline decoration-slate-400 hover:decoration-blue-700 hover:text-blue-700 dark:hover:decoration-blue-400 dark:hover:text-blue-400 cursor-pointer"
-                          >
-                            {clipName}
-                          </span>
-                        ) : clip.isPath && clip.value ? (
-                          <span
-                            onClick={async () => {
-                              try {
-                                await invoke('check_path', { path: clip.value })
-                                await invoke('open_path_or_app', { path: clip.value })
-                              } catch (err) {
-                                message(
-                                  t('Provided path {{clipValue}} might be invalid!', {
-                                    ns: 'common',
-                                    clipValue: clip.value,
-                                  }),
-                                  'Warning'
+                                return (
+                                  <NoteIcon
+                                    size={16}
+                                    className="opacity-70 hover:opacity-100 ml-1.5 hover:text-yellow-600"
+                                  />
                                 )
-                              }
-                            }}
-                            title={clip.value}
-                            className="underline decoration-slate-400 hover:decoration-blue-700 hover:text-blue-700 dark:hover:decoration-blue-400 dark:hover:text-blue-400 cursor-pointer"
-                          >
-                            {clipName}
-                          </span>
-                        ) : (
-                          clipName
-                        )}
-                        {clip.description && isShowDetails && (
-                          <ToolTipNotes
-                            text={clip.description}
-                            isDisabled={isDragPreview}
-                            side="right"
-                            isDark={isDark}
-                            delayDuration={300}
-                            align="end"
-                            classNameTrigger="mt-[2px]"
-                            sideOffset={10}
-                            maxWidth={clipNotesMaxWidth}
-                            maxHeight={clipNotesMaxHeight}
-                            asChild
-                          >
-                            <MessageSquareText
-                              size={16}
-                              className="opacity-70 hover:opacity-100 ml-1.5 hover:text-yellow-600"
-                            />
-                          </ToolTipNotes>
-                        )}
+                              })()}
+                            </ToolTipNotes>
+                          )}
+                        </div>
+                        {clip.description &&
+                          isShowDetails &&
+                          !shouldShowNoteIcon(clip.description, clip.itemOptions, {
+                            isNoteIconsEnabled,
+                            defaultNoteIconType,
+                          }) && (
+                            <ToolTipNotes
+                              text={clip.description}
+                              isDisabled={isDragPreview}
+                              side="right"
+                              isDark={isDark}
+                              delayDuration={300}
+                              align="end"
+                              classNameTrigger="mt-[2px]"
+                              sideOffset={10}
+                              maxWidth={clipNotesMaxWidth}
+                              maxHeight={clipNotesMaxHeight}
+                              asChild
+                            >
+                              <MessageSquareText
+                                size={16}
+                                className="opacity-70 hover:opacity-100 ml-1.5 hover:text-yellow-600"
+                              />
+                            </ToolTipNotes>
+                          )}
                       </ToolTipNotes>
                     )}
                   </div>
@@ -1426,6 +1486,8 @@ export function ClipCard({
           setSelectedItemId={setSelectedItemId}
           icon={clip.icon}
           iconVisibility={clip.iconVisibility}
+          description={clip.description}
+          itemOptions={clip.itemOptions}
           isPinned={clip.isPinned}
           isFavorite={clip.isFavorite}
           isMenu={clip.isMenu}

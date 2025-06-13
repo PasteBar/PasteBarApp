@@ -22,3 +22,7 @@ Show/Hide Main App Window: Mostrar/Ocultar ventana principal de la aplicación
 Show/Hide Quick Paste Window: Mostrar/Ocultar ventana de pegado rápido
 Quick Paste Window: Ventana de pegado rápido
 PasteBar Quick Paste: PasteBar Pegado Rápido
+Show Note Icons on Clips: Mostrar iconos de notas en clips
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Mostrar iconos persistentes en clips que tienen notas para mejorar la organización visual y hacer que las notas sean más fáciles de descubrir.
+Default Note Icon Type: Tipo de icono de nota predeterminado
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Esto establece el tipo de icono predeterminado para nuevos clips con notas. Puedes personalizar clips individuales a través del menú contextual.

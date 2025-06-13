@@ -11,7 +11,15 @@ import {
   uiStoreAtom,
 } from '~/store'
 import { useAtomValue } from 'jotai'
-import { ChevronDown, ChevronUp, MessageSquare, MessageSquareDashed } from 'lucide-react'
+import {
+  BookOpenText,
+  Contact,
+  FileText,
+  MessageSquare,
+  MessageSquareDashed,
+  MessageSquareText,
+  NotebookPen,
+} from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -71,6 +79,10 @@ export default function UserPreferences() {
     hotKeysShowHideQuickPasteWindow,
     setHotKeysShowHideMainAppWindow,
     setHotKeysShowHideQuickPasteWindow,
+    isNoteIconsEnabled,
+    setIsNoteIconsEnabled,
+    defaultNoteIconType,
+    setDefaultNoteIconType,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
@@ -996,6 +1008,105 @@ export default function UserPreferences() {
                     </CardContent>
                   </Card>
                 </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card
+                    className={`${
+                      !isNoteIconsEnabled && 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Show Note Icons on Clips', { ns: 'settings2' })}
+                      </CardTitle>
+                      <Switch
+                        checked={isNoteIconsEnabled}
+                        className="ml-auto"
+                        onCheckedChange={() => {
+                          setIsNoteIconsEnabled(!isNoteIconsEnabled)
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t(
+                          'Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.',
+                          { ns: 'settings2' }
+                        )}
+                      </Text>
+
+                      {isNoteIconsEnabled && (
+                        <Box className="mt-4">
+                          <Text className="text-sm font-medium mb-2 flex items-center gap-2">
+                            {t('Default Note Icon Type', { ns: 'settings2' })}
+                            <span className="text-gray-500 flex items-center gap-1">
+                              {(() => {
+                                const iconMap = {
+                                  MessageSquareText: MessageSquareText,
+                                  FileText: FileText,
+                                  BookOpenText: BookOpenText,
+                                  Contact: Contact,
+                                  NotebookPen: NotebookPen,
+                                }
+                                const IconComponent =
+                                  iconMap[defaultNoteIconType as keyof typeof iconMap] ||
+                                  MessageSquareText
+                                return (
+                                  <IconComponent
+                                    size={16}
+                                    className="text-gray-600 dark:text-gray-400"
+                                  />
+                                )
+                              })()}
+                            </span>
+                          </Text>
+                          <Flex className="gap-2 flex-wrap justify-start">
+                            {[
+                              {
+                                value: 'MessageSquareText',
+                                labelKey: 'Note Icon Types Message',
+                                icon: MessageSquareText,
+                              },
+                              { value: 'FileText', labelKey: 'Note Icon Types File', icon: FileText },
+                              {
+                                value: 'BookOpenText',
+                                labelKey: 'Note Icon Types Book',
+                                icon: BookOpenText,
+                              },
+                              { value: 'Contact', labelKey: 'Note Icon Types Contact', icon: Contact },
+                              {
+                                value: 'NotebookPen',
+                                labelKey: 'Note Icon Types Notebook',
+                                icon: NotebookPen,
+                              },
+                            ].map(option => (
+                              <Button
+                                key={option.value}
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setDefaultNoteIconType(option.value)
+                                }}
+                                className={`text-sm font-normal bg-slate-50 dark:bg-slate-950 ${
+                                  defaultNoteIconType === option.value
+                                    ? 'bg-slate-300 font-semibold dark:bg-slate-600 text-dark dark:text-slate-200 hover:dark:bg-slate-600 hover:bg-slate-300'
+                                    : ''
+                                } dark:text-slate-200 px-3 py-1.5 flex items-center gap-2`}
+                              >
+                                <option.icon size={16} />
+                                {t(option.labelKey, { ns: 'contextMenus' })}
+                              </Button>
+                            ))}
+                          </Flex>
+                          <Text className="text-xs text-muted-foreground mt-2">
+                            {t('This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.', { ns: 'settings2' })}
+                          </Text>
+                        </Box>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Box>
+
                 <Spacer h={6} />
                 <Link to={returnRoute} replace>
                   <Button

@@ -48,6 +48,7 @@ Expand View: Expand View
 Hide: Hide
 Hide Details: Hide Details
 Hide Subtitle: Hide Subtitle
+Icon Type: Icon Type
 Icon Visibility: Icon Visibility
 Large View: Large View
 Link To Clip: Link To Clip
@@ -65,6 +66,13 @@ Move To: Move To
 MoveTo:
   Board: Board
   Tab: Tab
+Note Icon: Note Icon
+Note Icon Settings: Note Icon Settings
+Note Icon Types Book: Book
+Note Icon Types Contact: Contact
+Note Icon Types File: File
+Note Icon Types Message: Message
+Note Icon Types Notebook: Notebook
 Open: Open
 Open Link in Browser: Open Link in Browser
 Organize: Organize
@@ -87,6 +95,7 @@ Select Icon: Select Icon
 Separator: Separator
 Show: Show
 Show Large View: Show Large View
+Show Note Icon: Show Note Icon
 Show Subtitle: Show Subtitle
 Star: Star
 Start: Start
@@ -95,5 +104,6 @@ UnPin: UnPin
 UnPin Clip: UnPin Clip
 Unmask Secret: Unmask Secret
 Up: Up
+Use Global Setting: Use Global Setting
 View: View
 not a code: not a code

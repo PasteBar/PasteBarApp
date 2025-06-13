@@ -188,6 +188,8 @@ function App() {
           isShowDisabledCollectionsOnNavBarMenu:
             settings.isShowDisabledCollectionsOnNavBarMenu?.valueBool,
           userSelectedLanguage: settings.userSelectedLanguage?.valueText,
+          isNoteIconsEnabled: settings.isNoteIconsEnabled?.valueBool ?? true,
+          defaultNoteIconType: settings.defaultNoteIconType?.valueText ?? 'MessageSquareText',
           isAppReady: true,
         })
         settingsStore.initConstants({
