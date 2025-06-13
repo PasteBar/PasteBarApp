@@ -86,6 +86,7 @@ type Settings = {
   clipTextMinLength: number
   clipTextMaxLength: number
   isImageCaptureDisabled: boolean
+  isMenuItemCopyOnlyEnabled: boolean
   isNoteIconsEnabled: boolean
   defaultNoteIconType: string
 }
@@ -163,6 +164,7 @@ export interface SettingsStoreState {
   setIsHideCollectionsOnNavBar: (isEnabled: boolean) => void
   setIsShowNavBarItemsOnHoverOnly: (isEnabled: boolean) => void
   setIsImageCaptureDisabled: (isEnabled: boolean) => void
+  setIsMenuItemCopyOnlyEnabled: (isEnabled: boolean) => void
   setIsNoteIconsEnabled: (isEnabled: boolean) => void
   setDefaultNoteIconType: (iconType: string) => void
   hashPassword: (pass: string) => Promise<string>
@@ -250,6 +252,7 @@ const initialState: SettingsStoreState & Settings = {
   clipTextMinLength: 0,
   clipTextMaxLength: 5000,
   isImageCaptureDisabled: false,
+  isMenuItemCopyOnlyEnabled: false,
   isNoteIconsEnabled: true,
   defaultNoteIconType: 'MessageSquareText',
   CONST: {
@@ -309,6 +312,7 @@ const initialState: SettingsStoreState & Settings = {
   setClipTextMinLength: () => {},
   setClipTextMaxLength: () => {},
   setIsImageCaptureDisabled: () => {},
+  setIsMenuItemCopyOnlyEnabled: () => {},
   setIsNoteIconsEnabled: () => {},
   setDefaultNoteIconType: () => {},
   initConstants: () => {},
@@ -383,7 +387,8 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
         name === 'isHistoryEnabled' ||
         name === 'userSelectedLanguage' ||
         name === 'isAppLocked' ||
-        name === 'isImageCaptureDisabled'
+        name === 'isImageCaptureDisabled' ||
+        name === 'isMenuItemCopyOnlyEnabled'
       ) {
         invoke('build_system_menu')
       }
@@ -618,6 +623,9 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsImageCaptureDisabled: async (isEnabled: boolean) => {
     return get().updateSetting('isImageCaptureDisabled', isEnabled)
+  },
+  setIsMenuItemCopyOnlyEnabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isMenuItemCopyOnlyEnabled', isEnabled)
   },
   setIsNoteIconsEnabled: async (isEnabled: boolean) => {
     return get().updateSetting('isNoteIconsEnabled', isEnabled)

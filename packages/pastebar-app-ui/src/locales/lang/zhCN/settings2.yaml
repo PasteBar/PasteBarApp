@@ -1,6 +1,7 @@
 App restart required: 需要重启应用
 Application Starts with Main Window Hidden: 应用启动时隐藏主窗口
 Change: 更改
+Copy only from menu items: 仅从菜单项复制
 Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: 仅在鼠标悬停在导航栏上时显示导航栏项目，减少可见的UI元素
 Global System OS Hotkeys: 全局系统操作系统热键
 Hide Collections Navbar: 隐藏收藏导航栏
@@ -22,6 +23,9 @@ Show/Hide Main App Window: 显示/隐藏主应用窗口
 Show/Hide Quick Paste Window: 显示/隐藏快速粘贴窗口
 Quick Paste Window: 快速粘贴窗口
 PasteBar Quick Paste: PasteBar 快速粘贴
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: 启用后，点击菜单项将仅复制内容到剪贴板而不是自动粘贴。这让您对内容粘贴的时间和位置有更多控制。
+
 Show Note Icons on Clips: 在剪辑上显示笔记图标
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: 在有笔记的剪辑上显示持久图标，以改善视觉组织并使笔记更容易发现。
 Default Note Icon Type: 默认笔记图标类型

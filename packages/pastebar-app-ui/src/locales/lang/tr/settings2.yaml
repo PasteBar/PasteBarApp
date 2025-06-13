@@ -1,27 +1,30 @@
-App restart required: Uygulamanın yeniden başlatılması gerekiyor
-Application Starts with Main Window Hidden: Uygulama Ana Pencere Gizli Olarak Başlıyor
+App restart required: Uygulama yeniden başlatma gerekli
+Application Starts with Main Window Hidden: Uygulama ana pencere gizli olarak başlar
 Change: Değiştir
-Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Görünür kullanıcı arayüzü öğelerini en aza indirmek için gezinme çubuğu öğelerini yalnızca fare gezinme çubuğunun üzerindeyken görüntüleyin
-Global System OS Hotkeys: Genel Işletim Sistemi Kısayolları
-Hide Collections Navbar: Koleksiyonlar Navigasyon Çubuğunu Gizle
-Hide collections menu dropdown on the navigation bar: Gezinme çubuğundaki koleksiyonlar menüsü açılır menüsünü gizle
+Copy only from menu items: Sadece menü öğelerinden kopyala
+Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Görünür arayüz öğelerini en aza indirmek için gezinme çubuğu öğelerini yalnızca fare üzerine geldiğinde göster
+Global System OS Hotkeys: Global Sistem Kısayol Tuşları
+Hide Collections Navbar: Koleksiyonlar Gezinme Çubuğunu Gizle
+Hide collections menu dropdown on the navigation bar: Gezinme çubuğundaki koleksiyonlar açılır menüsünü gizle
 Hide collections menu on the navbar: Gezinme çubuğundaki koleksiyonlar menüsünü gizle
 Hide the App Dock Icon: Uygulama Dock Simgesini Gizle
 ? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
-: Uygulama yeniden başlatıldığında ana uygulama penceresini gizli tutun. Menü çubuğunu veya görev çubuğu menüsünü kullanarak veya genel kısayol tuşlarını kullanarak yeniden açabilirsiniz.
-No keys set: Anahtar ayarlanmadı
-PasteBar Quick Paste: PasteBar Çabuk Yapıştır
+: Uygulama yeniden başladığında ana uygulama penceresini gizli tut. Menü çubuğu veya görev çubuğu menüsünü kullanarak veya global kısayol tuşlarını kullanarak yeniden açabilirsiniz.
+No keys set: Tuş atanmadı
+PasteBar Quick Paste: PasteBar Hızlı Yapıştır
 Press keys: Tuşlara basın
 Quick Paste Window: Hızlı Yapıştır Penceresi
 ? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
-: Uygulamayı arka planda çalıştırmaya devam ederken macOS Dock'tan PasteBar uygulama simgesini kaldırın. Uygulama menü çubuğu simgesi aracılığıyla erişilebilir olmaya devam eder. Etkili olması için uygulamanın yeniden başlatılması gerekir.
-Set: Set
-Set system OS hotkeys to show/hide the main app window and quick paste window: Ana uygulama penceresini ve hızlı yapıştırma penceresini gösterm/gizle için sistem işletim sistemi kısayol tuşlarını ayarlayın
-Show Navbar Items Hover: Navbar Öğelerini Göster
-Show collections menu on the navbar: Gezinme çubuğunda koleksiyonlar menüsünü göster.
-Show navbar elements on hover only: Navigasyon çubuğu öğelerini yalnızca üzerine gelindiğinde göster.
+: PasteBar uygulama simgesini macOS Dock'tan kaldırır ancak uygulama arka planda çalışmaya devam eder. Uygulamaya menü çubuğu simgesi üzerinden erişilebilir. Etkili olması için uygulama yeniden başlatma gerekir.
+Set: Ayarla
+Set system OS hotkeys to show/hide the main app window and quick paste window: Ana uygulama penceresini ve hızlı yapıştır penceresini göstermek/gizlemek için sistem kısayol tuşlarını ayarla
+Show Navbar Items Hover: Gezinme Çubuğu Öğelerini Üzerine Gelince Göster
+Show collections menu on the navbar: Gezinme çubuğunda koleksiyonlar menüsünü göster
+Show navbar elements on hover only: Gezinme çubuğu öğelerini yalnızca üzerine gelince göster
 Show/Hide Main App Window: Ana Uygulama Penceresini Göster/Gizle
 Show/Hide Quick Paste Window: Hızlı Yapıştır Penceresini Göster/Gizle
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: Etkinleştirildiğinde, menü öğelerine tıklamak içeriği otomatik yapıştırmak yerine yalnızca panoya kopyalar. Bu, içeriğin ne zaman ve nereye yapıştırılacağı konusunda size daha fazla kontrol sağlar.
 Show Note Icons on Clips: Kliplerde not simgelerini göster
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Görsel organizasyonu iyileştirmek ve notları keşfetmeyi kolaylaştırmak için notları olan kliplerde kalıcı simgeler görüntüle.
 Default Note Icon Type: Varsayılan not simgesi türü

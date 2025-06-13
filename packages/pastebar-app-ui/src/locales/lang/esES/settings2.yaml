@@ -1,25 +1,30 @@
-App restart required: Se requiere reiniciar
-Application Starts with Main Window Hidden: La aplicación inicia con la ventana principal oculta
+App restart required: Reinicio de aplicación requerido
+Application Starts with Main Window Hidden: La aplicación se inicia con la ventana principal oculta
 Change: Cambiar
-Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Mostrar elementos de la barra de navegación solo cuando el mouse pase por encima para minimizar los elementos visibles de la interfaz
-Global System OS Hotkeys: Teclas de acceso rápido globales del sistema operativo
-Hide Collections Navbar: Ocultar barra de navegación de colecciones
+Copy only from menu items: Copiar solo desde elementos del menú
+Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Mostrar elementos de la barra de navegación solo cuando el ratón se posiciona sobre ella para minimizar elementos visibles de la interfaz
+Global System OS Hotkeys: Atajos de teclado globales del sistema
+Hide Collections Navbar: Ocultar barra de colecciones
 Hide collections menu dropdown on the navigation bar: Ocultar menú desplegable de colecciones en la barra de navegación
 Hide collections menu on the navbar: Ocultar menú de colecciones en la barra de navegación
 Hide the App Dock Icon: Ocultar el icono de la aplicación en el Dock
 ? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
-: Mantener la ventana principal de la aplicación oculta cuando la aplicación se reinicia. Puede reabrirla usando la barra de menú o el menú de la barra de tareas, o usando teclas de acceso rápido globales.
-No keys set: No hay teclas configuradas
-Press keys: Presione las teclas
+: Mantener la ventana principal de la aplicación oculta al reiniciar. Puedes reabrirla usando la barra de menú o el menú de la barra de tareas, o usando atajos de teclado globales.
+No keys set: Sin teclas asignadas
+PasteBar Quick Paste: Pegado rápido PasteBar
+Press keys: Presiona las teclas
+Quick Paste Window: Ventana de pegado rápido
 ? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
-: Eliminar el icono de la aplicación PasteBar del Dock de macOS mientras la aplicación sigue ejecutándose en segundo plano. La aplicación sigue siendo accesible a través del icono en la barra de menú. Requiere reiniciar la aplicación para que surta efecto.
+: Eliminar el icono de PasteBar del Dock de macOS mientras mantiene la aplicación ejecutándose en segundo plano. La aplicación permanece accesible a través del icono de la barra de menú. Requiere reiniciar la aplicación para que tenga efecto.
 Set: Establecer
-Set system OS hotkeys to show/hide the main app window and quick paste window: Configurar teclas de acceso rápido del sistema operativo para mostrar/ocultar la ventana principal de la aplicación y la ventana de pegado rápido
-Show Navbar Items Hover: Mostrar elementos de la barra de navegación al pasar el mouse
+Set system OS hotkeys to show/hide the main app window and quick paste window: Establecer atajos de teclado del sistema para mostrar/ocultar la ventana principal y la ventana de pegado rápido
+Show Navbar Items Hover: Mostrar elementos de barra al pasar el ratón
 Show collections menu on the navbar: Mostrar menú de colecciones en la barra de navegación
-Show navbar elements on hover only: Mostrar elementos de la barra de navegación solo al pasar el mouse
-Show/Hide Main App Window: Mostrar/Ocultar ventana principal de la aplicación
+Show navbar elements on hover only: Mostrar elementos de la barra solo al pasar el ratón
+Show/Hide Main App Window: Mostrar/Ocultar ventana principal
 Show/Hide Quick Paste Window: Mostrar/Ocultar ventana de pegado rápido
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: Cuando está habilitado, hacer clic en elementos del menú solo copiará el contenido al portapapeles en lugar de pegarlo automáticamente. Esto te da más control sobre cuándo y dónde se pega el contenido.
 Quick Paste Window: Ventana de pegado rápido
 PasteBar Quick Paste: PasteBar Pegado Rápido
 Show Note Icons on Clips: Mostrar iconos de notas en clips
