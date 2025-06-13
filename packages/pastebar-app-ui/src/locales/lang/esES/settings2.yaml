@@ -13,7 +13,6 @@ Hide the App Dock Icon: Ocultar el icono de la aplicación en el Dock
 No keys set: Sin teclas asignadas
 PasteBar Quick Paste: Pegado rápido PasteBar
 Press keys: Presiona las teclas
-Quick Paste Window: Ventana de pegado rápido
 ? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
 : Eliminar el icono de PasteBar del Dock de macOS mientras mantiene la aplicación ejecutándose en segundo plano. La aplicación permanece accesible a través del icono de la barra de menú. Requiere reiniciar la aplicación para que tenga efecto.
 Set: Establecer
@@ -26,7 +25,6 @@ Show/Hide Quick Paste Window: Mostrar/Ocultar ventana de pegado rápido
 ? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
 : Cuando está habilitado, hacer clic en elementos del menú solo copiará el contenido al portapapeles en lugar de pegarlo automáticamente. Esto te da más control sobre cuándo y dónde se pega el contenido.
 Quick Paste Window: Ventana de pegado rápido
-PasteBar Quick Paste: PasteBar Pegado Rápido
 Show Note Icons on Clips: Mostrar iconos de notas en clips
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Mostrar iconos persistentes en clips que tienen notas para mejorar la organización visual y hacer que las notas sean más fáciles de descubrir.
 Default Note Icon Type: Tipo de icono de nota predeterminado

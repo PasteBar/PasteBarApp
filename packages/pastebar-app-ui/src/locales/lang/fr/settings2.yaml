@@ -21,13 +21,10 @@ Set system OS hotkeys to show/hide the main app window and quick paste window: D
 Show Navbar Items Hover: Afficher éléments barre au survol
 Show collections menu on the navbar: Afficher le menu des collections dans la barre de navigation
 Show navbar elements on hover only: Afficher les éléments de la barre uniquement au survol
-Show/Hide Main App Window: Afficher/Masquer fenêtre principale
 Show/Hide Quick Paste Window: Afficher/Masquer fenêtre de collage rapide
 ? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
 : Lorsqu'activé, cliquer sur les éléments du menu copiera uniquement le contenu dans le presse-papiers au lieu de le coller automatiquement. Cela vous donne plus de contrôle sur le moment et l'endroit où le contenu est collé.
-Show navbar elements on hover only: Afficher les éléments de la barre de navigation uniquement au survol
 Show/Hide Main App Window: Afficher/Masquer la fenêtre principale de l'application
-Show/Hide Quick Paste Window: Afficher/masquer la fenêtre de collage rapide
 Show Note Icons on Clips: Afficher les icônes de notes sur les clips
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Afficher des icônes persistantes sur les clips qui ont des notes pour améliorer l'organisation visuelle et faciliter la découverte des notes.
 Default Note Icon Type: Type d'icône de note par défaut

@@ -26,5 +26,6 @@ Show/Hide Quick Paste Window: Show/Hide Quick Paste Window
 Show Note Icons on Clips: Show Note Icons on Clips
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.
 Default Note Icon Type: Default Note Icon Type
-This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
 : When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
