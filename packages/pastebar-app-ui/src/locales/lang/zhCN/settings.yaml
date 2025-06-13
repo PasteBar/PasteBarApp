@@ -1,7 +1,6 @@
-"<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.": 已设置 <strong>{{screenLockPassCodeLength}}</strong> 位数字密码。
+'<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.': 已设置 <strong>{{screenLockPassCodeLength}}</strong> 位数字密码。
 Activation Success: 激活成功
-? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
-: 在 1 秒内复制两次文本时添加星标。这允许您快速将复制的文本或链接添加到收藏夹，并在剪贴板历史中轻松找到。
+Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.: 在 1 秒内复制两次文本时添加星标。这允许您快速将复制的文本或链接添加到收藏夹，并在剪贴板历史中轻松找到。
 Add an unlimited number of tabs within each collection for better organization and easy access.: 在每个收藏中添加无限数量的标签，以更好地组织和轻松访问。
 'Add an unlimited number of tabs within each collection for better organization and easy access.                                ': '在每个收藏中添加无限数量的标签，以更好地组织和轻松访问。                                '
 Advanced settings: 高级设置
@@ -25,8 +24,7 @@ Auto-Star on Double Copy: 双重复制时自动星标
 Auto-Update on Capture: 捕获时自动更新
 Auto-Trim Spaces on Capture: 捕获时自动删除空格
 Auto-delete clipboard history after: 自动删除剪贴板历史时间
-? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
-: 在剪贴板历史中自动创建链接卡片预览。这允许快速查看网站详情，无需打开或粘贴链接。
+Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.: 在剪贴板历史中自动创建链接卡片预览。这允许快速查看网站详情，无需打开或粘贴链接。
 Back: 返回
 Capture History: 捕获历史
 Capture History Text Length Limits: 捕获历史文本长度限制
@@ -44,8 +42,7 @@ Create an unlimited number of collections to organize your clips and menus.: 创
 Custom: 自定义
 Custom themes: 自定义主题
 Decrease UI Font Size: 减小 UI 字体大小
-? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
-: 在锁定的应用程序屏幕上显示剪贴板历史捕获开关。这允许您直接从锁定屏幕控制历史捕获设置。
+Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.: 在锁定的应用程序屏幕上显示剪贴板历史捕获开关。这允许您直接从锁定屏幕控制历史捕获设置。
 Display disabled collections name on the navigation bar collections menu: 在导航栏收藏菜单中显示已禁用的收藏名称
 Display disabled collections name on the navigation bar under collections menu: 在导航栏收藏菜单下显示已禁用的收藏名称
 Display full name of selected collection on the navigation bar: 在导航栏上显示所选收藏的完整名称
@@ -108,10 +105,10 @@ Passcode successfully verified: 密码验证成功
 Passcode verification error: 密码验证错误
 Passcode verification is locked.: 密码验证已锁定。
 Password is incorrect.: 密码不正确。
-"Password is incorrect. <br/>{{screenLockRecoveryPasswordMasked}}": 密码不正确。<br/>{{screenLockRecoveryPasswordMasked}}
+'Password is incorrect. <br/>{{screenLockRecoveryPasswordMasked}}': 密码不正确。<br/>{{screenLockRecoveryPasswordMasked}}
 'Password is incorrect. Hint: {{screenLockRecoveryPasswordMasked}}': '密码不正确。提示：{{screenLockRecoveryPasswordMasked}}'
 'Password is incorrect. Masked password is: {{screenLockRecoveryPasswordMasked}}': '密码不正确。掩码密码为：{{screenLockRecoveryPasswordMasked}}'
-"Password is incorrect. {{screenLockRecoveryPasswordMasked}}": 密码不正确。{{screenLockRecoveryPasswordMasked}}
+'Password is incorrect. {{screenLockRecoveryPasswordMasked}}': 密码不正确。{{screenLockRecoveryPasswordMasked}}
 Passwords do not match: 密码不匹配
 PasteBar Settings: PasteBar 设置
 Pin Window: 固定窗口
@@ -129,26 +126,22 @@ Recovery password is set.: 已设置恢复密码。
 Refresh Application UI: 刷新应用程序 UI
 Refresh UI: 刷新 UI
 Require Screen Unlock at Application Start: 应用程序启动时要求屏幕解锁
-? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
-: 要求应用程序启动时解锁屏幕以增强安全性。此设置确保只有授权用户可以访问应用程序，从一开始就保护您的数据免受未授权访问。
+Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.: 要求应用程序启动时解锁屏幕以增强安全性。此设置确保只有授权用户可以访问应用程序，从一开始就保护您的数据免受未授权访问。
 Reset Font Size: 重置字体大小
 Run Terminal or Shell Commands: 运行终端或 Shell 命令
 Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: 使用内置的网络抓取工具抓取和解析网站或 API 响应，并将提取的数据复制到剪贴板。
-? 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
-: '使用内置的网络抓取工具抓取和解析网站或 API 响应，并将提取的数据复制到剪贴板。                                '
+'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                ': '使用内置的网络抓取工具抓取和解析网站或 API 响应，并将提取的数据复制到剪贴板。                                '
 Security: 安全
 Security Settings: 安全设置
 Send HTTP requests to web APIs or services and copy the response data to the clipboard.: 向网络 API 或服务发送 HTTP 请求，并将响应数据复制到剪贴板。
 Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: 如果在复制的文本中找到以下列出的敏感词或句子，将自动被遮蔽。不区分大小写。
 Set a passcode to unlock the locked screen and protect your data from unauthorized access.: 设置密码以解锁锁定的屏幕并保护您的数据免受未授权访问。
-? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
-: 设置恢复密码，以便在忘记锁屏密码时轻松重置。您的密码将安全地存储在设备的操作系统存储中。
+Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.: 设置恢复密码，以便在忘记锁屏密码时轻松重置。您的密码将安全地存储在设备的操作系统存储中。
 Settings: 设置
 Show Clipboard History Capture Control on Lock Screen: 在锁屏上显示剪贴板历史捕获控制
 Show Disable History Capture When Screen Locked: 屏幕锁定时显示禁用历史记录捕获
 Show Disabled Collections: 显示已禁用的收藏
-? Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
-: 当应用程序屏幕锁定时显示剪贴板历史捕获开关。这允许您从应用程序锁定屏幕控制捕获历史设置。
+Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.: 当应用程序屏幕锁定时显示剪贴板历史捕获开关。这允许您从应用程序锁定屏幕控制捕获历史设置。
 Show collection name on the navbar: 在导航栏上显示收藏名称
 Show disabled collections on the navbar list: 在导航栏列表中显示已禁用的收藏
 Skip auto start prompt on app launch: 应用启动时跳过自动启动提示
@@ -158,19 +151,16 @@ Swap Panels Layout: 交换面板布局
 Switch the layout position of panels in Clipboard History and Paste Menu views: 在剪贴板历史和粘贴菜单视图中切换面板的布局位
 Thank you again for using PasteBar.: 再次感谢您使用 PasteBar。
 Thank you for testing! 🙌: 感谢您的测试！🙌
-? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
-: 此选项让您控制剪辑悬停注释的显示和时间。您可以选择立即显示注释或延迟显示，以防止意外弹出。
-? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
-: 此选项让您自定义显示剪辑注释的弹出窗口的最大宽度和高度，确保它舒适地适应您所需的尺寸。
-? This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
-: 此选项让您自定义剪贴板历史中可以捕获的文本的最小和最大长度。将任一值设置为 0 表示该限制为无限。
+This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.: 此选项让您控制剪辑悬停注释的显示和时间。您可以选择立即显示注释或延迟显示，以防止意外弹出。
+This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.: 此选项让您自定义显示剪辑注释的弹出窗口的最大宽度和高度，确保它舒适地适应您所需的尺寸。
+This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.: 此选项让您自定义剪贴板历史中可以捕获的文本的最小和最大长度。将任一值设置为 0 表示该限制为无限。
 To downgrade your current version, please visit: 要降级您的当前版本，请访问
 'To downgrade, please visit: ': '要降级，请访问：'
 To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: 为确保最佳检测准确性，请最多选择 7 种语言。限制选择可提高精确度。
 Today: 今天
 Tomorrow: 明天
-"Try after <strong>{{resetPassCodeNextDelay}}</strong> seconds": <strong>{{resetPassCodeNextDelay}}</strong> 秒后重试
-"Try again after <strong>{{resetPassCodeNextDelay}}</strong> seconds": <strong>{{resetPassCodeNextDelay}}</strong> 秒后再试
+'Try after <strong>{{resetPassCodeNextDelay}}</strong> seconds': <strong>{{resetPassCodeNextDelay}}</strong> 秒后重试
+'Try again after <strong>{{resetPassCodeNextDelay}}</strong> seconds': <strong>{{resetPassCodeNextDelay}}</strong> 秒后再试
 UI Language: UI 语言
 UnPin Window: 取消固定窗口
 Unlimited Collections: 无限收藏

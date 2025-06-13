@@ -1,9 +1,10 @@
-import { FC } from "react"
-import IconProps from "./types/icon-type"
+import { FC } from 'react'
 
-const DownloadIcon: FC<IconProps> = (props) => {
+import IconProps from './types/icon-type'
+
+const DownloadIcon: FC<IconProps> = props => {
   const { fill, size, ...attributes } = props
-  const line = fill || "#111827"
+  const line = fill || '#111827'
 
   return (
     <svg

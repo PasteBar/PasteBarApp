@@ -62,9 +62,9 @@ app.save_window_state(StateFlags::all()); // will save the state of all open win
 or through Javascript
 
 ```javascript
-import { saveWindowState, StateFlags } from "tauri-plugin-window-state-api";
+import { saveWindowState, StateFlags } from 'tauri-plugin-window-state-api'
 
-saveWindowState(StateFlags.ALL);
+saveWindowState(StateFlags.ALL)
 ```
 
 To manually restore a windows state from disk you can call the `restore_state()` method exposed by the `WindowExt` trait:
@@ -79,9 +79,9 @@ window.restore_state(StateFlags::all()); // will restore the windows state from 
 or through Javascript
 
 ```javascript
-import { restoreStateCurrent, StateFlags } from "tauri-plugin-window-state-api";
+import { restoreStateCurrent, StateFlags } from 'tauri-plugin-window-state-api'
 
-restoreStateCurrent(StateFlags.ALL);
+restoreStateCurrent(StateFlags.ALL)
 ```
 
 ## Contributing

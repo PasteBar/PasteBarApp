@@ -1,15 +1,11 @@
-import { GroupBase, SingleValueProps } from "react-select"
+import { useRef } from 'react'
+import clsx from 'clsx'
+import { GroupBase, SingleValueProps } from 'react-select'
 
-import Tooltip from "../../../../atoms/tooltip"
-import clsx from "clsx"
-import { hasPrefix } from "../utils"
-import { useRef } from "react"
+import Tooltip from '../../../../atoms/tooltip'
+import { hasPrefix } from '../utils'
 
-const SingleValue = <
-  Option,
-  IsMulti extends boolean,
-  Group extends GroupBase<Option>
->({
+const SingleValue = <Option, IsMulti extends boolean, Group extends GroupBase<Option>>({
   innerProps,
   children,
   cx,
@@ -53,11 +49,11 @@ const SingleValue = <
         ref={ref}
         className={cx(
           {
-            "single-value": true,
-            "single-value--is-disabled": isDisabled,
+            'single-value': true,
+            'single-value--is-disabled': isDisabled,
           },
           clsx(
-            "absolute top-1/2 -translate-y-1/2 overflow-hidden overflow-ellipsis whitespace-nowrap",
+            'absolute top-1/2 -translate-y-1/2 overflow-hidden overflow-ellipsis whitespace-nowrap',
             className
           )
         )}

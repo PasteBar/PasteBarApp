@@ -8,14 +8,12 @@ Hide Collections Navbar: Hide Collections Navbar
 Hide collections menu dropdown on the navigation bar: Hide collections menu dropdown on the navigation bar
 Hide collections menu on the navbar: Hide collections menu on the navbar
 Hide the App Dock Icon: Hide the App Dock Icon
-? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
-: Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
+Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.: Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
 No keys set: No keys set
 PasteBar Quick Paste: PasteBar Quick Paste
 Press keys: Press keys
 Quick Paste Window: Quick Paste Window
-? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
-: Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
+Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.: Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
 Set: Set
 Set system OS hotkeys to show/hide the main app window and quick paste window: Set system OS hotkeys to show/hide the main app window and quick paste window
 Show Navbar Items Hover: Show Navbar Items Hover
@@ -23,5 +21,8 @@ Show collections menu on the navbar: Show collections menu on the navbar
 Show navbar elements on hover only: Show navbar elements on hover only
 Show/Hide Main App Window: Show/Hide Main App Window
 Show/Hide Quick Paste Window: Show/Hide Quick Paste Window
-? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
-: When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+Show Note Icons on Clips: Show Note Icons on Clips
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.
+Default Note Icon Type: Default Note Icon Type
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.
+When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.

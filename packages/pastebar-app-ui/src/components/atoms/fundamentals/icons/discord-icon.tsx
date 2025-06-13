@@ -1,9 +1,10 @@
-import React from "react"
-import IconProps from "./types/icon-type"
+import React from 'react'
+
+import IconProps from './types/icon-type'
 
 const DiscordIcon: React.FC<IconProps> = ({
-  size = "16",
-  color = "currentColor",
+  size = '16',
+  color = 'currentColor',
   ...attributes
 }) => {
   return (

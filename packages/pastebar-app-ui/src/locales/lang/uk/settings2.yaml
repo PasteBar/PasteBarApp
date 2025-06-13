@@ -8,14 +8,11 @@ Hide Collections Navbar: Приховати панель колекцій
 Hide collections menu dropdown on the navigation bar: Приховати випадаюче меню колекцій на панелі навігації
 Hide collections menu on the navbar: Приховати меню колекцій на панелі навігації
 Hide the App Dock Icon: Приховати іконку додатку в Dock
-? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
-: Тримати головне вікно додатку прихованим при перезапуску. Ви можете відкрити його через меню в рядку меню або панелі завдань, або використовуючи глобальні гарячі клавіші.
+Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.: Тримати головне вікно додатку прихованим при перезапуску. Ви можете відкрити його через меню в рядку меню або панелі завдань, або використовуючи глобальні гарячі клавіші.
 No keys set: Клавіші не встановлені
-PasteBar Quick Paste: Швидка вставка PasteBar
 Press keys: Натисніть клавіші
 Quick Paste Window: Вікно швидкої вставки
-? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
-: Видалити іконку PasteBar з macOS Dock, залишаючи додаток запущеним у фоні. Додаток залишається доступним через іконку в рядку меню. Потрібен перезапуск додатку.
+Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.: Видалити іконку PasteBar з macOS Dock, залишаючи додаток запущеним у фоні. Додаток залишається доступним через іконку в рядку меню. Потрібен перезапуск додатку.
 Set: Встановити
 Set system OS hotkeys to show/hide the main app window and quick paste window: Встановити системні гарячі клавіші для показу/приховування головного вікна та вікна швидкої вставки
 Show Navbar Items Hover: Показувати елементи панелі при наведенні
@@ -23,5 +20,9 @@ Show collections menu on the navbar: Показувати меню колекц�
 Show navbar elements on hover only: Показувати елементи панелі тільки при наведенні
 Show/Hide Main App Window: Показати/Приховати головне вікно
 Show/Hide Quick Paste Window: Показати/Приховати вікно швидкої вставки
-? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
-: При увімкненні натискання на елементи меню буде тільки копіювати вміст до буфера обміну замість автоматичної вставки. Це дає вам більше контролю над тим, коли і де вставляється вміст.
+When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: При увімкненні натискання на елементи меню буде тільки копіювати вміст до буфера обміну замість автоматичної вставки. Це дає вам більше контролю над тим, коли і де вставляється вміст.
+PasteBar Quick Paste: PasteBar Швидка Вставка
+Show Note Icons on Clips: Показувати іконки заміток на кліпах
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Відображати постійні іконки на кліпах з замітками для покращення візуальної організації та полегшення пошуку заміток.
+Default Note Icon Type: Тип іконки замітки за замовчуванням
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Це встановлює тип іконки за замовчуванням для нових кліпів з замітками. Ви можете налаштувати окремі кліпи через контекстне меню.

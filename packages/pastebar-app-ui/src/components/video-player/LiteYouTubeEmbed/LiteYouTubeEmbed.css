@@ -9,7 +9,7 @@
 }
 
 .yt-lite.lyt-activated::before {
-  content: "";
+  content: '';
   box-sizing: content-box;
   display: block;
   position: absolute;
@@ -23,7 +23,7 @@
   transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 .yt-lite::after {
-  content: "";
+  content: '';
   display: block;
   padding-bottom: var(--aspect-ratio);
 }
@@ -48,7 +48,7 @@
   opacity: 1;
 }
 .yt-lite > .lty-playbtn::before {
-  content: "";
+  content: '';
   border-color: transparent transparent transparent #fff;
   border-style: solid;
   border-width: 11px 0 11px 19px;

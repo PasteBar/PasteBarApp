@@ -478,7 +478,10 @@ export function ClipEditContent({
     showPathValidationError.value = undefined
     webrequestTestOutputObject.value = {}
 
-    const saveValue = itemLocalOptions.value?.autoTrimSpaces === false ? clipValue.value : clipValue.value.trim()
+    const saveValue =
+      itemLocalOptions.value?.autoTrimSpaces === false
+        ? clipValue.value
+        : clipValue.value.trim()
 
     if (!force) {
       if (isTemplate) {
@@ -1962,7 +1965,9 @@ export function ClipEditContent({
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
-                    className={itemLocalOptions.value.autoTrimSpaces ? 'font-semibold' : ''}
+                    className={
+                      itemLocalOptions.value.autoTrimSpaces ? 'font-semibold' : ''
+                    }
                     onClick={e => {
                       e.preventDefault()
                       itemLocalOptions.value = {

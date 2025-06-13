@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api/tauri";
-import { WindowLabel, getCurrent } from "@tauri-apps/api/window";
+import { invoke } from '@tauri-apps/api/tauri'
+import { getCurrent, WindowLabel } from '@tauri-apps/api/window'
 
 export enum StateFlags {
   SIZE = 1 << 0,
@@ -15,21 +15,21 @@ export enum StateFlags {
  *  Save the state of all open windows to disk.
  */
 async function saveWindowState(flags: StateFlags) {
-  invoke("plugin:window-state|save_window_state", { flags });
+  invoke('plugin:window-state|save_window_state', { flags })
 }
 
 /**
  *  Restore the state for the specified window from disk.
  */
 async function restoreState(label: WindowLabel, flags: StateFlags) {
-  invoke("plugin:window-state|restore_state", { label, flags });
+  invoke('plugin:window-state|restore_state', { label, flags })
 }
 
 /**
  *  Restore the state for the current window from disk.
  */
 async function restoreStateCurrent(flags: StateFlags) {
-  restoreState(getCurrent().label, flags);
+  restoreState(getCurrent().label, flags)
 }
 
-export { restoreState, restoreStateCurrent, saveWindowState };
+export { restoreState, restoreStateCurrent, saveWindowState }

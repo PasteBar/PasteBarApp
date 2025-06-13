@@ -4,8 +4,8 @@
  * @author Katorly
  */
 /* General */
-pre[class*="language-"],
-code[class*="language-"] {
+pre[class*='language-'],
+code[class*='language-'] {
   color: #c9d1d9;
   font-size: 13px;
   text-shadow: none;
@@ -24,28 +24,28 @@ code[class*="language-"] {
   -ms-hyphens: none;
   hyphens: none;
 }
-pre[class*="language-"]::selection,
-code[class*="language-"]::selection,
-pre[class*="language-"]::mozselection,
-code[class*="language-"]::mozselection {
+pre[class*='language-']::selection,
+code[class*='language-']::selection,
+pre[class*='language-']::mozselection,
+code[class*='language-']::mozselection {
   text-shadow: none;
   background: #234879;
 }
 @media print {
-  pre[class*="language-"],
-  code[class*="language-"] {
+  pre[class*='language-'],
+  code[class*='language-'] {
     text-shadow: none;
   }
 }
-pre[class*="language-"] {
+pre[class*='language-'] {
   padding: 1em;
-  margin: .5em 0;
+  margin: 0.5em 0;
   overflow: auto;
   background: #161b22;
 }
-:not(pre) > code[class*="language-"] {
-  padding: .1em .3em;
-  border-radius: .3em;
+:not(pre) > code[class*='language-'] {
+  padding: 0.1em 0.3em;
+  border-radius: 0.3em;
   color: #c9d1d9;
   background: #343942;
 }
@@ -53,7 +53,7 @@ pre[class*="language-"] {
 pre[data-line] {
   position: relative;
 }
-pre[class*="language-"] > code[class*="language-"] {
+pre[class*='language-'] > code[class*='language-'] {
   position: relative;
   z-index: 1;
 }
@@ -72,7 +72,7 @@ pre[class*="language-"] > code[class*="language-"] {
 }
 /* Tokens */
 .namespace {
-  opacity: .7;
+  opacity: 0.7;
 }
 .token.comment,
 .token.prolog,

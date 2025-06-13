@@ -11,6 +11,7 @@ import {
   creatingClipItemBoardId,
   isCreatingMenuItem,
   newClipItemId,
+  settingsStoreAtom,
   showClipsMoveOnBoardId,
   showDeleteClipConfirmationId,
   showEditClipId,
@@ -25,15 +26,20 @@ import {
   ArrowDownToLine,
   ArrowUp,
   ArrowUpToLine,
+  BookOpenText,
   CircleOff,
   ClipboardCheck,
   ClipboardEdit,
   ClipboardMinus,
+  Contact,
   Copy,
   Expand,
+  FileText,
   Locate,
   MenuSquare,
+  MessageSquareText,
   Move,
+  NotebookPen,
   PanelTopClose,
   PanelTopOpen,
   Pencil,
@@ -77,11 +83,14 @@ import { useSignal } from '~/hooks/use-signal'
 import { BOARD } from '../../Dashboard'
 import { Board } from '../Board'
 import { Clip } from '../ClipCard'
+import { getNoteOptions, parseItemOptions, shouldShowNoteIcon } from '../utils'
 
 interface ClipsCardContextMenuProps {
   itemId: UniqueIdentifier
   icon?: string | null
   iconVisibility?: string | null
+  description?: string | null
+  itemOptions?: string | null
   isShowDetails: boolean | undefined
   boardId: UniqueIdentifier | null
   tabId: UniqueIdentifier | null
@@ -113,6 +122,8 @@ export default function ClipsCardContextMenuComponent({
   isMenu,
   icon,
   iconVisibility,
+  description,
+  itemOptions,
   isPinnedBoard,
   isFavorite,
   boardId,
@@ -128,6 +139,7 @@ export default function ClipsCardContextMenuComponent({
   const { updateItemById } = useUpdateItemById()
   const { updatePinnedClipsByIds } = usePinnedClipsByIds()
   const { setIsShowPinned, isShowPinned } = useAtomValue(uiStoreAtom)
+  const { isNoteIconsEnabled, defaultNoteIconType } = useAtomValue(settingsStoreAtom)
   const { createNewItem } = useCreateItem()
   const navigate = useNavigate()
   const showDeleteThisClipConfirmation = useSignal(false)
@@ -1176,6 +1188,210 @@ export default function ClipsCardContextMenuComponent({
                 </ContextMenuSub>
               </ContextMenuSubContent>
             </ContextMenuSub>
+
+            {description && (
+              <ContextMenuSub>
+                <ContextMenuSubTrigger>
+                  {t('Note Icon', { ns: 'contextMenus' })} ...
+                </ContextMenuSubTrigger>
+                <ContextMenuSubContent>
+                  <ContextMenuItem
+                    disabled={true}
+                    className="text-center items-center justify-center py-0.5"
+                  >
+                    <Text>{t('Note Icon Settings', { ns: 'contextMenus' })}</Text>
+                  </ContextMenuItem>
+                  <ContextMenuSeparator />
+                  <ContextMenuCheckboxItem
+                    checked={(() => {
+                      const currentOptions = parseItemOptions(itemOptions)
+                      return (
+                        !currentOptions.noteOptions ||
+                        Object.keys(currentOptions.noteOptions).length === 0
+                      )
+                    })()}
+                    onSelect={e => {
+                      e.preventDefault()
+                      const currentOptions = parseItemOptions(itemOptions)
+                      const { noteOptions, ...otherOptions } = currentOptions
+
+                      updateItemById({
+                        updatedItem: {
+                          itemOptions: JSON.stringify(otherOptions),
+                          itemId,
+                        },
+                      })
+                    }}
+                  >
+                    {t('Use Global Setting', { ns: 'contextMenus' })}
+                  </ContextMenuCheckboxItem>
+                  <ContextMenuCheckboxItem
+                    checked={shouldShowNoteIcon(description, itemOptions, {
+                      isNoteIconsEnabled,
+                      defaultNoteIconType,
+                    })}
+                    className={
+                      shouldShowNoteIcon(description, itemOptions, {
+                        isNoteIconsEnabled,
+                        defaultNoteIconType,
+                      })
+                        ? 'font-semibold'
+                        : ''
+                    }
+                    onSelect={e => {
+                      e.preventDefault()
+                      const currentOptions = parseItemOptions(itemOptions)
+                      const currentNoteOptions = currentOptions.noteOptions || {}
+                      const newShowIcon = !shouldShowNoteIcon(description, itemOptions, {
+                        isNoteIconsEnabled,
+                        defaultNoteIconType,
+                      })
+
+                      updateItemById({
+                        updatedItem: {
+                          itemOptions: JSON.stringify({
+                            ...currentOptions,
+                            noteOptions: {
+                              ...currentNoteOptions,
+                              showIcon: newShowIcon,
+                            },
+                          }),
+                          itemId,
+                        },
+                      })
+                    }}
+                  >
+                    {t('Show Note Icon', { ns: 'contextMenus' })}
+                  </ContextMenuCheckboxItem>
+
+                  {shouldShowNoteIcon(description, itemOptions, {
+                    isNoteIconsEnabled,
+                    defaultNoteIconType,
+                  }) && (
+                    <ContextMenuSub>
+                      <ContextMenuSubTrigger className="flex items-center justify-center">
+                        {(() => {
+                          const iconType = getNoteOptions(itemOptions, {
+                            isNoteIconsEnabled,
+                            defaultNoteIconType,
+                          }).iconType
+                          const iconMap = {
+                            MessageSquareText: (
+                              <MessageSquareText size={16} className="ml-1 mr-2" />
+                            ),
+                            FileText: <FileText size={16} className="ml-1 mr-2" />,
+                            BookOpenText: (
+                              <BookOpenText size={16} className="ml-1 mr-2" />
+                            ),
+                            Contact: <Contact size={16} className="ml-1 mr-2" />,
+                            NotebookPen: <NotebookPen size={16} className="ml-1 mr-2" />,
+                          }
+                          return (
+                            iconMap[iconType as keyof typeof iconMap] || (
+                              <MessageSquareText size={16} className="ml-1 mr-2" />
+                            )
+                          )
+                        })()}
+                        {t('Icon Type', { ns: 'contextMenus' })} ...
+                      </ContextMenuSubTrigger>
+                      <ContextMenuSubContent>
+                        {[
+                          {
+                            name: 'MessageSquareText',
+                            labelKey: 'Note Icon Types Message',
+                            icon: MessageSquareText,
+                          },
+                          {
+                            name: 'FileText',
+                            labelKey: 'Note Icon Types File',
+                            icon: FileText,
+                          },
+                          {
+                            name: 'BookOpenText',
+                            labelKey: 'Note Icon Types Book',
+                            icon: BookOpenText,
+                          },
+                          {
+                            name: 'Contact',
+                            labelKey: 'Note Icon Types Contact',
+                            icon: Contact,
+                          },
+                          {
+                            name: 'NotebookPen',
+                            labelKey: 'Note Icon Types Notebook',
+                            icon: NotebookPen,
+                          },
+                        ].map(iconType => {
+                          const isSelected =
+                            getNoteOptions(itemOptions, {
+                              isNoteIconsEnabled,
+                              defaultNoteIconType,
+                            }).iconType === iconType.name
+                          const IconComponent = iconType.icon
+
+                          return isSelected ? (
+                            <ContextMenuCheckboxItem
+                              key={iconType.name}
+                              checked={true}
+                              className="font-semibold"
+                              onSelect={e => {
+                                e.preventDefault()
+                                const currentOptions = parseItemOptions(itemOptions)
+                                const currentNoteOptions =
+                                  currentOptions.noteOptions || {}
+
+                                updateItemById({
+                                  updatedItem: {
+                                    itemOptions: JSON.stringify({
+                                      ...currentOptions,
+                                      noteOptions: {
+                                        ...currentNoteOptions,
+                                        iconType: iconType.name,
+                                        showIcon: true,
+                                      },
+                                    }),
+                                    itemId,
+                                  },
+                                })
+                              }}
+                            >
+                              {t(iconType.labelKey, { ns: 'contextMenus' })}
+                            </ContextMenuCheckboxItem>
+                          ) : (
+                            <ContextMenuItem
+                              key={iconType.name}
+                              onSelect={() => {
+                                const currentOptions = parseItemOptions(itemOptions)
+                                const currentNoteOptions =
+                                  currentOptions.noteOptions || {}
+
+                                updateItemById({
+                                  updatedItem: {
+                                    itemOptions: JSON.stringify({
+                                      ...currentOptions,
+                                      noteOptions: {
+                                        ...currentNoteOptions,
+                                        iconType: iconType.name,
+                                        showIcon: true,
+                                      },
+                                    }),
+                                    itemId,
+                                  },
+                                })
+                              }}
+                              className="flex items-center"
+                            >
+                              <IconComponent size={16} className="mr-2" />
+                              {t(iconType.labelKey, { ns: 'contextMenus' })}
+                            </ContextMenuItem>
+                          )
+                        })}
+                      </ContextMenuSubContent>
+                    </ContextMenuSub>
+                  )}
+                </ContextMenuSubContent>
+              </ContextMenuSub>
+            )}
           </ContextMenuSubContent>
         </ContextMenuSub>
 

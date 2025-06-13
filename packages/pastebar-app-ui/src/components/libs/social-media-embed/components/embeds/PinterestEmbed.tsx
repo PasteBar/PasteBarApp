@@ -1,26 +1,27 @@
-import classNames from 'classnames';
-import * as React from 'react';
-import { DivProps } from 'react-html-props';
-import { PlaceholderEmbed, PlaceholderEmbedProps } from '../placeholder/PlaceholderEmbed';
-import { EmbedStyle } from './EmbedStyle';
+import * as React from 'react'
+import classNames from 'classnames'
+import { DivProps } from 'react-html-props'
 
-const minPlaceholderWidth = 250;
-const maxPlaceholderWidth = 550;
-const defaultPlaceholderHeight = 550;
-const borderRadius = 8;
+import { PlaceholderEmbed, PlaceholderEmbedProps } from '../placeholder/PlaceholderEmbed'
+import { EmbedStyle } from './EmbedStyle'
+
+const minPlaceholderWidth = 250
+const maxPlaceholderWidth = 550
+const defaultPlaceholderHeight = 550
+const borderRadius = 8
 
 export interface PinterestEmbedProps extends DivProps {
-  url: string;
-  postUrl?: string;
-  width?: string | number;
-  height?: string | number;
-  linkText?: string;
-  placeholderImageUrl?: string;
-  placeholderSpinner?: React.ReactNode;
-  placeholderSpinnerDisabled?: boolean;
-  placeholderProps?: PlaceholderEmbedProps;
-  embedPlaceholder?: React.ReactNode;
-  placeholderDisabled?: boolean;
+  url: string
+  postUrl?: string
+  width?: string | number
+  height?: string | number
+  linkText?: string
+  placeholderImageUrl?: string
+  placeholderSpinner?: React.ReactNode
+  placeholderSpinnerDisabled?: boolean
+  placeholderProps?: PlaceholderEmbedProps
+  embedPlaceholder?: React.ReactNode
+  placeholderDisabled?: boolean
 }
 
 export const PinterestEmbed = ({
@@ -37,7 +38,7 @@ export const PinterestEmbed = ({
   placeholderDisabled = false,
   ...divProps
 }: PinterestEmbedProps) => {
-  const [ready, setReady] = React.useState(false);
+  const [ready, setReady] = React.useState(false)
 
   // === Placeholder ===
   const placeholderStyle: React.CSSProperties = {
@@ -47,12 +48,13 @@ export const PinterestEmbed = ({
     height:
       typeof height !== 'undefined'
         ? height
-        : typeof divProps.style?.height !== 'undefined' || typeof divProps.style?.maxHeight !== 'undefined'
+        : typeof divProps.style?.height !== 'undefined' ||
+            typeof divProps.style?.maxHeight !== 'undefined'
           ? '100%'
           : defaultPlaceholderHeight,
     border: 'solid 1px rgba(0, 0, 0, 0.15)',
     borderRadius,
-  };
+  }
   const placeholder = embedPlaceholder ?? (
     <PlaceholderEmbed
       url={postUrl ?? url}
@@ -63,11 +65,11 @@ export const PinterestEmbed = ({
       {...placeholderProps}
       style={{ ...placeholderStyle, ...placeholderProps?.style }}
     />
-  );
+  )
 
   // Example URL: https://www.pinterest.com/pin/875105771321194304/sent/?invite_code=e86262c989ee4f559a08a4494c300ba3&sfo=1
-  const postIdMatch = url.match(/pin\/([\w\d_-]+)/)?.[1];
-  const postId = postIdMatch ?? '000000000000000000';
+  const postIdMatch = url.match(/pin\/([\w\d_-]+)/)?.[1]
+  const postId = postIdMatch ?? '000000000000000000'
 
   return (
     <div
@@ -93,5 +95,5 @@ export const PinterestEmbed = ({
       ></iframe>
       {!ready && !placeholderDisabled && placeholder}
     </div>
-  );
-};
+  )
+}

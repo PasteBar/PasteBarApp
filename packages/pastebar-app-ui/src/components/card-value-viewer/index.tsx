@@ -162,9 +162,7 @@ export const CardValueViewer: FC<CardValueViewerProps> = ({
 
   const valueParsed = useMemo(() => {
     if (!isImageData && !isCode && !isImage && textValue) {
-      return isMasked
-        ? maskValue(bbCode.remove(textValue))
-        : bbCode.parse(textValue)
+      return isMasked ? maskValue(bbCode.remove(textValue)) : bbCode.parse(textValue)
     }
   }, [textValue])
 

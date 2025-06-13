@@ -8,20 +8,21 @@ Hide Collections Navbar: Nascondi barra delle collezioni
 Hide collections menu dropdown on the navigation bar: Nascondi il menu a discesa delle collezioni nella barra di navigazione
 Hide collections menu on the navbar: Nascondi il menu delle collezioni nella barra di navigazione
 Hide the App Dock Icon: Nascondi l'icona dell'app nel Dock
-? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
-: Mantieni nascosta la finestra principale dell'applicazione al riavvio. Puoi riaprirla usando la barra dei menu o il menu della barra delle applicazioni, o usando i tasti di scelta rapida globali.
+Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.: Mantieni nascosta la finestra principale dell'applicazione al riavvio. Puoi riaprirla usando la barra dei menu o il menu della barra delle applicazioni, o usando i tasti di scelta rapida globali.
 No keys set: Nessun tasto impostato
 PasteBar Quick Paste: Incolla rapido PasteBar
 Press keys: Premi i tasti
 Quick Paste Window: Finestra incolla rapido
-? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
-: Rimuovi l'icona di PasteBar dal Dock di macOS mantenendo l'app in esecuzione in background. L'app rimane accessibile tramite l'icona della barra dei menu. Richiede un riavvio dell'app per avere effetto.
+Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.: Rimuovi l'icona di PasteBar dal Dock di macOS mantenendo l'app in esecuzione in background. L'app rimane accessibile tramite l'icona della barra dei menu. Richiede un riavvio dell'app per avere effetto.
 Set: Imposta
 Set system OS hotkeys to show/hide the main app window and quick paste window: Imposta i tasti di scelta rapida del sistema per mostrare/nascondere la finestra principale e la finestra incolla rapido
 Show Navbar Items Hover: Mostra elementi barra al passaggio del mouse
 Show collections menu on the navbar: Mostra il menu delle collezioni nella barra di navigazione
 Show navbar elements on hover only: Mostra elementi della barra solo al passaggio del mouse
-Show/Hide Main App Window: Mostra/Nascondi finestra principale
 Show/Hide Quick Paste Window: Mostra/Nascondi finestra incolla rapido
-? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
-: Quando abilitato, cliccando sugli elementi del menu si copierà solo il contenuto negli appunti invece di incollarlo automaticamente. Questo ti dà maggior controllo su quando e dove incollare il contenuto.
+When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: Quando abilitato, cliccando sugli elementi del menu si copierà solo il contenuto negli appunti invece di incollarlo automaticamente. Questo ti dà maggior controllo su quando e dove incollare il contenuto.
+Show/Hide Main App Window: Mostra/Nascondi la finestra principale dell'applicazione
+Show Note Icons on Clips: Mostra icone delle note sui clip
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Visualizza icone persistenti sui clip che hanno note per migliorare l'organizzazione visiva e rendere le note più facili da scoprire.
+Default Note Icon Type: Tipo di icona nota predefinito
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Questo imposta il tipo di icona predefinito per i nuovi clip con note. Puoi personalizzare i singoli clip tramite il menu contestuale.

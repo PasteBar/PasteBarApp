@@ -1,241 +1,241 @@
 HISTORY_PANEL_TOUR:
-- element: '#side-panel_tour'
-  popover:
-    title: 剪贴板历史面板
-    description: 此面板显示您复制的剪贴板历史，方便以后访问。滚动浏览历史记录，搜索内容，或按类型筛选。您可以调整此面板的大小以获得自定义视图。
-    prefferedSide: right
-- element: '#history-find_tour'
-  popover:
-    title: 查找和筛选历史
-    description: 使用搜索功能快速找到剪贴板历史中的特定项目。按项目类型（如文本、图像或链接）筛选结果，轻松定位所需内容。再次复制找到的项目或将其保存到面板。
-    prefferedSide: bottom
-    alignment: center
-- element: '#history-list_tour .history-item'
-  popover:
-    title: 剪贴板历史项目
-    description: 剪贴板历史中的每个项目代表您之前复制的内容。<b>双击</b>项目或点击图标将其复制回剪贴板。<b>按住并拖动</b>以在面板上创建已保存的剪辑。<b>右键点击</b>项目查看更多上下文菜单选项。
-    prefferedSide: right
-- element: '#tabs-history_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: 历史/菜单导航标签
-    description: 在剪贴板历史和粘贴菜单之间切换，轻松管理和访问您的内容。
-    alignment: center
-    prefferedSide: top
-- element: '#history-menu-button_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: 历史选中项目菜单
-    description: 使用此菜单管理剪贴板历史中的选定项目。您可以<b>多选</b>项目，取消全选，添加到面板，删除，或清除特定日期的历史记录。
-    alignment: end
-    prefferedSide: right
-- element: .panel-resize_tour
-  popover:
-    title: 可调整大小的面板视图
-    description: 通过调整面板视图大小来自定义您的工作区以适应您的偏好。<b>将鼠标悬停</b>在面板边缘直到出现调整大小的光标，然后<b>点击并拖动</b>以调整面板大小。
-    prefferedSide: right
+  - element: '#side-panel_tour'
+    popover:
+      title: 剪贴板历史面板
+      description: 此面板显示您复制的剪贴板历史，方便以后访问。滚动浏览历史记录，搜索内容，或按类型筛选。您可以调整此面板的大小以获得自定义视图。
+      prefferedSide: right
+  - element: '#history-find_tour'
+    popover:
+      title: 查找和筛选历史
+      description: 使用搜索功能快速找到剪贴板历史中的特定项目。按项目类型（如文本、图像或链接）筛选结果，轻松定位所需内容。再次复制找到的项目或将其保存到面板。
+      prefferedSide: bottom
+      alignment: center
+  - element: '#history-list_tour .history-item'
+    popover:
+      title: 剪贴板历史项目
+      description: 剪贴板历史中的每个项目代表您之前复制的内容。<b>双击</b>项目或点击图标将其复制回剪贴板。<b>按住并拖动</b>以在面板上创建已保存的剪辑。<b>右键点击</b>项目查看更多上下文菜单选项。
+      prefferedSide: right
+  - element: '#tabs-history_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 历史/菜单导航标签
+      description: 在剪贴板历史和粘贴菜单之间切换，轻松管理和访问您的内容。
+      alignment: center
+      prefferedSide: top
+  - element: '#history-menu-button_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 历史选中项目菜单
+      description: 使用此菜单管理剪贴板历史中的选定项目。您可以<b>多选</b>项目，取消全选，添加到面板，删除，或清除特定日期的历史记录。
+      alignment: end
+      prefferedSide: right
+  - element: .panel-resize_tour
+    popover:
+      title: 可调整大小的面板视图
+      description: 通过调整面板视图大小来自定义您的工作区以适应您的偏好。<b>将鼠标悬停</b>在面板边缘直到出现调整大小的光标，然后<b>点击并拖动</b>以调整面板大小。
+      prefferedSide: right
 
-DASHBOARD_CLIPS_TOUR:    
-- element: .clips-dashboard-panel_tour
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: 仪表板面板
-    description: 该面板为组织和管理已保存的剪辑提供了一个中心枢纽。创建自定义标签和面板来组织您的内容。从剪贴板历史<b>拖放</b>项目以创建新的剪辑。使用标签在不同的面板类别之间切换。
-    prefferedSide: left
-- element: '#dashboard-tabs_tour'
-  popover:
-    title: 仪表板标签
-    description: 创建自定义标签并使用它们在仪表板的不同部分之间导航。在类别之间切换以快速管理和访问您的剪辑和内容。
-    alignment: center
-    prefferedSide: bottom
-- element: '#dashboard-tabs-create-button_tour'
-  popover:
-    title: 创建仪表板项目
-    description: 为您的仪表板创建新项目。添加剪辑、面板或自定义标签来组织您的内容。
-    alignment: end
-    prefferedSide: bottom
-- element: '#dashboard-tabs-context-menu_tour'
-  popover:
-    title: 标签和布局菜单
-    description: <b>右键点击</b>标签或<b>点击菜单图标</b>以组织您的布局并管理您的标签。您可以编辑现有标签或更改仪表板布局以适应您的工作流程偏好。
-    alignment: end
-    prefferedSide: bottom
-- element: .board-panel_tour
-  popover:
-    title: 面板
-    description: 此面板允许您组织已保存的剪辑以便快速轻松访问。从剪贴板历史<b>拖放</b>项目。使用面板有效地分类和管理您的内容。
-    alignment: center
-    prefferedSide: right
-- element: .board-panel-header_tour
-  popover:
-    title: 面板标题
-    description: <b>双击</b>标题可快速展开面板，或<b>右键点击</b>查看其他选项以自定义和管理面板。
-    alignment: start
-    prefferedSide: right
-- element: .clip_tour
-  popover:
-    title: 已保存的剪辑项目
-    description: 快速访问已保存的剪辑内容。<b>双击</b>或<b>点击剪贴板图标</b>进行复制。<b>长按</b>重新排列项目，或<b>右键点击</b>查看更多选项以自定义和组织您的剪辑。
-    alignment: start
-    prefferedSide: right
-- element: .panel-resize_tour
-  popover:
-    title: 可调整大小的面板视图
-    description: 通过调整面板视图大小来自定义您的工作区以适应您的偏好。<b>将鼠标悬停</b>在面板边缘直到出现调整大小的光标，然后<b>点击并拖动</b>以调整面板大小。
-    prefferedSide: right
+DASHBOARD_CLIPS_TOUR:
+  - element: .clips-dashboard-panel_tour
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 仪表板面板
+      description: 该面板为组织和管理已保存的剪辑提供了一个中心枢纽。创建自定义标签和面板来组织您的内容。从剪贴板历史<b>拖放</b>项目以创建新的剪辑。使用标签在不同的面板类别之间切换。
+      prefferedSide: left
+  - element: '#dashboard-tabs_tour'
+    popover:
+      title: 仪表板标签
+      description: 创建自定义标签并使用它们在仪表板的不同部分之间导航。在类别之间切换以快速管理和访问您的剪辑和内容。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#dashboard-tabs-create-button_tour'
+    popover:
+      title: 创建仪表板项目
+      description: 为您的仪表板创建新项目。添加剪辑、面板或自定义标签来组织您的内容。
+      alignment: end
+      prefferedSide: bottom
+  - element: '#dashboard-tabs-context-menu_tour'
+    popover:
+      title: 标签和布局菜单
+      description: <b>右键点击</b>标签或<b>点击菜单图标</b>以组织您的布局并管理您的标签。您可以编辑现有标签或更改仪表板布局以适应您的工作流程偏好。
+      alignment: end
+      prefferedSide: bottom
+  - element: .board-panel_tour
+    popover:
+      title: 面板
+      description: 此面板允许您组织已保存的剪辑以便快速轻松访问。从剪贴板历史<b>拖放</b>项目。使用面板有效地分类和管理您的内容。
+      alignment: center
+      prefferedSide: right
+  - element: .board-panel-header_tour
+    popover:
+      title: 面板标题
+      description: <b>双击</b>标题可快速展开面板，或<b>右键点击</b>查看其他选项以自定义和管理面板。
+      alignment: start
+      prefferedSide: right
+  - element: .clip_tour
+    popover:
+      title: 已保存的剪辑项目
+      description: 快速访问已保存的剪辑内容。<b>双击</b>或<b>点击剪贴板图标</b>进行复制。<b>长按</b>重新排列项目，或<b>右键点击</b>查看更多选项以自定义和组织您的剪辑。
+      alignment: start
+      prefferedSide: right
+  - element: .panel-resize_tour
+    popover:
+      title: 可调整大小的面板视图
+      description: 通过调整面板视图大小来自定义您的工作区以适应您的偏好。<b>将鼠标悬停</b>在面板边缘直到出现调整大小的光标，然后<b>点击并拖动</b>以调整面板大小。
+      prefferedSide: right
 
 MENU_TOUR:
-- element: '#side-panel_tour'
-  popover:
-    title: 粘贴菜单面板
-    description: 此面板允许您管理系统任务栏或菜单栏的原生粘贴菜单。<b>按住并拖动</b>项目以重新排列，<b>双击</b>重命名。<b>按住</b> ALT 或 Command 键并点击任何项目进行多选。
-    prefferedSide: right
-- element: '#menu-find_tour'
-  popover:
-    title: 查找菜单项
-    description: 使用搜索栏快速找到特定的菜单项。输入关键词以筛选和定位您需要的项目。
-    prefferedSide: bottom
-    alignment: center
-- element: div[role=treeitem]
-  popover:
-    title: 菜单项树
-    description: 菜单树中的每个项目都可以单独或分组重新排列。<b>双击</b>重命名，<b>按住并拖动</b>重新排列。<b>按住</b> ALT 或 Command 键并点击进行多选。
-    prefferedSide: right
-- element: '#tabs-menu_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: 历史/菜单导航标签
-    description: 在剪贴板历史和粘贴菜单之间切换，轻松管理和访问您的内容。
-    alignment: center
-    prefferedSide: top
-- element: '#menu-icon-menu-button_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: 选中项目粘贴菜单
-    description: 使用此菜单管理多个选定的菜单项。多选、取消全选、重建原生菜单或删除项目，快速组织您的粘贴菜单。
-    alignment: end
-    prefferedSide: right
-- element: '#menu-main-list_tour'
-  meta:
-    closeTourCssPosition: hidden
-  popover:
-    title: 管理粘贴菜单面板
-    description: 此面板允许您管理所有活动菜单项。添加、编辑或删除项目以自定义您的粘贴菜单。创建新项目或链接现有剪辑。<b>双击</b>将内容复制到剪贴板，<b>右键点击</b>查看更多选项。
-    alignment: start
-    prefferedSide: left
-- element: .menu-item_tour
-  popover:
-    title: 菜单项
-    description: 在这里，您可以单独管理每个菜单项。<b>点击</b>展开图标查看菜单内容。<b>双击</b>将内容复制到剪贴板，<b>右键点击</b>查看更多选项。
-    alignment: center
-    prefferedSide: bottom
-- element: '#add-menu-item__tour'
-  popover:
-    title: 添加菜单项
-    description: 点击加号图标并选择要添加新项目的位置，可以在现有菜单项之前或之后。您可以创建新菜单、子菜单、分隔符、禁用的菜单项、来自最近历史的菜单项，或链接到已保存的剪辑。
-    alignment: end
-    prefferedSide: bottom
-- element: '#toggle-inactive-menu-items_tour'
-  popover:
-    title: 切换非活动菜单项
-    description: 点击此图标显示或隐藏非活动菜单项。这有助于通过在需要时关注活动项目来管理和组织您的菜单。简化您的菜单并整理您的工作空间以提高效率。
-    alignment: start
-    prefferedSide: bottom
-- element: .panel-resize_tour
-  popover:
-    title: 可调整大小的面板视图
-    description: 通过调整面板视图大小来自定义您的工作区以适应您的偏好。<b>将鼠标悬停</b>在面板边缘直到出现调整大小的光标，然后<b>点击并拖动</b>以调整面板大小。
-    prefferedSide: right
+  - element: '#side-panel_tour'
+    popover:
+      title: 粘贴菜单面板
+      description: 此面板允许您管理系统任务栏或菜单栏的原生粘贴菜单。<b>按住并拖动</b>项目以重新排列，<b>双击</b>重命名。<b>按住</b> ALT 或 Command 键并点击任何项目进行多选。
+      prefferedSide: right
+  - element: '#menu-find_tour'
+    popover:
+      title: 查找菜单项
+      description: 使用搜索栏快速找到特定的菜单项。输入关键词以筛选和定位您需要的项目。
+      prefferedSide: bottom
+      alignment: center
+  - element: div[role=treeitem]
+    popover:
+      title: 菜单项树
+      description: 菜单树中的每个项目都可以单独或分组重新排列。<b>双击</b>重命名，<b>按住并拖动</b>重新排列。<b>按住</b> ALT 或 Command 键并点击进行多选。
+      prefferedSide: right
+  - element: '#tabs-menu_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 历史/菜单导航标签
+      description: 在剪贴板历史和粘贴菜单之间切换，轻松管理和访问您的内容。
+      alignment: center
+      prefferedSide: top
+  - element: '#menu-icon-menu-button_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 选中项目粘贴菜单
+      description: 使用此菜单管理多个选定的菜单项。多选、取消全选、重建原生菜单或删除项目，快速组织您的粘贴菜单。
+      alignment: end
+      prefferedSide: right
+  - element: '#menu-main-list_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 管理粘贴菜单面板
+      description: 此面板允许您管理所有活动菜单项。添加、编辑或删除项目以自定义您的粘贴菜单。创建新项目或链接现有剪辑。<b>双击</b>将内容复制到剪贴板，<b>右键点击</b>查看更多选项。
+      alignment: start
+      prefferedSide: left
+  - element: .menu-item_tour
+    popover:
+      title: 菜单项
+      description: 在这里，您可以单独管理每个菜单项。<b>点击</b>展开图标查看菜单内容。<b>双击</b>将内容复制到剪贴板，<b>右键点击</b>查看更多选项。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#add-menu-item__tour'
+    popover:
+      title: 添加菜单项
+      description: 点击加号图标并选择要添加新项目的位置，可以在现有菜单项之前或之后。您可以创建新菜单、子菜单、分隔符、禁用的菜单项、来自最近历史的菜单项，或链接到已保存的剪辑。
+      alignment: end
+      prefferedSide: bottom
+  - element: '#toggle-inactive-menu-items_tour'
+    popover:
+      title: 切换非活动菜单项
+      description: 点击此图标显示或隐藏非活动菜单项。这有助于通过在需要时关注活动项目来管理和组织您的菜单。简化您的菜单并整理您的工作空间以提高效率。
+      alignment: start
+      prefferedSide: bottom
+  - element: .panel-resize_tour
+    popover:
+      title: 可调整大小的面板视图
+      description: 通过调整面板视图大小来自定义您的工作区以适应您的偏好。<b>将鼠标悬停</b>在面板边缘直到出现调整大小的光标，然后<b>点击并拖动</b>以调整面板大小。
+      prefferedSide: right
 
 NAVBAR_TOUR:
-- element: '#navbar-panel_tour'
-  popover:
-    title: 导航栏
-    description: 导航栏提供对 PasteBar 功能和设置的快速访问。使用它在剪贴板历史和粘贴菜单之间切换，访问您的收藏，执行全局搜索功能，切换固定面板的显示状态可见性，调整设置，以及在需要时获取帮助。
-    alignment: center
-    prefferedSide: bottom
-- element: '#navbar-pastebar_tour'
-  popover:
-    title: PasteBar 菜单
-    description: PasteBar 菜单提供对基本功能和信息的快速访问。在这里，您可以检查更新，访问设置，锁定应用程序屏幕，关闭主窗口或退出应用程序。
-    alignment: start
-    prefferedSide: bottom
-- element: '#navbar-view_tour'
-  popover:
-    title: 视图菜单
-    description: 使用视图菜单导航剪贴板历史和粘贴菜单，调整选项，更改颜色主题，修改 UI 字体大小，以及更改语言。访问其他设置以获得个性化体验。
-    alignment: start
-    prefferedSide: bottom
-- element: '#navbar-collections_tour'
-  popover:
-    title: 收藏菜单
-    description: 收藏菜单允许您在不同的剪辑、面板和标签收藏之间切换。创建和自定义每个收藏以满足您的特定需求，例如按项目或类别组织内容。
-    alignment: center
-    prefferedSide: bottom
-- element: '#navbar-toggle-history-split'
-  popover:
-    title: 切换剪贴板历史的分割窗口
-    description: 点击此图标以在单独的窗口中打开或关闭剪贴板历史。使用此功能可以独立于主窗口管理您的剪贴板历史。
-    alignment: center
-    preferredSide: bottom
-- element: '#navbar-search_tour'
-  popover:
-    title: 全局搜索功能
-    description: 使用全局搜索功能快速查找活动收藏中的剪辑、面板和菜单项。输入关键词以筛选结果并高效定位所需内容。从搜索结果中<b>双击</b>剪辑直接复制。
-    alignment: center
-    prefferedSide: bottom
-- element: '#navbar-pinned_tour'
-  popover:
-    title: 切换固定面板的显示状态
-    description: 点击此图标显示或隐藏固定面板。使用此功能保持工作区组织有序，专注于最相关的内容。
-    alignment: end
-    prefferedSide: bottom
-- element: '#navbar-help_tour'
-  popover:
-    title: 帮助菜单
-    description: 从帮助菜单快速访问引导教程和 UI 功能展示。它提供分步指导和演示，帮助您有效地浏览和理解 PasteBar 的功能和用户界面。
-    alignment: end
-    prefferedSide: bottom
-- element: '#navbar-close-window_tour'
-  popover:
-    title: 关闭主窗口
-    description: 点击关闭图标以关闭 PasteBar 主窗口，同时保持其功能从任务栏或菜单栏图标可用。您随时可以从主菜单重新打开主应用程序窗口。
-    alignment: end
-    prefferedSide: bottom
+  - element: '#navbar-panel_tour'
+    popover:
+      title: 导航栏
+      description: 导航栏提供对 PasteBar 功能和设置的快速访问。使用它在剪贴板历史和粘贴菜单之间切换，访问您的收藏，执行全局搜索功能，切换固定面板的显示状态可见性，调整设置，以及在需要时获取帮助。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-pastebar_tour'
+    popover:
+      title: PasteBar 菜单
+      description: PasteBar 菜单提供对基本功能和信息的快速访问。在这里，您可以检查更新，访问设置，锁定应用程序屏幕，关闭主窗口或退出应用程序。
+      alignment: start
+      prefferedSide: bottom
+  - element: '#navbar-view_tour'
+    popover:
+      title: 视图菜单
+      description: 使用视图菜单导航剪贴板历史和粘贴菜单，调整选项，更改颜色主题，修改 UI 字体大小，以及更改语言。访问其他设置以获得个性化体验。
+      alignment: start
+      prefferedSide: bottom
+  - element: '#navbar-collections_tour'
+    popover:
+      title: 收藏菜单
+      description: 收藏菜单允许您在不同的剪辑、面板和标签收藏之间切换。创建和自定义每个收藏以满足您的特定需求，例如按项目或类别组织内容。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-toggle-history-split'
+    popover:
+      title: 切换剪贴板历史的分割窗口
+      description: 点击此图标以在单独的窗口中打开或关闭剪贴板历史。使用此功能可以独立于主窗口管理您的剪贴板历史。
+      alignment: center
+      preferredSide: bottom
+  - element: '#navbar-search_tour'
+    popover:
+      title: 全局搜索功能
+      description: 使用全局搜索功能快速查找活动收藏中的剪辑、面板和菜单项。输入关键词以筛选结果并高效定位所需内容。从搜索结果中<b>双击</b>剪辑直接复制。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-pinned_tour'
+    popover:
+      title: 切换固定面板的显示状态
+      description: 点击此图标显示或隐藏固定面板。使用此功能保持工作区组织有序，专注于最相关的内容。
+      alignment: end
+      prefferedSide: bottom
+  - element: '#navbar-help_tour'
+    popover:
+      title: 帮助菜单
+      description: 从帮助菜单快速访问引导教程和 UI 功能展示。它提供分步指导和演示，帮助您有效地浏览和理解 PasteBar 的功能和用户界面。
+      alignment: end
+      prefferedSide: bottom
+  - element: '#navbar-close-window_tour'
+    popover:
+      title: 关闭主窗口
+      description: 点击关闭图标以关闭 PasteBar 主窗口，同时保持其功能从任务栏或菜单栏图标可用。您随时可以从主菜单重新打开主应用程序窗口。
+      alignment: end
+      prefferedSide: bottom
 
 SETTINGS_TOUR:
-- element: '#app-settings-history_tour'
-  popover:
-    title: 剪贴板历史设置
-    description: 调整剪贴板历史设置以自定义 PasteBar 如何捕获和管理您复制的内容。启用或禁用自动更新、自动星标、链接预览、停用词列表、编程语言自动检测等功能，以获得个性化体验。
-    alignment: start
-    prefferedSide: right
-- element: '#app-settings-collections_tour'
-  popover:
-    title: 管理收藏设置
-    description: 使用管理收藏来组织和自定义您的收藏。添加新收藏、编辑现有收藏，并在它们之间切换以适应您的工作流程。通过将相关的剪辑、面板和标签分组来高效管理您的内容。
-    alignment: start
-    prefferedSide: right
-- element: '#app-settings-preferences_tour'
-  popover:
-    title: 用户首选项
-    description: 调整字体大小，切换颜色主题，更改界面语言，并配置自动启动选项。交换面板布局，在导航栏上显示收藏名称，并管理剪辑注释弹出窗口。
-    alignment: start
-    prefferedSide: right
-- element: '#app-settings-security_tour'
-  popover:
-    title: 安全设置
-    description: 配置安全设置以保护您的数据。设置锁屏密码和恢复密码。在锁屏时控制剪贴板历史的捕获，并在不活动时启用自动锁定。调整这些设置以增强 PasteBar 应用程序的安全性。
-    alignment: start
-    prefferedSide: right
-- element: '#app-settings-back_tour'
-  popover:
-    title: 返回主屏幕
-    description: 点击从设置返回到主应用程序视图。
-    alignment: start
-    prefferedSide: right
+  - element: '#app-settings-history_tour'
+    popover:
+      title: 剪贴板历史设置
+      description: 调整剪贴板历史设置以自定义 PasteBar 如何捕获和管理您复制的内容。启用或禁用自动更新、自动星标、链接预览、停用词列表、编程语言自动检测等功能，以获得个性化体验。
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-collections_tour'
+    popover:
+      title: 管理收藏设置
+      description: 使用管理收藏来组织和自定义您的收藏。添加新收藏、编辑现有收藏，并在它们之间切换以适应您的工作流程。通过将相关的剪辑、面板和标签分组来高效管理您的内容。
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-preferences_tour'
+    popover:
+      title: 用户首选项
+      description: 调整字体大小，切换颜色主题，更改界面语言，并配置自动启动选项。交换面板布局，在导航栏上显示收藏名称，并管理剪辑注释弹出窗口。
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-security_tour'
+    popover:
+      title: 安全设置
+      description: 配置安全设置以保护您的数据。设置锁屏密码和恢复密码。在锁屏时控制剪贴板历史的捕获，并在不活动时启用自动锁定。调整这些设置以增强 PasteBar 应用程序的安全性。
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-back_tour'
+    popover:
+      title: 返回主屏幕
+      description: 点击从设置返回到主应用程序视图。
+      alignment: start
+      prefferedSide: right

@@ -1,11 +1,7 @@
-import clsx from "clsx"
-import { GroupBase, PlaceholderProps } from "react-select"
+import clsx from 'clsx'
+import { GroupBase, PlaceholderProps } from 'react-select'
 
-const Placeholder = <
-  Option,
-  IsMulti extends boolean,
-  Group extends GroupBase<Option>
->({
+const Placeholder = <Option, IsMulti extends boolean, Group extends GroupBase<Option>>({
   innerProps,
   children,
   className,
@@ -19,7 +15,7 @@ const Placeholder = <
           placeholder: true,
         },
         clsx(
-          "inter-base-regular text-grey-50 absolute top-1/2 -translate-y-1/2 select-none",
+          'inter-base-regular text-grey-50 absolute top-1/2 -translate-y-1/2 select-none',
           className
         )
       )}

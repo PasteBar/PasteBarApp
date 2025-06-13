@@ -102,8 +102,7 @@ Errors:
   Something went wrong! {{err}} Please try again.: Щось пішло не так! {{err}} Будь ласка, спробуйте ще раз.
 Expand Edit: Розгорнути редагування
 Field is not found in the template: Поле не знайдено в шаблоні
-? Field {{Clipboard}} has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
-: Поле <b>{{Clipboard}}</b> знайдено в шаблоні. Це дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
+Field {{Clipboard}} has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: Поле <b>{{Clipboard}}</b> знайдено в шаблоні. Це дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
 Find Clip: Знайти кліп
 Find History: Знайти в історії
 Found in template but missing from fields definition: Знайдено в шаблоні, але відсутнє у визначенні полів
@@ -163,8 +162,7 @@ Pasted: Вставлено
 Path: Шлях
 Pause: Пауза
 Pause Playing: Пауза
-? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
-: 'Помилка перевірки: PasteBar не був успішно доданий до налаштувань Спеціальних можливостей. Будь ласка, надайте необхідні дозволи та натисніть «Готово» ще раз.'
+'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.': 'Помилка перевірки: PasteBar не був успішно доданий до налаштувань Спеціальних можливостей. Будь ласка, надайте необхідні дозволи та натисніть «Готово» ще раз.'
 Pin Selected: Закріпити вибране
 Pinned: Закріплений
 Pinned_few: Закріплених
@@ -337,8 +335,7 @@ View Edit: Редагування у збільшеному вигляді
 Views:
   Paste Menu: Меню вставки
 We apologize but you found a bug. Please report this issue to us and try again: Просимо вибачення, але ви виявили помилку. Будь ласка, повідомте нам про цю проблему та спробуйте ще раз
-? We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
-: Ми не змогли підтвердити безпеку цього файлу. Не вдалося перевірити ID3-теги та цілісність файлу. MP3-файли можуть потенційно містити шкідливий код. Будь ласка, будьте обережні.
+We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.: Ми не змогли підтвердити безпеку цього файлу. Не вдалося перевірити ID3-теги та цілісність файлу. MP3-файли можуть потенційно містити шкідливий код. Будь ласка, будьте обережні.
 Yes: Так
 Yes, activate: Так, активувати
 chars: символів

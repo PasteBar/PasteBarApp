@@ -21,7 +21,7 @@ New Disabled Menu: 新建禁用菜单
 New Menu: 新建菜单
 New Submenu: 新建子菜单
 No Menu Items: 无菜单项目
-"No {{hasActive}} menu items in": 在 {{hasActive}} 中无菜单项目
+'No {{hasActive}} menu items in': 在 {{hasActive}} 中无菜单项目
 Select item to add a menu after: 选择项目以在其后添加菜单
 Separator: 分隔符
 Submenu: 子菜单

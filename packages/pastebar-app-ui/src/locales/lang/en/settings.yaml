@@ -1,7 +1,6 @@
 <strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.: <strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.
 Activation Success: Activation Success
-? Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
-: Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
+Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.: Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.
 Add an unlimited number of tabs within each collection for better organization and easy access.: Add an unlimited number of tabs within each collection for better organization and easy access.
 'Add an unlimited number of tabs within each collection for better organization and easy access.                                ': 'Add an unlimited number of tabs within each collection for better organization and easy access.                                '
 Advanced settings: Advanced settings
@@ -30,8 +29,7 @@ Auto-Star on Double Copy: Auto-Star on Double Copy
 Auto-Trim Spaces on Capture: Auto-Trim Spaces on Capture
 Auto-Update on Capture: Auto-Update on Capture
 Auto-delete clipboard history after: Auto-delete clipboard history after
-? Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
-: Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
+Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.: Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.
 Back: Back
 Capture History: Capture History
 Capture History Text Length Limits: Capture History Text Length Limits
@@ -65,8 +63,7 @@ Decrease UI Font Size: Decrease UI Font Size
 Default: Default
 Disable Image Capture: Disable Image Capture
 Disable capturing and storing images from clipboard: Disable capturing and storing images from clipboard
-? Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
-: Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
+Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.: Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.
 Display disabled collections name on the navigation bar collections menu: Display disabled collections name on the navigation bar collections menu
 Display disabled collections name on the navigation bar under collections menu: Display disabled collections name on the navigation bar under collections menu
 Display full name of selected collection on the navigation bar: Display full name of selected collection on the navigation bar
@@ -104,8 +101,7 @@ Forgot?: Forgot?
 Forgot? Reset using Password: Forgot? Reset using Password
 Get priority email support from us to resolve any issues or questions you may have about PasteBar.: Get priority email support from us to resolve any issues or questions you may have about PasteBar.
 'Hint: {{screenLockRecoveryPasswordMasked}}': 'Hint: {{screenLockRecoveryPasswordMasked}}'
-? If a database file already exists at the default location, do you want to overwrite it? Choosing "Cancel" will skip moving the file if an existing file is found.
-: If a database file already exists at the default location, do you want to overwrite it? Choosing "Cancel" will skip moving the file if an existing file is found.
+If a database file already exists at the default location, do you want to overwrite it? Choosing "Cancel" will skip moving the file if an existing file is found.: If a database file already exists at the default location, do you want to overwrite it? Choosing "Cancel" will skip moving the file if an existing file is found.
 Incorrect passcode.: Incorrect passcode.
 Increase UI Font Size: Increase UI Font Size
 Issued: Issued
@@ -161,15 +157,13 @@ Recovery password is set.: Recovery password is set.
 Refresh Application UI: Refresh Application UI
 Refresh UI: Refresh UI
 Require Screen Unlock at Application Start: Require Screen Unlock at Application Start
-? Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
-: Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
+Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.: Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.
 Reset Font Size: Reset Font Size
 Revert to Default: Revert to Default
 Revert to Default and Restart: Revert to Default and Restart
 Run Terminal or Shell Commands: Run Terminal or Shell Commands
 Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.
-? 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
-: 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
+'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                ': 'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                '
 Security: Security
 Security Settings: Security Settings
 Select Custom Data Folder...: Select Custom Data Folder...
@@ -182,15 +176,13 @@ Selected new data folder for change: Selected new data folder for change
 Send HTTP requests to web APIs or services and copy the response data to the clipboard.: Send HTTP requests to web APIs or services and copy the response data to the clipboard.
 Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.
 Set a passcode to unlock the locked screen and protect your data from unauthorized access.: Set a passcode to unlock the locked screen and protect your data from unauthorized access.
-? Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
-: Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
+Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.: Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.
 Setting a custom database location requires an application restart to take effect.: Setting a custom database location requires an application restart to take effect.
 Settings: Settings
 Show Clipboard History Capture Control on Lock Screen: Show Clipboard History Capture Control on Lock Screen
 Show Disable History Capture When Screen Locked: Show Disable History Capture When Screen Locked
 Show Disabled Collections: Show Disabled Collections
-? Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
-: Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
+Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.: Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.
 Show collection name on the navbar: Show collection name on the navbar
 Show disabled collections on the navbar list: Show disabled collections on the navbar list
 Skip auto start prompt on app launch: Skip auto start prompt on app launch
@@ -200,16 +192,12 @@ Swap Panels Layout: Swap Panels Layout
 Switch the layout position of panels in Clipboard History and Paste Menu views: Switch the layout position of panels in Clipboard History and Paste Menu views
 Thank you again for using PasteBar.: Thank you again for using PasteBar.
 Thank you for testing! 🙌: Thank you for testing! 🙌
-? The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
-: The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?
 The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?: The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?
 This folder already contains PasteBar data. The application will use this existing data after restart.: This folder already contains PasteBar data. The application will use this existing data after restart.
-? This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
-: This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
-? This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
-: This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
-? This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
-: This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
+This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.: This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.
+This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.: This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.
+This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.: This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.
 To downgrade your current version, please visit: To downgrade your current version, please visit
 'To downgrade, please visit: ': 'To downgrade, please visit: '
 To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.

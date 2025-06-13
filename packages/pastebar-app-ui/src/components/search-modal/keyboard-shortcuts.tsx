@@ -1,7 +1,7 @@
-import ArrowDownIcon from "../../fundamentals/icons/arrow-down-icon"
-import ArrowUpIcon from "../../fundamentals/icons/arrow-up-icon"
-import DownLeftIcon from "../../fundamentals/icons/down-left"
-import PointerIcon from "../../fundamentals/icons/pointer-icon"
+import ArrowDownIcon from '../../fundamentals/icons/arrow-down-icon'
+import ArrowUpIcon from '../../fundamentals/icons/arrow-up-icon'
+import DownLeftIcon from '../../fundamentals/icons/down-left'
+import PointerIcon from '../../fundamentals/icons/pointer-icon'
 
 const KeyboardShortcuts = ({ ...props }) => {
   return (
@@ -35,11 +35,11 @@ const KeyboardShortcuts = ({ ...props }) => {
 
 const OSCommandIcon = () => {
   const isMac =
-    typeof window !== "undefined" &&
-    navigator?.platform?.toUpperCase().indexOf("MAC") >= 0
+    typeof window !== 'undefined' &&
+    navigator?.platform?.toUpperCase().indexOf('MAC') >= 0
       ? true
       : false
-  return <>{isMac ? "⌘" : "Ctrl"}</>
+  return <>{isMac ? '⌘' : 'Ctrl'}</>
 }
 
 export default KeyboardShortcuts

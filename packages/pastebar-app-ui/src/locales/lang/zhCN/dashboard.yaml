@@ -21,15 +21,15 @@ Add Section: 添加部分
 Add Tab: 添加标签
 Add Template Field: 添加模板字段
 Add a Tab: 添加一个标签
-"Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template": '将字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> 添加到模板中'
-"Add field <b>{{<b>{{name}}</b>}}</b> into the template": 将字段 <b>{{<b>{{name}}</b>}}</b> 添加到模板中
+'Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template': '将字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> 添加到模板中'
+'Add field <b>{{<b>{{name}}</b>}}</b> into the template': 将字段 <b>{{<b>{{name}}</b>}}</b> 添加到模板中
 Add image: 添加图片
 Add note: 添加注释
 Add to Board: 添加到面板
-"Add {{type}}": 添加 {{type}}
+'Add {{type}}': 添加 {{type}}
 All field labels must be unique to ensure they are correctly used within the template.: 所有字段标签必须唯一，以确保在模板中正确使用。
-"Are you sure you want to delete <strong>{{boardName}}</strong> board?": 确定要删除 <strong>{{boardName}}</strong> 面板吗？
-"Are you sure you want to delete <strong>{{tabName}}</strong> tab?": 确定要删除 <strong>{{tabName}}</strong> 标签吗？
+'Are you sure you want to delete <strong>{{boardName}}</strong> board?': 确定要删除 <strong>{{boardName}}</strong> 面板吗？
+'Are you sure you want to delete <strong>{{tabName}}</strong> tab?': 确定要删除 <strong>{{tabName}}</strong> 标签吗？
 Are you sure you want to delete?: 确定要删除吗？
 Are you sure you want to remove image from the clip?: 确定要从剪辑中移除图片吗？
 Auth: 认证
@@ -83,7 +83,7 @@ Delete field: 删除字段
 Delete tab: 删除标签
 Detect Template Fields: 检测模板字段
 Detect for Template Fields: 检测模板字段
-"Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template": '在模板中找到禁用字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b>'
+'Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template': '在模板中找到禁用字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b>'
 Done Create Clip: 完成创建剪辑
 Done Edit: 完成编辑
 Done Edit Tabs: 完成编辑标签
@@ -135,7 +135,7 @@ FILTERED_TYPES:
   RegEx Replace: 正则表达式替换
   Remove Quotes: 移除引号
 Field: 字段
-"Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template": '在模板中找到字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b>'
+'Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template': '在模板中找到字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b>'
 Field Options: 字段选项
 Fields Value: 字段值
 File, folder or app path does not exist: 文件、文件夹或应用程序路径不存在
@@ -223,7 +223,7 @@ Tabs Menu: 标签菜单
 Template: 模板
 Template Edit: 模板编辑
 Template Fields: 模板字段
-"Template should have⠀<b>{{output}}</b>⠀placeholder.": 模板应包含⠀<b>{{output}}</b>⠀占位符。
+'Template should have⠀<b>{{output}}</b>⠀placeholder.': 模板应包含⠀<b>{{output}}</b>⠀占位符。
 Test Request: 测试请求
 Test Run: 测试运行
 Text: 文本
@@ -243,7 +243,7 @@ Unsaved note: 未保存的注释
 Unsaved subtitle: 未保存的副标题
 Unsaved title: 未保存的标题
 Update Link Card: 更新链接卡片
-"Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.": 使用双大括号表示 {{字段名}}。使用 {{clipboard}} 添加当前剪贴板值。
+'Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.': 使用双大括号表示 {{字段名}}。使用 {{clipboard}} 添加当前剪贴板值。
 Value: 值
 Values: 值
 Vertical Split: 垂直分割
@@ -253,7 +253,7 @@ Web or Email link is valid: 网页或电子邮件链接有效
 Website URL: 网站 URL
 Website URL is valid: 网站 URL 有效
 Website URL might not be valid: 网站 URL 可能无效
-"Wrap output using {{output}} placeholder": 使用 {{output}} 占位符包装输出
+'Wrap output using {{output}} placeholder': 使用 {{output}} 占位符包装输出
 You have no rules added: 您没有添加规则
 You'll need to clear this board of all clips and subboards before it can be deleted.: 在删除此面板之前，您需要清除其中的所有剪辑和子面板。
 You'll need to clear this tab of all boards before it can be deleted.: 在删除此标签之前，您需要清除其中的所有面板。

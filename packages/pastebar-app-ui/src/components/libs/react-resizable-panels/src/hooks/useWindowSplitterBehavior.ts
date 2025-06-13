@@ -199,8 +199,8 @@ export function useWindowSplitterResizeHandlerBehavior({
               ? index - 1
               : handles.length - 1
             : index + 1 < handles.length
-            ? index + 1
-            : 0
+              ? index + 1
+              : 0
 
           const nextHandle = handles[nextIndex] as HTMLDivElement
           nextHandle.focus()

@@ -1,9 +1,10 @@
-import { FC } from "react"
-import IconProps from "./types/icon-type"
+import { FC } from 'react'
 
-const FileIcon: FC<IconProps> = (props) => {
+import IconProps from './types/icon-type'
+
+const FileIcon: FC<IconProps> = props => {
   const { fill, size, ...attributes } = props
-  const line = fill || "#2DD4BF"
+  const line = fill || '#2DD4BF'
   return (
     <svg
       width={size || 20}

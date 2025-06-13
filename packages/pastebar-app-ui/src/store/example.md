@@ -10,13 +10,13 @@ This is another fine paragraph
 
 ### Smaller subtitle
 
-This is a paragraph `with` ~style~ *italic* _italic_ **bold** __bold__
+This is a paragraph `with` ~style~ _italic_ _italic_ **bold** **bold**
 
-*Hello [PasteBar](https://www.pastebar.app/) lol*
+_Hello [PasteBar](https://www.pastebar.app/) lol_
 
-Hello [*PasteBar*](https://www.pastebar.app/) lol "cat"
+Hello [_PasteBar_](https://www.pastebar.app/) lol "cat"
 
-Hello from *[PasteBar](https://rsms.me/)* to __everyone__ `reading this`
+Hello from _[PasteBar](https://rsms.me/)_ to **everyone** `reading this`
 
 ### Embedded HTML
 
@@ -27,7 +27,6 @@ With default settings, markdown-wasm allows embedded HTML.
 
 <input type=“text” value=“type”></input>
 
-
 ### Block Quotes
 
 > You can insert quotes by
@@ -35,7 +34,6 @@ With default settings, markdown-wasm allows embedded HTML.
 >
 > Blockquotes can also contain line
 > breaks.
-
 
 ### Lists
 
@@ -49,8 +47,8 @@ With default settings, markdown-wasm allows embedded HTML.
 
 1. Ordered
 2. Lists
-4. Numbers are ignored
-1. Ordered
+3. Numbers are ignored
+4. Ordered
 
 121) Ordered lists can start
 122) with any number and
@@ -65,17 +63,17 @@ With default settings, markdown-wasm allows embedded HTML.
 
 ### Tables
 
-| Column 1 | Column 2 | Column 3 | Column 4
-|----------|:---------|:--------:|---------:
-| default | left | center | right
+| Column 1 | Column 2 | Column 3 | Column 4 |
+| -------- | :------- | :------: | -------: |
+| default  | left     |  center  |    right |
 
 #### Table of image file types
 
-| Header                    | Mime type    | Extensions | Description
-|---------------------------|--------------|------------|-------------
-| `89 50 4E 47 0D 0A 1A 0A` | image/png    | png        | PNG image
-| `47 49 46 38 39 61`       | image/gif    | gif        | GIF image
-| `FF D8 FF`                | image/jpeg   | jpg jpeg   | JPEG image
-| `4D 4D 00 2B`             | image/tiff   | tif tiff   | TIFF image
-| `42 4D`                   | image/bmp    | bmp        | Bitmap image
-| `00 00 01 00`             | image/x-icon | ico        | Icon image
+| Header                    | Mime type    | Extensions | Description  |
+| ------------------------- | ------------ | ---------- | ------------ |
+| `89 50 4E 47 0D 0A 1A 0A` | image/png    | png        | PNG image    |
+| `47 49 46 38 39 61`       | image/gif    | gif        | GIF image    |
+| `FF D8 FF`                | image/jpeg   | jpg jpeg   | JPEG image   |
+| `4D 4D 00 2B`             | image/tiff   | tif tiff   | TIFF image   |
+| `42 4D`                   | image/bmp    | bmp        | Bitmap image |
+| `00 00 01 00`             | image/x-icon | ico        | Icon image   |

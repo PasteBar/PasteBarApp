@@ -1,6 +1,6 @@
-import classNames from 'classnames';
-import React from 'react';
-import { DivProps } from 'react-html-props';
+import React from 'react'
+import classNames from 'classnames'
+import { DivProps } from 'react-html-props'
 
 export interface BorderSpinnerProps extends DivProps {}
 
@@ -31,5 +31,5 @@ export const BorderSpinner = ({ ...divProps }: BorderSpinnerProps) => {
         style={{ width: 10, height: 10, ...divProps.style }}
       />
     </>
-  );
-};
+  )
+}

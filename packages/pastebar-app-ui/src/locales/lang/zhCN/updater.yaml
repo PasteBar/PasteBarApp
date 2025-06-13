@@ -12,7 +12,7 @@ Installing Update: 正在安装更新
 No Update Available: 无可用更新
 Permission Denied Message: 由于权限不足，更新无法替换旧的应用程序文件。请使用管理员权限的帐户手动下载和更新应用程序文件。
 Quit PasteBar: 退出 PasteBar
-"Release date {{date}}": 发布日期 {{date}}
+'Release date {{date}}': 发布日期 {{date}}
 Remind Me Later: 稍后提醒我
 Restart: 重启
 Restart Required: 需要重新启动
@@ -26,5 +26,5 @@ Update Error: 更新错误
 Update Install Error: 更新安装错误
 'Update: Permission Denied': '更新：权限拒绝'
 Upgrade removes Pro features: 升级将移除专业版功能
-"Version {{newVersion}} is available": 版本 {{newVersion}} 可用
+'Version {{newVersion}} is available': 版本 {{newVersion}} 可用
 View Changes: 查看变更

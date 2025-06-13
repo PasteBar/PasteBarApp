@@ -143,8 +143,8 @@ export function PanelResizeHandle({
     'data-resize-handle-active': isDragging
       ? 'pointer'
       : isFocused
-      ? 'keyboard'
-      : undefined,
+        ? 'keyboard'
+        : undefined,
     'data-panel-group-direction': direction,
     'data-panel-group-id': groupId,
     'data-panel-resize-handle-enabled': !disabled,

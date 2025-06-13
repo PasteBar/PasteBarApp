@@ -1,10 +1,8 @@
-import React from "react"
-import IconProps from "../types/icon-type"
+import React from 'react'
 
-const DownLeftIcon: React.FC<IconProps> = ({
-  size = "16",
-  color = "#9CA3AF",
-}) => {
+import IconProps from '../types/icon-type'
+
+const DownLeftIcon: React.FC<IconProps> = ({ size = '16', color = '#9CA3AF' }) => {
   return (
     <svg
       width={size}

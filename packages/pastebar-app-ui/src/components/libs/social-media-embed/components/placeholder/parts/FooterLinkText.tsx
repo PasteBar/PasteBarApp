@@ -1,6 +1,6 @@
-import classNames from 'classnames';
-import React from 'react';
-import { DivProps } from 'react-html-props';
+import React from 'react'
+import classNames from 'classnames'
+import { DivProps } from 'react-html-props'
 
 export interface FooterLinkTextProps extends DivProps {}
 
@@ -21,5 +21,5 @@ export const FooterLinkText = ({ ...divProps }: FooterLinkTextProps) => {
     >
       {divProps.children}
     </div>
-  );
-};
+  )
+}
