@@ -11,7 +11,7 @@ import {
   uiStoreAtom,
 } from '~/store'
 import { useAtomValue } from 'jotai'
-import { ChevronDown, ChevronUp, MessageSquare, MessageSquareDashed } from 'lucide-react'
+import { MessageSquare, MessageSquareDashed } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -71,6 +71,8 @@ export default function UserPreferences() {
     hotKeysShowHideQuickPasteWindow,
     setHotKeysShowHideMainAppWindow,
     setHotKeysShowHideQuickPasteWindow,
+    isMenuItemCopyOnlyEnabled,
+    setIsMenuItemCopyOnlyEnabled,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
@@ -524,6 +526,32 @@ export default function UserPreferences() {
                         {t('Hide collections menu dropdown on the navigation bar', {
                           ns: 'settings2',
                         })}
+                      </Text>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card
+                    className={`${
+                      !isMenuItemCopyOnlyEnabled && 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Copy only from menu items', { ns: 'settings2' })}
+                      </CardTitle>
+                      <Switch
+                        checked={isMenuItemCopyOnlyEnabled}
+                        className="ml-auto"
+                        onCheckedChange={() => {
+                          setIsMenuItemCopyOnlyEnabled(!isMenuItemCopyOnlyEnabled)
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t('When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.', { ns: 'settings2' })}
                       </Text>
                     </CardContent>
                   </Card>

@@ -145,6 +145,7 @@ function App() {
           clipTextMinLength: settings.clipTextMinLength?.valueInt,
           clipTextMaxLength: settings.clipTextMaxLength?.valueInt,
           isImageCaptureDisabled: settings.isImageCaptureDisabled?.valueBool,
+          isMenuItemCopyOnlyEnabled: settings.isMenuItemCopyOnlyEnabled?.valueBool,
           isAutoClearSettingsEnabled: settings.isAutoClearSettingsEnabled?.valueBool,
           autoClearSettingsDuration: settings.autoClearSettingsDuration?.valueInt,
           autoClearSettingsDurationType:
