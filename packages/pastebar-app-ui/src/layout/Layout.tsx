@@ -641,7 +641,7 @@ export const Component = () => {
   return (
     <div
       className={`flex flex-col bg-gray-100 ${
-        isSimplifiedLayout ? 'dark:bg-gray-900/90' : 'dark:bg-gray-700/90'
+        isSimplifiedLayout ? 'dark:bg-gray-900' : 'dark:bg-gray-700'
       } overflow-hidden ${
         !hasSplitViewLayout && !isSimplifiedLayout ? 'rounded-b-md' : ''
       } mt-[40px] ${isSimplifiedLayout ? 'simplified-layout' : ''} ${
