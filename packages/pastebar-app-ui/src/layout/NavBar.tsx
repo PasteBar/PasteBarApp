@@ -1100,7 +1100,7 @@ export function NavBar() {
                   checked={!isHistoryPanelVisibleOnly && isSavedClipsPanelVisibleOnly}
                   onClick={async () => {
                     await setIsSavedClipsPanelVisibleOnly(true)
-                    navigate('/menu', { replace: true })
+                    navigate('/history', { replace: true })
                   }}
                 >
                   {t('Show Clips Panel Only', { ns: 'navbar' })}
