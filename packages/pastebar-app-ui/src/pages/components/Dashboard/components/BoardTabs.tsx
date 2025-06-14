@@ -18,10 +18,12 @@ import {
   hasDashboardItemCreate,
   newBoardItemId,
   newClipItemId,
+  settingsStoreAtom,
   showClipsMoveOnBoardId,
   showEditClipId,
   showEditTabs,
   showOrganizeLayout,
+  uiStoreAtom,
 } from '~/store'
 import { useAtomValue } from 'jotai'
 import {
@@ -107,6 +109,8 @@ export default function BoardTabs({
   setCurrentTab: (tab: string) => void
 }) {
   const { clipboardHistory } = useAtomValue(clipboardHistoryStoreAtom)
+  const { isSimplifiedLayout } = useAtomValue(settingsStoreAtom)
+  const { isSplitPanelView } = useAtomValue(uiStoreAtom)
   const { t } = useTranslation()
   const { updateTabById } = useUpdateTabById()
   const contextMenuButtonRef = useRef<HTMLButtonElement>(null)
@@ -335,8 +339,14 @@ export default function BoardTabs({
   return (
     <>
       <Tabs
-        className={`flex ${bgColor(currentTabColor)} rounded-lg py-0 mx-1.5 ${
-          isFirstTab ? 'flex-col items-center justify-center pb-2 mb-1' : 'mb-3 mr-3'
+        className={`flex ${bgColor(
+          currentTabColor
+        )} main-boards-tabs rounded-lg py-0 mx-1.5 ${
+          isFirstTab
+            ? 'flex-col items-center justify-center pb-2 mb-1'
+            : isSimplifiedLayout && !isSplitPanelView
+              ? 'mb-3 mr-1.5 ml-0'
+              : 'mb-3 mr-3'
         }`}
         onValueChange={tabId => {
           setCurrentTab(tabId)

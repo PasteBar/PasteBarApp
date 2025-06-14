@@ -177,7 +177,7 @@ export function NavBarHistoryWindow() {
   useEffect(() => {
     if (window.plausible && deviceId) {
       window.plausible('History Separate Window', {
-        props: { deviceId },
+        props: { deviceId, version: APP_VERSION },
       })
     }
   }, [deviceId, window.plausible])

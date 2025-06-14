@@ -192,6 +192,17 @@ function App() {
           isNoteIconsEnabled: settings.isNoteIconsEnabled?.valueBool ?? true,
           defaultNoteIconType:
             settings.defaultNoteIconType?.valueText ?? 'MessageSquareText',
+          isHistoryPanelVisibleOnly:
+            settings.isHistoryPanelVisibleOnly?.valueBool &&
+            settings.isSavedClipsPanelVisibleOnly?.valueBool
+              ? null
+              : settings.isHistoryPanelVisibleOnly?.valueBool,
+          isSavedClipsPanelVisibleOnly:
+            settings.isSavedClipsPanelVisibleOnly?.valueBool &&
+            settings.isHistoryPanelVisibleOnly?.valueBool
+              ? null
+              : settings.isSavedClipsPanelVisibleOnly?.valueBool,
+          isSimplifiedLayout: settings.isSimplifiedLayout?.valueBool ?? true,
           isAppReady: true,
         })
         settingsStore.initConstants({
@@ -574,8 +585,8 @@ function App() {
           <div
             className={`border overflow-hidden ${
               uiStore.isMacOSX
-                ? 'rounded-lg shadow-window border-gray-100 dark:border-gray-800'
-                : 'rounded-md _shadow-window border-gray-300 dark:border-gray-800 '
+                ? 'rounded-lg shadow-window _border-gray-100 _dark:border-gray-800'
+                : 'rounded-md _shadow-window _border-gray-300 _dark:border-gray-800 '
             } relative`}
           >
             {window.isHistoryWindow ? <NavBarHistoryWindow /> : <NavBar />}

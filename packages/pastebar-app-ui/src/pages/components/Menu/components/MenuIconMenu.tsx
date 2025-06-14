@@ -110,11 +110,11 @@ export const MenuIconMenu = ({
         <Button
           variant="light"
           id="menu-icon-menu-button_tour"
-          className="w-10 text-slate-400 hover:text-slate-500 hover:dark:text-slate-400 dark:text-slate-500 bg-slate-100 p-1 relative hover:bg-slate-100/70 dark:bg-slate-900 dark:hover:bg-slate-700/70"
+          className="w-10 text-gray-400 hover:text-gray-500 hover:dark:text-gray-400 dark:text-gray-500 bg-gray-100 p-1 relative hover:bg-gray-100/70 dark:bg-gray-900 dark:hover:bg-gray-700/70"
         >
           <MenuSquare className="stroke-[1.3px]" size={22} />
           {selectedItemIds.length > 1 && (
-            <Badge variant="slate" className="absolute right-[-10px] top-[-10px]">
+            <Badge variant="gray" className="absolute right-[-10px] top-[-10px]">
               {selectedItemIds.length}
             </Badge>
           )}
@@ -190,7 +190,7 @@ export const MenuIconMenu = ({
             >
               <Pointer className="mr-2 h-4 w-4" />
               <Text className="mr-1">{t('Make Enabled', { ns: 'common' })}</Text>
-              <Badge variant="slate" className="ml-1 py-0 font-semibold">
+              <Badge variant="gray" className="ml-1 py-0 font-semibold">
                 {selectedItemsDisabled.length}
               </Badge>
             </DropdownMenuItem>
@@ -236,7 +236,7 @@ export const MenuIconMenu = ({
             >
               <EyeOff className="mr-2 h-4 w-4" />
               <Text className="mr-1">{t('Make Inactive', { ns: 'common' })}</Text>
-              <Badge variant="slate" className="ml-1 py-0 font-semibold">
+              <Badge variant="gray" className="ml-1 py-0 font-semibold">
                 {selectedItemsActive.length}
               </Badge>
             </DropdownMenuItem>
@@ -257,7 +257,7 @@ export const MenuIconMenu = ({
             >
               <Eye className="mr-2 h-4 w-4" />
               <Text className="mr-1">{t('Make Active', { ns: 'common' })}</Text>
-              <Badge variant="slate" className="ml-1 py-0 font-semibold">
+              <Badge variant="gray" className="ml-1 py-0 font-semibold">
                 {selectedItemsInactive.length}
               </Badge>
             </DropdownMenuItem>

@@ -144,7 +144,8 @@ function DashboardComponent({
   useGetCollections()
 
   const { t } = useTranslation()
-  const { isShowPinned, setIsShowPinned, isSplitPanelView } = useAtomValue(uiStoreAtom)
+  const { isShowPinned, setIsShowPinned, isSplitPanelView, isSwapPanels } =
+    useAtomValue(uiStoreAtom)
   const [showDetailsItem, setShowDetailsItem] = useState<UniqueIdentifier | null>(null)
   const [dragOverPinnedId, setDragOverPinnedId] = useState<UniqueIdentifier | null>(null)
   const [showDetailsItemPinned, setShowDetailsItemPinned] =
@@ -239,6 +240,7 @@ function DashboardComponent({
     isClipNotesHoverCardsEnabled,
     clipNotesHoverCardsDelayMS,
     clipNotesMaxHeight,
+    isSimplifiedLayout,
     clipNotesMaxWidth,
   } = useAtomValue(settingsStoreAtom)
 
@@ -494,7 +496,9 @@ function DashboardComponent({
                       ? 'bg-orange-200/70 dark:bg-orange-600/70'
                       : 'bg-orange-100 dark:bg-orange-500/70'
                     : 'bg-orange-300/40 dark:bg-orange-700/40'
-                } rounded-lg px-2 py-4 pt-3 mx-2 mr-3 relative`}
+                } rounded-lg px-2 py-4 pt-3 ${
+                  isSimplifiedLayout && !isSplitPanelView ? 'mr-2' : 'mx-2 mr-3'
+                } relative`}
               >
                 <DropZone
                   id="clips::pinnedzone"
@@ -907,7 +911,19 @@ function DashboardComponent({
             </SortableContext>
           )}
 
-          <Panel collapsible={false} order={2} ref={panelHeightRef} id="boards">
+          <Panel
+            collapsible={false}
+            order={2}
+            ref={panelHeightRef}
+            id="boards"
+            className={
+              isSimplifiedLayout && !isSplitPanelView
+                ? 'px-0'
+                : isSimplifiedLayout
+                  ? 'px-1.5'
+                  : 'px-0'
+            }
+          >
             {panelHeight > 0 && (
               <AutoSize disableWidth defaultHeight={panelHeight - 20}>
                 {({ height }: { height: number }) => {

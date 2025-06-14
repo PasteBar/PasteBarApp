@@ -1,4 +1,4 @@
-App restart required: Uygulama yeniden başlatma gerekli
+App restart required: Yeniden başlatma lazım
 Application Starts with Main Window Hidden: Uygulama ana pencere gizli olarak başlar
 Change: Değiştir
 Copy only from menu items: Sadece menü öğelerinden kopyala
@@ -26,3 +26,15 @@ Show Note Icons on Clips: Kliplerde not simgelerini göster
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Görsel organizasyonu iyileştirmek ve notları keşfetmeyi kolaylaştırmak için notları olan kliplerde kalıcı simgeler görüntüle.
 Default Note Icon Type: Varsayılan not simgesi türü
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Bu, notları olan yeni klipler için varsayılan simge türünü ayarlar. Bağlam menüsü aracılığıyla bireysel klipleri özelleştirebilirsiniz.
+Boards, saved clips and menu items panel visible: Panolar, kaydedilmiş klipler ve menü öğeleri paneli görünür
+Both clipboard history and saved clips panels visible: Hem pano geçmişi hem de kaydedilmiş klipler panelleri görünür
+Clipboard history panel visible: Pano geçmişi paneli görünür
+Control which panels are visible in the main window: Ana pencerede hangi panellerin görünür olduğunu kontrol et
+Enable simplified, less boxy layout for a cleaner and more streamlined interface design: Daha temiz ve akıcı arayüz tasarımı için sadeleştirilmiş, daha az kutu şeklinde düzen etkinleştir
+'Note: At least one panel must remain visible in main window.': 'Not: Ana pencerede en az bir panel görünür kalmalıdır.'
+Panel Visibility: Panel Görünürlüğü
+Show Boards and Clips Panel Only: Sadece panolar ve klipler panelini göster
+Show Both Panels: Her iki paneli de göster
+Show History Panel Only: Sadece geçmiş panelini göster
+Show Simplified Layout: Basitleştirilmiş düzeni göster
+Simplified Panel Layout: Sadeleştirilmiş panel düzeni

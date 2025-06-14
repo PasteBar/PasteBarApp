@@ -1,4 +1,4 @@
-App restart required: Riavvio app richiesto
+App restart required: Riavvio necessario
 Application Starts with Main Window Hidden: L'applicazione si avvia con la finestra principale nascosta
 Change: Modifica
 Copy only from menu items: Copia solo dagli elementi del menu
@@ -26,3 +26,15 @@ Show Note Icons on Clips: Mostra icone delle note sui clip
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Visualizza icone persistenti sui clip che hanno note per migliorare l'organizzazione visiva e rendere le note più facili da scoprire.
 Default Note Icon Type: Tipo di icona nota predefinito
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Questo imposta il tipo di icona predefinito per i nuovi clip con note. Puoi personalizzare i singoli clip tramite il menu contestuale.
+Boards, saved clips and menu items panel visible: Pannello di bacheche, clip salvati e elementi menu visibile
+Both clipboard history and saved clips panels visible: Entrambi i pannelli cronologia appunti e clip salvati visibili
+Clipboard history panel visible: Pannello cronologia appunti visibile
+Control which panels are visible in the main window: Controlla quali pannelli sono visibili nella finestra principale
+Enable simplified, less boxy layout for a cleaner and more streamlined interface design: Abilita layout semplificato, meno squadrato per un design dell'interfaccia più pulito e ottimizzato
+'Note: At least one panel must remain visible in main window.': 'Nota: Almeno un pannello deve rimanere visibile nella finestra principale.'
+Panel Visibility: Visibilità pannelli
+Show Boards and Clips Panel Only: Mostra solo pannello bacheche e clip
+Show Both Panels: Mostra entrambi i pannelli
+Show History Panel Only: Mostra solo pannello cronologia
+Show Simplified Layout: Mostra layout semplificato
+Simplified Panel Layout: Layout pannello semplificato

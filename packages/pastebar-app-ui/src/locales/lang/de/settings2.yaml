@@ -1,4 +1,4 @@
-App restart required: App-Neustart erforderlich
+App restart required: Neustart nötig
 Application Starts with Main Window Hidden: Anwendung startet mit verborgenem Hauptfenster
 Change: Ändern
 Copy only from menu items: Nur aus Menüelementen kopieren
@@ -22,3 +22,19 @@ Show navbar elements on hover only: Navigationsleistenelemente nur bei Hover anz
 Show/Hide Main App Window: Hauptfenster anzeigen/verbergen
 Show/Hide Quick Paste Window: Schnelleinfügen-Fenster anzeigen/verbergen
 When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: Wenn aktiviert, wird beim Klicken auf Menüelemente der Inhalt nur in die Zwischenablage kopiert, anstatt automatisch eingefügt zu werden. Dies gibt Ihnen mehr Kontrolle darüber, wann und wo Inhalte eingefügt werden.
+Show Note Icons on Clips: Notiz-Symbole auf Clips anzeigen
+Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Dauerhafte Symbole auf Clips mit Notizen anzeigen, um die visuelle Organisation zu verbessern und Notizen leichter auffindbar zu machen.
+Default Note Icon Type: Standard-Notiz-Symbol-Typ
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Dies legt den Standard-Symbol-Typ für neue Clips mit Notizen fest. Sie können einzelne Clips über das Kontextmenü anpassen.
+Boards, saved clips and menu items panel visible: Boards-, gespeicherte Clips- und Menüelemente-Panel sichtbar
+Both clipboard history and saved clips panels visible: Sowohl Zwischenablage-Verlauf als auch gespeicherte Clips-Panels sichtbar
+Clipboard history panel visible: Zwischenablage-Verlauf-Panel sichtbar
+Control which panels are visible in the main window: Steuern Sie, welche Panels im Hauptfenster sichtbar sind
+Enable simplified, less boxy layout for a cleaner and more streamlined interface design: Vereinfachtes, weniger kastenförmiges Layout für ein saubereres und optimiertes Interface-Design aktivieren
+'Note: At least one panel must remain visible in main window.': 'Hinweis: Mindestens ein Panel muss im Hauptfenster sichtbar bleiben.'
+Panel Visibility: Panel-Sichtbarkeit
+Show Boards and Clips Panel Only: Nur Boards- und Clips-Panel anzeigen
+Show Both Panels: Beide Panels anzeigen
+Show History Panel Only: Nur Verlauf-Panel anzeigen
+Show Simplified Layout: Vereinfachtes Layout anzeigen
+Simplified Panel Layout: Vereinfachtes Panel-Layout

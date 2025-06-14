@@ -221,6 +221,9 @@ export default function ClipboardHistoryPage() {
     copyPasteSequenceIsReversOrder,
     setCopyPasteSequenceIsReversOrder,
     setIsHistoryAutoUpdateOnCaputureEnabled,
+    isHistoryPanelVisibleOnly,
+    isSimplifiedLayout,
+    isSavedClipsPanelVisibleOnly,
   } = useAtomValue(settingsStoreAtom)
 
   const { t } = useTranslation()
@@ -836,11 +839,13 @@ export default function ClipboardHistoryPage() {
           maxSize={700}
           showEndPanelOnly={
             (isSwapPanels && isSplitPanelView && isHistoryWindow) ||
-            (!isSwapPanels && isSplitPanelView && isMainWindow)
+            (!isSwapPanels && isSplitPanelView && isMainWindow) ||
+            (!isHistoryPanelVisibleOnly && isSavedClipsPanelVisibleOnly)
           }
           showStartPanelOnly={
             (isSwapPanels && isSplitPanelView && isMainWindow) ||
-            (!isSwapPanels && isSplitPanelView && isHistoryWindow)
+            (!isSwapPanels && isSplitPanelView && isHistoryWindow) ||
+            (isHistoryPanelVisibleOnly && !isSavedClipsPanelVisibleOnly)
           }
           defaultSize={getDefaultPanelWidth()}
           key={
@@ -856,13 +861,19 @@ export default function ClipboardHistoryPage() {
           onResize={setPanelSize}
           autoSaveId={isSplitPanelView ? 'app-main-panel-splited' : 'app-main-panel'}
         >
-          <SplitPanePrimary isSplitPanelView={isSplitPanelView}>
+          <SplitPanePrimary
+            isSplitPanelView={isSplitPanelView || isHistoryPanelVisibleOnly}
+          >
             <Box
               className={`${
-                isSplitPanelView
+                isSplitPanelView || isHistoryPanelVisibleOnly || isSimplifiedLayout
                   ? 'h-[calc(100vh-40px)]'
                   : 'h-[calc(100vh-70px)] shadow-sm rounded-xl'
-              } flex flex-col bg-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.8] pb-6 pt-4 px-3 pr-3`}
+              } flex flex-col ${
+                isSimplifiedLayout
+                  ? 'bg-gray-200/50 dark:bg-gray-800'
+                  : 'bg-slate-200/90 dark:bg-gray-800'
+              } dark:border-gray-700 dark:shadow-gray-700/[.8] pb-6 pt-4 px-3 pr-3`}
             >
               <AutoSize disableWidth>
                 {({ height }: { height: number }) =>
@@ -870,11 +881,15 @@ export default function ClipboardHistoryPage() {
                   height &&
                   height > 0 && (
                     <Box
-                      className="flex flex-col h-[calc(100vh-95px)] relative"
+                      className={`flex flex-col ${
+                        isSimplifiedLayout
+                          ? 'h-[calc(100vh-70px)]'
+                          : 'h-[calc(100vh-95px)]'
+                      } relative`}
                       id="side-panel_tour"
                     >
                       <Box
-                        className="flex flex-row bg-slate-100 dark:bg-slate-700 rounded-md p-0 items-center h-[40px] mb-3"
+                        className="flex flex-row bg-gray-100 dark:bg-gray-700 rounded-md p-0 items-center h-[40px] mb-3"
                         id="history-find_tour"
                       >
                         {activeDragId && pinnedClipboardHistory.length === 0 ? (
@@ -933,7 +948,7 @@ export default function ClipboardHistoryPage() {
                               ref={searchHistoryInputRef}
                               iconLeft={<Search className="h-4 w-4" />}
                               classNameInput="w-full pr-0"
-                              className="text-md ring-offset-0 bg-slate-100 dark:bg-slate-700 border-r-0 border-t-0 border-b-0"
+                              className="text-md ring-offset-0 bg-gray-100 dark:bg-gray-700 border-r-0 border-t-0 border-b-0"
                             />
                             <ClipboardHistoryListFilter
                               setHistoryFilters={setHistoryFilters}
@@ -990,7 +1005,7 @@ export default function ClipboardHistoryPage() {
                             }}
                             sideOffset={10}
                           >
-                            <Text className="text-xs text-center dark:text-slate-800 bg-blue-200 dark:bg-blue-400 rounded-full px-3 cursor-pointer pointer-events-auto">
+                            <Text className="text-xs text-center dark:text-gray-800 bg-gray-300 dark:bg-gray-500 rounded-full px-3 cursor-pointer pointer-events-auto">
                               {clipboardHistory.length ? (
                                 <>
                                   {clipboardHistory.length < 100
@@ -1612,7 +1627,7 @@ export default function ClipboardHistoryPage() {
                                       </ButtonGhost>
                                     </ToolTip>
                                     {clipboardHistory.length > 0 && (
-                                      <Text className="text-xs text-center bg-slate-100 dark:bg-slate-700 rounded-full px-3 mt-2">
+                                      <Text className="text-xs text-center bg-gray-100 dark:bg-gray-700 rounded-full px-3 mt-2">
                                         {t('Last update', { ns: 'dashboard' })}:{' '}
                                         {clipboardHistory[0].timeAgo}
                                       </Text>
@@ -1903,15 +1918,24 @@ export default function ClipboardHistoryPage() {
                               selectedHistoryItems={selectedHistoryItems}
                             />
                           )}
-                          <TabsList className="self-center" id="tabs-history_tour">
+                          <TabsList
+                            className="self-center bg-gray-100 dark:bg-gray-700"
+                            id="tabs-history_tour"
+                          >
                             {!activeDragId ? (
                               <>
-                                <TabsTrigger value="/history" className="min-w-[90px]">
+                                <TabsTrigger
+                                  value="/history"
+                                  className="min-w-[90px] bg-gray-100 dark:bg-gray-700"
+                                >
                                   {panelSize < getDefaultPanelWidth()
                                     ? t('History', { ns: 'common' })
                                     : t('Clipboard History', { ns: 'common' })}
                                 </TabsTrigger>
-                                <TabsTrigger value="/menu" className="min-w-[90px]">
+                                <TabsTrigger
+                                  value="/menu"
+                                  className="min-w-[90px] bg-gray-100 dark:bg-gray-700"
+                                >
                                   {panelSize < getDefaultPanelWidth()
                                     ? t('Menu', { ns: 'common' })
                                     : t('Paste Menu', { ns: 'common' })}
@@ -1973,10 +1997,14 @@ export default function ClipboardHistoryPage() {
             {!showLargeViewHistoryId.value && !showLargeViewClipId.value ? (
               <Box
                 className={`${
-                  isSplitPanelView
+                  isSplitPanelView || isSimplifiedLayout
                     ? 'h-[calc(100vh-40px)]'
                     : 'h-[calc(100vh-70px)] shadow-sm rounded-xl border'
-                } flex flex-col bg-gray-50 border-gray-200 dark:bg-gray-900/60 dark:border-gray-800 dark:shadow-gray-700/[.7]`}
+                } flex flex-col ${
+                  !isSimplifiedLayout
+                    ? 'bg-gray-50 border-gray-200 dark:bg-gray-900/60 dark:border-gray-800 dark:shadow-gray-700/[.7]'
+                    : ''
+                }`}
               >
                 <AutoSize disableWidth>
                   {({ height }: { height: number }) => {
@@ -1986,11 +2014,17 @@ export default function ClipboardHistoryPage() {
                         <Box
                           className={`${
                             isSplitPanelView ? 'pl-1 pr-0' : 'p-2'
-                          } pt-0 py-4 pr-0 pb-0 m-0 select-none`}
+                          } pt-0 py-4 pr-0 pb-0 m-0 select-none ${
+                            isSimplifiedLayout ? 'pl-0 pr-0' : ''
+                          }`}
                         >
                           <SimpleBar
+                            className="simplebar-dashboard"
                             style={{
-                              height: isSplitPanelView ? height - 5 : height - 10,
+                              height:
+                                isSplitPanelView || isSimplifiedLayout
+                                  ? height - 5
+                                  : height - 10,
                             }}
                             onScroll={(_e: Event, isScroll) => {
                               setIsScrolling(isScroll)
@@ -1998,7 +2032,10 @@ export default function ClipboardHistoryPage() {
                           >
                             <Flex
                               style={{
-                                height: isSplitPanelView ? height - 5 : height - 10,
+                                height:
+                                  isSplitPanelView || isSimplifiedLayout
+                                    ? height - 5
+                                    : height - 10,
                               }}
                               className="flex items-start flex-col justify-start p-0"
                             >
@@ -2018,10 +2055,14 @@ export default function ClipboardHistoryPage() {
             ) : (
               <Box
                 className={`${
-                  isSplitPanelView
+                  isSplitPanelView || isSimplifiedLayout
                     ? 'h-[calc(100vh-40px)]'
                     : 'h-[calc(100vh-70px)] shadow-sm rounded-xl border'
-                } flex flex-col bg-gray-50 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-700/[.7]`}
+                } flex flex-col ${
+                  isSimplifiedLayout
+                    ? 'bg-gray-50 rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-700/[.7]'
+                    : 'bg-red-50'
+                }`}
               >
                 <AutoSize disableWidth>
                   {({ height }: { height: number }) => {
@@ -2043,6 +2084,7 @@ export default function ClipboardHistoryPage() {
                           <SimpleBar
                             style={{ height: height - 40 }}
                             autoHide={false}
+                            className="simplebar-large-view"
                             onScroll={(_e: Event, isScroll) => {
                               setIsScrolling(isScroll)
                             }}

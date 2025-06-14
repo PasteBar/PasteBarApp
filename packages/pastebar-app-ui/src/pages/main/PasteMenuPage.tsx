@@ -91,6 +91,7 @@ export default function PasteMenuPage() {
     useAtomValue(collectionsStoreAtom)
   const { data, setData } = useDynamicTree()
   const { themeDark } = useAtomValue(themeStoreAtom)
+  const { isSimplifiedLayout } = useAtomValue(settingsStoreAtom)
 
   const [term, setTerm] = useState('')
   const [openItemId, setOpenItemId] = useState<string | null>(null)
@@ -389,7 +390,17 @@ export default function PasteMenuPage() {
         autoSaveId="app-main-panel"
       >
         <SplitPanePrimary>
-          <Box className="h-[calc(100vh-70px)] flex flex-col bg-slate-200 shadow-sm rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.8] pb-4 pt-4 px-3 pr-3">
+          <Box
+            className={`${
+              isSimplifiedLayout
+                ? 'h-[calc(100vh-40px)]'
+                : 'h-[calc(100vh-70px)] shadow-sm rounded-xl'
+            } flex flex-col ${
+              isSimplifiedLayout
+                ? 'bg-gray-200/50 dark:bg-gray-800'
+                : 'bg-slate-200/90 dark:bg-gray-800'
+            }  dark:border-gray-700 dark:shadow-slate-700/[.8] pb-4 pt-4 px-3 pr-3`}
+          >
             <AutoSize disableWidth>
               {({ height }: { height: number }) =>
                 height &&
@@ -397,12 +408,14 @@ export default function PasteMenuPage() {
                 !isCollectionWithItemLoading &&
                 currentCollectionId && (
                   <Box
-                    className="flex flex-col h-[calc(100vh-95px)] relative"
+                    className={`flex flex-col ${
+                      isSimplifiedLayout ? 'h-[calc(100vh-70px)]' : 'h-[calc(100vh-95px)]'
+                    } relative`}
                     id="side-panel_tour"
                   >
                     {data.length > 0 ? (
                       <Box
-                        className="flex flex-row bg-slate-100 dark:bg-slate-700 rounded-md p-0 items-center h-[40px] mb-2"
+                        className="flex flex-row bg-gray-100 dark:bg-gray-700 rounded-md p-0 items-center h-[40px] mb-2"
                         id="menu-find_tour"
                       >
                         <Input
@@ -414,7 +427,7 @@ export default function PasteMenuPage() {
                           }}
                           iconLeft={<Search className="h-4 w-4" />}
                           classNameInput="w-full pr-0"
-                          className="text-md ring-offset-0 bg-slate-100 dark:bg-slate-700 border-r-0 border-t-0 border-b-0"
+                          className="text-md ring-offset-0 bg-gray-100 dark:bg-gray-700 border-r-0 border-t-0 border-b-0"
                         />
                       </Box>
                     ) : (
@@ -430,7 +443,12 @@ export default function PasteMenuPage() {
                         </Flex>
                       )
                     )}
-                    <SimpleBar style={{ maxHeight: height - 93 }} autoHide={true}>
+                    <SimpleBar
+                      style={{
+                        maxHeight: isSimplifiedLayout ? height - 5 : height - 93,
+                      }}
+                      autoHide={true}
+                    >
                       <Tree
                         data={data}
                         rowHeight={33}
@@ -557,13 +575,22 @@ export default function PasteMenuPage() {
                         navigate(pathname, { replace: true })
                       }}
                     >
-                      <TabsList className="self-center" id="tabs-menu_tour">
-                        <TabsTrigger value="/history" className="min-w-[90px]">
+                      <TabsList
+                        className="self-center bg-gray-100 dark:bg-gray-700"
+                        id="tabs-menu_tour"
+                      >
+                        <TabsTrigger
+                          value="/history"
+                          className="min-w-[90px] bg-gray-100 dark:bg-gray-700"
+                        >
                           {panelSize < getDefaultPanelWidth()
                             ? t('History', { ns: 'common' })
                             : t('Clipboard History', { ns: 'common' })}
                         </TabsTrigger>
-                        <TabsTrigger value="/menu" className="min-w-[90px]">
+                        <TabsTrigger
+                          value="/menu"
+                          className="min-w-[90px] bg-gray-100 dark:bg-gray-700"
+                        >
                           {panelSize < getDefaultPanelWidth()
                             ? t('Menu', { ns: 'common' })
                             : t('Paste Menu', { ns: 'common' })}
@@ -597,12 +624,27 @@ export default function PasteMenuPage() {
         </SplitPanePrimary>
         <SplitPaneSecondary>
           {menuFullyLoaded && (
-            <Box className="h-[calc(100vh-70px)] select-none flex flex-col bg-slate-50 border shadow-sm rounded-xl dark:bg-gray-900/60 dark:border-gray-800 dark:shadow-slate-700/[.7]">
+            <Box
+              className={`${
+                isSimplifiedLayout
+                  ? 'h-[calc(100vh-40px)]'
+                  : 'h-[calc(100vh-70px)] shadow-sm rounded-xl border'
+              } select-none flex flex-col ${
+                !isSimplifiedLayout
+                  ? 'bg-slate-50 border-gray-200 dark:bg-gray-900/60 dark:border-gray-800 dark:shadow-slate-700/[.7]'
+                  : ''
+              }`}
+            >
               <AutoSize disableWidth>
                 {({ height }) => {
                   return (
                     height && (
-                      <Box className="p-4 py-4 pb-2 select-auto" id="menu-main-list_tour">
+                      <Box
+                        className={`p-4 py-4 pb-2 select-auto ${
+                          isSimplifiedLayout ? 'pl-0 pr-0' : ''
+                        }`}
+                        id="menu-main-list_tour"
+                      >
                         <Flex className="justify-center relative h-8 pt-2 select-none">
                           {inactiveMenuItems.length > 0 && (
                             <Button
@@ -727,7 +769,9 @@ export default function PasteMenuPage() {
 
                         <Spacer h={2} />
                         <SimpleBar
-                          style={{ height: height - 75 }}
+                          style={{
+                            height: isSimplifiedLayout ? height - 5 : height - 75,
+                          }}
                           autoHide={true}
                           className="select-none"
                         >

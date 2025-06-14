@@ -620,22 +620,39 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
 }
 
 export const Component = () => {
-  const { isMacOSX, isWindows, isSplitPanelView } = useAtomValue(uiStoreAtom)
+  const { isMacOSX, isWindows, isSplitPanelView, isSwapPanels } =
+    useAtomValue(uiStoreAtom)
   const { playerSongs } = useAtomValue(playerStoreAtom)
 
-  const { isShowNavBarItemsOnHoverOnly } = useAtomValue(settingsStoreAtom)
+  const {
+    isShowNavBarItemsOnHoverOnly,
+    isHistoryPanelVisibleOnly,
+    isSavedClipsPanelVisibleOnly,
+    isSimplifiedLayout,
+  } = useAtomValue(settingsStoreAtom)
 
   const { pathname } = useLocation()
 
-  const hasSplitViewLayout = pathname.startsWith('/history') && isSplitPanelView
+  const hasSplitViewLayout =
+    pathname.startsWith('/history') && (isSplitPanelView || isHistoryPanelVisibleOnly)
 
   useDirection()
 
   return (
     <div
-      className={`flex flex-col bg-gray-100 dark:bg-gray-700 overflow-hidden ${
-        !hasSplitViewLayout ? 'rounded-b-md' : ''
-      } mt-[40px]`}
+      className={`flex flex-col bg-gray-100 ${
+        isSimplifiedLayout ? 'dark:bg-gray-900/90' : 'dark:bg-gray-700/90'
+      } overflow-hidden ${
+        !hasSplitViewLayout && !isSimplifiedLayout ? 'rounded-b-md' : ''
+      } mt-[40px] ${isSimplifiedLayout ? 'simplified-layout' : ''} ${
+        isSwapPanels ? 'swaped-panels' : ''
+      } ${
+        isHistoryPanelVisibleOnly
+          ? 'history-panel-visible-only'
+          : isSavedClipsPanelVisibleOnly
+            ? 'clips-panel-visible-only'
+            : ''
+      }`}
     >
       <div
         data-tauri-drag-region
@@ -645,10 +662,16 @@ export const Component = () => {
           }
         }}
         className={`${
-          isMacOSX ? `h-calc(100vh-40px) ${!hasSplitViewLayout ? 'p-[14px]' : ''}` : ''
+          isMacOSX
+            ? `h-calc(100vh-40px) ${
+                !hasSplitViewLayout && !isSimplifiedLayout ? 'p-[14px]' : ''
+              }`
+            : ''
         } ${
           isWindows
-            ? `h-[calc(100vh-50px)] ${!hasSplitViewLayout ? 'px-[12px] pt-[10px]' : ''}`
+            ? `h-[calc(100vh-50px)] ${
+                !hasSplitViewLayout && !isSimplifiedLayout ? 'px-[12px] pt-[10px]' : ''
+              }`
             : ''
         }  `}
       >

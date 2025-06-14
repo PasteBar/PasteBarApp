@@ -1,4 +1,4 @@
-App restart required: Потрібен перезапуск додатку
+App restart required: Перезапуск потрібен
 Application Starts with Main Window Hidden: Додаток запускається з прихованим головним вікном
 Change: Змінити
 Copy only from menu items: Копіювати тільки з елементів меню
@@ -26,3 +26,15 @@ Show Note Icons on Clips: Показувати іконки заміток на 
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Відображати постійні іконки на кліпах з замітками для покращення візуальної організації та полегшення пошуку заміток.
 Default Note Icon Type: Тип іконки замітки за замовчуванням
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Це встановлює тип іконки за замовчуванням для нових кліпів з замітками. Ви можете налаштувати окремі кліпи через контекстне меню.
+Boards, saved clips and menu items panel visible: Панель дошок, збережених кліпів та елементів меню видима
+Both clipboard history and saved clips panels visible: Обі панелі історії буфера та збережених кліпів видимі
+Clipboard history panel visible: Панель історії буфера видима
+Control which panels are visible in the main window: Контроль того, які панелі видимі в головному вікні
+Enable simplified, less boxy layout for a cleaner and more streamlined interface design: Увімкнути спрощений, менш квадратний макет для більш чистого і оптимізованого дизайну інтерфейсу
+'Note: At least one panel must remain visible in main window.': 'Примітка: Принаймні одна панель повинна залишатися видимою в головному вікні.'
+Panel Visibility: Видимість панелей
+Show Boards and Clips Panel Only: Показувати тільки панель дошок і кліпів
+Show Both Panels: Показувати обі панелі
+Show History Panel Only: Показувати тільки панель історії
+Show Simplified Layout: Показувати спрощений макет
+Simplified Panel Layout: Спрощений макет панелі
