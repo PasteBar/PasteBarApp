@@ -397,7 +397,7 @@ export default function PasteMenuPage() {
                 : 'h-[calc(100vh-70px)] shadow-sm rounded-xl'
             } flex flex-col ${
               isSimplifiedLayout
-                ? 'bg-gray-200/50 dark:bg-gray-800'
+                ? 'bg-slate-200/90 dark:bg-gray-800'
                 : 'bg-slate-200/90 dark:bg-gray-800'
             }  dark:border-gray-700 dark:shadow-slate-700/[.8] pb-4 pt-4 px-3 pr-3`}
           >
@@ -576,21 +576,15 @@ export default function PasteMenuPage() {
                       }}
                     >
                       <TabsList
-                        className="self-center bg-gray-100 dark:bg-gray-700"
+                        className="self-center bg-transparent"
                         id="tabs-menu_tour"
                       >
-                        <TabsTrigger
-                          value="/history"
-                          className="min-w-[90px] bg-gray-100 dark:bg-gray-700"
-                        >
+                        <TabsTrigger value="/history" className="min-w-[90px]">
                           {panelSize < getDefaultPanelWidth()
                             ? t('History', { ns: 'common' })
                             : t('Clipboard History', { ns: 'common' })}
                         </TabsTrigger>
-                        <TabsTrigger
-                          value="/menu"
-                          className="min-w-[90px] bg-gray-100 dark:bg-gray-700"
-                        >
+                        <TabsTrigger value="/menu" className="min-w-[90px]">
                           {panelSize < getDefaultPanelWidth()
                             ? t('Menu', { ns: 'common' })
                             : t('Paste Menu', { ns: 'common' })}

@@ -871,8 +871,8 @@ export default function ClipboardHistoryPage() {
                   : 'h-[calc(100vh-70px)] shadow-sm rounded-xl'
               } flex flex-col ${
                 isSimplifiedLayout
-                  ? 'bg-gray-200/50 dark:bg-gray-800'
-                  : 'bg-slate-200/90 dark:bg-gray-800'
+                  ? 'bg-slate-200/90 dark:bg-slate-800'
+                  : 'bg-slate-200/90 dark:bg-slate-800'
               } dark:border-gray-700 dark:shadow-gray-700/[.8] pb-6 pt-4 px-3 pr-3`}
             >
               <AutoSize disableWidth>
@@ -1919,14 +1919,14 @@ export default function ClipboardHistoryPage() {
                             />
                           )}
                           <TabsList
-                            className="self-center bg-gray-100 dark:bg-gray-700"
+                            className="self-center bg-transparent"
                             id="tabs-history_tour"
                           >
                             {!activeDragId ? (
                               <>
                                 <TabsTrigger
                                   value="/history"
-                                  className="min-w-[90px] bg-gray-100 dark:bg-gray-700"
+                                  className="min-w-[90px] data-[state=active]:bg-gray-100 dark:data-[state=active]:bg-gray-600"
                                 >
                                   {panelSize < getDefaultPanelWidth()
                                     ? t('History', { ns: 'common' })
@@ -1934,7 +1934,7 @@ export default function ClipboardHistoryPage() {
                                 </TabsTrigger>
                                 <TabsTrigger
                                   value="/menu"
-                                  className="min-w-[90px] bg-gray-100 dark:bg-gray-700"
+                                  className="min-w-[90px] data-[state=active]:bg-gray-100 dark:data-[state=active]:bg-gray-600"
                                 >
                                   {panelSize < getDefaultPanelWidth()
                                     ? t('Menu', { ns: 'common' })

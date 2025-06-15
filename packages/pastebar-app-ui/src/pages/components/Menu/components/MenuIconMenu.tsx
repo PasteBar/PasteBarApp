@@ -110,7 +110,7 @@ export const MenuIconMenu = ({
         <Button
           variant="light"
           id="menu-icon-menu-button_tour"
-          className="w-10 text-gray-400 hover:text-gray-500 hover:dark:text-gray-400 dark:text-gray-500 bg-gray-100 p-1 relative hover:bg-gray-100/70 dark:bg-gray-900 dark:hover:bg-gray-700/70"
+          className="w-10 text-gray-400 hover:text-gray-500 hover:dark:text-gray-400 dark:text-gray-500 bg-transparent p-1 relative hover:bg-gray-100/70 dark:bg-gray-900 dark:hover:bg-gray-700/70"
         >
           <MenuSquare className="stroke-[1.3px]" size={22} />
           {selectedItemIds.length > 1 && (
