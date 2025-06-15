@@ -1,0 +1,46 @@
+Auto Backup on Restore: Automatisches Backup bei Wiederherstellung
+Available Backups: Verfügbare Backups
+Backup Files: Backup-Dateien
+Backup Now: Jetzt sichern
+Backup and Restore: Sichern und Wiederherstellen
+Backup created successfully: Backup erfolgreich erstellt
+Backup deleted successfully: Backup erfolgreich gelöscht
+Backup on Restore: Backup bei Wiederherstellung
+Browse: Durchsuchen
+Create Backup: Backup erstellen
+Create a backup of your data?: Backup Ihrer Daten erstellen?
+Created: Erstellt
+Creating backup...: Backup wird erstellt...
+Delete: Löschen
+Delete this backup? This action cannot be undone.: Dieses Backup löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+Failed to create backup: Backup-Erstellung fehlgeschlagen
+Failed to delete backup: Backup-Löschung fehlgeschlagen
+Failed to load backup list: Backup-Liste konnte nicht geladen werden
+Failed to open backup folder: Backup-Ordner konnte nicht geöffnet werden
+Failed to restore backup: Backup-Wiederherstellung fehlgeschlagen
+Failed to select backup file: Backup-Datei konnte nicht ausgewählt werden
+Include images in backup: Bilder im Backup einschließen
+Invalid backup file: Ungültige Backup-Datei
+Loading backups...: Backups werden geladen...
+Move to another location?: An anderen Ort verschieben?
+No backups found: Keine Backups gefunden
+Restore: Wiederherstellen
+Restore Data: Daten wiederherstellen
+Restore completed. The application will restart.: Wiederherstellung abgeschlossen. Die Anwendung wird neu gestartet.
+Restore from "{{filename}}"? This will replace all current data.: Von "{{filename}}" wiederherstellen? Dies ersetzt alle aktuellen Daten.
+Restore from File...: Aus Datei wiederherstellen...
+Restore from {{filename}}? This will replace all current data.: Von {{filename}} wiederherstellen? Dies ersetzt alle aktuellen Daten.
+Restored from {{filename}}: Wiederhergestellt von {{filename}}
+Restoring a backup will automatically restart the application.: Die Wiederherstellung eines Backups startet die Anwendung automatisch neu.
+Restoring backup...: Backup wird wiederhergestellt...
+Restoring...: Wird wiederhergestellt...
+Select backup file: Backup-Datei auswählen
+Size: Größe
+The selected file is not a valid PasteBar backup: Die ausgewählte Datei ist kein gültiges PasteBar-Backup
+This action cannot be undone. All current data will be replaced with the backup data.: Diese Aktion kann nicht rückgängig gemacht werden. Alle aktuellen Daten werden durch die Backup-Daten ersetzt.
+This will create a backup file containing your database: Dies erstellt eine Backup-Datei mit Ihrer Datenbank
+This will replace all current data. Are you sure?: Dies ersetzt alle aktuellen Daten. Sind Sie sicher?
+Total backup space {{size}}: 'Gesamter Backup-Speicherplatz: {{size}}'
+and images: und Bilder
+selected file: ausgewählte Datei
+will be permanently deleted.: wird dauerhaft gelöscht.

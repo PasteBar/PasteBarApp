@@ -428,7 +428,7 @@ export function ClipCard({
     : ''
 
   const variants = cva(
-    `relative clip_tour overflow-hidden p-[2px] px-0 hover:shadow-sm !rounded-lg duration-300 bg-${color}-50 dark:bg-${color}-950 dark:bg-opacity-80 border-${color}-200 dark:border-${color}-900 ${borderLeftColors} hover:bg-white dark:hover:bg-${color}-950 dark:hover:bg-opacity-60 ` +
+    `relative clip_tour overflow-hidden p-[2px] px-0 !rounded-lg duration-300 bg-${color}-50 dark:bg-${color}-950 dark:bg-opacity-80 border-${color}-200 dark:border-${color}-900 ${borderLeftColors} hover:bg-white dark:hover:bg-${color}-950 dark:hover:bg-opacity-60 ` +
       `${hasBorderLeft ? `border border-l-[${borderWidthLeft}px] ` : 'border-0'} ` +
       `${isClipEdit ? 'bg-white' : ''} ` +
       `${
@@ -849,6 +849,7 @@ export function ClipCard({
                               delayDuration={300}
                               align="end"
                               sideOffset={10}
+                              classNameTrigger="self-start mt-[2px]"
                               maxWidth={clipNotesMaxWidth}
                               maxHeight={clipNotesMaxHeight}
                               asChild

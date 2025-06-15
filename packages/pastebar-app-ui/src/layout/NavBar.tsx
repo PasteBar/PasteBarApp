@@ -510,7 +510,7 @@ export function NavBar() {
   return (
     <div
       data-tauri-drag-region
-      className="h-[41px] absolute top-0 left-0 w-full"
+      className="h-[41px] absolute top-0 left-0 w-full dark:bg-gray-900"
       onMouseEnter={() => {
         if (isShowNavBarItemsOnHoverOnly) {
           isNavBarHovering.value = true
@@ -530,7 +530,7 @@ export function NavBar() {
     >
       <Menubar
         data-tauri-drag-region
-        className={`border-0 !h-full _border-b _border-gray-200/50 _dark:border-gray-500/50 rounded-b-none bg-gray-50 pl-3 hover:bg-white dark:hover:bg-gray-950 active:cursor-move active:bg-white transform duration-300 dark:bg-gray-900 dark:text-slate-300`}
+        className={`border-0 !h-full _border-b _border-gray-200/50 _dark:border-gray-500/50 rounded-b-none bg-gray-50 pl-3 hover:bg-white dark:hover:bg-gray-950 active:cursor-move active:bg-white transform duration-300 dark:bg-gray-950/60 dark:text-slate-300`}
       >
         <div className="inline-flex h-fit w-fit items-center text-cyan-500 relative">
           <div

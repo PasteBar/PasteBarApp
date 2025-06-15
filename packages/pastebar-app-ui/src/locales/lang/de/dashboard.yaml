@@ -1,0 +1,268 @@
+API Key: API-Schlüssel
+Add: Hinzufügen
+Add Auth: Auth hinzufügen
+Add Clipboard Value: Zwischenablage-Wert hinzufügen
+Add Custom: Benutzerdefiniert hinzufügen
+Add Custom Field: Benutzerdefiniertes Feld hinzufügen
+Add Delay Time: Verzögerungszeit hinzufügen
+Add First Board: Erstes Board hinzufügen
+Add Form Field: Formularfeld hinzufügen
+Add Header: Header hinzufügen
+Add Key Press: Tastendruck hinzufügen
+Add Key Press After Paste: Tastendruck nach Einfügen hinzufügen
+Add Link Card: Link-Karte hinzufügen
+Add Open URL: URL öffnen hinzufügen
+Add Output Template: Ausgabevorlage hinzufügen
+Add Regex Match Group Filter: Regex-Match-Gruppenfilter hinzufügen
+Add Request Header: Request-Header hinzufügen
+Add Response Filter: Antwortfilter hinzufügen
+Add Scraping Rule: Scraping-Regel hinzufügen
+Add Section: Abschnitt hinzufügen
+Add Tab: Tab hinzufügen
+Add Template Field: Vorlagenfeld hinzufügen
+Add a Tab: Tab hinzufügen
+Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Feld <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> zur Vorlage hinzufügen
+Add field <b>{{<b>{{name}}</b>}}</b> into the template: Feld <b>{{<b>{{name}}</b>}}</b> zur Vorlage hinzufügen
+Add image: Bild hinzufügen
+Add note: Notiz hinzufügen
+Add to Board: Zum Board hinzufügen
+Add {{type}}: '{{type}} hinzufügen'
+All field labels must be unique to ensure they are correctly used within the template.: Alle Feldbezeichnungen müssen eindeutig sein, um sicherzustellen, dass sie korrekt in der Vorlage verwendet werden.
+Are you sure you want to delete <strong>{{boardName}}</strong> board?: Möchten Sie das Board <strong>{{boardName}}</strong> wirklich löschen?
+Are you sure you want to delete <strong>{{tabName}}</strong> tab?: Möchten Sie den Tab <strong>{{tabName}}</strong> wirklich löschen?
+Are you sure you want to delete?: Möchten Sie wirklich löschen?
+Are you sure you want to remove image from the clip?: Möchten Sie das Bild wirklich aus dem Clip entfernen?
+Auth: Auth
+Auto update is Off: Auto-Update ist aus
+Basic Auth: Basic Auth
+Basic Password: Basic Passwort
+Basic Username: Basic Benutzername
+Bearer Token: Bearer Token
+Board Layout Height: Board-Layout-Höhe
+Board Layout Split: Board-Layout-Teilung
+Board Menu: Board-Menü
+Board is Not Empty: Board ist nicht leer
+Boards: Boards
+Border Width: Rahmenbreite
+CSS Selector: CSS-Selektor
+Cancel: Abbrechen
+Change Layout: Layout ändern
+Change color: Farbe ändern
+Clear: Löschen
+Clear All Fields: Alle Felder löschen
+Click To Add: Zum Hinzufügen klicken
+Clip Menu: Clip-Menü
+Clip Options: Clip-Optionen
+Clipboard: Zwischenablage
+Clips:
+  App: App
+  Clip Menu: Clip-Menü
+  Clips: Clips
+  Link: Link
+Close Edit: Bearbeitung schließen
+Command:
+  error: Fehler
+  output: Ausgabe
+Command error: Befehlsfehler
+Common Fields: Gemeinsame Felder
+Confirm Clear All Fields: Alle Felder löschen bestätigen
+Confirm to remove Auth: Auth entfernen bestätigen
+Confirm to remove filters: Filter entfernen bestätigen
+Confirm to remove headers: Header entfernen bestätigen
+Copy Clip: Clip kopieren
+Create Board: Board erstellen
+Create Tab: Tab erstellen
+Create tab: Tab erstellen
+Dashboard: Dashboard
+Delay: Verzögerung
+Delete Board: Board löschen
+Delete Clip: Clip löschen
+Delete Tab: Tab löschen
+Delete board: Board löschen
+Delete field: Feld löschen
+Delete tab: Tab löschen
+Detect Template Fields: Vorlagenfelder erkennen
+Detect for Template Fields: Nach Vorlagenfeldern suchen
+Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Deaktiviertes Feld <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> wurde in der Vorlage gefunden
+Done Create Clip: Clip-Erstellung abgeschlossen
+Done Edit: Bearbeitung abgeschlossen
+Done Edit Tabs: Tab-Bearbeitung abgeschlossen
+Done Organize: Organisation abgeschlossen
+Drag & Drop Path: Pfad ziehen & ablegen
+Drop To Add: Zum Hinzufügen ablegen
+Drop image file here, or use a separate window for drag and drop.: Bilddatei hier ablegen oder separates Fenster für Drag & Drop verwenden.
+Drop to Pin: Zum Anheften ablegen
+Edit Note: Notiz bearbeiten
+Edit Template: Vorlage bearbeiten
+Edit subtitle: Untertitel bearbeiten
+Edit tab name: Tab-Namen bearbeiten
+Enable / Disable: Aktivieren / Deaktivieren
+Enable / Disable URL Open: URL-Öffnung aktivieren / deaktivieren
+Enter Label: Label eingeben
+Enter URL: URL eingeben
+Enter board subtitle or description: Board-Untertitel oder Beschreibung eingeben
+Enter board title: Board-Titel eingeben
+Enter clip name: Clip-Namen eingeben
+Enter clip note: Clip-Notiz eingeben
+Enter code: Code eingeben
+Enter credit card number: Kreditkartennummer eingeben
+Enter default value: Standardwert eingeben
+Enter field value: Feldwert eingeben
+Enter full path to file, folder or application: Vollständigen Pfad zu Datei, Ordner oder Anwendung eingeben
+Enter regex for output filer: Regex für Ausgabefilter eingeben
+Enter request url: Request-URL eingeben
+Enter secret value: Geheimwert eingeben
+Enter section label: Abschnittslabel eingeben
+Enter select option: Auswahloption eingeben
+Enter tab name: Tab-Namen eingeben
+Enter template or drag from history: Vorlage eingeben oder aus Verlauf ziehen
+Enter template value: Vorlagenwert eingeben
+Enter value or drag from history: Wert eingeben oder aus Verlauf ziehen
+Enter web link or email: Weblink oder E-Mail eingeben
+Errors:
+  No fields found in the template.: Keine Felder in der Vorlage gefunden.
+  Please fix output template or confirm to save as is.: Bitte korrigieren Sie die Ausgabevorlage oder bestätigen Sie das Speichern.
+  Please fix template fields or confirm to save as is.: Bitte korrigieren Sie die Vorlagenfelder oder bestätigen Sie das Speichern.
+  Please fix the problem or confirm to save as is.: Bitte beheben Sie das Problem oder bestätigen Sie das Speichern.
+  Please verify your link for any errors, or confirm to save as is.: Bitte überprüfen Sie Ihren Link auf Fehler oder bestätigen Sie das Speichern.
+  Please verify your path for any errors, or confirm to save as is.: Bitte überprüfen Sie Ihren Pfad auf Fehler oder bestätigen Sie das Speichern.
+  Your command runs with errors, confirm you want to save as is.: Ihr Befehl läuft mit Fehlern, bestätigen Sie das Speichern.
+  Your request runs with errors, confirm you want to save as is.: Ihre Anfrage läuft mit Fehlern, bestätigen Sie das Speichern.
+FILTERED_TYPES:
+  Dot Path: Punkt-Pfad
+  JSON Path: JSON-Pfad
+  RegEx: RegEx
+  RegEx Replace: RegEx Ersetzen
+  Remove Quotes: Anführungszeichen entfernen
+Field: Feld
+Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Feld <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> wurde in der Vorlage gefunden
+Field Options: Feldoptionen
+Fields Value: Feldwert
+File, folder or app path does not exist: Datei-, Ordner- oder App-Pfad existiert nicht
+File, folder or app path is valid: Datei-, Ordner- oder App-Pfad ist gültig
+File, folder or app path might not be valid: Datei-, Ordner- oder App-Pfad könnte ungültig sein
+Fill Template: Vorlage ausfüllen
+Filter Type: Filtertyp
+Filter's Value: Filterwert
+Find in Clip: Im Clip suchen
+Find in clip: Im Clip suchen
+Find in history: Im Verlauf suchen
+Form Fields: Formularfelder
+General Fields: Allgemeine Felder
+HTML: HTML
+Headers: Header
+Hide Label: Label ausblenden
+History capture is off: Verlaufserfassung ist aus
+Key Press: Tastendruck
+Key Press After: Tastendruck nach
+Key Press After Paste: Tastendruck nach Einfügen
+'Key Press After Paste: {{keyPress}}': 'Tastendruck nach Einfügen: {{keyPress}}'
+Label Left: Label links
+Label Top: Label oben
+Label on Left: Label links
+Labels: Labels
+Last run: Letzte Ausführung
+Last update: Letzte Aktualisierung
+Layout Max Width: Layout Max Breite
+Mask to hide clipboard value in preview: Maskierung zum Verbergen des Zwischenablage-Werts in der Vorschau
+Move Clip: Clip verschieben
+Moved Clips Panel: Panel für verschobene Clips
+Name: Name
+New Board: Neues Board
+New Clip: Neuer Clip
+No Boards: Keine Boards
+No Clipboard History: Kein Zwischenablage-Verlauf
+No Tabs or Boards: Keine Tabs oder Boards
+Number of columns: Anzahl der Spalten
+Open: Öffnen
+Open URL Disable / Enable: URL-Öffnung deaktivieren / aktivieren
+Output Template: Ausgabevorlage
+Panel for moved or copied items from other tabs: Panel für verschobene oder kopierte Elemente aus anderen Tabs
+Please confirm to save as is.: Bitte bestätigen Sie das Speichern.
+Press: Drücken
+RETURN_POSITION_TYPES:
+  First Only: Nur Erstes
+  Last Only: Nur Letztes
+RULES_TYPES:
+  CSS Selector: CSS-Selektor
+  RegEx Find: RegEx Suchen
+  RegEx Group Match: RegEx Gruppen-Match
+  RegEx Match: RegEx Match
+  RegEx Replace: RegEx Ersetzen
+RegEx Find: RegEx Suchen
+RegEx Match: RegEx Match
+RegEx Match Group: RegEx Match-Gruppe
+RegEx Replace: RegEx Ersetzen
+Regex Match Group Filter: Regex Match-Gruppenfilter
+Remove Open URL: URL-Öffnung entfernen
+Remove headers: Header entfernen
+Remove image: Bild entfernen
+Rename: Umbenennen
+Reset to Defaults: Auf Standard zurücksetzen
+Response Filters: Antwortfilter
+Result: Ergebnis
+SEPARATOR_TYPES:
+  Comma (,): Komma (,)
+  New Line (\n): Neue Zeile (\n)
+  Pipe (|): Pipe (|)
+  Semicolon (;): Semikolon (;)
+  Space (' '): Leerzeichen (' ')
+  Tab (\t): Tab (\t)
+Save as Defaults: Als Standard speichern
+Scan for Template Fields: Nach Vorlagenfeldern scannen
+Select Color: Farbe auswählen
+Select Default Option: Standardoption auswählen
+Select Option: Option auswählen
+Select Options: Optionen auswählen
+Show Label: Label anzeigen
+Special Field: Spezialfeld
+Subtitle: Untertitel
+Tab: Tab
+Tab is Not Empty: Tab ist nicht leer
+Tabs Menu: Tabs-Menü
+Template: Vorlage
+Template Edit: Vorlage bearbeiten
+Template Fields: Vorlagenfelder
+Template should have⠀<b>{{output}}</b>⠀placeholder.: Vorlage sollte⠀<b>{{output}}</b>⠀Platzhalter haben.
+Test Request: Anfrage testen
+Test Run: Testlauf
+Text: Text
+This action cannot be undone.: Diese Aktion kann nicht rückgängig gemacht werden.
+This field allows to insert text from clipboard: Dieses Feld ermöglicht das Einfügen von Text aus der Zwischenablage
+Too long: Zu lang
+Too short: Zu kurz
+Turn On auto update: Auto-Update einschalten
+Turn on history capture: Verlaufserfassung einschalten
+Type:
+  Command: Befehl
+  Request: Anfrage
+  Scraper: Scraper
+URL: URL
+Unsaved name: Ungespeicherter Name
+Unsaved note: Ungespeicherte Notiz
+Unsaved subtitle: Ungespeicherter Untertitel
+Unsaved title: Ungespeicherter Titel
+Update Link Card: Link-Karte aktualisieren
+Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.: Verwenden Sie doppelte geschweifte Klammern für {{Feldname}}. Verwenden Sie {{clipboard}}, um den aktuellen Zwischenablage-Wert hinzuzufügen.
+Value: Wert
+Values: Werte
+Vertical Split: Vertikale Teilung
+We need to open a new window where you can drag & drop file, path or application.: Wir müssen ein neues Fenster öffnen, in dem Sie Datei, Pfad oder Anwendung ziehen & ablegen können.
+Web Link or Email might not be valid: Weblink oder E-Mail könnte ungültig sein
+Web or Email link is valid: Web- oder E-Mail-Link ist gültig
+Website URL: Website-URL
+Website URL is valid: Website-URL ist gültig
+Website URL might not be valid: Website-URL könnte ungültig sein
+Wrap output using {{output}} placeholder: Ausgabe mit {{output}} Platzhalter umschließen
+You have no rules added: Sie haben keine Regeln hinzugefügt
+You'll need to clear this board of all clips and subboards before it can be deleted.: Sie müssen dieses Board von allen Clips und Unterboards leeren, bevor es gelöscht werden kann.
+You'll need to clear this tab of all boards before it can be deleted.: Sie müssen diesen Tab von allen Boards leeren, bevor er gelöscht werden kann.
+filled template: ausgefüllte Vorlage
+new clips: neue Clips
+template: Vorlage
+'{{count}} fields found in template but missing from fields definition._one': '{{count}} Feld in Vorlage gefunden, fehlt aber in Felddefinition.'
+'{{count}} fields found in template but missing from fields definition._other': '{{count}} Felder in Vorlage gefunden, fehlen aber in Felddefinition.'
+'{{count}} fields not found in the template._one': '{{count}} Feld nicht in der Vorlage gefunden.'
+'{{count}} fields not found in the template._other': '{{count}} Felder nicht in der Vorlage gefunden.'
+'{{type}} Field': '{{type}}-Feld'
+'{{type}} field': '{{type}}-Feld'

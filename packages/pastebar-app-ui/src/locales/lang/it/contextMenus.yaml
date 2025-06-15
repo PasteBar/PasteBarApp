@@ -96,11 +96,14 @@ UnPin Clip: Rimuovi Clip
 Unmask Secret: Rimuovi Maschera Segreto
 Up: Su
 View: Visualizza
-not a code: non un codice
-
-# Note Icon Types
+not a code: non è codice
+Note Icon: Icona nota
+Note Icon Settings: Impostazioni icona
+Use Global Setting: Usa predefinito
+Show Note Icon: Mostra icona
+Icon Type: Tipo icona
 Note Icon Types Book: Libro
 Note Icon Types Contact: Contatto
 Note Icon Types File: File
 Note Icon Types Message: Messaggio
-Note Icon Types Notebook: Blocco note
+Note Icon Types Notebook: Taccuino

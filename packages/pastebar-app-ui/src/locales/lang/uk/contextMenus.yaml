@@ -97,8 +97,11 @@ Unmask Secret: Зняти маскування секрету
 Up: Вище
 View: Перегляд
 not a code: не код
-
-# Note Icon Types
+Note Icon: Іконка нотатки
+Note Icon Settings: Налаштування іконки нотатки
+Use Global Setting: Налаштування за замовчуванням
+Show Note Icon: Показувати іконку
+Icon Type: Тип іконки
 Note Icon Types Book: Книга
 Note Icon Types Contact: Контакт
 Note Icon Types File: Файл
