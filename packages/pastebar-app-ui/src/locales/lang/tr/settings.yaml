@@ -207,3 +207,6 @@ An error occurred during directory processing.: Dizin işleme sırasında bir ha
 An error occurred during directory selection or setup.: Dizin seçimi veya kurulumu sırasında bir hata oluştu.
 Disable Image Capture: Görüntü Yakalamayı Devre Dışı Bırak
 Disable capturing and storing images from clipboard: Panodan görüntü yakalama ve depolamayı devre dışı bırak
+Custom Database Location: Özel Veritabanı Konumu
+Selected new data folder: Değişiklik için seçili yeni veri klasörü
+none: hiçbiri

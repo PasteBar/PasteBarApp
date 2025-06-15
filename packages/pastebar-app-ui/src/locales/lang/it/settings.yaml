@@ -206,3 +206,6 @@ An error occurred during directory processing.: Si è verificato un errore duran
 An error occurred during directory selection or setup.: Si è verificato un errore durante la selezione o configurazione della directory.
 Disable Image Capture: Disabilita Cattura Immagini
 Disable capturing and storing images from clipboard: Disabilita la cattura e memorizzazione di immagini dagli appunti
+Custom Database Location: Posizione Database Personalizzata
+Selected new data folder: Nuova cartella dati selezionata per il cambio
+none: nessuno

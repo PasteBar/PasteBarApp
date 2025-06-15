@@ -207,3 +207,6 @@ An error occurred during directory processing.: 目录处理期间发生错误�
 An error occurred during directory selection or setup.: 目录选择或设置期间发生错误。
 Disable Image Capture: 禁用图像捕获
 Disable capturing and storing images from clipboard: 禁用从剪贴板捕获和存储图像
+Custom Database Location: 自定义数据库位置
+Selected new data folder: 选定的新数据文件夹用于更改
+none: 无

@@ -285,3 +285,4 @@ template: modello
 '{{count}} fields not found in the template._other': '{{count}} campi non trovati nel modello.'
 '{{type}} Field': 'Campo {{type}}'
 '{{type}} field': 'campo {{type}}'
+Press: Press

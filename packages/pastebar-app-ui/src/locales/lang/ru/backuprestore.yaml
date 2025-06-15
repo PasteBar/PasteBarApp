@@ -41,3 +41,6 @@ Loading backups...: Загрузка резервных копий...
 will be permanently deleted.: будет удалена навсегда.
 This action cannot be undone. All current data will be replaced with the backup data.: Это действие нельзя отменить. Все текущие данные будут заменены данными из резервной копии.
 Restoring a backup will automatically restart the application.: Восстановление резервной копии автоматически перезапустит приложение.
+Backup on Restore: Резервное копирование при восстановлении
+Restore from {{filename}}? This will replace all current data.: Восстановить из файла {{filename}}? Это заменит все текущие данные.
+Restoring...: Восстановление...

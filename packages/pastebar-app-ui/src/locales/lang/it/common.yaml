@@ -349,3 +349,9 @@ second: secondo
 seconds: secondi
 show less: mostra meno
 www.site: www.pastebar.app
+Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template: Aggiungi il campo <b>{{Clipboard}}</b> al modello. Questo ti permette di copiare il testo negli appunti e sarà inserito nel modello
+Clear History: Cancella Cronologia
+'Copy of ': 'Copia di '
+Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: Il campo <b>{{Clipboard}}</b> è stato trovato nel modello. Questo ti permette di copiare il testo negli appunti e sarà inserito nel modello
+Size: Dimensione
+Update Error: Errore di Aggiornamento

@@ -19,7 +19,8 @@
     "preview": "vite preview",
     "changeset": "changeset",
     "version:sync": "node scripts/sync-version.js",
-    "version": "changeset version && npm run version:sync"
+    "version": "changeset version && npm run version:sync",
+    "translation-audit": "ts-node scripts/translation-audit.ts"
   },
   "dependencies": {
     "@codastic/react-positioning-portal": "^0.7.0",
@@ -177,12 +178,13 @@
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
-    "rimraf": "^5.0.5",
     "react-compiler-runtime": "^19.0.0-beta-b2e8e9c-20241220",
+    "rimraf": "^5.0.5",
     "tailwind-merge": "^2.0.0",
     "tailwindcss": "^3.3.5",
     "taze": "^0.12.2",
-    "typescript": "^5.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
     "vite": "^6.0.6",
     "vite-plugin-tauri": "^4.0.0"
   }
