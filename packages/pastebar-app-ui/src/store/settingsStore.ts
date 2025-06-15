@@ -266,8 +266,8 @@ const initialState: SettingsStoreState & Settings = {
   isMenuItemCopyOnlyEnabled: false,
   isNoteIconsEnabled: true,
   defaultNoteIconType: NOTE_ICON_TYPES.MESSAGE,
-  isHistoryPanelVisibleOnly: true,
-  isSavedClipsPanelVisibleOnly: true,
+  isHistoryPanelVisibleOnly: false,
+  isSavedClipsPanelVisibleOnly: false,
   isSimplifiedLayout: true,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],

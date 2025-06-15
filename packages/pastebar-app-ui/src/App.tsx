@@ -192,16 +192,8 @@ function App() {
           isNoteIconsEnabled: settings.isNoteIconsEnabled?.valueBool ?? true,
           defaultNoteIconType:
             settings.defaultNoteIconType?.valueText ?? 'MessageSquareText',
-          isHistoryPanelVisibleOnly:
-            settings.isHistoryPanelVisibleOnly?.valueBool &&
-            settings.isSavedClipsPanelVisibleOnly?.valueBool
-              ? null
-              : settings.isHistoryPanelVisibleOnly?.valueBool,
-          isSavedClipsPanelVisibleOnly:
-            settings.isSavedClipsPanelVisibleOnly?.valueBool &&
-            settings.isHistoryPanelVisibleOnly?.valueBool
-              ? null
-              : settings.isSavedClipsPanelVisibleOnly?.valueBool,
+          isHistoryPanelVisibleOnly: settings.isHistoryPanelVisibleOnly?.valueBool,
+          isSavedClipsPanelVisibleOnly: settings.isSavedClipsPanelVisibleOnly?.valueBool,
           isSimplifiedLayout: settings.isSimplifiedLayout?.valueBool ?? true,
           isAppReady: true,
         })
