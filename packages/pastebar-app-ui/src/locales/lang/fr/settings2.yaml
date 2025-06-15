@@ -1,4 +1,4 @@
-App restart required: Redémarrage de l'app requis
+App restart required: Redémarrage nécessaire
 Application Starts with Main Window Hidden: L'application démarre avec la fenêtre principale masquée
 Change: Modifier
 Copy only from menu items: Copier uniquement depuis les éléments du menu
@@ -26,3 +26,15 @@ Show Note Icons on Clips: Afficher les icônes de notes sur les clips
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Afficher des icônes persistantes sur les clips qui ont des notes pour améliorer l'organisation visuelle et faciliter la découverte des notes.
 Default Note Icon Type: Type d'icône de note par défaut
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Cela définit le type d'icône par défaut pour les nouveaux clips avec des notes. Vous pouvez personnaliser les clips individuels via le menu contextuel.
+Boards, saved clips and menu items panel visible: Panneau des tableaux, clips sauvegardés et éléments de menu visible
+Both clipboard history and saved clips panels visible: Les deux panneaux d'historique du presse-papiers et de clips sauvegardés visibles
+Clipboard history panel visible: Panneau d'historique du presse-papiers visible
+Control which panels are visible in the main window: Contrôler quels panneaux sont visibles dans la fenêtre principale
+Enable simplified, less boxy layout for a cleaner and more streamlined interface design: Activer une mise en page simplifiée, moins carrée pour une interface plus propre et rationalisée
+'Note: At least one panel must remain visible in main window.': 'Note : Au moins un panneau doit rester visible dans la fenêtre principale.'
+Panel Visibility: Visibilité des panneaux
+Show Boards and Clips Panel Only: Afficher uniquement le panneau tableaux et clips
+Show Both Panels: Afficher les deux panneaux
+Show History Panel Only: Afficher uniquement le panneau historique
+Show Simplified Layout: Afficher la mise en page simplifiée
+Simplified Panel Layout: Mise en page de panneau simplifiée

@@ -394,7 +394,7 @@ export function ClipboardHistoryRowComponent({
               aria-selected={isKeyboardSelected}
             >
               <Box
-                className={`rounded-md justify-start duration-300 relative px-3 py-1 hover:shadow-sm my-0.5 shadow-none border-2 flex flex-col ${
+                className={`rounded-md justify-start duration-300 history-box relative px-3 py-1 hover:shadow-sm my-0.5 shadow-none border-2 flex flex-col ${
                   index === 0 &&
                   clipboard.updatedAt > Date.now() - MINUTE_IN_MS &&
                   !isCopiedOrPasted &&

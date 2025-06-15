@@ -97,8 +97,11 @@ Unmask Secret: Montrer code secret
 Up: Haut
 View: Vue
 not a code: pas un code
-
-# Note Icon Types
+Note Icon: Icône de note
+Note Icon Settings: Paramètres d'icône
+Use Global Setting: Utiliser par défaut
+Show Note Icon: Afficher l'icône
+Icon Type: Type d'icône
 Note Icon Types Book: Livre
 Note Icon Types Contact: Contact
 Note Icon Types File: Fichier

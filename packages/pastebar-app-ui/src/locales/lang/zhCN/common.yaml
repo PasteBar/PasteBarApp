@@ -350,3 +350,5 @@ second: 秒
 seconds: 秒
 show less: 显示更少
 www.site: www.pastebar.app
+Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: 在模板中找到字段 <b>{{Clipboard}}</b>。这允许您将文本复制到剪贴板，然后将其插入模板中。
+Size: 大小

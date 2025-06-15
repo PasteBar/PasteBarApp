@@ -193,6 +193,13 @@ export function NavBar() {
     isHideCollectionsOnNavBar,
     isImageCaptureDisabled,
     setIsImageCaptureDisabled,
+    isHistoryPanelVisibleOnly,
+    setIsHistoryPanelVisibleOnly,
+    isSavedClipsPanelVisibleOnly,
+    setShowBothPanels,
+    setIsSavedClipsPanelVisibleOnly,
+    isSimplifiedLayout,
+    setIsSimplifiedLayout,
   } = useAtomValue(settingsStoreAtom)
 
   const {
@@ -290,11 +297,13 @@ export function NavBar() {
     }
   }, [isCreatingMenuItem.value])
 
+  const isSinglePanelView = isHistoryPanelVisibleOnly || isSavedClipsPanelVisibleOnly
+
   const buildDate = dayjs(BUILD_DATE).format('MMMM, YYYY')
 
   useEffect(() => {
     if (window.plausible && deviceId) {
-      window.plausible('App Start', { props: { deviceId } })
+      window.plausible('App Start', { props: { deviceId, version: APP_VERSION } })
     }
   }, [deviceId, window.plausible])
 
@@ -501,7 +510,7 @@ export function NavBar() {
   return (
     <div
       data-tauri-drag-region
-      className="h-[41px] absolute top-0 left-0 w-full"
+      className="h-[41px] absolute top-0 left-0 w-full dark:bg-gray-900"
       onMouseEnter={() => {
         if (isShowNavBarItemsOnHoverOnly) {
           isNavBarHovering.value = true
@@ -521,7 +530,7 @@ export function NavBar() {
     >
       <Menubar
         data-tauri-drag-region
-        className={`border-0 !h-full border-b border-slate-200/50 dark:border-slate-500/50 rounded-b-none bg-gray-50 pl-3 hover:bg-white dark:hover:bg-gray-950 active:cursor-move active:bg-white transform duration-300 dark:bg-gray-900 dark:text-slate-300`}
+        className={`border-0 !h-full _border-b _border-gray-200/50 _dark:border-gray-500/50 rounded-b-none bg-gray-50 pl-3 hover:bg-white dark:hover:bg-gray-950 active:cursor-move active:bg-white transform duration-300 dark:bg-gray-950/60 dark:text-slate-300`}
       >
         <div className="inline-flex h-fit w-fit items-center text-cyan-500 relative">
           <div
@@ -785,29 +794,43 @@ export function NavBar() {
             {t('View', { ns: 'navbar' })}
           </MenubarTrigger>
           <MenubarContent>
-            {isSplitPanelView ? (
+            {!isSinglePanelView && (
               <MenubarItem
                 onClick={() => {
                   navigate('/history', { replace: true })
                 }}
               >
-                {t('Clip Boards', { ns: 'common' })}
-                <MenubarShortcut>
-                  <Shortcut keys="CTRL+B" />
-                </MenubarShortcut>
-              </MenubarItem>
-            ) : (
-              <MenubarItem
-                onClick={() => {
-                  navigate('/history', { replace: true })
-                }}
-              >
-                {t('Clipboard History', { ns: 'common' })}
+                {isSplitPanelView
+                  ? t('Clip Boards', { ns: 'common' })
+                  : t('Clipboard History', { ns: 'common' })}
                 <MenubarShortcut>
                   <Shortcut keys="CTRL+B" />
                 </MenubarShortcut>
               </MenubarItem>
             )}
+
+            {isSavedClipsPanelVisibleOnly && (
+              <MenubarItem
+                onClick={() => {
+                  setIsHistoryPanelVisibleOnly(true)
+                  navigate('/history', { replace: true })
+                }}
+              >
+                {t('Show History Panel Only', { ns: 'navbar' })}
+              </MenubarItem>
+            )}
+
+            {isHistoryPanelVisibleOnly && (
+              <MenubarItem
+                onClick={() => {
+                  setIsSavedClipsPanelVisibleOnly(true)
+                  navigate('/history', { replace: true })
+                }}
+              >
+                {t('Show Clips Panel Only', { ns: 'navbar' })}
+              </MenubarItem>
+            )}
+
             <MenubarItem
               onClick={() => {
                 navigate('/menu', { replace: true })
@@ -819,18 +842,20 @@ export function NavBar() {
               </MenubarShortcut>
             </MenubarItem>
 
-            <MenubarItem
-              onClick={async () => {
-                await toggleIsSplitPanelView()
-              }}
-            >
-              {isSplitPanelView
-                ? t('Close History Window', { ns: 'common' })
-                : t('Split History Window', { ns: 'common' })}
-              <MenubarShortcut className="ml-2">
-                <Shortcut keys="CTRL+N" />
-              </MenubarShortcut>
-            </MenubarItem>
+            {!isSinglePanelView && (
+              <MenubarItem
+                onClick={async () => {
+                  await toggleIsSplitPanelView()
+                }}
+              >
+                {isSplitPanelView
+                  ? t('Close History Window', { ns: 'common' })
+                  : t('Split History Window', { ns: 'common' })}
+                <MenubarShortcut className="ml-2">
+                  <Shortcut keys="CTRL+N" />
+                </MenubarShortcut>
+              </MenubarItem>
+            )}
 
             <MenubarItem
               onClick={async () => {
@@ -1001,6 +1026,7 @@ export function NavBar() {
               <MenubarSubContent className="w-[235px] dark:text-slate-300">
                 <MenubarCheckboxItem
                   checked={isSwapPanels}
+                  disabled={isSinglePanelView}
                   onClick={() => {
                     setIsSwapPanels(!isSwapPanels)
                   }}
@@ -1009,6 +1035,15 @@ export function NavBar() {
                   <MenubarShortcut>
                     <Shortcut keys="CTRL+P" />
                   </MenubarShortcut>
+                </MenubarCheckboxItem>
+
+                <MenubarCheckboxItem
+                  checked={isSimplifiedLayout}
+                  onClick={() => {
+                    setIsSimplifiedLayout(!isSimplifiedLayout)
+                  }}
+                >
+                  {t('Show Simplified Layout', { ns: 'settings2' })}
                 </MenubarCheckboxItem>
 
                 <MenubarCheckboxItem
@@ -1047,6 +1082,37 @@ export function NavBar() {
                   }}
                 >
                   {t('Show Disabled Collections', { ns: 'settings' })}
+                </MenubarCheckboxItem>
+
+                <MenubarSeparator />
+
+                <MenubarCheckboxItem
+                  checked={isHistoryPanelVisibleOnly && !isSavedClipsPanelVisibleOnly}
+                  onClick={async () => {
+                    await setIsHistoryPanelVisibleOnly(true)
+                    navigate('/history', { replace: true })
+                  }}
+                >
+                  {t('Show History Panel Only', { ns: 'navbar' })}
+                </MenubarCheckboxItem>
+
+                <MenubarCheckboxItem
+                  checked={!isHistoryPanelVisibleOnly && isSavedClipsPanelVisibleOnly}
+                  onClick={async () => {
+                    await setIsSavedClipsPanelVisibleOnly(true)
+                    navigate('/history', { replace: true })
+                  }}
+                >
+                  {t('Show Clips Panel Only', { ns: 'navbar' })}
+                </MenubarCheckboxItem>
+
+                <MenubarCheckboxItem
+                  checked={!isHistoryPanelVisibleOnly && !isSavedClipsPanelVisibleOnly}
+                  onClick={async () => {
+                    await setShowBothPanels(true)
+                  }}
+                >
+                  {t('Show Both Panels', { ns: 'navbar' })}
                 </MenubarCheckboxItem>
 
                 <MenubarSeparator />
@@ -1132,95 +1198,99 @@ export function NavBar() {
           </MenubarContent>
         </MenubarMenu>
 
-        {collections.length > 0 && !isHideCollectionsOnNavBar && (
-          <MenubarMenu>
-            <MenubarTrigger
-              className={`font-normal min-w-fit px-2.5 ${
-                isShowNavBarItems ? 'opacity-1' : 'opacity-0'
-              }`}
-              id="navbar-collections_tour"
-            >
-              <Flex className="flex justify-start items-center whitespace-nowrap overflow-hidden">
-                <LibrarySquare className="mr-1.5 text-slate-500" size={18} />
-                <Box className="overflow-hidden text-ellipsis max-w-[16rem]">
-                  {isShowCollectionNameOnNavBar
-                    ? collections.find(
-                        ({ collectionId }) => collectionId === currentCollectionId
-                      )?.title ?? t('Collections', { ns: 'collections' })
-                    : t('Collections', { ns: 'collections' })}
-                </Box>
-              </Flex>
-            </MenubarTrigger>
-            <MenubarContent forceMount>
-              <MenubarItem inset disabled className="py-0.5">
-                {t('Switch collections', { ns: 'collections' })}
-              </MenubarItem>
-              <MenubarSeparator />
-              <SimpleBar
-                className="code-filter"
-                style={{
-                  height: 'auto',
-                  maxHeight: '400px',
-                  width: '100%',
-                  minWidth: '200px',
-                }}
-                autoHide={false}
+        {collections.length > 0 &&
+          !isHideCollectionsOnNavBar &&
+          !isHistoryPanelVisibleOnly && (
+            <MenubarMenu>
+              <MenubarTrigger
+                className={`font-normal min-w-fit px-2.5 ${
+                  isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+                }`}
+                id="navbar-collections_tour"
               >
-                <MenubarRadioGroup value={currentCollectionId ?? ''}>
-                  {collections
-                    .filter(
-                      ({ isEnabled }) =>
-                        isShowDisabledCollectionsOnNavBarMenu || isEnabled
-                    )
-                    .sort((a, b) => {
-                      if (isShowDisabledCollectionsOnNavBarMenu) {
-                        if (a.isEnabled && !b.isEnabled) {
-                          return -1
+                <Flex className="flex justify-start items-center whitespace-nowrap overflow-hidden">
+                  <LibrarySquare className="mr-1.5 text-slate-500" size={18} />
+                  <Box className="overflow-hidden text-ellipsis max-w-[16rem]">
+                    {isShowCollectionNameOnNavBar
+                      ? collections.find(
+                          ({ collectionId }) => collectionId === currentCollectionId
+                        )?.title ?? t('Collections', { ns: 'collections' })
+                      : t('Collections', { ns: 'collections' })}
+                  </Box>
+                </Flex>
+              </MenubarTrigger>
+              <MenubarContent forceMount>
+                <MenubarItem inset disabled className="py-0.5">
+                  {t('Switch collections', { ns: 'collections' })}
+                </MenubarItem>
+                <MenubarSeparator />
+                <SimpleBar
+                  className="code-filter"
+                  style={{
+                    height: 'auto',
+                    maxHeight: '400px',
+                    width: '100%',
+                    minWidth: '200px',
+                  }}
+                  autoHide={false}
+                >
+                  <MenubarRadioGroup value={currentCollectionId ?? ''}>
+                    {collections
+                      .filter(
+                        ({ isEnabled }) =>
+                          isShowDisabledCollectionsOnNavBarMenu || isEnabled
+                      )
+                      .sort((a, b) => {
+                        if (isShowDisabledCollectionsOnNavBarMenu) {
+                          if (a.isEnabled && !b.isEnabled) {
+                            return -1
+                          }
+                          if (!a.isEnabled && b.isEnabled) {
+                            return 1
+                          }
                         }
-                        if (!a.isEnabled && b.isEnabled) {
-                          return 1
-                        }
-                      }
-                      return a.createdAt - b.createdAt
-                    })
-                    .map(({ collectionId, isEnabled, isSelected, title }) => (
-                      <MenubarRadioItem
-                        key={collectionId}
-                        value={collectionId}
-                        disabled={!isEnabled}
-                        onClick={() => {
-                          selectCollectionById({
-                            selectCollection: {
-                              collectionId,
-                            },
-                          })
-                        }}
-                      >
-                        <span className={isSelected ? 'font-semibold' : ''}>{title}</span>
-                      </MenubarRadioItem>
-                    ))}
-                </MenubarRadioGroup>
-              </SimpleBar>
-              <MenubarSeparator />
-              <MenubarItem
-                onClick={() => {
-                  navigate('/app-settings/collections', { replace: true })
-                }}
-              >
-                <Settings className="mr-2" size={14} />
-                {t('Manage Collections', { ns: 'collections' })}
-              </MenubarItem>
-              <MenubarItem
-                onClick={() => {
-                  navigate('/app-settings/collections/new', { replace: true })
-                }}
-              >
-                <Plus className="mr-2" size={15} />
-                {t('Add Collection', { ns: 'collections' })}
-              </MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
-        )}
+                        return a.createdAt - b.createdAt
+                      })
+                      .map(({ collectionId, isEnabled, isSelected, title }) => (
+                        <MenubarRadioItem
+                          key={collectionId}
+                          value={collectionId}
+                          disabled={!isEnabled}
+                          onClick={() => {
+                            selectCollectionById({
+                              selectCollection: {
+                                collectionId,
+                              },
+                            })
+                          }}
+                        >
+                          <span className={isSelected ? 'font-semibold' : ''}>
+                            {title}
+                          </span>
+                        </MenubarRadioItem>
+                      ))}
+                  </MenubarRadioGroup>
+                </SimpleBar>
+                <MenubarSeparator />
+                <MenubarItem
+                  onClick={() => {
+                    navigate('/app-settings/collections', { replace: true })
+                  }}
+                >
+                  <Settings className="mr-2" size={14} />
+                  {t('Manage Collections', { ns: 'collections' })}
+                </MenubarItem>
+                <MenubarItem
+                  onClick={() => {
+                    navigate('/app-settings/collections/new', { replace: true })
+                  }}
+                >
+                  <Plus className="mr-2" size={15} />
+                  {t('Add Collection', { ns: 'collections' })}
+                </MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          )}
 
         <div
           data-tauri-drag-region
@@ -1228,67 +1298,72 @@ export function NavBar() {
             isShowNavBarItems ? 'opacity-1' : 'opacity-0'
           }`}
         >
-          {!isSplitPanelView ? (
-            <Button
-              onClick={() => {
-                toggleIsSplitPanelView()
-              }}
-              id="navbar-toggle-history-split"
-              title={t('Split History Window', { ns: 'common' })}
-              variant="ghost"
-              className="relative h-7 focus:outline-none px-2 mr-0 ml-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
-            >
-              <TabletSmartphone size={19} className="stroke-[1.8px]" />
-            </Button>
-          ) : (
-            <Button
-              onClick={() => {
-                toggleIsSplitPanelView()
-              }}
-              id="navbar-toggle-history-split"
-              title={t('Close History Window', { ns: 'common' })}
-              variant="ghost"
-              className="relative h-7 focus:outline-none px-2 mr-0 ml-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
-            >
-              <Columns2 size={19} className="stroke-[1.8px]" />
-            </Button>
-          )}
-          <GlobalSearch isDark={isDark} />
-          {!isShowPinned ? (
-            <Button
-              onClick={() => {
-                setIsShowPinned(true)
-              }}
-              id="navbar-pinned_tour"
-              title={t('Show Pinned', { ns: 'pinned' })}
-              variant="ghost"
-              className="relative h-7 focus:outline-none px-2 mx-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
-            >
-              <Icons.pin size={18} />
-              {pinnedClips.length > 0 && (
-                <Badge
-                  variant="outline"
-                  className="bg-orange-100 dark:bg-orange-900/80 dark:border-orange-950 border absolute border-orange-50 cursor-pointer px-1.5 left-[30px] top"
+          {!isSinglePanelView && (
+            <>
+              {!isSplitPanelView ? (
+                <Button
+                  onClick={() => {
+                    toggleIsSplitPanelView()
+                  }}
+                  id="navbar-toggle-history-split"
+                  title={t('Split History Window', { ns: 'common' })}
+                  variant="ghost"
+                  className="relative h-7 focus:outline-none px-2 mr-0 ml-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
                 >
-                  <Text className="font-mono !text-orange-400 font-semibold">
-                    {pinnedClips.length}
-                  </Text>
-                </Badge>
+                  <TabletSmartphone size={19} className="stroke-[1.8px]" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    toggleIsSplitPanelView()
+                  }}
+                  id="navbar-toggle-history-split"
+                  title={t('Close History Window', { ns: 'common' })}
+                  variant="ghost"
+                  className="relative h-7 focus:outline-none px-2 mr-0 ml-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
+                >
+                  <Columns2 size={19} className="stroke-[1.8px]" />
+                </Button>
               )}
-            </Button>
-          ) : (
-            <Button
-              onClick={() => {
-                setIsShowPinned(false)
-              }}
-              id="navbar-pinned_tour"
-              title={t('Hide Pinned', { ns: 'pinned' })}
-              variant="ghost"
-              className="relative h-7 focus:outline-none px-2 mx-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
-            >
-              <Icons.pinoff size={18} />
-            </Button>
+            </>
           )}
+          {!isHistoryPanelVisibleOnly && <GlobalSearch isDark={isDark} />}
+          {!isHistoryPanelVisibleOnly &&
+            (!isShowPinned ? (
+              <Button
+                onClick={() => {
+                  setIsShowPinned(true)
+                }}
+                id="navbar-pinned_tour"
+                title={t('Show Pinned', { ns: 'pinned' })}
+                variant="ghost"
+                className="relative h-7 focus:outline-none px-2 mx-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
+              >
+                <Icons.pin size={18} />
+                {pinnedClips.length > 0 && (
+                  <Badge
+                    variant="outline"
+                    className="bg-orange-100 dark:bg-orange-900/80 dark:border-orange-950 border absolute border-orange-50 cursor-pointer px-1.5 left-[30px] top"
+                  >
+                    <Text className="font-mono !text-orange-400 font-semibold">
+                      {pinnedClips.length}
+                    </Text>
+                  </Badge>
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  setIsShowPinned(false)
+                }}
+                id="navbar-pinned_tour"
+                title={t('Hide Pinned', { ns: 'pinned' })}
+                variant="ghost"
+                className="relative h-7 focus:outline-none px-2 mx-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
+              >
+                <Icons.pinoff size={18} />
+              </Button>
+            ))}
         </div>
 
         <div data-tauri-drag-region className="inline-flex h-full justify-end">
@@ -1883,16 +1958,18 @@ export function NavBar() {
           >
             <Icons.minimize className="h-3 w-3" />
           </Button>
-          <Button
-            onClick={maximizeWindow}
-            title={t('Window:::Maximize Window', { ns: 'navbar' })}
-            variant="ghost"
-            className={`h-8 focus:outline-none ${
-              isShowNavBarItems ? 'opacity-1' : 'opacity-0'
-            }`}
-          >
-            <Maximize className="h-4 w-4" />
-          </Button>
+          {!isHistoryPanelVisibleOnly && (
+            <Button
+              onClick={maximizeWindow}
+              title={t('Window:::Maximize Window', { ns: 'navbar' })}
+              variant="ghost"
+              className={`h-8 focus:outline-none ${
+                isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+              }`}
+            >
+              <Maximize className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             onClick={hideWindow}
             id="navbar-close-window_tour"

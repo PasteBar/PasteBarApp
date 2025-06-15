@@ -350,3 +350,9 @@ second: секунда
 seconds: секунди
 show less: показати менше
 www.site: www.pastebar.app
+Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template: Додайте поле <b>{{Clipboard}}</b> до шаблону. Це дозволить копіювати текст до буфера обміну, і він буде вставлений у шаблон
+Clear History: Очистити історію
+'Copy of ': 'Копія '
+Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: Поле <b>{{Clipboard}}</b> знайдено в шаблоні. Це дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
+Size: Розмір
+Update Error: Помилка оновлення

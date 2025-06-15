@@ -209,14 +209,14 @@ export const ClipboardHistoryIconMenu = ({
         <Button
           variant="light"
           id="history-menu-button_tour"
-          className="w-10 text-slate-400 hover:text-slate-500 hover:dark:text-slate-400 dark:text-slate-500 bg-slate-100 p-1 relative hover:bg-slate-100/70 dark:bg-slate-900 dark:hover:bg-slate-700/70"
+          className="w-10 text-gray-400 hover:text-gray-500 hover:dark:text-gray-400 dark:text-gray-500 bg-gray-100 p-1 relative hover:bg-gray-100/70 dark:bg-gray-900 dark:hover:bg-gray-700/70"
         >
           <HistoryIcon
             className="w-5 max-w-[22px] min-w-[16px] stroke-[1.3px]"
             lightingColor={isDark ? '#0f182a' : '#f1f5f9'}
           />
           {selectedHistoryItems.length > 0 && (
-            <Badge variant="slate" className="absolute left-[-10px] top-[-10px]">
+            <Badge variant="gray" className="absolute left-[-10px] top-[-10px]">
               {selectedHistoryItems.length}
             </Badge>
           )}
@@ -320,8 +320,8 @@ export const ClipboardHistoryIconMenu = ({
                     </Badge>
                   ) : (
                     <Badge
-                      variant="slateSecondary"
-                      className="bg-slate-200 text-slate-500 ml-1 py-0 font-semibold"
+                      variant="graySecondary"
+                      className="bg-grey-200 text-grey-500 ml-1 py-0 font-semibold"
                     >
                       {selectedHistoryItems.length}
                     </Badge>

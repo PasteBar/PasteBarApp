@@ -86,10 +86,19 @@ export default function UserPreferences() {
     setDefaultNoteIconType,
     isMenuItemCopyOnlyEnabled,
     setIsMenuItemCopyOnlyEnabled,
+    isHistoryPanelVisibleOnly,
+    setIsHistoryPanelVisibleOnly,
+    isSavedClipsPanelVisibleOnly,
+    setShowBothPanels,
+    setIsSavedClipsPanelVisibleOnly,
+    isSimplifiedLayout,
+    setIsSimplifiedLayout,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
     useAtomValue(uiStoreAtom)
+
+  const isSinglePanelView = isHistoryPanelVisibleOnly || isSavedClipsPanelVisibleOnly
 
   const [isAutoStartEnabled, setIsAutoStartEnabled] = useState(false)
 
@@ -465,6 +474,7 @@ export default function UserPreferences() {
                       </CardTitle>
                       <Switch
                         checked={isSwapPanels}
+                        disabled={isSinglePanelView}
                         className="ml-auto"
                         onCheckedChange={async () => {
                           setIsSwapPanels(!isSwapPanels)
@@ -478,6 +488,147 @@ export default function UserPreferences() {
                           { ns: 'settings' }
                         )}
                       </Text>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card
+                    className={`${
+                      !isSimplifiedLayout && 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Simplified Panel Layout', { ns: 'settings2' })}
+                      </CardTitle>
+                      <Switch
+                        checked={isSimplifiedLayout}
+                        className="ml-auto"
+                        onCheckedChange={async () => {
+                          setIsSimplifiedLayout(!isSimplifiedLayout)
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t(
+                          'Enable simplified, less boxy layout for a cleaner and more streamlined interface design',
+                          { ns: 'settings2' }
+                        )}
+                      </Text>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="animate-in fade-in text-md font-medium">
+                        {t('Panel Visibility', { ns: 'settings2' })}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground mb-4">
+                        {t('Control which panels are visible in the main window', {
+                          ns: 'settings2',
+                        })}
+                      </Text>
+
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Text className="text-sm font-medium">
+                              {t('Show History Panel Only', { ns: 'settings2' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {t('Clipboard history panel visible', { ns: 'settings2' })}
+                            </Text>
+                          </div>
+                          <Switch
+                            checked={isHistoryPanelVisibleOnly}
+                            onCheckedChange={async checked => {
+                              try {
+                                await setIsHistoryPanelVisibleOnly(checked)
+                              } catch (error) {
+                                console.error(
+                                  'Failed to update history panel visibility:',
+                                  error
+                                )
+                              }
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Text className="text-sm font-medium">
+                              {t('Show Boards and Clips Panel Only', { ns: 'settings2' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {t('Boards, saved clips and menu items panel visible', {
+                                ns: 'settings2',
+                              })}
+                            </Text>
+                          </div>
+                          <Switch
+                            checked={isSavedClipsPanelVisibleOnly}
+                            onCheckedChange={async checked => {
+                              try {
+                                await setIsSavedClipsPanelVisibleOnly(checked)
+                              } catch (error) {
+                                console.error(
+                                  'Failed to update saved clips panel visibility:',
+                                  error
+                                )
+                              }
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Text className="text-sm font-medium">
+                              {t('Show Both Panels', { ns: 'settings2' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {t(
+                                'Both clipboard history and saved clips panels visible',
+                                {
+                                  ns: 'settings2',
+                                }
+                              )}
+                            </Text>
+                          </div>
+                          <Switch
+                            checked={
+                              !isSavedClipsPanelVisibleOnly && !isHistoryPanelVisibleOnly
+                            }
+                            onCheckedChange={async checked => {
+                              try {
+                                await setShowBothPanels(checked)
+                              } catch (error) {
+                                console.error(
+                                  'Failed to update saved clips panel visibility:',
+                                  error
+                                )
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {(isHistoryPanelVisibleOnly || isSavedClipsPanelVisibleOnly) && (
+                        <div className="mt-3 p-2 bg-amber-50 dark:bg-amber-900/20 rounded border-l-4 border-amber-300 dark:border-amber-600">
+                          <Text className="text-xs text-amber-700 dark:text-amber-300">
+                            {t(
+                              'Note: At least one panel must remain visible in main window.',
+                              {
+                                ns: 'settings2',
+                              }
+                            )}
+                          </Text>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </Box>

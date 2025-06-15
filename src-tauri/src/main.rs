@@ -993,6 +993,20 @@ async fn main() {
         }
       }
 
+      let mut window_min_inner_width = 720.;
+
+      // if settings isHistoryPanelVisibleOnly is true set min inner size to 310 width
+      {
+        let settings_map = app_settings.lock().unwrap();
+        if let Some(setting) = settings_map.get("isHistoryPanelVisibleOnly") {
+          if let Some(value_bool) = &setting.value_bool {
+            if *value_bool {
+              window_min_inner_width = 310.;
+            }
+          }
+        }
+      }
+
       app.manage(app_settings);
 
       let menu = Menu::new().add_submenu(Submenu::new(
@@ -1009,7 +1023,7 @@ async fn main() {
       let mut window_builder =
         tauri::WindowBuilder::new(app, "main", tauri::WindowUrl::App("index.html".into()))
           .inner_size(1100., 730.)
-          .min_inner_size(720., 620.)
+          .min_inner_size(window_min_inner_width, 620.)
           // .decorations(false)
           // .title_bar_style(tauri::TitleBarStyle::Overlay)
           // .hidden_title(true)

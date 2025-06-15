@@ -97,9 +97,12 @@ Unmask Secret: 取消遮蔽密码
 Up: 向上
 View: 查看
 not a code: 非代码
-
-# Note Icon Types
-Note Icon Types Book: 书籍
+Note Icon: 笔记图标
+Note Icon Settings: 图标设置
+Use Global Setting: 使用默认
+Show Note Icon: 显示图标
+Icon Type: 图标类型
+Note Icon Types Book: 书本
 Note Icon Types Contact: 联系人
 Note Icon Types File: 文件
 Note Icon Types Message: 消息

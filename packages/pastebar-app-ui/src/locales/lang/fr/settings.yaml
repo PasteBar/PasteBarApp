@@ -207,3 +207,6 @@ An error occurred during directory processing.: Une erreur s'est produite lors d
 An error occurred during directory selection or setup.: Une erreur s'est produite lors de la sélection ou configuration du répertoire.
 Disable Image Capture: Désactiver la Capture d'Images
 Disable capturing and storing images from clipboard: Désactiver la capture et le stockage d'images depuis le presse-papiers
+Custom Database Location: Emplacement personnalisé de la base de données
+Selected new data folder: Nouveau dossier de données sélectionné pour modification
+none: aucun

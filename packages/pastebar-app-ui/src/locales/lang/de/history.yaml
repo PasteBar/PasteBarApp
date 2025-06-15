@@ -1,0 +1,41 @@
+All History Settings: Alle Verlaufseinstellungen
+All done! History's been cleared.: Fertig! Verlauf wurde gelöscht.
+Auto Update on Capture: Bei Erfassung automatisch aktualisieren
+Auto-Clear Settings: Auto-Lösch-Einstellungen
+Capture History: Verlauf erfassen
+Clear: Löschen
+Clear All: Alles löschen
+Clear All History: Gesamten Verlauf löschen
+Clear History: Verlauf löschen
+Confirm Clear All History: Gesamten Verlauf löschen bestätigen
+Do you really want to remove ALL clipboard history items?: Möchten Sie wirklich ALLE Zwischenablage-Verlaufselemente entfernen?
+Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Möchten Sie Zwischenablage-Verlaufselemente älter als {{olderThen}} {{durationType}} entfernen?
+Enable Capture History: Verlaufserfassung aktivieren
+Enable Image Capture: Bilderfassung aktivieren
+Filters:
+  App Filters: App-Filter
+  Audio: Audio
+  Clear Filters: Filter löschen
+  Code: Code
+  Emoji: Emoji
+  Image: Bild
+  Language Filters: Sprachfilter
+  Languages: Sprachen
+  Languages Filter: Sprachenfilter
+  Languages Filters: Sprachfilter
+  Link: Link
+  Pinned: Angeheftet
+  Secret: Geheim
+  Select Filters: Filter auswählen
+  Source: Quelle
+  Source Application: Quellanwendung
+  Source Filters: Quellenfilter
+  Starred: Mit Stern
+  Text: Text
+  Video: Video
+Hide pinned history: Angehefteten Verlauf ausblenden
+History Settings: Verlaufseinstellungen
+Paste Menu: Einfügemenü
+Select Filters: Filter auswählen
+View pinned history: Angehefteten Verlauf anzeigen
+'{{isAll}} Clipboard History': '{{isAll}} Zwischenablage-Verlauf'

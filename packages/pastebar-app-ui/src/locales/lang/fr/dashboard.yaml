@@ -244,3 +244,20 @@ Unsaved subtitle: Sous-titre non enregistré
 Unsaved title: Titre non enregistré
 Update Link Card: Mettre à jour la carte de lien
 Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.: Utilisez des doubles accolades pour {{nom du champ}}. Utilisez {{clipboard}} pour ajouter la valeur actuelle du presse-papier
+Value: Valeur
+Values: Valeurs
+Vertical Split: Division verticale
+We need to open a new window where you can drag & drop file, path or application.: Nous devons ouvrir une nouvelle fenêtre où vous pouvez glisser-déposer un fichier, un chemin ou une application.
+Web Link or Email might not be valid: Le lien Web ou l'e-mail pourrait ne pas être valide
+Web or Email link is valid: Le lien Web ou l'e-mail est valide
+Website URL: URL du site Web
+Website URL is valid: L'URL du site Web est valide
+Website URL might not be valid: L'URL du site Web pourrait ne pas être valide
+Wrap output using {{output}} placeholder: Envelopper la sortie en utilisant l'espace réservé {{output}}
+You have no rules added: Vous n'avez ajouté aucune règle
+You'll need to clear this board of all clips and subboards before it can be deleted.: Vous devrez vider ce tableau de tous les clips et sous-tableaux avant de pouvoir le supprimer.
+You'll need to clear this tab of all boards before it can be deleted.: Vous devrez vider cet onglet de tous les tableaux avant de pouvoir le supprimer.
+filled template: modèle rempli
+new clips: nouveaux clips
+template: modèle
+'{{type}} Field': 'Champ {{type}}'

@@ -41,3 +41,6 @@ Loading backups...: Cargando copias de seguridad...
 will be permanently deleted.: será eliminado permanentemente.
 This action cannot be undone. All current data will be replaced with the backup data.: Esta acción no se puede deshacer. Todos los datos actuales serán reemplazados con los datos de la copia de seguridad.
 Restoring a backup will automatically restart the application.: Restaurar una copia de seguridad reiniciará automáticamente la aplicación.
+Backup on Restore: Copia de seguridad al restaurar
+Restore from {{filename}}? This will replace all current data.: ¿Restaurar desde {{filename}}? Esto reemplazará todos los datos actuales.
+Restoring...: Restaurando...

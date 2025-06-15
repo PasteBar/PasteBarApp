@@ -265,3 +265,4 @@ template: şablon
 '{{count}} fields not found in the template._other': '{{count}} şablonda alanlar bulunamadı.'
 '{{type}} Field': '{{type}} Alan'
 '{{type}} field': '{{type}} alan'
+HTML: HTML

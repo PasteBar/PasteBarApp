@@ -49,7 +49,9 @@ export type SplitViewProps = {
 
 export type SplitPanePrimaryProps = { children: ReactNode } & DOMProps & {
     isSplitPanelView?: boolean
+    isFullWidth?: boolean
   }
 export type SplitPaneSecondaryProps = { children: ReactNode } & DOMProps & {
     isSplitPanelView?: boolean
+    isFullWidth?: boolean
   }

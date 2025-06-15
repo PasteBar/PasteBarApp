@@ -93,6 +93,9 @@ type Settings = {
   isMenuItemCopyOnlyEnabled: boolean
   isNoteIconsEnabled: boolean
   defaultNoteIconType: NoteIconType
+  isHistoryPanelVisibleOnly: boolean
+  isSavedClipsPanelVisibleOnly: boolean
+  isSimplifiedLayout: boolean
 }
 
 type Constants = {
@@ -171,6 +174,10 @@ export interface SettingsStoreState {
   setIsMenuItemCopyOnlyEnabled: (isEnabled: boolean) => void
   setIsNoteIconsEnabled: (isEnabled: boolean) => void
   setDefaultNoteIconType: (iconType: NoteIconType) => void
+  setIsHistoryPanelVisibleOnly: (isVisible: boolean) => void
+  setIsSavedClipsPanelVisibleOnly: (isVisible: boolean) => void
+  setShowBothPanels: (isVisible: boolean) => void
+  setIsSimplifiedLayout: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -259,6 +266,9 @@ const initialState: SettingsStoreState & Settings = {
   isMenuItemCopyOnlyEnabled: false,
   isNoteIconsEnabled: true,
   defaultNoteIconType: NOTE_ICON_TYPES.MESSAGE,
+  isHistoryPanelVisibleOnly: false,
+  isSavedClipsPanelVisibleOnly: false,
+  isSimplifiedLayout: true,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -319,6 +329,10 @@ const initialState: SettingsStoreState & Settings = {
   setIsMenuItemCopyOnlyEnabled: () => {},
   setIsNoteIconsEnabled: () => {},
   setDefaultNoteIconType: () => {},
+  setIsHistoryPanelVisibleOnly: () => {},
+  setIsSavedClipsPanelVisibleOnly: () => {},
+  setShowBothPanels: () => {},
+  setIsSimplifiedLayout: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -646,6 +660,43 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       console.error('Failed to update default note icon type setting:', error)
       throw error
     }
+  },
+  setShowBothPanels: async () => {
+    get().updateSetting('isHistoryPanelVisibleOnly', false)
+    get().updateSetting('isSavedClipsPanelVisibleOnly', false)
+  },
+  setIsHistoryPanelVisibleOnly: async (isVisible: boolean) => {
+    // When enabling history panel in "panel only" mode, disable the saved clips panel
+    const { isSavedClipsPanelVisibleOnly } = get()
+
+    // If we're enabling this panel and the other is also enabled, disable the other
+    if (isVisible && isSavedClipsPanelVisibleOnly) {
+      await get().updateSetting('isSavedClipsPanelVisibleOnly', false)
+    }
+    // If we're disabling this panel and the other is also disabled, enable the other
+    else if (!isVisible && !isSavedClipsPanelVisibleOnly) {
+      await get().updateSetting('isSavedClipsPanelVisibleOnly', true)
+    }
+
+    return get().updateSetting('isHistoryPanelVisibleOnly', isVisible)
+  },
+  setIsSavedClipsPanelVisibleOnly: async (isVisible: boolean) => {
+    // When enabling saved clips panel in "panel only" mode, disable the history panel
+    const { isHistoryPanelVisibleOnly } = get()
+
+    // If we're enabling this panel and the other is also enabled, disable the other
+    if (isVisible && isHistoryPanelVisibleOnly) {
+      await get().updateSetting('isHistoryPanelVisibleOnly', false)
+    }
+    // If we're disabling this panel and the other is also disabled, enable the other
+    else if (!isVisible && !isHistoryPanelVisibleOnly) {
+      await get().updateSetting('isHistoryPanelVisibleOnly', true)
+    }
+
+    return get().updateSetting('isSavedClipsPanelVisibleOnly', isVisible)
+  },
+  setIsSimplifiedLayout: async (isEnabled: boolean) => {
+    return get().updateSetting('isSimplifiedLayout', isEnabled)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

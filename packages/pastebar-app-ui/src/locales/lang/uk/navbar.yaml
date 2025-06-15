@@ -21,7 +21,10 @@ Lock Screen: Заблокувати екран
 Open PasteBar: Відкрити PasteBar
 Options: Налаштування
 Player: Плеєр
+Show Both Panels: Показувати обидві панелі
+Show Clips Panel Only: Показувати лише панель кліпів
 Show Collections Name: Показувати назву колекції
+Show History Panel Only: Показувати лише панель історії
 Swap Panels Layout: Поміняти панелі місцями
 Theme:
   Dark: Темна
@@ -34,3 +37,4 @@ Window:
   Minimize Window: Згорнути вікно
   Pin Window: Закріпити вікно
   UnPin Window: Відкріпити вікно
+Help: Допомога

@@ -97,10 +97,13 @@ Unmask Secret: Gizlemeyi kaldır
 Up: Yukarı
 View: Görüş
 not a code: kod değil
-
-# Note Icon Types
+Note Icon: Not simgesi
+Note Icon Settings: Simge ayarları
+Use Global Setting: Varsayılanı kullan
+Show Note Icon: Simgeyi göster
+Icon Type: Simge türü
 Note Icon Types Book: Kitap
-Note Icon Types Contact: İletişim
+Note Icon Types Contact: Kişi
 Note Icon Types File: Dosya
 Note Icon Types Message: Mesaj
-Note Icon Types Notebook: Not defteri
+Note Icon Types Notebook: Defter

@@ -1,0 +1,241 @@
+HISTORY_PANEL_TOUR:
+  - element: '#side-panel_tour'
+    popover:
+      title: Zwischenablage-Verlauf Panel
+      description: Dieses Panel zeigt Ihren kopierten Zwischenablage-Verlauf für einfachen späteren Zugriff. Durchsuchen Sie Ihren Verlauf, suchen Sie nach Inhalten oder filtern Sie nach Typ. Sie können die Größe dieses Panels für eine angepasste Ansicht ändern.
+      prefferedSide: right
+  - element: '#history-find_tour'
+    popover:
+      title: Verlauf suchen und filtern
+      description: Verwenden Sie die Suche, um schnell bestimmte Elemente in Ihrem Zwischenablage-Verlauf zu finden. Filtern Sie Ergebnisse nach Typ (Text, Bilder oder Links), um das Gesuchte leicht zu finden. Kopieren Sie ein gefundenes Element erneut oder speichern Sie es auf dem Board.
+      prefferedSide: bottom
+      alignment: center
+  - element: '#history-list_tour .history-item'
+    popover:
+      title: Zwischenablage-Verlauf Element
+      description: Jedes Element in Ihrem Zwischenablage-Verlauf stellt zuvor kopierten Inhalt dar. <b>Doppelklicken</b> Sie auf ein Element oder klicken Sie auf das Symbol, um es wieder in die Zwischenablage zu kopieren. <b>Drücken und ziehen</b> Sie, um einen gespeicherten Clip auf dem Board-Panel zu erstellen. <b>Rechtsklicken</b> Sie auf ein Element für weitere Optionen im Kontextmenü.
+      prefferedSide: right
+  - element: '#tabs-history_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Verlauf/Menü-Navigationsregisterkarten
+      description: Wechseln Sie zwischen Zwischenablage-Verlauf und Einfügemenü-Ansichten für einfache Verwaltung und Zugriff auf Ihre Inhalte.
+      alignment: center
+      prefferedSide: top
+  - element: '#history-menu-button_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Verlauf Ausgewählte Elemente Menü
+      description: Verwenden Sie dieses Menü, um ausgewählte Elemente in Ihrem Zwischenablage-Verlauf zu verwalten. Sie können <b>mehrere Elemente auswählen</b>, alle abwählen, zum Board hinzufügen, löschen oder den Verlauf für bestimmte Daten löschen.
+      alignment: end
+      prefferedSide: right
+  - element: .panel-resize_tour
+    popover:
+      title: Größenverstellbare Panel-Ansicht
+      description: Passen Sie Ihren Arbeitsbereich an, indem Sie die Panel-Größe nach Ihren Wünschen anpassen. <b>Bewegen Sie Ihre Maus</b> über den Rand des Panels, bis der Größenänderungscursor erscheint, dann <b>klicken und ziehen</b> Sie, um die Panel-Größe anzupassen.
+      prefferedSide: right
+
+DASHBOARD_CLIPS_TOUR:
+  - element: .clips-dashboard-panel_tour
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Dashboard-Panel
+      description: Dieses Panel bietet einen zentralen Hub zum Organisieren und Verwalten Ihrer gespeicherten Clips. Erstellen Sie benutzerdefinierte Tabs und Boards, um Ihre Inhalte zu strukturieren. <b>Ziehen und ablegen</b> Sie Elemente aus Ihrem Zwischenablage-Verlauf, um neue Clips zu erstellen. Verwenden Sie Tabs, um zwischen verschiedenen Board-Kategorien zu wechseln.
+      prefferedSide: left
+  - element: '#dashboard-tabs_tour'
+    popover:
+      title: Dashboard-Tabs
+      description: Erstellen Sie benutzerdefinierte Tabs und verwenden Sie sie, um durch verschiedene Abschnitte Ihres Dashboards zu navigieren. Wechseln Sie zwischen Kategorien, um Ihre Clips und Inhalte schnell zu verwalten und darauf zuzugreifen.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#dashboard-tabs-create-button_tour'
+    popover:
+      title: Dashboard-Elemente erstellen
+      description: Erstellen Sie neue Elemente für Ihr Dashboard. Fügen Sie Clips, Boards oder benutzerdefinierte Tabs hinzu, um Ihre Inhalte zu organisieren.
+      alignment: end
+      prefferedSide: bottom
+  - element: '#dashboard-tabs-context-menu_tour'
+    popover:
+      title: Tabs und Layout-Menü
+      description: <b>Rechtsklicken</b> Sie auf die Tabs oder <b>klicken Sie auf das Menüsymbol</b>, um Ihr Layout zu organisieren und Ihre Tabs zu verwalten. Sie können bestehende Tabs bearbeiten oder das Dashboard-Layout ändern, um es an Ihren Workflow anzupassen.
+      alignment: end
+      prefferedSide: bottom
+  - element: .board-panel_tour
+    popover:
+      title: Board-Panel
+      description: Dieses Board-Panel ermöglicht es Ihnen, Ihre gespeicherten Clips für schnellen und einfachen Zugriff zu organisieren. <b>Ziehen und ablegen</b> Sie Elemente aus Ihrem Zwischenablage-Verlauf. Verwenden Sie Boards, um Ihre Inhalte effizient zu kategorisieren und zu verwalten.
+      alignment: center
+      prefferedSide: right
+  - element: .board-panel-header_tour
+    popover:
+      title: Board-Panel-Kopfzeile
+      description: <b>Doppelklicken</b> Sie auf die Kopfzeile, um das Board-Panel schnell zu erweitern, oder <b>rechtsklicken</b> Sie, um weitere Optionen zum Anpassen und Verwalten des Boards zu sehen.
+      alignment: start
+      prefferedSide: right
+  - element: .clip_tour
+    popover:
+      title: Gespeichertes Clip-Element
+      description: Greifen Sie schnell auf gespeicherte Clip-Inhalte zu. <b>Doppelklicken</b> oder <b>klicken Sie auf das Zwischenablage-Symbol</b>, um es zu kopieren. <b>Lang drücken</b>, um Elemente neu anzuordnen, oder <b>rechtsklicken</b> für weitere Optionen zum Anpassen und Organisieren Ihres Clips.
+      alignment: start
+      prefferedSide: right
+  - element: .panel-resize_tour
+    popover:
+      title: Größenverstellbare Panel-Ansicht
+      description: Passen Sie Ihren Arbeitsbereich an, indem Sie die Panel-Größe nach Ihren Wünschen anpassen. <b>Bewegen Sie Ihre Maus</b> über den Rand des Panels, bis der Größenänderungscursor erscheint, dann <b>klicken und ziehen</b> Sie, um die Panel-Größe anzupassen.
+      prefferedSide: right
+
+MENU_TOUR:
+  - element: '#side-panel_tour'
+    popover:
+      title: Einfügemenü-Panel
+      description: Dieses Panel ermöglicht es Ihnen, das native Einfügemenü Ihrer System-Taskleiste oder Menüleiste zu verwalten. <b>Halten und ziehen</b> Sie Elemente, um sie neu anzuordnen, <b>doppelklicken</b> zum Umbenennen. <b>Drücken</b> Sie ALT oder Command-Taste und klicken Sie auf ein beliebiges Element zur Mehrfachauswahl.
+      prefferedSide: right
+  - element: '#menu-find_tour'
+    popover:
+      title: Menüelemente suchen
+      description: Verwenden Sie die Suchleiste, um schnell bestimmte Menüelemente zu finden. Geben Sie Schlüsselwörter ein, um die benötigten Elemente zu filtern und zu finden.
+      prefferedSide: bottom
+      alignment: center
+  - element: div[role=treeitem]
+    popover:
+      title: Menüelement-Baum
+      description: Jedes Element im Menübaum kann einzeln oder in Gruppen neu angeordnet werden. <b>Doppelklicken</b> zum Umbenennen, <b>halten und ziehen</b> zum Neuanordnen. <b>Drücken</b> Sie ALT oder Command-Taste und klicken zur Mehrfachauswahl.
+      prefferedSide: right
+  - element: '#tabs-menu_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Verlauf/Menü-Navigationsregisterkarten
+      description: Wechseln Sie zwischen Zwischenablage-Verlauf und Einfügemenü-Ansichten für einfache Verwaltung und Zugriff auf Ihre Inhalte.
+      alignment: center
+      prefferedSide: top
+  - element: '#menu-icon-menu-button_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Ausgewählte Elemente Einfügemenü
+      description: Verwenden Sie dieses Menü, um mehrere ausgewählte Menüelemente zu verwalten. Mehrfachauswahl, alle abwählen, das native Menü neu erstellen oder Elemente löschen, um Ihr Einfügemenü schnell zu organisieren.
+      alignment: end
+      prefferedSide: right
+  - element: '#menu-main-list_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: Einfügemenü-Panel verwalten
+      description: Dieses Panel ermöglicht es Ihnen, alle aktiven Menüelemente zu verwalten. Fügen Sie Elemente hinzu, bearbeiten oder entfernen Sie sie, um Ihr Einfügemenü anzupassen. Erstellen Sie neue Elemente oder verknüpfen Sie bestehende Clips. <b>Doppelklicken</b> Sie, um Inhalte in die Zwischenablage zu kopieren, und <b>rechtsklicken</b> Sie für weitere Optionen.
+      alignment: start
+      prefferedSide: left
+  - element: .menu-item_tour
+    popover:
+      title: Menüelement
+      description: Hier können Sie jedes Menüelement einzeln verwalten. <b>Klicken</b> Sie auf das Erweiterungssymbol, um den Menüinhalt zu sehen. <b>Doppelklicken</b> Sie, um Inhalte in die Zwischenablage zu kopieren, und <b>rechtsklicken</b> Sie, um weitere Optionen zu sehen.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#add-menu-item__tour'
+    popover:
+      title: Menüelement hinzufügen
+      description: Klicken Sie auf das Plus-Symbol und wählen Sie den Ort, an dem Sie das neue Element hinzufügen möchten, vor oder nach dem bestehenden Menüelement. Sie können ein neues Menü, Untermenüs, Trennzeichen, deaktivierte Menüelemente, Menüelemente aus dem aktuellen Verlauf oder einen Link zu einem gespeicherten Clip erstellen.
+      alignment: end
+      prefferedSide: bottom
+  - element: '#toggle-inactive-menu-items_tour'
+    popover:
+      title: Inaktive Menüelemente umschalten
+      description: Klicken Sie auf dieses Symbol, um inaktive Menüelemente anzuzeigen oder auszublenden. Dies hilft bei der Verwaltung und Organisation Ihres Menüs, indem Sie sich bei Bedarf auf aktive Elemente konzentrieren. Optimieren Sie Ihr Menü und räumen Sie Ihren Arbeitsbereich für verbesserte Effizienz auf.
+      alignment: start
+      prefferedSide: bottom
+  - element: .panel-resize_tour
+    popover:
+      title: Größenverstellbare Panel-Ansicht
+      description: Passen Sie Ihren Arbeitsbereich an, indem Sie die Panel-Größe nach Ihren Wünschen anpassen. <b>Bewegen Sie Ihre Maus</b> über den Rand des Panels, bis der Größenänderungscursor erscheint, dann <b>klicken und ziehen</b> Sie, um die Panel-Größe anzupassen.
+      prefferedSide: right
+
+NAVBAR_TOUR:
+  - element: '#navbar-panel_tour'
+    popover:
+      title: Navigationsleiste
+      description: Die Navigationsleiste bietet schnellen Zugriff auf die Funktionen und Einstellungen von PasteBar. Verwenden Sie sie, um zwischen Zwischenablage-Verlauf und Einfügemenü-Ansichten zu wechseln, auf Ihre Sammlungen zuzugreifen, eine globale Suche durchzuführen, die Sichtbarkeit des angehefteten Boards umzuschalten, Einstellungen anzupassen und bei Bedarf Hilfe zu erhalten.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-pastebar_tour'
+    popover:
+      title: PasteBar-Menü
+      description: Das PasteBar-Menü bietet schnellen Zugriff auf wichtige Funktionen und Informationen. Hier können Sie nach Updates suchen, auf Einstellungen zugreifen, den App-Bildschirm sperren, das Hauptfenster schließen oder die Anwendung beenden.
+      alignment: start
+      prefferedSide: bottom
+  - element: '#navbar-view_tour'
+    popover:
+      title: Ansichtsmenü
+      description: Verwenden Sie das Ansichtsmenü, um durch Ihren Zwischenablage-Verlauf und Ihr Einfügemenü zu navigieren, Optionen anzupassen, das Farbthema zu ändern, die UI-Schriftgröße zu ändern und die Sprache zu ändern. Greifen Sie auf zusätzliche Einstellungen für eine personalisierte Erfahrung zu.
+      alignment: start
+      prefferedSide: bottom
+  - element: '#navbar-collections_tour'
+    popover:
+      title: Sammlungsmenü
+      description: Das Sammlungsmenü ermöglicht es Ihnen, zwischen verschiedenen Sammlungen von Clips, Boards und Tabs zu wechseln. Erstellen und passen Sie jede Sammlung an Ihre spezifischen Bedürfnisse an, wie z.B. die Organisation von Inhalten nach Projekt oder Kategorie.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-toggle-history-split'
+    popover:
+      title: Geteiltes Verlaufsfenster umschalten
+      description: Klicken Sie auf dieses Symbol, um den Zwischenablage-Verlauf in einem separaten Fenster zu öffnen oder zu schließen. Verwenden Sie diese Funktion, um Ihren Zwischenablage-Verlauf unabhängig vom Hauptfenster zu verwalten.
+      alignment: center
+      preferredSide: bottom
+  - element: '#navbar-search_tour'
+    popover:
+      title: Globale Suche
+      description: Verwenden Sie die globale Suche, um schnell Clips, Boards und Menüelemente in der aktiven Sammlung zu finden. Geben Sie Schlüsselwörter ein, um Ergebnisse zu filtern und die benötigten Inhalte effizient zu finden. <b>Doppelklicken</b> Sie auf einen Clip, um ihn direkt aus den Suchergebnissen zu kopieren.
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-pinned_tour'
+    popover:
+      title: Angeheftetes Board umschalten
+      description: Klicken Sie auf dieses Symbol, um das angeheftete Board anzuzeigen oder auszublenden. Verwenden Sie diese Funktion, um Ihren Arbeitsbereich organisiert zu halten und sich auf die relevantesten Inhalte zu konzentrieren.
+      alignment: end
+      prefferedSide: bottom
+  - element: '#navbar-help_tour'
+    popover:
+      title: Hilfemenü
+      description: Greifen Sie schnell auf geführte Touren und UI-Feature-Präsentationen aus dem Hilfemenü zu. Es bietet schrittweise Anleitungen und Demonstrationen, um Ihnen zu helfen, die Funktionen und die Benutzeroberfläche von PasteBar effektiv zu navigieren und zu verstehen.
+      alignment: end
+      prefferedSide: bottom
+  - element: '#navbar-close-window_tour'
+    popover:
+      title: Hauptfenster schließen
+      description: Klicken Sie auf das Schließen-Symbol, um das PasteBar-Hauptfenster zu schließen, während die Funktionalität über das Taskleisten- oder Menüleistensymbol verfügbar bleibt. Sie können das Hauptanwendungsfenster jederzeit über das Hauptmenü wieder öffnen.
+      alignment: end
+      prefferedSide: bottom
+
+SETTINGS_TOUR:
+  - element: '#app-settings-history_tour'
+    popover:
+      title: Zwischenablage-Verlauf-Einstellungen
+      description: Passen Sie Ihre Zwischenablage-Verlauf-Einstellungen an, um anzupassen, wie PasteBar Ihre kopierten Inhalte erfasst und verwaltet. Aktivieren oder deaktivieren Sie Funktionen wie Auto-Update, Auto-Stern, Link-Vorschau, Stoppwortliste und automatische Programmiersprachen-Erkennung für eine personalisierte Erfahrung.
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-collections_tour'
+    popover:
+      title: Sammlungen verwalten Einstellungen
+      description: Verwenden Sie die Sammlungsverwaltung, um Ihre Sammlungen zu organisieren und anzupassen. Fügen Sie neue Sammlungen hinzu, bearbeiten Sie bestehende und wechseln Sie zwischen ihnen, um Ihren Workflow anzupassen. Verwalten Sie Ihre Inhalte effizient, indem Sie verwandte Clips, Boards und Tabs gruppieren.
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-preferences_tour'
+    popover:
+      title: Benutzereinstellungen
+      description: Passen Sie die Schriftgröße an, wechseln Sie Farbthemen, ändern Sie die Oberflächensprache und konfigurieren Sie Autostart-Optionen. Tauschen Sie Panel-Layouts, zeigen Sie Sammlungsnamen in der Navigationsleiste an und verwalten Sie Clip-Notiz-Popups.
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-security_tour'
+    popover:
+      title: Sicherheitseinstellungen
+      description: Konfigurieren Sie Ihre Sicherheitseinstellungen zum Schutz Ihrer Daten. Legen Sie einen Sperrbildschirm-Passcode und ein Wiederherstellungspasswort fest. Steuern Sie die Erfassung des Zwischenablage-Verlaufs vom Sperrbildschirm aus und aktivieren Sie die automatische Sperre bei Inaktivität. Passen Sie diese Einstellungen an, um die Sicherheit Ihrer PasteBar-Anwendung zu erhöhen.
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-back_tour'
+    popover:
+      title: Zurück zum Hauptbildschirm
+      description: Klicken Sie, um von den Einstellungen zur Hauptanwendungsansicht zurückzukehren.
+      alignment: start
+      prefferedSide: right

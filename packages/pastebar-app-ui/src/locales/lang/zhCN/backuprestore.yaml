@@ -41,3 +41,6 @@ Loading backups...: 正在加载备份...
 will be permanently deleted.: 将被永久删除。
 This action cannot be undone. All current data will be replaced with the backup data.: 此操作无法撤销。所有当前数据将被备份数据替换。
 Restoring a backup will automatically restart the application.: 恢复备份将自动重启应用程序。
+Backup on Restore: 恢复时备份
+Restore from {{filename}}? This will replace all current data.: 从 {{filename}} 恢复？这将替换所有当前数据。
+Restoring...: 恢复中...

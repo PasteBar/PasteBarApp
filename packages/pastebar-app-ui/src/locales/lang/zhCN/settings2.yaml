@@ -22,8 +22,19 @@ Show/Hide Quick Paste Window: 显示/隐藏快速粘贴窗口
 Quick Paste Window: 快速粘贴窗口
 PasteBar Quick Paste: PasteBar 快速粘贴
 When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: 启用后，点击菜单项将仅复制内容到剪贴板而不是自动粘贴。这让您对内容粘贴的时间和位置有更多控制。
-
 Show Note Icons on Clips: 在剪辑上显示笔记图标
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: 在有笔记的剪辑上显示持久图标，以改善视觉组织并使笔记更容易发现。
 Default Note Icon Type: 默认笔记图标类型
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: 这设置了有笔记的新剪辑的默认图标类型。您可以通过上下文菜单自定义单个剪辑。
+Boards, saved clips and menu items panel visible: 面板、已保存剪辑和菜单项面板可见
+Both clipboard history and saved clips panels visible: 剪贴板历史和已保存剪辑面板都可见
+Clipboard history panel visible: 剪贴板历史面板可见
+Control which panels are visible in the main window: 控制在主窗口中可见的面板
+Enable simplified, less boxy layout for a cleaner and more streamlined interface design: 启用简化、更少方框式的布局，获得更干净和流线型的界面设计
+'Note: At least one panel must remain visible in main window.': '注意：主窗口中至少要保持一个面板可见。'
+Panel Visibility: 面板可见性
+Show Boards and Clips Panel Only: 仅显示面板和剪辑面板
+Show Both Panels: 显示两个面板
+Show History Panel Only: 仅显示历史面板
+Show Simplified Layout: 显示简化布局
+Simplified Panel Layout: 简化面板布局
