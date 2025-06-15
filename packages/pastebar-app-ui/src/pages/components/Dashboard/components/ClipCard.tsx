@@ -24,6 +24,7 @@ import {
   isKeyAltPressed,
   settingsStoreAtom,
   showClipFindKeyPressed,
+  showClipsMoveOnBoardId,
   showLargeViewClipId,
   showLinkedClipId,
 } from '~/store'
@@ -363,7 +364,20 @@ export function ClipCard({
   const isSearch = useSignal(false)
   const searchTerm = useSignal('')
   const { updateItemById } = useUpdateItemById()
-  // const onLongPress = useLongPress()
+  const longPressHandlers = useLongPress(
+    () => {
+      if (isClipEdit || isShowDetails || isPinnedBoard) {
+        return
+      }
+      showClipsMoveOnBoardId.value = clip.parentId
+    },
+    {
+      delay: 1000,
+      threshold: 10,
+      cancelOnMove: true,
+      preventDefault: true,
+    }
+  )
 
   const [copiedItem, setCopiedItem, _, copyInProgressItemId] = useCopyClipItem({})
   const [pastedItem, pastingCountDown, setPastedItem] = usePasteClipItem({})
@@ -665,12 +679,7 @@ export function ClipCard({
           >
             <CardHeaderWithRef
               title={titleText}
-              // {...onLongPress(() => {
-              //   if (isClipEdit || isShowDetails || isPinnedBoard) {
-              //     return
-              //   }
-              //   showClipsMoveOnBoardId.value = clip.parentId
-              // })}
+              {...longPressHandlers}
               onClickCapture={e => {
                 if (e.shiftKey) {
                   e.preventDefault()
