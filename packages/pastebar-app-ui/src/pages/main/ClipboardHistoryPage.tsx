@@ -574,8 +574,8 @@ export default function ClipboardHistoryPage() {
 
         const navigationOrder = buildNavigationOrder(clipItems, currentTab)
         if (navigationOrder.length > 1) {
-          const firstBoardItem = navigationOrder[1]
-          navigateToItem(firstBoardItem, clipItems, currentTab)
+          const lastBoardItem = navigationOrder[navigationOrder.length - 1]
+          navigateToItem(lastBoardItem, clipItems, currentTab)
         }
         return
       }
