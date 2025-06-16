@@ -93,6 +93,8 @@ export default function UserPreferences() {
     setIsSavedClipsPanelVisibleOnly,
     isSimplifiedLayout,
     setIsSimplifiedLayout,
+    showTrayIcon,
+    setShowTrayIcon,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
@@ -116,6 +118,27 @@ export default function UserPreferences() {
       setIsAutoStartEnabled(Boolean(isEnabled))
     })
   }, [])
+
+  // macOS-specific logic for showTrayIcon
+  useEffect(() => {
+    if (isMacOSX && !showTrayIcon) {
+      // If tray icon is hidden on macOS, force dock icon to be visible
+      // and main window to show on restart.
+      if (isHideMacOSDockIcon) {
+        setIsHideMacOSDockIcon(false)
+      }
+      if (isKeepMainWindowClosedOnRestartEnabled) {
+        setIsKeepMainWindowClosedOnRestartEnabled(false)
+      }
+    }
+  }, [
+    isMacOSX,
+    showTrayIcon,
+    isHideMacOSDockIcon,
+    setIsHideMacOSDockIcon,
+    isKeepMainWindowClosedOnRestartEnabled,
+    setIsKeepMainWindowClosedOnRestartEnabled,
+  ])
 
   const isDark = themeDark()
 
@@ -268,9 +291,37 @@ export default function UserPreferences() {
                 </Box>
 
                 <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Show System Tray Icon', { ns: 'settings2' })} {/* TODO: Add translation key */}
+                      </CardTitle>
+                      <Switch
+                        checked={showTrayIcon}
+                        className="ml-auto"
+                        onCheckedChange={() => {
+                          setShowTrayIcon(!showTrayIcon)
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t(
+                          'Show the application icon in the system tray or menu bar. If disabled on macOS, the Dock icon will always be visible and the app window will show on startup.',
+                          { ns: 'settings2' } // TODO: Add translation key
+                        )}
+                      </Text>
+                      <Text className="text-xs text-muted-foreground mt-2">
+                        ({t('app_restart_required_tray', { ns: 'settings2' })}) {/* Placeholder for translation */}
+                      </Text>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card
                     className={`${
-                      !isKeepMainWindowClosedOnRestartEnabled
+                      (!isKeepMainWindowClosedOnRestartEnabled || (isMacOSX && !showTrayIcon))
                         ? 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
                         : ''
                     }`}
@@ -283,6 +334,7 @@ export default function UserPreferences() {
                       </CardTitle>
                       <Switch
                         checked={isKeepMainWindowClosedOnRestartEnabled}
+                        disabled={isMacOSX && !showTrayIcon}
                         className="ml-auto"
                         onCheckedChange={() => {
                           setIsKeepMainWindowClosedOnRestartEnabled(
@@ -296,6 +348,11 @@ export default function UserPreferences() {
                         {t(
                           'Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.',
                           { ns: 'settings2' }
+                        )}
+                        {isMacOSX && !showTrayIcon && (
+                          <Text className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                            ({t('Disabled because "Show System Tray Icon" is off.', { ns: 'settings2' })}) {/* TODO: Add translation key */}
+                          </Text>
                         )}
                       </Text>
                     </CardContent>
@@ -923,7 +980,7 @@ export default function UserPreferences() {
                   <Box className="animate-in fade-in max-w-xl mt-4">
                     <Card
                       className={`${
-                        !isHideMacOSDockIcon &&
+                        (!isHideMacOSDockIcon || (isMacOSX && !showTrayIcon)) &&
                         'opacity-80 bg-gray-100 dark:bg-gray-900/80'
                       }`}
                     >
@@ -940,6 +997,7 @@ export default function UserPreferences() {
                         </CardTitle>
                         <Switch
                           checked={isHideMacOSDockIcon}
+                          disabled={isMacOSX && !showTrayIcon}
                           className="ml-auto"
                           onCheckedChange={() => {
                             setIsHideMacOSDockIcon(!isHideMacOSDockIcon)
@@ -951,6 +1009,11 @@ export default function UserPreferences() {
                           {t(
                             'Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.',
                             { ns: 'settings2' }
+                          )}
+                          {isMacOSX && !showTrayIcon && (
+                            <Text className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                              ({t('Disabled because "Show System Tray Icon" is off.', { ns: 'settings2' })}) {/* TODO: Add translation key */}
+                            </Text>
                           )}
                         </Text>
                       </CardContent>

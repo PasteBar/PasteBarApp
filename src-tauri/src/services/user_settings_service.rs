@@ -16,23 +16,32 @@ pub struct UserConfig {
 
 pub fn load_user_config() -> UserConfig {
   let path = get_config_file_path();
-  if !path.exists() {
-    return UserConfig::default();
-  }
-
-  match std::fs::read_to_string(&path) {
-    Ok(contents) => match serde_yaml::from_str::<UserConfig>(&contents) {
-      Ok(cfg) => cfg,
+  let mut cfg = if !path.exists() {
+    UserConfig::default()
+  } else {
+    match std::fs::read_to_string(&path) {
+      Ok(contents) => match serde_yaml::from_str::<UserConfig>(&contents) {
+        Ok(parsed_cfg) => parsed_cfg,
+        Err(e) => {
+          eprintln!("Error parsing user config YAML: {:#}", e);
+          UserConfig::default()
+        }
+      },
       Err(e) => {
-        eprintln!("Error parsing user config YAML: {:#}", e);
+        eprintln!("Error reading user config file: {:#}", e);
         UserConfig::default()
       }
-    },
-    Err(e) => {
-      eprintln!("Error reading user config file: {:#}", e);
-      UserConfig::default()
     }
+  };
+
+  // Ensure "showTrayIcon" is present
+  if !cfg.data.contains_key("showTrayIcon") {
+    cfg.data.insert(
+      "showTrayIcon".to_string(),
+      serde_yaml::Value::Bool(true),
+    );
   }
+  cfg
 }
 
 /// Save the `UserConfig` back to `pastebar_settings.yaml`.

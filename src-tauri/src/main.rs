@@ -75,7 +75,9 @@ use tauri::ClipboardManager;
 use tauri::Manager;
 use tauri::SystemTray;
 use tauri::SystemTrayEvent;
+use tauri::SystemTrayMenu; // Added for empty menu
 // use tauri_plugin_positioner::{Position, WindowExt};
+use crate::services::user_settings_service;
 
 use fns::debounce;
 use inputbot::KeybdKey::*;
@@ -1079,19 +1081,30 @@ async fn main() {
           }
         }
 
-        match menu::build_tray_menu(
-          db_items_state_local,
-          db_recent_history_items_state,
-          app_settings,
-        ) {
-          Ok(tray_menu) => {
-            let menu = SystemTray::new().with_id(tray_id).with_menu(tray_menu);
-            menu.build(app)?;
+        // Determine if the tray icon should be shown
+        let show_tray_icon_setting = user_settings_service::get_setting("showTrayIcon");
+        let mut show_tray_icon_bool = true; // Default to true if not found or not a bool
+        if let Some(value) = show_tray_icon_setting {
+          if let serde_yaml::Value::Bool(b) = value {
+            show_tray_icon_bool = b;
           }
-          Err(error_msg) => {
-            debug_output(|| {
-              println!("Failed to build tray menu: {}", error_msg);
-            });
+        }
+
+        if show_tray_icon_bool {
+          match menu::build_tray_menu(
+            db_items_state_local,
+            db_recent_history_items_state,
+            app_settings,
+          ) {
+            Ok(tray_menu) => {
+              let menu = SystemTray::new().with_id(tray_id).with_menu(tray_menu);
+              menu.build(app)?;
+            }
+            Err(error_msg) => {
+              debug_output(|| {
+                println!("Failed to build tray menu: {}", error_msg);
+              });
+            }
           }
         }
 

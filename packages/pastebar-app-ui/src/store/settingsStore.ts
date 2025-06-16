@@ -96,6 +96,7 @@ type Settings = {
   isHistoryPanelVisibleOnly: boolean
   isSavedClipsPanelVisibleOnly: boolean
   isSimplifiedLayout: boolean
+  showTrayIcon: boolean
 }
 
 type Constants = {
@@ -178,6 +179,7 @@ export interface SettingsStoreState {
   setIsSavedClipsPanelVisibleOnly: (isVisible: boolean) => void
   setShowBothPanels: (isVisible: boolean) => void
   setIsSimplifiedLayout: (isEnabled: boolean) => void
+  setShowTrayIcon: (showTrayIcon: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -269,6 +271,7 @@ const initialState: SettingsStoreState & Settings = {
   isHistoryPanelVisibleOnly: false,
   isSavedClipsPanelVisibleOnly: false,
   isSimplifiedLayout: true,
+  showTrayIcon: true,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -333,6 +336,7 @@ const initialState: SettingsStoreState & Settings = {
   setIsSavedClipsPanelVisibleOnly: () => {},
   setShowBothPanels: () => {},
   setIsSimplifiedLayout: () => {},
+  setShowTrayIcon: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -697,6 +701,10 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsSimplifiedLayout: async (isEnabled: boolean) => {
     return get().updateSetting('isSimplifiedLayout', isEnabled)
+  },
+  setShowTrayIcon: async (showTrayIcon: boolean) => {
+    // The backend will handle tray visibility on next startup based on this persisted setting.
+    return get().updateSetting('showTrayIcon', showTrayIcon)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

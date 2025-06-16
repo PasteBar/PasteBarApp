@@ -195,6 +195,7 @@ function App() {
           isHistoryPanelVisibleOnly: settings.isHistoryPanelVisibleOnly?.valueBool,
           isSavedClipsPanelVisibleOnly: settings.isSavedClipsPanelVisibleOnly?.valueBool,
           isSimplifiedLayout: settings.isSimplifiedLayout?.valueBool ?? true,
+          showTrayIcon: settings.showTrayIcon?.valueBool ?? true, // Added line
           isAppReady: true,
         })
         settingsStore.initConstants({
