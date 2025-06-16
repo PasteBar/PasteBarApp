@@ -586,7 +586,7 @@ export default function ClipboardHistoryPage() {
 
         const currentIndex = findCurrentNavigationIndex(navigationOrder)
 
-        if (currentIndex === navigationOrder.length + 1) {
+        if (currentIndex >= navigationOrder.length) {
           currentNavigationContext.value = 'history'
           keyboardSelectedBoardId.value = null
           keyboardSelectedClipId.value = null
