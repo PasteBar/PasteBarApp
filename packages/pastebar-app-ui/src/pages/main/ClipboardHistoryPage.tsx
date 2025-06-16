@@ -24,7 +24,6 @@ import {
   createMenuItemFromHistoryId,
   currentBoardIndex,
   currentNavigationContext,
-  keyboardSelectedItemId as globalKeyboardSelectedItemId,
   hoveringHistoryRowId,
   isKeyAltPressed,
   keyboardSelectedBoardId,
@@ -365,6 +364,7 @@ export default function ClipboardHistoryPage() {
     },
     {
       enableOnFormTags: ['input'],
+      enabled: isWindows,
     }
   )
 
@@ -412,7 +412,7 @@ export default function ClipboardHistoryPage() {
       if (currentNavigationContext.value === 'board' && keyboardSelectedClipId.value) {
         try {
           currentNavigationContext.value = null
-          globalKeyboardSelectedItemId.value = null
+          keyboardSelectedItemId.value = null
           keyboardSelectedBoardId.value = null
           await handleCopyClipItem(keyboardSelectedClipId.value)
           keyboardSelectedClipId.value = null
@@ -421,16 +421,16 @@ export default function ClipboardHistoryPage() {
         }
 
         currentNavigationContext.value = null
-        globalKeyboardSelectedItemId.value = null
+        keyboardSelectedItemId.value = null
         keyboardSelectedBoardId.value = null
         keyboardSelectedClipId.value = null
         currentBoardIndex.value = 0
       } else if (
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
-        globalKeyboardSelectedItemId.value
+        keyboardSelectedItemId.value
       ) {
-        setCopiedItem(globalKeyboardSelectedItemId.value)
+        setCopiedItem(keyboardSelectedItemId.value)
       } else if (
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
@@ -439,7 +439,7 @@ export default function ClipboardHistoryPage() {
         setCopiedItem(clipboardHistory[0]?.historyId)
       }
       currentNavigationContext.value = null
-      globalKeyboardSelectedItemId.value = null
+      keyboardSelectedItemId.value = null
       keyboardSelectedBoardId.value = null
       keyboardSelectedClipId.value = null
       currentBoardIndex.value = 0
@@ -610,7 +610,7 @@ export default function ClipboardHistoryPage() {
     'esc',
     () => {
       currentNavigationContext.value = null
-      globalKeyboardSelectedItemId.value = null
+      keyboardSelectedItemId.value = null
       keyboardSelectedItemId.value = null
       hoveringHistoryRowId.value = null
       keyboardSelectedBoardId.value = null
@@ -627,11 +627,11 @@ export default function ClipboardHistoryPage() {
     e => {
       e.preventDefault()
       const currentItemIndex = clipboardHistory.findIndex(
-        item => item.historyId === globalKeyboardSelectedItemId.value
+        item => item.historyId === keyboardSelectedItemId.value
       )
       const nextItem = clipboardHistory[currentItemIndex + 1]
       if (nextItem) {
-        globalKeyboardSelectedItemId.value = nextItem.historyId
+        keyboardSelectedItemId.value = nextItem.historyId
       }
     },
     {
@@ -651,11 +651,11 @@ export default function ClipboardHistoryPage() {
         currentNavigationContext.value === null
       ) {
         const currentItemIndex = clipboardHistory.findIndex(
-          item => item.historyId === globalKeyboardSelectedItemId.value
+          item => item.historyId === keyboardSelectedItemId.value
         )
         const prevItem = clipboardHistory[currentItemIndex - 1]
         if (prevItem) {
-          globalKeyboardSelectedItemId.value = prevItem.historyId
+          keyboardSelectedItemId.value = prevItem.historyId
         }
       }
     },
@@ -670,24 +670,8 @@ export default function ClipboardHistoryPage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Control' || e.key === 'Meta') {
-        if (
-          currentNavigationContext.value === null ||
-          currentNavigationContext.value === 'history'
-        ) {
-          currentNavigationContext.value = 'history'
-          if (!globalKeyboardSelectedItemId.value && clipboardHistory.length > 0) {
-            globalKeyboardSelectedItemId.value = clipboardHistory[0]?.historyId
-          }
-        } else if (currentNavigationContext.value === 'board') {
-          globalKeyboardSelectedItemId.value = null // Ensure no history item is selected
-        }
-      }
-    }
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'Control' || e.key === 'Meta') {
-        // Reset all navigation states
         currentNavigationContext.value = null
-        globalKeyboardSelectedItemId.value = null
+        keyboardSelectedItemId.value = null
         keyboardSelectedBoardId.value = null
         keyboardSelectedClipId.value = null
         currentBoardIndex.value = 0
@@ -695,50 +679,27 @@ export default function ClipboardHistoryPage() {
       }
     }
     window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('keyup', handleKeyUp)
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('keyup', handleKeyUp)
     }
   }, [
     clipboardHistory,
     currentNavigationContext,
-    globalKeyboardSelectedItemId,
+    keyboardSelectedItemId,
     keyboardSelectedBoardId,
     keyboardSelectedClipId,
     currentBoardIndex,
-  ]) // Added dependencies
+  ])
 
   useEffect(() => {
     if (
       currentNavigationContext.value === 'history' &&
-      !globalKeyboardSelectedItemId.value &&
+      !keyboardSelectedItemId.value &&
       clipboardHistory.length > 0
     ) {
-      globalKeyboardSelectedItemId.value = clipboardHistory[0]?.historyId
+      keyboardSelectedItemId.value = clipboardHistory[0]?.historyId
     }
-  }, [
-    currentNavigationContext.value,
-    globalKeyboardSelectedItemId.value,
-    clipboardHistory,
-  ])
-
-  useEffect(() => {
-    if (
-      globalKeyboardSelectedItemId.value &&
-      (currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null)
-    ) {
-      hoveringHistoryRowId.value = globalKeyboardSelectedItemId.value
-    } else if (!globalKeyboardSelectedItemId.value && !keyboardSelectedClipId.value) {
-      // Clear hover if no item is selected in any context
-      hoveringHistoryRowId.value = null
-    }
-  }, [
-    globalKeyboardSelectedItemId.value,
-    currentNavigationContext.value,
-    keyboardSelectedClipId.value,
-  ])
+  }, [currentNavigationContext.value, keyboardSelectedItemId.value, clipboardHistory])
 
   useEffect(() => {
     const listenToClipboardUnlisten = listen(
@@ -2037,8 +1998,7 @@ export default function ClipboardHistoryPage() {
                                                   'history' ||
                                                   currentNavigationContext.value ===
                                                     null) &&
-                                                historyId ===
-                                                  globalKeyboardSelectedItemId.value
+                                                historyId === keyboardSelectedItemId.value
                                               }
                                               isCopied={historyId === copiedItemValue}
                                               isSaved={historyId === savingItem}

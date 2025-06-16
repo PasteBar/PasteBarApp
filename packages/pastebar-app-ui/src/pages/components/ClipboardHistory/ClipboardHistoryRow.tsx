@@ -319,7 +319,7 @@ export function ClipboardHistoryRowComponent({
   }, [clipboard?.isLink, hasLinkCard])
 
   const showCopyPasteIndexNumber =
-    (isKeyCtrlPressed.value || (isKeyAltPressed.value && !isWindows)) &&
+    ((isKeyCtrlPressed.value && isWindows) || (isKeyAltPressed.value && !isWindows)) &&
     typeof index !== 'undefined' &&
     index < 10
 
