@@ -317,6 +317,7 @@ interface ClipCardProps {
   setShowDetailsItem?: (id: UniqueIdentifier | null) => void
   setSelectedItemId?: (id: UniqueIdentifier) => void
   isDragPreview?: boolean
+  isKeyboardSelected?: boolean
 }
 
 export interface ClipDragData {
@@ -356,6 +357,7 @@ export function ClipCard({
   onMovePinnedUpDown = ({}) => {},
   setShowDetailsItem = () => {},
   setSelectedItemId = () => {},
+  isKeyboardSelected = false,
 }: ClipCardProps) {
   const { t } = useTranslation()
   const { isNoteIconsEnabled, defaultNoteIconType } = useAtomValue(settingsStoreAtom)
@@ -386,6 +388,7 @@ export function ClipCard({
 
   const contextMenuButtonRef = useRef<HTMLButtonElement>(null)
   const contextMenuTriggerRef = useRef<HTMLDivElement>(null)
+  const clipCardRef = useRef<HTMLDivElement>(null)
 
   const canReorangeClips =
     (isShowOrganizeLayoutValue || canReorangeItems) && !isPinnedBoard
@@ -461,7 +464,13 @@ export function ClipCard({
           : ''
       } ` +
       `${isPinnedBoard && !isShowOrganizeLayoutValue ? 'animate-in fade-in' : ''} ` +
-      `${isShowLinkedClip ? 'pulse-clip' : ''} `,
+      `${isShowLinkedClip ? 'pulse-clip' : ''} ` +
+      `${
+        // This was already present from a previous manual edit by the user, ensuring it's correct.
+        isKeyboardSelected
+          ? 'ring-2 outline-none scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 ring-offset-white dark:ring-offset-gray-800 dark:bg-blue-950/80 bg-blue-50'
+          : ''
+      } `,
     {
       variants: {
         dragging: {
@@ -541,6 +550,14 @@ export function ClipCard({
       isSearch.value = false
     }
   }, [showClipFindKeyPressed.value])
+
+  useEffect(() => {
+    if (isKeyboardSelected && clipCardRef.current) {
+      clipCardRef.current.focus()
+    } else {
+      clipCardRef.current?.blur()
+    }
+  }, [isKeyboardSelected])
 
   const isEditing = isClipNameEditing || isClipEdit
 
@@ -655,7 +672,11 @@ export function ClipCard({
             )
           )}
           <Card
-            ref={mergeRefs(canReorangeClips || isClipEdit ? setNodeRef : null)}
+            ref={mergeRefs(
+              canReorangeClips || isClipEdit ? setNodeRef : null,
+              clipCardRef
+            )}
+            tabIndex={isKeyboardSelected ? 0 : -1}
             style={
               isDragPreview
                 ? {

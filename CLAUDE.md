@@ -49,6 +49,9 @@ npm run format
 
 # Version management
 npm run version:sync
+
+# Translation audit
+npm run translation-audit
 ```
 
 ### Frontend Development (packages/pastebar-app-ui/)

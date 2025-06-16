@@ -1,8 +1,24 @@
 import { UniqueIdentifier } from '@dnd-kit/core'
+import createBoardTree from '~/libs/create-board-tree'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+import {
+  currentBoardIndex,
+  currentNavigationContext,
+  keyboardSelectedBoardId,
+  keyboardSelectedClipId,
+} from '~/store/signalStore'
+
 import { MenuItem } from '~/types/menu'
+
+// Navigation types and helper functions
+interface NavigationItem {
+  id: UniqueIdentifier
+  type: 'history' | 'board'
+  parentId?: UniqueIdentifier | null
+  depth: number
+}
 
 const EMOJIREGEX =
   /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gm
@@ -52,6 +68,227 @@ export function formatDate(input: string | number): string {
 
 export function absoluteUrl(path: string) {
   return `${process.env.NEXT_PUBLIC_APP_URL}${path}`
+}
+
+// Build a flattened navigation order that includes boards and sub-boards
+// Only boards are included in Left/Right navigation - clips are navigated with Up/Down within boards
+export function buildNavigationOrder(
+  clipItems: any[],
+  currentTab: string
+): NavigationItem[] {
+  const navigationOrder: NavigationItem[] = []
+
+  // Add history placeholder - actual history navigation is handled by ClipboardHistoryPage
+  navigationOrder.push({ id: 'history', type: 'history', depth: 0 })
+
+  // Get all boards and clips in the current tab
+  const allItems = clipItems.filter(item => item.tabId === currentTab)
+
+  // Build board tree for proper nesting
+  const boardTree = createBoardTree(clipItems, currentTab, null)
+
+  // Recursively add boards (but not clips - clips are navigated with Up/Down within boards)
+  function addBoardAndContents(boardId: UniqueIdentifier, depth: number) {
+    const board = allItems.find(item => item.itemId === boardId && item.isBoard)
+    if (!board) return
+
+    // Add the board itself to navigation order
+    navigationOrder.push({
+      id: boardId,
+      type: 'board',
+      parentId: board.parentId,
+      depth,
+    })
+
+    // Get direct child boards (not clips) sorted by order
+    const childBoards = allItems
+      .filter(item => item.parentId === boardId && item.isBoard)
+      .sort((a, b) => a.orderNumber - b.orderNumber)
+
+    // Add child boards recursively
+    childBoards.forEach(child => {
+      addBoardAndContents(child.itemId, depth + 1)
+    })
+  }
+
+  // Start with top-level boards
+  const topLevelBoards = allItems
+    .filter(item => item.isBoard && item.parentId === null)
+    .sort((a, b) => a.orderNumber - b.orderNumber)
+
+  topLevelBoards.forEach(board => {
+    addBoardAndContents(board.itemId, 1)
+  })
+
+  return navigationOrder
+}
+
+// Find current position in navigation order
+export function findCurrentNavigationIndex(navigationOrder: NavigationItem[]): number {
+  if (currentNavigationContext.value === 'history') {
+    return 0 // History is always at index 0
+  } else if (currentNavigationContext.value === 'board') {
+    if (keyboardSelectedBoardId.value) {
+      // Find board position - since clips are not in navigation order,
+      // we find the board that contains the selected clip
+      return navigationOrder.findIndex(
+        item => item.type === 'board' && item.id === keyboardSelectedBoardId.value
+      )
+    }
+  }
+  return 0
+}
+
+// Find the next non-empty board in the navigation order (skipping empty boards)
+function findNextNonEmptyBoard(
+  navigationOrder: NavigationItem[],
+  startIndex: number,
+  direction: 'forward' | 'backward',
+  clipItems: any[],
+  currentTab: string
+): NavigationItem | null {
+  const maxAttempts = navigationOrder.length // Prevent infinite loops
+  let currentIndex = startIndex
+
+  for (let i = 0; i < maxAttempts; i++) {
+    // Move in the specified direction
+    if (direction === 'forward') {
+      currentIndex = currentIndex + 1
+      // If we've gone past the end, wrap to history (index 0) or return null for no more boards
+      if (currentIndex >= navigationOrder.length) {
+        return null // Let caller handle going back to history
+      }
+    } else {
+      currentIndex = currentIndex - 1
+      // If we've gone before the beginning, return null for going to history
+      if (currentIndex < 1) {
+        // Index 0 is history, so < 1 means we should go to history
+        return null
+      }
+    }
+
+    const candidateItem = navigationOrder[currentIndex]
+
+    // Skip history item (only boards should be checked)
+    if (candidateItem.type === 'history') {
+      continue
+    }
+
+    // Check if this board has clips
+    const clipsInBoard = clipItems.filter(
+      clipItem =>
+        clipItem.isClip &&
+        clipItem.parentId === candidateItem.id &&
+        clipItem.tabId === currentTab
+    )
+
+    // If board has clips, return it
+    if (clipsInBoard.length > 0) {
+      return candidateItem
+    }
+  }
+
+  // If no non-empty board found, return null
+  return null
+}
+
+// Navigate to specific item in the navigation order
+export function navigateToItem(
+  item: NavigationItem,
+  clipItems: any[],
+  currentTab: string
+) {
+  if (item.type === 'history') {
+    currentNavigationContext.value = 'history'
+    keyboardSelectedBoardId.value = null
+    keyboardSelectedClipId.value = null
+    currentBoardIndex.value = 0
+    // Let ClipboardHistoryPage handle history item selection
+  } else if (item.type === 'board') {
+    // Check if the target board has clips
+    const clipsInBoard = clipItems
+      .filter(
+        clipItem =>
+          clipItem.isClip &&
+          clipItem.parentId === item.id &&
+          clipItem.tabId === currentTab
+      )
+      .sort((a, b) => a.orderNumber - b.orderNumber)
+
+    // If the board is empty, try to find a non-empty board
+    if (clipsInBoard.length === 0) {
+      // Build navigation order to find alternatives
+      const navigationOrder = buildNavigationOrder(clipItems, currentTab)
+      const currentIndex = navigationOrder.findIndex(navItem => navItem.id === item.id)
+
+      // Try to find next non-empty board in forward direction first
+      let alternativeBoard = findNextNonEmptyBoard(
+        navigationOrder,
+        currentIndex,
+        'forward',
+        clipItems,
+        currentTab
+      )
+
+      // If no forward board found, try backward direction
+      if (!alternativeBoard) {
+        alternativeBoard = findNextNonEmptyBoard(
+          navigationOrder,
+          currentIndex,
+          'backward',
+          clipItems,
+          currentTab
+        )
+      }
+
+      // If we found an alternative non-empty board, navigate to it instead
+      if (alternativeBoard) {
+        navigateToItem(alternativeBoard, clipItems, currentTab)
+        return
+      }
+
+      // If no non-empty boards found anywhere, go to history
+      currentNavigationContext.value = 'history'
+      keyboardSelectedBoardId.value = null
+      keyboardSelectedClipId.value = null
+      currentBoardIndex.value = 0
+      return
+    }
+
+    // Board has clips, proceed with normal navigation
+    currentNavigationContext.value = 'board'
+    keyboardSelectedBoardId.value = item.id
+    keyboardSelectedClipId.value = clipsInBoard[0].itemId // Select first clip
+
+    // Update board index - for subboards, find the root parent
+    const topLevelBoards = clipItems
+      .filter(
+        boardItem =>
+          boardItem.isBoard &&
+          boardItem.parentId === null &&
+          boardItem.tabId === currentTab
+      )
+      .sort((a, b) => a.orderNumber - b.orderNumber)
+
+    // Find the root parent board for subboards
+    const currentBoard = clipItems.find(boardItem => boardItem.itemId === item.id)
+    if (currentBoard) {
+      let rootParent = currentBoard
+      while (rootParent.parentId !== null) {
+        rootParent = clipItems.find(boardItem => boardItem.itemId === rootParent.parentId)
+        if (!rootParent) break
+      }
+      if (rootParent) {
+        currentBoardIndex.value = topLevelBoards.findIndex(
+          board => board.itemId === rootParent.itemId
+        )
+      } else {
+        currentBoardIndex.value = topLevelBoards.findIndex(
+          board => board.itemId === item.id
+        )
+      }
+    }
+  }
 }
 
 export const findNewChildrenOrderByParentIdAndDragId = (
@@ -305,19 +542,16 @@ export function bgColor(
 ) {
   const colorNameToUse = colorName || 'slate'
 
-  const darkColorCode = darkCode
-    ? darkCode
-    : colorCode === '200' && colorNameToUse === 'slate'
-      ? '700'
-      : colorNameToUse !== 'slate'
-        ? '900'
-        : '300'
-          ? '600'
-          : '400'
-            ? '500'
-            : '600'
-              ? '700'
-              : '300'
+  let darkColorCode: string
+  if (darkCode) {
+    darkColorCode = darkCode
+  } else if (colorCode === '200' && colorNameToUse === 'slate') {
+    darkColorCode = '700'
+  } else if (colorNameToUse !== 'slate') {
+    darkColorCode = '900'
+  } else {
+    darkColorCode = '300'
+  }
 
   const type = isBorder ? 'border' : 'bg'
 
