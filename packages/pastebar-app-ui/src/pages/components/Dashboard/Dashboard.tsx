@@ -31,8 +31,13 @@ import {
   activeOverTabId,
   collectionsStoreAtom,
   createFirstBoard,
+  currentBoardIndex,
+  currentNavigationContext,
   isFullyExpandViewBoard,
   isKeyAltPressed,
+  keyboardSelectedBoardId,
+  keyboardSelectedClipId,
+  keyboardSelectedItemId,
   playerStoreAtom,
   settingsStoreAtom,
   showClipsMoveOnBoardId,
@@ -57,6 +62,7 @@ import {
   Plus,
   X,
 } from 'lucide-react'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { useTranslation } from 'react-i18next'
 
 import { bgColor } from '~/lib/utils'
@@ -103,6 +109,7 @@ import {
 import { useUpdateTabs } from '~/hooks/queries/use-tabs'
 import { useCopyClipItem, usePasteClipItem } from '~/hooks/use-copypaste-clip-item'
 import { useLocalStorage } from '~/hooks/use-localstorage'
+// import { useNavigation } from '~/hooks/use-navigation'
 import { useSignal } from '~/hooks/use-signal'
 
 import { Item } from '~/types/menu'
@@ -254,6 +261,31 @@ function DashboardComponent({
         .map(board => board.itemId),
     [clipItems]
   )
+
+  // // Prepare board contexts for navigation
+  // const boardContexts = useMemo(() => {
+  //   return clipItems
+  //     .filter(
+  //       ({ parentId, isBoard, tabId }) =>
+  //         parentId === null && isBoard && tabId === currentTab
+  //     )
+  //     .map(board => ({
+  //       boardId: board.itemId.toString(),
+  //       boardName: board.name,
+  //       clips: clipItems
+  //         .filter(
+  //           ({ parentId, isClip, tabId }) =>
+  //             parentId === board.itemId && isClip && tabId === currentTab
+  //         )
+  //         .map(clip => ({ id: clip.itemId, itemId: clip.itemId }))
+  //     }))
+  // }, [clipItems, currentTab])
+
+  // // Use unified navigation hook (empty history items for Dashboard only)
+  // const { selectedClipId } = useNavigation({
+  //   historyItems: [],
+  //   boardContexts,
+  // })
 
   useEffect(() => {
     if (pinnedClips.length === 0) {
@@ -907,6 +939,7 @@ function DashboardComponent({
                 pinnedItemIds={pinnedClips.map(clip => clip.id)}
                 currentTab={currentTab}
                 setCurrentTab={setCurrentTab}
+                isKeyboardNavigationDisabled={currentNavigationContext.value !== null}
               />
             </SortableContext>
           )}
@@ -975,6 +1008,9 @@ function DashboardComponent({
                                     setShowDetailsItem={setShowDetailsItem}
                                     selectedItemIds={selectedItemIds}
                                     setSelectedItemId={setSelectedItemId}
+                                    keyboardSelectedClipId={keyboardSelectedClipId}
+                                    currentSelectedBoardId={keyboardSelectedBoardId}
+                                    keyboardNavigationMode={currentNavigationContext}
                                   />
                                 ))}
                               </PanelGroup>
@@ -1007,6 +1043,9 @@ function DashboardComponent({
                               setShowDetailsItem={setShowDetailsItem}
                               selectedItemIds={selectedItemIds}
                               setSelectedItemId={setSelectedItemId}
+                              keyboardSelectedClipId={keyboardSelectedClipId}
+                              currentSelectedBoardId={keyboardSelectedBoardId}
+                              keyboardNavigationMode={currentNavigationContext}
                             />
                             <Flex className="absolute right-0 w-full bottom-[-13px] z-100">
                               <Button

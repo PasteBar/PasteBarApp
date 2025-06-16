@@ -234,6 +234,7 @@ export function ClipboardHistoryRowComponent({
       rowKeyboardRef.current.scrollIntoView({
         block: 'center',
       })
+      // rowKeyboardRef.current.focus()
     }
   }, [isKeyboardSelected, isScrolling])
 
@@ -403,7 +404,7 @@ export function ClipboardHistoryRowComponent({
                   !isSelected
                     ? 'bg-teal-50 hover:border-slate-300 dark:bg-sky-900/40 dark:hover:border-slate-700 hover:bg-teal-50/90 hover:dark:bg-sky-950'
                     : isKeyboardSelected
-                      ? `bg-blue-50 !shadow-sm border-blue-300 dark:bg-blue-950/80 dark:border-blue-900/80 hover:border-blue-300/80 dark:hover:border-blue-800 hover:bg-blue-50/80 ${
+                      ? `bg-blue-50 ring-2 scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 !shadow-sm border-blue-300 dark:bg-blue-950/80 dark:hover:border-blue-800 hover:bg-blue-50/80 ring-offset-white dark:ring-offset-gray-800 ${
                           isPinnedTop ? ' dark:!bg-amber-950' : ''
                         }`
                       : isDeleting && !isDragPreview

@@ -152,6 +152,9 @@ interface BoardProps {
   showDetailsItem?: UniqueIdentifier | null
   setShowDetailsItem?: (id: UniqueIdentifier | null) => void
   isDragPreview?: boolean
+  keyboardSelectedClipId?: { value: UniqueIdentifier | null }
+  currentSelectedBoardId?: { value: UniqueIdentifier | null }
+  keyboardNavigationMode?: { value: 'history' | 'board' | null }
 }
 
 export function BoardComponent({
@@ -173,6 +176,9 @@ export function BoardComponent({
   setShowDetailsItem,
   setCurrentTab,
   setSelectedItemId,
+  keyboardSelectedClipId,
+  currentSelectedBoardId,
+  keyboardNavigationMode,
 }: BoardProps) {
   const { t } = useTranslation()
   const childrenIds = useMemo(() => {
@@ -692,6 +698,9 @@ export function BoardComponent({
                                       setSelectedItemId={setSelectedItemId}
                                       showDetailsItem={showDetailsItem}
                                       setShowDetailsItem={setShowDetailsItem}
+                                      keyboardSelectedClipId={keyboardSelectedClipId}
+                                      currentSelectedBoardId={currentSelectedBoardId}
+                                      keyboardNavigationMode={keyboardNavigationMode}
                                     />
                                   ) : (
                                     item.type === CLIP && (
@@ -746,6 +755,10 @@ export function BoardComponent({
                                         isSelected={selectedItemIds.includes(item.id)}
                                         selectedOrder={
                                           selectedItemIds.indexOf(item.id) + 1
+                                        }
+                                        isKeyboardSelected={
+                                          keyboardSelectedClipId?.value === item.id &&
+                                          keyboardNavigationMode?.value === 'board'
                                         }
                                       />
                                     )
@@ -980,6 +993,9 @@ export function BoardWithPanel({
   order,
   isLastBoard,
   setSelectedItemId,
+  keyboardSelectedClipId,
+  currentSelectedBoardId,
+  keyboardNavigationMode,
 }: BoardProps) {
   return (
     <ResizePanel
@@ -1012,6 +1028,9 @@ export function BoardWithPanel({
         setShowDetailsItem={setShowDetailsItem}
         isDark={isDark}
         isDragPreview={isDragPreview}
+        keyboardSelectedClipId={keyboardSelectedClipId}
+        currentSelectedBoardId={currentSelectedBoardId}
+        keyboardNavigationMode={keyboardNavigationMode}
       />
     </ResizePanel>
   )
