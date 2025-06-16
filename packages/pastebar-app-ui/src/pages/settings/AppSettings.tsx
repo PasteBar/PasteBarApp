@@ -29,11 +29,13 @@ export default function AppSettingsPage() {
           autoSaveId="app-main-panel-settings"
         >
           <SplitPanePrimary>
-            <Box className={`${
-              isSimplifiedLayout
-                ? 'h-[calc(100vh-40px)]'
-                : 'h-[calc(100vh-70px)] shadow-sm rounded-xl'
-            } flex flex-col bg-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.8] py-6 px-3 pr-3`}>
+            <Box
+              className={`${
+                isSimplifiedLayout
+                  ? 'h-[calc(100vh-40px)]'
+                  : 'h-[calc(100vh-70px)] shadow-sm rounded-xl'
+              } flex flex-col bg-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.8] py-6 px-3 pr-3`}
+            >
               <Box className="animate-in fade-in">
                 <Box className="flex flex-rowrounded-md p-0 items-center justify-end pr-5 h-[40px]">
                   <Text className="text-lg font-semibold text-center flex items-center">
@@ -147,15 +149,17 @@ export default function AppSettingsPage() {
             </Box>
           </SplitPanePrimary>
           <SplitPaneSecondary>
-            <Box className={`${
-              isSimplifiedLayout
-                ? 'h-[calc(100vh-40px)]'
-                : 'h-[calc(100vh-70px)] shadow-sm rounded-xl border-0'
-            } flex flex-col ${
-              !isSimplifiedLayout
-                ? 'bg-slate-50 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]'
-                : ''
-            }`}>
+            <Box
+              className={`${
+                isSimplifiedLayout
+                  ? 'h-[calc(100vh-40px)]'
+                  : 'h-[calc(100vh-70px)] shadow-sm rounded-xl border-0'
+              } flex flex-col ${
+                !isSimplifiedLayout
+                  ? 'bg-slate-50 dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]'
+                  : ''
+              }`}
+            >
               <Outlet />
             </Box>
           </SplitPaneSecondary>
