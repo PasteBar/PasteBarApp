@@ -100,6 +100,7 @@ export default function BoardTabs({
   pinnedItemIds,
   currentTab,
   setCurrentTab,
+  isKeyboardNavigationDisabled,
 }: {
   tabs: TabsType[]
   currentTab: string
@@ -107,6 +108,7 @@ export default function BoardTabs({
   pinnedItemIds: UniqueIdentifier[]
   setSelectedItemIds: (ids: UniqueIdentifier[]) => void
   setCurrentTab: (tab: string) => void
+  isKeyboardNavigationDisabled?: boolean
 }) {
   const { clipboardHistory } = useAtomValue(clipboardHistoryStoreAtom)
   const { isSimplifiedLayout } = useAtomValue(settingsStoreAtom)
@@ -370,7 +372,10 @@ export default function BoardTabs({
               >
                 <SimpleBar style={{ width: '97%' }}>
                   {!showEditTabs.value ? (
-                    <TabsList className="bg-transparent pr-0.5">
+                    <TabsList
+                      className="bg-transparent pr-0.5"
+                      disableKeyboardNavigation={isKeyboardNavigationDisabled}
+                    >
                       {tabs.map(
                         ({ tabId, tabName, tabIsHidden, tabOrderNumber }) =>
                           tabId &&
@@ -396,7 +401,10 @@ export default function BoardTabs({
                       )}
                     </TabsList>
                   ) : (
-                    <TabsList className="bg-transparent pr-0.5">
+                    <TabsList
+                      className="bg-transparent pr-0.5"
+                      disableKeyboardNavigation={isKeyboardNavigationDisabled}
+                    >
                       {tabs.map(
                         ({ tabId, tabName, tabIsHidden, tabColor, tabOrderNumber }) =>
                           tabId &&
