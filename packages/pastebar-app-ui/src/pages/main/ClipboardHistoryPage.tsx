@@ -519,6 +519,9 @@ export default function ClipboardHistoryPage() {
     e => {
       e.preventDefault()
       e.stopPropagation()
+
+      showLargeViewHistoryId.value = null
+
       if (
         currentNavigationContextValue === 'history' ||
         currentNavigationContextValue === null
@@ -565,6 +568,9 @@ export default function ClipboardHistoryPage() {
     e => {
       e.preventDefault()
       e.stopPropagation()
+
+      showLargeViewHistoryId.value = null
+
       if (
         currentNavigationContextValue === 'history' ||
         currentNavigationContextValue === null
@@ -609,13 +615,18 @@ export default function ClipboardHistoryPage() {
   useHotkeys(
     'esc',
     () => {
-      currentNavigationContext.value = null
-      keyboardSelectedItemId.value = null
-      keyboardSelectedItemId.value = null
-      hoveringHistoryRowId.value = null
-      keyboardSelectedBoardId.value = null
-      keyboardSelectedClipId.value = null
-      currentBoardIndex.value = 0
+      // Escape closes large view first, then performs normal escape behavior
+      if (showLargeViewHistoryId.value) {
+        showLargeViewHistoryId.value = null
+      } else {
+        currentNavigationContext.value = null
+        keyboardSelectedItemId.value = null
+        keyboardSelectedItemId.value = null
+        hoveringHistoryRowId.value = null
+        keyboardSelectedBoardId.value = null
+        keyboardSelectedClipId.value = null
+        currentBoardIndex.value = 0
+      }
     },
     {
       enableOnFormTags: ['input'],
@@ -632,6 +643,9 @@ export default function ClipboardHistoryPage() {
       const nextItem = clipboardHistory[currentItemIndex + 1]
       if (nextItem) {
         keyboardSelectedItemId.value = nextItem.historyId
+        if (showLargeViewHistoryId.value) {
+          showLargeViewHistoryId.value = nextItem.historyId
+        }
       }
     },
     {
@@ -656,7 +670,57 @@ export default function ClipboardHistoryPage() {
         const prevItem = clipboardHistory[currentItemIndex - 1]
         if (prevItem) {
           keyboardSelectedItemId.value = prevItem.historyId
+          // Update large view if it's open
+          if (showLargeViewHistoryId.value) {
+            showLargeViewHistoryId.value = prevItem.historyId
+          }
         }
+      }
+    },
+    {
+      enableOnFormTags: ['input'],
+      enabled:
+        currentNavigationContext.value === 'history' ||
+        currentNavigationContext.value === null,
+    }
+  )
+
+  useHotkeys(
+    ['arrowright'],
+    e => {
+      e.preventDefault()
+
+      if (keyboardSelectedItemId.value) {
+        if (isSwapPanels) {
+          // In swap mode, right arrow closes large view
+          showLargeViewHistoryId.value = null
+        } else {
+          // In regular mode, right arrow opens large view
+          showLargeViewHistoryId.value = keyboardSelectedItemId.value
+        }
+      }
+    },
+    {
+      enableOnFormTags: ['input'],
+      enabled:
+        currentNavigationContext.value === 'history' ||
+        currentNavigationContext.value === null,
+    }
+  )
+
+  useHotkeys(
+    ['arrowleft'],
+    e => {
+      e.preventDefault()
+
+      if (isSwapPanels) {
+        // In swap mode, left arrow opens large view
+        if (keyboardSelectedItemId.value) {
+          showLargeViewHistoryId.value = keyboardSelectedItemId.value
+        }
+      } else {
+        // In regular mode, left arrow closes large view
+        showLargeViewHistoryId.value = null
       }
     },
     {
