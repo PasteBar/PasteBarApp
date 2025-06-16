@@ -148,10 +148,9 @@ function findNextNonEmptyBoard(
   currentTab: string
 ): NavigationItem | null {
   const maxAttempts = navigationOrder.length // Prevent infinite loops
-  let attempts = 0
   let currentIndex = startIndex
 
-  while (attempts < maxAttempts) {
+  for (let i = 0; i < maxAttempts; i++) {
     // Move in the specified direction
     if (direction === 'forward') {
       currentIndex = currentIndex + 1
@@ -172,7 +171,6 @@ function findNextNonEmptyBoard(
 
     // Skip history item (only boards should be checked)
     if (candidateItem.type === 'history') {
-      attempts++
       continue
     }
 
@@ -188,8 +186,6 @@ function findNextNonEmptyBoard(
     if (clipsInBoard.length > 0) {
       return candidateItem
     }
-
-    attempts++
   }
 
   // If no non-empty board found, return null

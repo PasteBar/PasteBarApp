@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -16,6 +16,7 @@ import {
   creatingClipItemBoardId,
   editBoardItemId,
   hasDashboardItemCreate,
+  isWindowsOS,
   newBoardItemId,
   newClipItemId,
   settingsStoreAtom,
@@ -42,6 +43,7 @@ import {
   Trash,
   X,
 } from 'lucide-react'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { bgColor } from '~/lib/utils'
@@ -119,6 +121,28 @@ export default function BoardTabs({
   const contextMenuTriggerRef = useRef<HTMLDivElement>(null)
   const contextMenuOpen = useSignal(false)
   const { updateMovedClips } = useUpdateMovedClipsInCollection()
+
+  const visibleTabs = useMemo(() => tabs.filter(tab => !tab.tabIsHidden), [tabs])
+
+  useHotkeys(
+    [...Array(10).keys()].map(i => `${isWindowsOS.value ? 'alt' : 'ctrl'}+${i}`),
+    (event, _handler) => {
+      event.preventDefault()
+      const keyNumber = parseInt(event.key, 10)
+      const tabIndex = keyNumber === 0 ? 9 : keyNumber - 1
+
+      if (tabIndex >= 0 && tabIndex < visibleTabs.length) {
+        const tabToSelect = visibleTabs[tabIndex]
+        if (tabToSelect && tabToSelect.tabId !== currentTab) {
+          setCurrentTab(tabToSelect.tabId)
+        }
+      }
+    },
+    {
+      enabled: visibleTabs.length > 0,
+    },
+    [visibleTabs, setCurrentTab, currentTab]
+  )
 
   useEffect(() => {
     if (hasDashboardItemCreate.value) {
@@ -319,7 +343,7 @@ export default function BoardTabs({
     }
 
     processClips()
-  }, [createClipBoardItemId.value])
+  }, [createClipBoardItemId.value, doCreateNewClip, updateMovedClips])
 
   useEffect(() => {
     async function processBoard() {
