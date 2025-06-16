@@ -154,7 +154,7 @@ interface BoardProps {
   isDragPreview?: boolean
   keyboardSelectedClipId?: { value: UniqueIdentifier | null }
   currentSelectedBoardId?: { value: UniqueIdentifier | null }
-  keyboardNavigationMode?: { value: 'history' | 'board' | null }
+  keyboardNavigationMode?: { value: 'history' | 'board' | 'search' | null }
 }
 
 export function BoardComponent({
@@ -757,8 +757,7 @@ export function BoardComponent({
                                           selectedItemIds.indexOf(item.id) + 1
                                         }
                                         isKeyboardSelected={
-                                          keyboardSelectedClipId?.value === item.id &&
-                                          keyboardNavigationMode?.value === 'board'
+                                          keyboardSelectedClipId?.value === item.id
                                         }
                                       />
                                     )

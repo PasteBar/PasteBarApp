@@ -25,7 +25,11 @@ export default function createFilteredFlatBoardTreeWithClips(
           !isSearchNameOrLabelOnly &&
           item.value?.toLowerCase().includes(find.toLowerCase())
 
-        return nameMatches || valueMatches
+        const descriptionMatches =
+          !isSearchNameOrLabelOnly &&
+          item.description?.toLowerCase().includes(find.toLowerCase())
+
+        return nameMatches || valueMatches || descriptionMatches
       })
       .map(item => ({ ...item, type: CLIP, id: item.itemId.toString() }))
 
