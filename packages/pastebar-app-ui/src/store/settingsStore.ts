@@ -97,6 +97,7 @@ type Settings = {
   isSavedClipsPanelVisibleOnly: boolean
   isSimplifiedLayout: boolean
   isMainWindowOnTop: boolean
+  isSingleClickToCopyPaste: boolean
 }
 
 type Constants = {
@@ -180,6 +181,7 @@ export interface SettingsStoreState {
   setShowBothPanels: (isVisible: boolean) => void
   setIsSimplifiedLayout: (isEnabled: boolean) => void
   setIsMainWindowOnTop: (isEnabled: boolean) => void
+  setIsSingleClickToCopyPaste: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -272,6 +274,7 @@ const initialState: SettingsStoreState & Settings = {
   isSavedClipsPanelVisibleOnly: false,
   isSimplifiedLayout: true,
   isMainWindowOnTop: false,
+  isSingleClickToCopyPaste: false,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -337,6 +340,7 @@ const initialState: SettingsStoreState & Settings = {
   setShowBothPanels: () => {},
   setIsSimplifiedLayout: () => {},
   setIsMainWindowOnTop: () => {},
+  setIsSingleClickToCopyPaste: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -704,6 +708,11 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsMainWindowOnTop: async (isEnabled: boolean) => {
     return get().updateSetting('isMainWindowOnTop', isEnabled)
+  },
+  setIsSingleClickToCopyPaste: async (isEnabled: boolean) => {
+    get().syncStateUpdate('isSingleClickToCopyPaste', isEnabled)
+
+    return get().updateSetting('isSingleClickToCopyPaste', isEnabled)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

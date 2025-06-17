@@ -93,6 +93,8 @@ export default function UserPreferences() {
     setIsSavedClipsPanelVisibleOnly,
     isSimplifiedLayout,
     setIsSimplifiedLayout,
+    isSingleClickToCopyPaste,
+    setIsSingleClickToCopyPaste,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
@@ -718,6 +720,36 @@ export default function UserPreferences() {
                       <Text className="text-sm text-muted-foreground">
                         {t(
                           'When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.',
+                          { ns: 'settings2' }
+                        )}
+                      </Text>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card
+                    className={`${
+                      !isSingleClickToCopyPaste &&
+                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Single Click Copy/Paste', { ns: 'settings2' })}
+                      </CardTitle>
+                      <Switch
+                        checked={isSingleClickToCopyPaste}
+                        className="ml-auto"
+                        onCheckedChange={() => {
+                          setIsSingleClickToCopyPaste(!isSingleClickToCopyPaste)
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t(
+                          'Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.',
                           { ns: 'settings2' }
                         )}
                       </Text>

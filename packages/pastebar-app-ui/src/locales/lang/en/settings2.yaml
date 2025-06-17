@@ -38,3 +38,6 @@ Show/Hide Quick Paste Window: Show/Hide Quick Paste Window
 Simplified Panel Layout: Simplified Panel Layout
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.
 When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+? Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.
+: Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.
+Single Click Copy/Paste: Single Click Copy/Paste

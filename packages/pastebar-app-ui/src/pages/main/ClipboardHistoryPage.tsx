@@ -238,6 +238,7 @@ export default function ClipboardHistoryPage() {
     isHistoryPanelVisibleOnly,
     isSimplifiedLayout,
     isSavedClipsPanelVisibleOnly,
+    isSingleClickToCopyPaste,
   } = useAtomValue(settingsStoreAtom)
 
   const { t } = useTranslation()
@@ -1488,6 +1489,7 @@ export default function ClipboardHistoryPage() {
                                               clipboard={item}
                                               removeLinkMetaData={removeLinkMetaData}
                                               generateLinkMetaData={generateLinkMetaData}
+                                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
                                             />
                                           </Box>
                                         )
@@ -2111,6 +2113,7 @@ export default function ClipboardHistoryPage() {
                                               clipboard={clipboard}
                                               removeLinkMetaData={removeLinkMetaData}
                                               generateLinkMetaData={generateLinkMetaData}
+                                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
                                               index={index}
                                               style={style}
                                             />
@@ -2170,6 +2173,7 @@ export default function ClipboardHistoryPage() {
                                   : clip.historyId ===
                                       activeDragId.toString().split('::pinned')[0]
                               })}
+                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
                             />
                           ) : null}
                         </DragOverlay>
