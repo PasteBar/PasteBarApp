@@ -97,6 +97,7 @@ type Settings = {
   isSavedClipsPanelVisibleOnly: boolean
   isSimplifiedLayout: boolean
   isMainWindowOnTop: boolean
+  isSingleClickToCopyPaste: boolean
   isQuickPasteCopyOnly: boolean
   isQuickPasteAutoClose: boolean
 }
@@ -184,6 +185,7 @@ export interface SettingsStoreState {
   setIsMainWindowOnTop: (isEnabled: boolean) => void
   setIsQuickPasteCopyOnly: (isEnabled: boolean) => void
   setIsQuickPasteAutoClose: (isEnabled: boolean) => void
+  setIsSingleClickToCopyPaste: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -276,6 +278,7 @@ const initialState: SettingsStoreState & Settings = {
   isSavedClipsPanelVisibleOnly: false,
   isSimplifiedLayout: true,
   isMainWindowOnTop: false,
+  isSingleClickToCopyPaste: false,
   isQuickPasteCopyOnly: false,
   isQuickPasteAutoClose: true,
   CONST: {
@@ -343,6 +346,7 @@ const initialState: SettingsStoreState & Settings = {
   setShowBothPanels: () => {},
   setIsSimplifiedLayout: () => {},
   setIsMainWindowOnTop: () => {},
+  setIsSingleClickToCopyPaste: () => {},
   setIsQuickPasteCopyOnly: () => {},
   setIsQuickPasteAutoClose: () => {},
   initConstants: () => {},
@@ -712,6 +716,10 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsMainWindowOnTop: async (isEnabled: boolean) => {
     return get().updateSetting('isMainWindowOnTop', isEnabled)
+  },
+  setIsSingleClickToCopyPaste: async (isEnabled: boolean) => {
+    get().syncStateUpdate('isSingleClickToCopyPaste', isEnabled)
+    return get().updateSetting('isSingleClickToCopyPaste', isEnabled)
   },
   setIsQuickPasteCopyOnly: async (isEnabled: boolean) => {
     get().syncStateUpdate('isQuickPasteCopyOnly', isEnabled)

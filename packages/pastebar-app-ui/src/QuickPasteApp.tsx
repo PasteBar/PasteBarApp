@@ -45,8 +45,10 @@ function QuickPasteApp() {
           i18n.changeLanguage(i18n.resolvedLanguage)
         }
 
+        // @ts-expect-error
         settingsStore.initSettings({
           appDataDir: '',
+          isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool,
           appLastUpdateVersion: settings.appLastUpdateVersion?.valueText,
           appLastUpdateDate: settings.appLastUpdateDate?.valueText,
           isHideMacOSDockIcon: settings.isHideMacOSDockIcon?.valueBool,

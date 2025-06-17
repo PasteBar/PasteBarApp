@@ -14,19 +14,7 @@ import { MINUTE_IN_MS } from '~/constants'
 import { isEmailNotUrl } from '~/libs/utils'
 import { formatLocale as format } from '~/locales/date-locales'
 import { hoveringHistoryRowId, isKeyAltPressed, isKeyCtrlPressed } from '~/store'
-import {
-  ArrowDownToLine,
-  Check,
-  Clipboard,
-  ClipboardPaste,
-  Dot,
-  Grip,
-  MoreVertical,
-  MoveDown,
-  MoveUp,
-  Star,
-  X,
-} from 'lucide-react'
+import { Check, Dot, Star } from 'lucide-react'
 import { Highlight, themes } from 'prism-react-renderer'
 import { useTranslation } from 'react-i18next'
 
@@ -36,7 +24,7 @@ import ImageWithFallback from '~/components/atoms/image/image-with-fallback-on-e
 import LinkCard from '~/components/atoms/link-card/link-card'
 import PlayButton from '~/components/atoms/play-button/PlayButton'
 import ToolTip from '~/components/atoms/tooltip'
-import { Badge, Box, ContextMenu, ContextMenuTrigger, Flex, Text } from '~/components/ui'
+import { Badge, Box } from '~/components/ui'
 import YoutubeEmbed from '~/components/video-player/YoutubeEmbed'
 
 import { useSignal } from '~/hooks/use-signal'
@@ -114,6 +102,7 @@ interface ClipboardHistoryQuickPasteRowProps {
   setRowHeight?: (index: number, height: number) => void
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
+  isSingleClickToCopyPaste?: boolean
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -156,25 +145,23 @@ export function ClipboardHistoryQuickPasteRowComponent({
   setLargeViewItemId = () => {},
   pastingCountDown,
   onCopyPaste = () => {},
-  onCopy = () => {},
   invalidateClipboardHistoryQuery = () => {},
   generateLinkMetaData,
-  removeLinkMetaData = () => Promise.resolve(),
   isBrokenImage = false,
   setExpanded = () => {},
-  onMovePinnedUpDown = ({}) => {},
   setWrapText = () => {},
   setBrokenImageItem = () => {},
   setSelectHistoryItem = () => {},
   isDragPreview = false,
   setRowHeight = () => {},
-  setHistoryFilters = () => {},
-  setAppFilters = () => {},
+  isSingleClickToCopyPaste = false,
 }: ClipboardHistoryQuickPasteRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
   const rowKeyboardRef = useRef<HTMLDivElement>(null)
   const isCopiedOrPasted = isCopied || isPasted || isSaved
+
+  console.log('isSingleClickToCopyPaste', isSingleClickToCopyPaste)
 
   const contentElementRendered = useSignal<boolean>(false)
   const contextMenuOpen = useSignal<boolean>(false)
@@ -414,6 +401,9 @@ export function ClipboardHistoryQuickPasteRowComponent({
               } else if (largeViewItemId && !isLargeView) {
                 window.getSelection()?.removeAllRanges()
                 setLargeViewItemId(clipboard.historyId)
+              } else if (isSingleClickToCopyPaste && !getSelectedText().text) {
+                // Single-click in quick paste mode triggers copy+paste
+                onCopyPaste(clipboard.historyId)
               } else {
                 setKeyboardSelected(clipboard.historyId)
                 hoveringHistoryRowId.value = !isPinnedTop
@@ -430,7 +420,9 @@ export function ClipboardHistoryQuickPasteRowComponent({
               hoveringHistoryRowId.value = null
             }}
             onDoubleClickCapture={e => {
-              onCopyPaste(clipboard.historyId)
+              if (!isSingleClickToCopyPaste) {
+                onCopyPaste(clipboard.historyId)
+              }
             }}
           >
             <Box

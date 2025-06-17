@@ -318,6 +318,7 @@ interface ClipCardProps {
   setSelectedItemId?: (id: UniqueIdentifier) => void
   isDragPreview?: boolean
   isKeyboardSelected?: boolean
+  isSingleClickToCopyPaste?: boolean
 }
 
 export interface ClipDragData {
@@ -358,6 +359,7 @@ export function ClipCard({
   setShowDetailsItem = () => {},
   setSelectedItemId = () => {},
   isKeyboardSelected = false,
+  isSingleClickToCopyPaste = false,
 }: ClipCardProps) {
   const { t } = useTranslation()
   const { isNoteIconsEnabled, defaultNoteIconType } = useAtomValue(settingsStoreAtom)
@@ -715,10 +717,30 @@ export function ClipCard({
                   } else {
                     setShowDetailsItem(null)
                   }
+                } else if (isSingleClickToCopyPaste && !copyDisabled) {
+                  // Check if click is on context menu button or its children
+                  const isContextMenuClick = contextMenuButtonRef.current && 
+                    (contextMenuButtonRef.current.contains(e.target as Node) || 
+                     contextMenuButtonRef.current === e.target)
+                  
+                  if (isContextMenuClick) {
+                    return // Don't copy/paste if clicking on context menu
+                  }
+                  
+                  // Single-click copy mode
+                  if (e.altKey || e.metaKey) {
+                    if (clip.isForm) {
+                      setPastedItem(clip.id, undefined, true)
+                    } else {
+                      setPastedItem(clip.id)
+                    }
+                  } else {
+                    setCopiedItem(clip.id)
+                  }
                 }
               }}
               onDoubleClickCapture={e => {
-                if (copyDisabled || e.shiftKey) {
+                if (copyDisabled || e.shiftKey || isSingleClickToCopyPaste) {
                   e.preventDefault()
                   return
                 }

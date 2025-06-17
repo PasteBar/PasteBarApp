@@ -249,6 +249,7 @@ function DashboardComponent({
     clipNotesMaxHeight,
     isSimplifiedLayout,
     clipNotesMaxWidth,
+    isSingleClickToCopyPaste,
   } = useAtomValue(settingsStoreAtom)
 
   const boardsIds = useMemo(
@@ -606,6 +607,7 @@ function DashboardComponent({
                                 showOrganizeLayout.value || isPinnedPanelReorder.value
                               }
                               isPinnedBoard={true}
+                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
                             />
                           ))}
                         </Flex>
@@ -1166,6 +1168,7 @@ function DashboardComponent({
               isDragPreview
               isClipNotesHoverCardsEnabled={false}
               isDark={isDark}
+              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
             />
           )}
         </DragOverlay>

@@ -209,6 +209,7 @@ function App() {
           isMainWindowOnTop: settings.isMainWindowOnTop?.valueBool ?? false,
           isQuickPasteCopyOnly: settings.isQuickPasteCopyOnly?.valueBool ?? false,
           isQuickPasteAutoClose: settings.isQuickPasteAutoClose?.valueBool ?? true,
+          isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool ?? false,
           isAppReady: true,
         })
         settingsStore.initConstants({
