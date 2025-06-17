@@ -96,6 +96,7 @@ type Settings = {
   isHistoryPanelVisibleOnly: boolean
   isSavedClipsPanelVisibleOnly: boolean
   isSimplifiedLayout: boolean
+  isMainWindowOnTop: boolean
 }
 
 type Constants = {
@@ -178,6 +179,7 @@ export interface SettingsStoreState {
   setIsSavedClipsPanelVisibleOnly: (isVisible: boolean) => void
   setShowBothPanels: (isVisible: boolean) => void
   setIsSimplifiedLayout: (isEnabled: boolean) => void
+  setIsMainWindowOnTop: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -269,6 +271,7 @@ const initialState: SettingsStoreState & Settings = {
   isHistoryPanelVisibleOnly: false,
   isSavedClipsPanelVisibleOnly: false,
   isSimplifiedLayout: true,
+  isMainWindowOnTop: false,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -333,6 +336,7 @@ const initialState: SettingsStoreState & Settings = {
   setIsSavedClipsPanelVisibleOnly: () => {},
   setShowBothPanels: () => {},
   setIsSimplifiedLayout: () => {},
+  setIsMainWindowOnTop: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -697,6 +701,9 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsSimplifiedLayout: async (isEnabled: boolean) => {
     return get().updateSetting('isSimplifiedLayout', isEnabled)
+  },
+  setIsMainWindowOnTop: async (isEnabled: boolean) => {
+    return get().updateSetting('isMainWindowOnTop', isEnabled)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

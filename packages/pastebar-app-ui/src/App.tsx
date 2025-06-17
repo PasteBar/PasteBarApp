@@ -206,6 +206,7 @@ function App() {
           isHistoryPanelVisibleOnly: settings.isHistoryPanelVisibleOnly?.valueBool,
           isSavedClipsPanelVisibleOnly: settings.isSavedClipsPanelVisibleOnly?.valueBool,
           isSimplifiedLayout: settings.isSimplifiedLayout?.valueBool ?? true,
+          isMainWindowOnTop: settings.isMainWindowOnTop?.valueBool ?? false,
           isAppReady: true,
         })
         settingsStore.initConstants({
