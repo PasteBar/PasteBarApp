@@ -102,8 +102,11 @@ export default function ClipboardHistoryQuickPastePage() {
   const isShowSearch = useSignal(false)
   const { movePinnedClipboardHistoryUpDown } = useMovePinnedClipboardHistoryUpDown()
 
-  const { isAutoPreviewLinkCardsEnabled, isAutoGenerateLinkCardsEnabled } =
-    useAtomValue(settingsStoreAtom)
+  const {
+    isAutoPreviewLinkCardsEnabled,
+    isAutoGenerateLinkCardsEnabled,
+    isSingleClickToCopyPaste,
+  } = useAtomValue(settingsStoreAtom)
 
   const [historyFilters, setHistoryFilters] = useState<string[]>([])
   const [codeFilters, setCodeFilters] = useState<string[]>([])
@@ -722,6 +725,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               clipboard={item}
                               removeLinkMetaData={removeLinkMetaData}
                               generateLinkMetaData={generateLinkMetaData}
+                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
                             />
                           )
                         })}
@@ -917,6 +921,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               clipboard={clipboard}
                               removeLinkMetaData={removeLinkMetaData}
                               generateLinkMetaData={generateLinkMetaData}
+                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
                               index={index}
                               style={style}
                             />

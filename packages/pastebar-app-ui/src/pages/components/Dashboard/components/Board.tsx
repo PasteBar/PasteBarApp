@@ -194,6 +194,7 @@ export function BoardComponent({
     clipNotesHoverCardsDelayMS,
     clipNotesMaxHeight,
     clipNotesMaxWidth,
+    isSingleClickToCopyPaste,
   } = useAtomValue(settingsStoreAtom)
 
   const contextMenuOpen = useSignal(false)
@@ -759,6 +760,7 @@ export function BoardComponent({
                                         isKeyboardSelected={
                                           keyboardSelectedClipId?.value === item.id
                                         }
+                                        isSingleClickToCopyPaste={isSingleClickToCopyPaste}
                                       />
                                     )
                                   )}

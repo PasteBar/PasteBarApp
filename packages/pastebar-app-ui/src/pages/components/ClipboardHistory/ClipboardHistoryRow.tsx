@@ -121,6 +121,7 @@ interface ClipboardHistoryRowProps {
   setRowHeight?: (index: number, height: number) => void
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
+  isSingleClickToCopyPaste?: boolean
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -178,6 +179,7 @@ export function ClipboardHistoryRowComponent({
   setRowHeight = () => {},
   setHistoryFilters = () => {},
   setAppFilters = () => {},
+  isSingleClickToCopyPaste = false,
 }: ClipboardHistoryRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
@@ -434,7 +436,17 @@ export function ClipboardHistoryRowComponent({
                                   }`
                 }`}
                 onClickCapture={e => {
-                  if ((isWindows && e.ctrlKey) || (e.metaKey && !isWindows)) {
+                  if (
+                    (isSingleClickToCopyPaste &&
+                      !getSelectedText().text &&
+                      isWindows &&
+                      e.ctrlKey) ||
+                    (e.metaKey && !isWindows)
+                  ) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onCopyPaste(clipboard.historyId)
+                  } else if ((isWindows && e.ctrlKey) || (e.metaKey && !isWindows)) {
                     setSelectHistoryItem(clipboard.historyId)
                   } else if (e.ctrlKey || e.metaKey) {
                     e.preventDefault()
@@ -447,6 +459,25 @@ export function ClipboardHistoryRowComponent({
                   } else if (largeViewItemId && !isLargeView) {
                     window.getSelection()?.removeAllRanges()
                     setLargeViewItemId(clipboard.historyId)
+                  } else if (isSingleClickToCopyPaste && !getSelectedText().text) {
+                    // Check if click is on context menu button or its children
+                    const isContextMenuClick = contextMenuButtonRef.current && 
+                      (contextMenuButtonRef.current.contains(e.target as Node) || 
+                       contextMenuButtonRef.current === e.target)
+                    
+                    if (isContextMenuClick) {
+                      return // Don't copy/paste if clicking on context menu
+                    }
+                    
+                    if (
+                      e.altKey ||
+                      (e.metaKey && isWindows) ||
+                      (e.ctrlKey && !isWindows)
+                    ) {
+                      onCopyPaste(clipboard.historyId)
+                    } else {
+                      onCopy(clipboard.historyId)
+                    }
                   } else {
                     hoveringHistoryRowId.value = !isPinnedTop
                       ? clipboard.historyId
@@ -462,7 +493,7 @@ export function ClipboardHistoryRowComponent({
                   hoveringHistoryRowId.value = null
                 }}
                 onDoubleClickCapture={e => {
-                  if (!getSelectedText().text) {
+                  if (!isSingleClickToCopyPaste && !getSelectedText().text) {
                     if (e.altKey || e.metaKey) {
                       onCopyPaste(clipboard.historyId)
                     } else {
