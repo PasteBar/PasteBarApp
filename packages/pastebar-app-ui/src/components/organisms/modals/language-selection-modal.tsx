@@ -92,7 +92,7 @@ export default function LanguageSelectionModal({
           variant="link"
           type="button"
           onClick={onClose}
-          className="hover:bg-slate-200 px-2 absolute right-1.5 top-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 hover:dark:text-slate-400 hover:bg-transparent dark:hover:bg-transparent z-10"
+          className="hover:bg-slate-200 ring-0 focus-visible:ring-0 px-2 outline-none absolute right-1.5 top-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 hover:dark:text-slate-400 hover:bg-transparent dark:hover:bg-transparent z-10"
         >
           <X className="w-5 h-5" />
         </Button>
