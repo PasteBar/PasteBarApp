@@ -12,6 +12,9 @@ export default function createFilteredFlatBoardTreeWithClips(
   const findTabById = (tabId: string | undefined) =>
     allTabs.filter(tab => tab.tabId === tabId)
 
+  // Pre-compute lowercase search term
+  const lowerFind = find.toLowerCase()
+
   const findChildrenClips = (parentId: string | null) =>
     items
       .filter(item => {
@@ -19,13 +22,17 @@ export default function createFilteredFlatBoardTreeWithClips(
           return false
         }
 
-        const nameMatches = item.name.toLowerCase().includes(find.toLowerCase())
+        const nameMatches = item.name.toLowerCase().includes(lowerFind)
 
         const valueMatches =
           !isSearchNameOrLabelOnly &&
-          item.value?.toLowerCase().includes(find.toLowerCase())
+          item.value?.toLowerCase().includes(lowerFind)
 
-        return nameMatches || valueMatches
+        const descriptionMatches =
+          !isSearchNameOrLabelOnly &&
+          item.description?.toLowerCase().includes(lowerFind)
+
+        return nameMatches || valueMatches || descriptionMatches
       })
       .map(item => ({ ...item, type: CLIP, id: item.itemId.toString() }))
 
@@ -60,7 +67,7 @@ export default function createFilteredFlatBoardTreeWithClips(
         })
         .filter(board => board !== null)
     : allBoards
-        .filter(board => board.name.toLowerCase().includes(find.toLowerCase()))
+        .filter(board => board.name.toLowerCase().includes(lowerFind))
         .map(board => {
           const children = findAllChildrenClips(board.itemId.toString())
           return {
