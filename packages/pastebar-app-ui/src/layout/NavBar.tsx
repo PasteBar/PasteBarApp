@@ -47,6 +47,7 @@ import {
   Maximize,
   Minus,
   Pause,
+  PinOff,
   Play,
   Plus,
   RefreshCw,
@@ -90,6 +91,7 @@ import { Badge, Box, Button, Flex, Shortcut, Text } from '~/components/ui'
 import { useSelectCollectionById } from '~/hooks/queries/use-collections'
 import { useDeleteClipboardHistoryByIds } from '~/hooks/queries/use-history-items'
 import { useDeleteItemById } from '~/hooks/queries/use-items'
+import { useSignal } from '~/hooks/use-signal'
 
 import { PlayerMenu } from '../components/audio-player/PlayerMenu'
 import Logo from './Logo'
@@ -124,6 +126,16 @@ export function NavBar() {
     useAtomValue(collectionsStoreAtom)
   const { selectCollectionById } = useSelectCollectionById()
   const isDark = themeDark()
+
+  const onTopWindow = () => {
+    appWindow?.setAlwaysOnTop(true)
+    setIsMainWindowOnTop(true)
+  }
+
+  const offTopWindow = () => {
+    appWindow?.setAlwaysOnTop(false)
+    setIsMainWindowOnTop(false)
+  }
 
   useEffect(() => {
     invoke('is_autostart_enabled').then(isEnabled => {
@@ -200,6 +212,8 @@ export function NavBar() {
     setIsSavedClipsPanelVisibleOnly,
     isSimplifiedLayout,
     setIsSimplifiedLayout,
+    isMainWindowOnTop,
+    setIsMainWindowOnTop,
   } = useAtomValue(settingsStoreAtom)
 
   const {
@@ -217,6 +231,13 @@ export function NavBar() {
     setIsShowPinned,
     isSwapPanels,
   } = useAtomValue(uiStoreAtom)
+
+  // Restore window always-on-top state on startup
+  useEffect(() => {
+    if (isMainWindowOnTop) {
+      appWindow?.setAlwaysOnTop(true)
+    }
+  }, [isMainWindowOnTop])
 
   useHotkeys(['alt+b', 'ctrl+b', 'meta+b'], () => {
     navigate('/history', { replace: true })
@@ -1082,6 +1103,19 @@ export function NavBar() {
                   }}
                 >
                   {t('Show Disabled Collections', { ns: 'settings' })}
+                </MenubarCheckboxItem>
+
+                <MenubarCheckboxItem
+                  checked={isMainWindowOnTop}
+                  onClick={() => {
+                    if (!isMainWindowOnTop) {
+                      onTopWindow()
+                    } else {
+                      offTopWindow()
+                    }
+                  }}
+                >
+                  {t('Show Always on Top', { ns: 'navbar' })}
                 </MenubarCheckboxItem>
 
                 <MenubarSeparator />
@@ -1959,16 +1993,31 @@ export function NavBar() {
             <Icons.minimize className="h-3 w-3" />
           </Button>
           {!isHistoryPanelVisibleOnly && (
-            <Button
-              onClick={maximizeWindow}
-              title={t('Window:::Maximize Window', { ns: 'navbar' })}
-              variant="ghost"
-              className={`h-8 focus:outline-none ${
-                isShowNavBarItems ? 'opacity-1' : 'opacity-0'
-              }`}
-            >
-              <Maximize className="h-4 w-4" />
-            </Button>
+            <>
+              {!isMainWindowOnTop ? (
+                <Button
+                  onClick={maximizeWindow}
+                  title={t('Window:::Maximize Window', { ns: 'navbar' })}
+                  variant="ghost"
+                  className={`h-8 focus:outline-none ${
+                    isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+                  }`}
+                >
+                  <Maximize className="h-4 w-4" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={offTopWindow}
+                  title={t('Window:::UnPin Window', { ns: 'navbar' })}
+                  variant="ghost"
+                  className={`h-8 focus:outline-none ${
+                    isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+                  }`}
+                >
+                  <PinOff className="stroke-[1.8px] h-4 w-4" />
+                </Button>
+              )}
+            </>
           )}
           <Button
             onClick={hideWindow}
