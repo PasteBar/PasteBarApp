@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { listen } from '@tauri-apps/api/event'
 import { register, unregisterAll } from '@tauri-apps/api/globalShortcut'
@@ -10,6 +10,7 @@ import { useAtomValue } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
+import LanguageSelectionModal from '~/components/organisms/modals/language-selection-modal'
 import { ThemeProvider } from '~/components/theme-provider'
 
 import useKeyPressAlt from '~/hooks/use-keypress-alt'
@@ -52,6 +53,16 @@ function App() {
   const { i18n, t } = useTranslation()
   const { toast } = useToast()
   const historyWindowOpening = useSignal(false)
+  const showLanguageSelectionModal = useSignal(false)
+
+  const handleLanguageSelected = useCallback(
+    (languageCode: string) => {
+      settingsStore.updateSetting('userSelectedLanguage', languageCode)
+      settingsStore.updateSetting('isFirstRun', false)
+      showLanguageSelectionModal.value = false
+    },
+    [settingsStore]
+  )
 
   const handleActivity = useCallback(
     debounce(() => {
@@ -210,7 +221,7 @@ function App() {
 
         if (settings.isFirstRun?.valueBool) {
           appWindow.setSize(new LogicalSize(1105, 710))
-          settingsStore.updateSetting('isFirstRun', false)
+          showLanguageSelectionModal.value = true
         }
 
         if (
@@ -585,6 +596,16 @@ function App() {
             <Outlet />
           </div>
         </div>
+        {settingsStore.isFirstRun && (
+          <LanguageSelectionModal
+            open={showLanguageSelectionModal.value}
+            onClose={() => {
+              showLanguageSelectionModal.value = false
+              settingsStore.updateSetting('isFirstRun', false)
+            }}
+            onLanguageSelected={handleLanguageSelected}
+          />
+        )}
       </ThemeProvider>
     </>
   )

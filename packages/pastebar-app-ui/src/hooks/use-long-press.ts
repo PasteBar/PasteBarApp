@@ -27,7 +27,7 @@ export function useLongPress(
     delay = 600,
     threshold = 10,
     cancelOnMove = true,
-    preventDefault = true
+    preventDefault = true,
   } = options
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -64,7 +64,7 @@ export function useLongPress(
       const touch = 'touches' in e ? e.touches[0] : e
       startPositionRef.current = {
         x: touch.clientX,
-        y: touch.clientY
+        y: touch.clientY,
       }
 
       if (preventDefault) {
@@ -120,14 +120,11 @@ export function useLongPress(
   }, [clear])
 
   // Prevent context menu on long press
-  const handleContextMenu = useCallback(
-    (e: React.MouseEvent) => {
-      if (isLongPressTriggeredRef.current || timeoutRef.current) {
-        e.preventDefault()
-      }
-    },
-    []
-  )
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
+    if (isLongPressTriggeredRef.current || timeoutRef.current) {
+      e.preventDefault()
+    }
+  }, [])
 
   return {
     onMouseDown: start as (e: React.MouseEvent) => void,
@@ -138,7 +135,7 @@ export function useLongPress(
     onTouchEnd: end as (e: React.TouchEvent) => void,
     onTouchMove: move as (e: React.TouchEvent) => void,
     onTouchCancel: cancel,
-    onContextMenu: preventDefault ? handleContextMenu : undefined
+    onContextMenu: preventDefault ? handleContextMenu : undefined,
   }
 }
 
