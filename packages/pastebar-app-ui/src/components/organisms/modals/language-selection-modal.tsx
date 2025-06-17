@@ -86,7 +86,7 @@ export default function LanguageSelectionModal({
   })
 
   return (
-    <Modal open={open} handleClose={() => {}} canClose={false} positionTop={true}>
+    <Modal open={open} handleClose={() => {}} positionTop={true}>
       <Modal.Body className="min-w-[400px] max-w-[500px] relative">
         <Button
           variant="link"
@@ -102,7 +102,7 @@ export default function LanguageSelectionModal({
               <Text className="font-semibold text-2xl mb-2 justify-center">
                 {t('Welcome to PasteBar', { ns: 'common2' })}
               </Text>
-              <Text className="text-gray-600 dark:text-gray-400">
+              <Text className="text-gray-600 dark:text-gray-400 justify-center">
                 {t('Please select your preferred language', { ns: 'common2' })}
               </Text>
             </div>
