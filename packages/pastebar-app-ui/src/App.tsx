@@ -207,6 +207,8 @@ function App() {
           isSavedClipsPanelVisibleOnly: settings.isSavedClipsPanelVisibleOnly?.valueBool,
           isSimplifiedLayout: settings.isSimplifiedLayout?.valueBool ?? true,
           isMainWindowOnTop: settings.isMainWindowOnTop?.valueBool ?? false,
+          isQuickPasteCopyOnly: settings.isQuickPasteCopyOnly?.valueBool ?? false,
+          isQuickPasteAutoClose: settings.isQuickPasteAutoClose?.valueBool ?? true,
           isAppReady: true,
         })
         settingsStore.initConstants({

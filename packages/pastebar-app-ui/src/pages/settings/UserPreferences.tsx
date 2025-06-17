@@ -93,6 +93,10 @@ export default function UserPreferences() {
     setIsSavedClipsPanelVisibleOnly,
     isSimplifiedLayout,
     setIsSimplifiedLayout,
+    isQuickPasteCopyOnly,
+    setIsQuickPasteCopyOnly,
+    isQuickPasteAutoClose,
+    setIsQuickPasteAutoClose,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
@@ -1189,6 +1193,82 @@ export default function UserPreferences() {
                       >
                         {t('Reset', { ns: 'common' })}
                       </Button>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="animate-in fade-in text-md font-medium">
+                        {t('Quick Paste Window Options', { ns: 'settings2' })}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground mb-4">
+                        {t(
+                          'Configure the behavior of the Quick Paste window when selecting items',
+                          {
+                            ns: 'settings2',
+                          }
+                        )}
+                      </Text>
+
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Text className="text-[15px] font-extrabold">
+                              {t('Copy items only (no auto-paste)', { ns: 'settings2' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {t(
+                                'When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.',
+                                { ns: 'settings2' }
+                              )}
+                            </Text>
+                          </div>
+                          <Switch
+                            checked={isQuickPasteCopyOnly}
+                            onCheckedChange={async checked => {
+                              try {
+                                await setIsQuickPasteCopyOnly(checked)
+                              } catch (error) {
+                                console.error(
+                                  'Failed to update quick paste copy only setting:',
+                                  error
+                                )
+                              }
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Text className="text-[15px] font-extrabold">
+                              {t('Auto-close window after action', { ns: 'settings2' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {t(
+                                'When enabled, the Quick Paste window will automatically close after copying or pasting an item.',
+                                { ns: 'settings2' }
+                              )}
+                            </Text>
+                          </div>
+                          <Switch
+                            checked={isQuickPasteAutoClose}
+                            onCheckedChange={async checked => {
+                              try {
+                                await setIsQuickPasteAutoClose(checked)
+                              } catch (error) {
+                                console.error(
+                                  'Failed to update quick paste auto close setting:',
+                                  error
+                                )
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 </Box>

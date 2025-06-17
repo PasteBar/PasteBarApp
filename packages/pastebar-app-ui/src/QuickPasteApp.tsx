@@ -122,6 +122,8 @@ function QuickPasteApp() {
           userSelectedLanguage: settings.userSelectedLanguage?.valueText,
           clipTextMinLength: settings.clipTextMinLength?.valueInt,
           clipTextMaxLength: settings.clipTextMaxLength?.valueInt,
+          isQuickPasteCopyOnly: settings.isQuickPasteCopyOnly?.valueBool ?? false,
+          isQuickPasteAutoClose: settings.isQuickPasteAutoClose?.valueBool ?? true,
           isAppReady: true,
         })
 
