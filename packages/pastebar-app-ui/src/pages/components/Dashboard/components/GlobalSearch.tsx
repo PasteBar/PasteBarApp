@@ -64,6 +64,12 @@ const FILTER = {
   MENUS: 'menus',
 } as const
 
+// Utility function for selection styles
+const getSelectionStyles = (isSelected: boolean) => clsx(
+  'rounded-md transition-colors',
+  isSelected && 'bg-blue-100 dark:bg-blue-900/30 ring-2 outline-none scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 ring-offset-white dark:ring-offset-gray-800'
+)
+
 export function GlobalSearch({ isDark }: { isDark: boolean }) {
   const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
@@ -132,13 +138,16 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
 
     const menus = menuItems.length > 0 ? menuItems : collectionWithMenuItems?.items || []
     const data = menus.length > 0 ? createMenuTree(menus, null, false) : []
+    
+    // Pre-compute lowercase search term
+    const lowerSearchTerm = debouncedSearchTerm.toLowerCase()
 
     const hasMatchingDescendant = (item: Item) => {
-      if (item.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())) {
+      if (item.name.toLowerCase().includes(lowerSearchTerm)) {
         return true
       }
       if (
-        item.value?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
+        item.value?.toLowerCase().includes(lowerSearchTerm) &&
         !isSearchNameOrLabelOnly
       ) {
         return true
@@ -367,35 +376,25 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
     }
   }, [hasSearch, fetchCollectionWithClips, fetchCollectionWithMenuItems])
 
-  useEffect(() => {
-    if (!showSearchModal) {
-      recentSearchTerm.value = searchTerm
-      setSearchTerm('')
-    }
-  }, [showSearchModal])
-
   useHotkeys(['meta+k', 'ctrl+k', 'alt+k'], toggleSearch, {}, [])
   useHotkeys('/', toggleSearch, {}, [])
 
-  // Global keyboard event listener for search modal
-  useEffect(() => {
-    if (!showSearchModal) return
-
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      // Only handle if search modal is open
-      if (!showSearchModal) return
+  // Extract keyboard handler with minimal dependencies
+  const handleGlobalKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      const currentItems = getCurrentItems()
+      const totalItems = currentItems.length
+      const availableTabs = getAvailableTabs()
 
       if (e.key === 'ArrowDown') {
         e.preventDefault()
         e.stopPropagation()
-        const totalItems = getTotalItemsCount()
         if (totalItems > 0) {
           setSelectedIndex(prev => (prev === -1 ? 0 : (prev + 1) % totalItems))
         }
       } else if (e.key === 'ArrowUp') {
         e.preventDefault()
         e.stopPropagation()
-        const totalItems = getTotalItemsCount()
         if (totalItems > 0) {
           setSelectedIndex(prev =>
             prev === -1 ? totalItems - 1 : (prev - 1 + totalItems) % totalItems
@@ -404,7 +403,6 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
       } else if (e.key === 'Tab' && !e.shiftKey) {
         e.preventDefault()
         e.stopPropagation()
-        const availableTabs = getAvailableTabs()
         if (availableTabs.length > 1) {
           const currentTabIndex = availableTabs.indexOf(filter)
           const nextTabIndex = (currentTabIndex + 1) % availableTabs.length
@@ -414,7 +412,6 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
       } else if (e.key === 'Tab' && e.shiftKey) {
         e.preventDefault()
         e.stopPropagation()
-        const availableTabs = getAvailableTabs()
         if (availableTabs.length > 1) {
           const currentTabIndex = availableTabs.indexOf(filter)
           const prevTabIndex =
@@ -433,7 +430,13 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
         e.stopPropagation()
         setShowSearchModal(false)
       }
-    }
+    },
+    [filter, selectedIndex, handleCopySelectedItem, flattenedItems]
+  )
+
+  // Separate effect for event listener management
+  useEffect(() => {
+    if (!showSearchModal) return
 
     // Add listener with high priority (capture phase)
     document.addEventListener('keydown', handleGlobalKeyDown, true)
@@ -441,13 +444,7 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
     return () => {
       document.removeEventListener('keydown', handleGlobalKeyDown, true)
     }
-  }, [
-    showSearchModal,
-    getTotalItemsCount,
-    getAvailableTabs,
-    filter,
-    handleCopySelectedItem,
-  ])
+  }, [showSearchModal, handleGlobalKeyDown])
 
   useEffect(() => {
     if (!hasSearch || flattenedItems.clips.length > 0) {
@@ -473,8 +470,7 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
   useEffect(() => {
     if (scrollContainerRef.current && showSearchModal && selectedIndex >= 0) {
       // Get the actual DOM element from SimpleBar component
-      // @ts-expect-error
-      const simpleBarElement = scrollContainerRef.current?.el
+      const simpleBarElement = (scrollContainerRef.current as any)?.el
       const container = simpleBarElement?.querySelector('.simplebar-content-wrapper')
       const selectedElement = container?.querySelector(`.search-item-${selectedIndex}`)
       if (selectedElement && container) {
@@ -704,6 +700,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                 width: 420,
               }}
               autoHide={false}
+              role="listbox"
+              aria-label="Search results"
+              aria-activedescendant={selectedIndex >= 0 ? `search-item-${selectedIndex}` : undefined}
             >
               {filter === FILTER.CLIPS &&
                 clipItemsFiltered.results
@@ -724,22 +723,14 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                         {boardGroup.map((board: Board, index) => {
                           // Find if any clips in this board are selected
                           const currentItems = getCurrentItems()
-                          const selectedClipId =
-                            selectedIndex >= 0
-                              ? currentItems
-                                  .filter(
-                                    item =>
-                                      item.type === 'clip' &&
-                                      item.boardIndex === groupIndex
-                                  )
-                                  .map(item => {
-                                    const globalIndex = currentItems.findIndex(
-                                      ci => ci.id === item.id
-                                    )
-                                    return globalIndex === selectedIndex ? item.id : null
-                                  })
-                                  .filter(Boolean)[0] || null
-                              : null
+                          let selectedClipId = null
+                          
+                          if (selectedIndex >= 0 && selectedIndex < currentItems.length) {
+                            const selectedItem = currentItems[selectedIndex]
+                            if (selectedItem?.type === 'clip' && selectedItem?.boardIndex === groupIndex) {
+                              selectedClipId = selectedItem.id
+                            }
+                          }
 
                           return (
                             <Box
@@ -748,6 +739,8 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                                 'rounded-md transition-colors',
                                 `search-item-${groupIndex}`
                               )}
+                              role="group"
+                              aria-label={`Board: ${board.name}`}
                             >
                               <BoardComponentMemorized
                                 board={board}
@@ -795,15 +788,17 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                             selectedIndex >= 0 &&
                             currentItems[selectedIndex]?.type === 'board' &&
                             currentItems[selectedIndex]?.id === board.id
+                          const boardGlobalIndex = currentItems.findIndex(item => item.id === board.id)
                           return (
                             <Box
                               key={`${groupIndex}-${index}`}
                               className={clsx(
-                                'rounded-md transition-colors',
-                                `search-item-${selectedIndex}`,
-                                isSelected &&
-                                  'bg-blue-100 dark:bg-blue-900/30 ring-2 outline-none scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 ring-offset-white dark:ring-offset-gray-800'
+                                `search-item-${boardGlobalIndex}`,
+                                getSelectionStyles(isSelected)
                               )}
+                              role="option"
+                              aria-selected={isSelected}
+                              id={isSelected ? `search-item-${selectedIndex}` : undefined}
                             >
                               <BoardComponentMemorized
                                 board={board}
@@ -839,15 +834,17 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                       selectedIndex >= 0 &&
                       currentItems[selectedIndex]?.type === 'menu' &&
                       currentItems[selectedIndex]?.id === item.itemId
+                    const menuGlobalIndex = currentItems.findIndex(menuItem => menuItem.id === item.itemId)
                     return (
                       <AccordionItem key={`${item.itemId}`} value={item.itemId}>
                         <Box
                           className={clsx(
-                            'rounded-md transition-colors',
-                            `search-item-${selectedIndex}`,
-                            isSelected &&
-                              'bg-blue-100 dark:bg-blue-900/30 ring-2 outline-none scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 ring-offset-white dark:ring-offset-gray-800'
+                            `search-item-${menuGlobalIndex}`,
+                            getSelectionStyles(isSelected)
                           )}
+                          role="option"
+                          aria-selected={isSelected}
+                          id={isSelected ? `search-item-${selectedIndex}` : undefined}
                         >
                           <MenuCollapsibleItem
                             label={item.name}
