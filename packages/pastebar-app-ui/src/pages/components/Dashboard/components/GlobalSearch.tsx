@@ -1,15 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSignal } from '@preact/signals-react'
 import { Portal } from '@radix-ui/react-portal'
 import createFilteredFlatBoardTree from '~/libs/create-filtered-flat-board-tree'
 import createMenuTree from '~/libs/create-menu-tree'
 import {
   collectionsStoreAtom,
+  currentNavigationContext,
   isNavBarHovering,
+  keyboardSelectedBoardId,
+  keyboardSelectedClipId,
+  keyboardSelectedItemId,
   recentSearchTerm,
   settingsStoreAtom,
   uiStoreAtom,
 } from '~/store'
+import clsx from 'clsx'
 import { useAtomValue } from 'jotai/react'
 import { Search, Settings } from 'lucide-react'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -58,11 +64,19 @@ const FILTER = {
   MENUS: 'menus',
 } as const
 
+// Utility function for selection styles
+const getSelectionStyles = (isSelected: boolean) => clsx(
+  'rounded-md transition-colors',
+  isSelected && 'bg-blue-100 dark:bg-blue-900/30 ring-2 outline-none scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 ring-offset-white dark:ring-offset-gray-800'
+)
+
 export function GlobalSearch({ isDark }: { isDark: boolean }) {
   const { t } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState<string>(FILTER.CLIPS)
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1)
   const searchHistoryInputRef = useRef<HTMLElement>()
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
   const deletingMenuItemIds = useSignal<string[] | null>(null)
   const showEditMenuItemId = useSignal<string | null>(null)
   const showMultiSelectItems = useSignal(false)
@@ -76,7 +90,7 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
     isSearchNameOrLabelOnly,
   } = useAtomValue(settingsStoreAtom)
 
-  const [copiedItem] = useCopyClipItem({})
+  const [copiedItem, handleCopyClipItem] = useCopyClipItem({})
   const [pastedItem] = usePasteClipItem({})
 
   const { clipItems, tabs, setCurrentTab } = useAtomValue(collectionsStoreAtom)
@@ -91,10 +105,22 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
 
   const [showSearchModal, setShowSearchModal] = useState(false)
 
+  // Reset all keyboard navigation when search opens
+  const resetKeyboardNavigation = () => {
+    currentNavigationContext.value = null
+    keyboardSelectedItemId.value = null
+    keyboardSelectedClipId.value = null
+    keyboardSelectedBoardId.value = null
+  }
+
   const toggleSearch = (e: Event) => {
     e.preventDefault()
     e.stopPropagation()
-    setShowSearchModal(show => !show)
+    setShowSearchModal(show => {
+      const newShow = !show
+      resetKeyboardNavigation()
+      return newShow
+    })
     searchHistoryInputRef.current?.focus()
   }
 
@@ -112,13 +138,16 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
 
     const menus = menuItems.length > 0 ? menuItems : collectionWithMenuItems?.items || []
     const data = menus.length > 0 ? createMenuTree(menus, null, false) : []
+    
+    // Pre-compute lowercase search term
+    const lowerSearchTerm = debouncedSearchTerm.toLowerCase()
 
     const hasMatchingDescendant = (item: Item) => {
-      if (item.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())) {
+      if (item.name.toLowerCase().includes(lowerSearchTerm)) {
         return true
       }
       if (
-        item.value?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
+        item.value?.toLowerCase().includes(lowerSearchTerm) &&
         !isSearchNameOrLabelOnly
       ) {
         return true
@@ -224,6 +253,113 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
     setShowSearchModal(false)
   }
 
+  // Create flattened item lists for navigation
+  const flattenedItems = useMemo(() => {
+    const clips: Array<{
+      id: UniqueIdentifier
+      type: 'clip'
+      data: any
+      boardIndex: number
+    }> = []
+    const boards: Array<{ id: UniqueIdentifier; type: 'board'; data: any }> = []
+    const menus: Array<{ id: UniqueIdentifier; type: 'menu'; data: any }> = []
+
+    // Flatten clips from all boards
+    clipItemsFiltered.results.forEach((board, boardIndex) => {
+      board.children?.forEach(clip => {
+        clips.push({
+          id: clip.id,
+          type: 'clip',
+          data: clip,
+          boardIndex,
+        })
+      })
+    })
+
+    // Flatten boards
+    boardsFiltered.results.forEach(board => {
+      boards.push({
+        id: board.id,
+        type: 'board',
+        data: board,
+      })
+    })
+
+    // Flatten menus
+    menuItemsFiltered.results.forEach(menu => {
+      menus.push({
+        id: menu.itemId,
+        type: 'menu',
+        data: menu,
+      })
+    })
+
+    return { clips, boards, menus }
+  }, [clipItemsFiltered.results, boardsFiltered.results, menuItemsFiltered.results])
+
+  // Get current items array and total count
+  const getCurrentItems = () => {
+    if (filter === FILTER.CLIPS) return flattenedItems.clips
+    if (filter === FILTER.BOARDS) return flattenedItems.boards
+    if (filter === FILTER.MENUS) return flattenedItems.menus
+    return []
+  }
+
+  const getTotalItemsCount = () => {
+    return getCurrentItems().length
+  }
+
+  // Get available tabs with items
+  const getAvailableTabs = () => {
+    const tabs = []
+    if (flattenedItems.clips.length > 0) tabs.push(FILTER.CLIPS)
+    if (flattenedItems.boards.length > 0) tabs.push(FILTER.BOARDS)
+    if (flattenedItems.menus.length > 0) tabs.push(FILTER.MENUS)
+    return tabs
+  }
+
+  // Handle copying selected item
+  const handleCopySelectedItem = useCallback(async () => {
+    const currentItems = getCurrentItems()
+    if (
+      currentItems.length === 0 ||
+      selectedIndex < 0 ||
+      selectedIndex >= currentItems.length
+    )
+      return
+
+    const selectedItem = currentItems[selectedIndex]
+
+    if (selectedItem.type === 'clip') {
+      handleCopyClipItem(selectedItem.id)
+      setTimeout(() => {
+        setShowSearchModal(false)
+      }, 1000)
+    } else if (selectedItem.type === 'board') {
+      // For boards, navigate to the board
+      const boardData = selectedItem.data
+      if (boardData && boardData.tabId) {
+        setCurrentTab(boardData.tabId)
+        closeGlobalSearchNavigateHistory()
+      }
+    } else if (selectedItem.type === 'menu') {
+      // For menus, copy the menu item value
+      const menuData = selectedItem.data
+      if (menuData?.value) {
+        handleCopyClipItem(selectedItem.id)
+        setTimeout(() => {
+          setShowSearchModal(false)
+        }, 1000)
+      }
+    }
+  }, [
+    selectedIndex,
+    getCurrentItems,
+    handleCopyClipItem,
+    setCurrentTab,
+    closeGlobalSearchNavigateHistory,
+  ])
+
   useEffect(() => {
     if (!showSearchModal) {
       recentSearchTerm.value = searchTerm
@@ -240,25 +376,115 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
     }
   }, [hasSearch, fetchCollectionWithClips, fetchCollectionWithMenuItems])
 
-  useEffect(() => {
-    if (!showSearchModal) {
-      recentSearchTerm.value = searchTerm
-      setSearchTerm('')
-    }
-  }, [showSearchModal])
-
   useHotkeys(['meta+k', 'ctrl+k', 'alt+k'], toggleSearch, {}, [])
   useHotkeys('/', toggleSearch, {}, [])
 
+  // Extract keyboard handler with minimal dependencies
+  const handleGlobalKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      const currentItems = getCurrentItems()
+      const totalItems = currentItems.length
+      const availableTabs = getAvailableTabs()
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        e.stopPropagation()
+        if (totalItems > 0) {
+          setSelectedIndex(prev => (prev === -1 ? 0 : (prev + 1) % totalItems))
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        e.stopPropagation()
+        if (totalItems > 0) {
+          setSelectedIndex(prev =>
+            prev === -1 ? totalItems - 1 : (prev - 1 + totalItems) % totalItems
+          )
+        }
+      } else if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault()
+        e.stopPropagation()
+        if (availableTabs.length > 1) {
+          const currentTabIndex = availableTabs.indexOf(filter)
+          const nextTabIndex = (currentTabIndex + 1) % availableTabs.length
+          setFilter(availableTabs[nextTabIndex])
+          setSelectedIndex(-1)
+        }
+      } else if (e.key === 'Tab' && e.shiftKey) {
+        e.preventDefault()
+        e.stopPropagation()
+        if (availableTabs.length > 1) {
+          const currentTabIndex = availableTabs.indexOf(filter)
+          const prevTabIndex =
+            (currentTabIndex - 1 + availableTabs.length) % availableTabs.length
+          setFilter(availableTabs[prevTabIndex])
+          setSelectedIndex(-1)
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault()
+        e.stopPropagation()
+        if (selectedIndex >= 0) {
+          handleCopySelectedItem()
+        }
+      } else if (e.key === 'Escape') {
+        e.preventDefault()
+        e.stopPropagation()
+        setShowSearchModal(false)
+      }
+    },
+    [filter, selectedIndex, handleCopySelectedItem, flattenedItems]
+  )
+
+  // Separate effect for event listener management
   useEffect(() => {
-    if (!hasSearch || clipItemsFiltered.count > 0) {
+    if (!showSearchModal) return
+
+    // Add listener with high priority (capture phase)
+    document.addEventListener('keydown', handleGlobalKeyDown, true)
+
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyDown, true)
+    }
+  }, [showSearchModal, handleGlobalKeyDown])
+
+  useEffect(() => {
+    if (!hasSearch || flattenedItems.clips.length > 0) {
       setFilter(FILTER.CLIPS)
-    } else if (boardsFiltered.count > 0) {
+    } else if (flattenedItems.boards.length > 0) {
       setFilter(FILTER.BOARDS)
-    } else if (menuItemsFiltered.count > 0) {
+    } else if (flattenedItems.menus.length > 0) {
       setFilter(FILTER.MENUS)
     }
-  }, [clipItemsFiltered.count, boardsFiltered.count, hasSearch])
+  }, [
+    flattenedItems.clips.length,
+    flattenedItems.boards.length,
+    flattenedItems.menus.length,
+    hasSearch,
+  ])
+
+  // Reset selected index when search term or filter changes
+  useEffect(() => {
+    setSelectedIndex(-1)
+  }, [debouncedSearchTerm, filter])
+
+  // Scroll to selected item when index changes
+  useEffect(() => {
+    if (scrollContainerRef.current && showSearchModal && selectedIndex >= 0) {
+      // Get the actual DOM element from SimpleBar component
+      const simpleBarElement = (scrollContainerRef.current as any)?.el
+      const container = simpleBarElement?.querySelector('.simplebar-content-wrapper')
+      const selectedElement = container?.querySelector(`.search-item-${selectedIndex}`)
+      if (selectedElement && container) {
+        const containerRect = container.getBoundingClientRect()
+        const elementRect = selectedElement.getBoundingClientRect()
+        const isAbove = elementRect.top < containerRect.top
+        const isBelow = elementRect.bottom > containerRect.bottom
+
+        if (isAbove || isBelow) {
+          selectedElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        }
+      }
+    }
+  }, [selectedIndex, showSearchModal])
 
   useEffect(() => {
     if (showSearchModal && (copiedItem || pastedItem) && isAutoCloseOnCopyPaste) {
@@ -275,7 +501,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
         modal={false}
         open={showSearchModal}
         onOpenChange={() => {
-          setShowSearchModal(!showSearchModal)
+          const newShow = !showSearchModal
+          setShowSearchModal(newShow)
+          resetKeyboardNavigation()
         }}
       >
         <PopoverAnchor asChild>
@@ -329,6 +557,10 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
           sideOffset={4}
           onOpenAutoFocus={e => {
             e.preventDefault()
+            // Keep focus on the input when modal opens
+            setTimeout(() => {
+              searchHistoryInputRef.current?.focus()
+            }, 0)
           }}
           onInteractOutside={e => {
             e.preventDefault()
@@ -423,7 +655,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                       variant="outline"
                       className="text-[12px] ml-1 py-0.5 bg-slate-100 text-gray-400 dark:bg-slate-700 dark:text-gray-400 !font-mono border-0"
                     >
-                      {clipItemsFiltered.count > 99 ? '99+' : clipItemsFiltered.count}
+                      {flattenedItems.clips.length > 99
+                        ? '99+'
+                        : flattenedItems.clips.length}
                     </Badge>
                   </TabsTrigger>
                   <TabsTrigger
@@ -435,7 +669,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                       variant="outline"
                       className="text-[12px] ml-1 py-0.5 bg-slate-100 text-gray-400 dark:bg-slate-700 dark:text-gray-400 !font-mono border-0"
                     >
-                      {boardsFiltered.count > 99 ? '99+' : boardsFiltered.count}
+                      {flattenedItems.boards.length > 99
+                        ? '99+'
+                        : flattenedItems.boards.length}
                     </Badge>
                   </TabsTrigger>
                   <TabsTrigger
@@ -447,13 +683,16 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                       variant="outline"
                       className="text-[12px] ml-1 py-0.5 bg-slate-100 text-gray-400 dark:bg-slate-700 dark:text-gray-400 !font-mono border-0"
                     >
-                      {menuItemsFiltered.count > 99 ? '99+' : menuItemsFiltered.count}
+                      {flattenedItems.menus.length > 99
+                        ? '99+'
+                        : flattenedItems.menus.length}
                     </Badge>
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
             )}
             <SimpleBar
+              ref={mergeRefs(scrollContainerRef)}
               className="flex-col"
               style={{
                 height: 'auto',
@@ -461,6 +700,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                 width: 420,
               }}
               autoHide={false}
+              role="listbox"
+              aria-label="Search results"
+              aria-activedescendant={selectedIndex >= 0 ? `search-item-${selectedIndex}` : undefined}
             >
               {filter === FILTER.CLIPS &&
                 clipItemsFiltered.results
@@ -478,22 +720,47 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                   .map((boardGroup: Board[], groupIndex) => {
                     return (
                       <Box key={`${groupIndex}`} className="mt-1 mb-2">
-                        {boardGroup.map((board: Board, index) => (
-                          <BoardComponentMemorized
-                            key={`${groupIndex}-${index}`}
-                            board={board}
-                            isDark={isDark}
-                            closeGlobalSearch={closeGlobalSearchNavigateHistory}
-                            setCurrentTab={setCurrentTab}
-                            globalSearchTerm={debouncedSearchTerm}
-                            isHistoryDragActive={false}
-                            currentTabLayout={'auto'}
-                            order={board.orderNumber}
-                            isLastBoard={index === boardGroup.length - 1}
-                            selectedItemIds={[]}
-                            setSelectedItemId={() => {}}
-                          />
-                        ))}
+                        {boardGroup.map((board: Board, index) => {
+                          // Find if any clips in this board are selected
+                          const currentItems = getCurrentItems()
+                          let selectedClipId = null
+                          
+                          if (selectedIndex >= 0 && selectedIndex < currentItems.length) {
+                            const selectedItem = currentItems[selectedIndex]
+                            if (selectedItem?.type === 'clip' && selectedItem?.boardIndex === groupIndex) {
+                              selectedClipId = selectedItem.id
+                            }
+                          }
+
+                          return (
+                            <Box
+                              key={`${groupIndex}-${index}`}
+                              className={clsx(
+                                'rounded-md transition-colors',
+                                `search-item-${groupIndex}`
+                              )}
+                              role="group"
+                              aria-label={`Board: ${board.name}`}
+                            >
+                              <BoardComponentMemorized
+                                board={board}
+                                isDark={isDark}
+                                closeGlobalSearch={closeGlobalSearchNavigateHistory}
+                                setCurrentTab={setCurrentTab}
+                                globalSearchTerm={debouncedSearchTerm}
+                                isHistoryDragActive={false}
+                                currentTabLayout={'auto'}
+                                order={board.orderNumber}
+                                isLastBoard={index === boardGroup.length - 1}
+                                selectedItemIds={[]}
+                                setSelectedItemId={() => {}}
+                                keyboardSelectedClipId={{
+                                  value: selectedClipId as UniqueIdentifier,
+                                }}
+                              />
+                            </Box>
+                          )
+                        })}
                       </Box>
                     )
                   })}
@@ -514,23 +781,43 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                   .map((boardGroup: Board[], groupIndex) => {
                     return (
                       <Box key={`${groupIndex}`} className="mt-1 mb-2">
-                        {boardGroup.map((board: Board, index) => (
-                          <BoardComponentMemorized
-                            key={`${groupIndex}-${index}`}
-                            board={board}
-                            isDark={isDark}
-                            globalSearchTerm={debouncedSearchTerm}
-                            setCurrentTab={setCurrentTab}
-                            closeGlobalSearch={closeGlobalSearchNavigateHistory}
-                            isHistoryDragActive={false}
-                            isGlobalSearchBoardsOnly={true}
-                            currentTabLayout={'auto'}
-                            order={board.orderNumber}
-                            isLastBoard={index === boardGroup.length - 1}
-                            selectedItemIds={[]}
-                            setSelectedItemId={() => {}}
-                          />
-                        ))}
+                        {boardGroup.map((board: Board, index) => {
+                          // Check if this board is the currently selected item
+                          const currentItems = getCurrentItems()
+                          const isSelected =
+                            selectedIndex >= 0 &&
+                            currentItems[selectedIndex]?.type === 'board' &&
+                            currentItems[selectedIndex]?.id === board.id
+                          const boardGlobalIndex = currentItems.findIndex(item => item.id === board.id)
+                          return (
+                            <Box
+                              key={`${groupIndex}-${index}`}
+                              className={clsx(
+                                `search-item-${boardGlobalIndex}`,
+                                getSelectionStyles(isSelected)
+                              )}
+                              role="option"
+                              aria-selected={isSelected}
+                              id={isSelected ? `search-item-${selectedIndex}` : undefined}
+                            >
+                              <BoardComponentMemorized
+                                board={board}
+                                isDark={isDark}
+                                globalSearchTerm={debouncedSearchTerm}
+                                setCurrentTab={setCurrentTab}
+                                closeGlobalSearch={closeGlobalSearchNavigateHistory}
+                                isHistoryDragActive={false}
+                                isGlobalSearchBoardsOnly={true}
+                                currentTabLayout={'auto'}
+                                order={board.orderNumber}
+                                isLastBoard={index === boardGroup.length - 1}
+                                selectedItemIds={[]}
+                                setSelectedItemId={() => {}}
+                                keyboardSelectedClipId={{ value: null }}
+                              />
+                            </Box>
+                          )
+                        })}
                       </Box>
                     )
                   })}
@@ -540,41 +827,60 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                   collapsible
                   className="flex items-center flex-col"
                 >
-                  {menuItemsFiltered.results.map((item, i) => (
-                    <AccordionItem key={`${item.itemId}`} value={item.itemId}>
-                      <MenuCollapsibleItem
-                        label={item.name}
-                        globalSearchTerm={debouncedSearchTerm}
-                        closeGlobalSearch={closeGlobalSearchNavigateMenu}
-                        isLastItem={i === menuItemsFiltered.results.length - 1}
-                        deletingMenuItemIds={deletingMenuItemIds}
-                        isFirstItem={i === 0}
-                        isDark={isDark}
-                        showEditMenuItemId={showEditMenuItemId}
-                        hasChildren={item.hasChildren}
-                        isSeparator={item.isSeparator}
-                        showMultiSelectItems={showMultiSelectItems}
-                        hasSelectedItems={false}
-                        id={item.itemId}
-                        item={item}
-                        isClip={item.isClip}
-                        isForm={item.isForm && item.isClip}
-                        isWebRequest={item.isWebRequest && item.isClip}
-                        isWebScraping={item.isWebScraping && item.isClip}
-                        isCommand={item.isCommand && item.isClip}
-                        isCreatingMenuItem={isCreatingMenuItem}
-                        indent={item.indent}
-                        onFolderClose={() => {}}
-                        onFolderOpen={() => {}}
-                        isClosedFolder={false}
-                        isSelected={false}
-                        hasMultipleSelectedItems={false}
-                        isOpen={false}
-                      >
-                        <></>
-                      </MenuCollapsibleItem>
-                    </AccordionItem>
-                  ))}
+                  {menuItemsFiltered.results.map((item, i) => {
+                    // Check if this menu item is the currently selected item
+                    const currentItems = getCurrentItems()
+                    const isSelected =
+                      selectedIndex >= 0 &&
+                      currentItems[selectedIndex]?.type === 'menu' &&
+                      currentItems[selectedIndex]?.id === item.itemId
+                    const menuGlobalIndex = currentItems.findIndex(menuItem => menuItem.id === item.itemId)
+                    return (
+                      <AccordionItem key={`${item.itemId}`} value={item.itemId}>
+                        <Box
+                          className={clsx(
+                            `search-item-${menuGlobalIndex}`,
+                            getSelectionStyles(isSelected)
+                          )}
+                          role="option"
+                          aria-selected={isSelected}
+                          id={isSelected ? `search-item-${selectedIndex}` : undefined}
+                        >
+                          <MenuCollapsibleItem
+                            label={item.name}
+                            globalSearchTerm={debouncedSearchTerm}
+                            closeGlobalSearch={closeGlobalSearchNavigateMenu}
+                            isLastItem={i === menuItemsFiltered.results.length - 1}
+                            deletingMenuItemIds={deletingMenuItemIds}
+                            isFirstItem={i === 0}
+                            isDark={isDark}
+                            showEditMenuItemId={showEditMenuItemId}
+                            hasChildren={item.hasChildren}
+                            isSeparator={item.isSeparator}
+                            showMultiSelectItems={showMultiSelectItems}
+                            hasSelectedItems={false}
+                            id={item.itemId}
+                            item={item}
+                            isClip={item.isClip}
+                            isForm={item.isForm && item.isClip}
+                            isWebRequest={item.isWebRequest && item.isClip}
+                            isWebScraping={item.isWebScraping && item.isClip}
+                            isCommand={item.isCommand && item.isClip}
+                            isCreatingMenuItem={isCreatingMenuItem}
+                            indent={item.indent}
+                            onFolderClose={() => {}}
+                            onFolderOpen={() => {}}
+                            isClosedFolder={false}
+                            isSelected={false}
+                            hasMultipleSelectedItems={false}
+                            isOpen={false}
+                          >
+                            <></>
+                          </MenuCollapsibleItem>
+                        </Box>
+                      </AccordionItem>
+                    )
+                  })}
                 </Accordion>
               )}
               {!hasSearch ? (
@@ -583,9 +889,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                 </Box>
               ) : (
                 <>
-                  {clipItemsFiltered.count === 0 &&
-                  boardsFiltered.count === 0 &&
-                  menuItemsFiltered.count === 0 ? (
+                  {flattenedItems.clips.length === 0 &&
+                  flattenedItems.boards.length === 0 &&
+                  flattenedItems.menus.length === 0 ? (
                     <Box className="text-gray-400/90 dark:text-gray-600 text-center mb-1">
                       {t('GlobalSearch:::Nothing found in clips, boards or menus.', {
                         ns: 'navbar',
@@ -593,7 +899,7 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                     </Box>
                   ) : (
                     <>
-                      {clipItemsFiltered.count === 0 && filter === FILTER.CLIPS && (
+                      {flattenedItems.clips.length === 0 && filter === FILTER.CLIPS && (
                         <Box className="text-gray-400/90 dark:text-gray-600 text-center mb-1">
                           {t('GlobalSearch:::Nothing found in clips.', {
                             ns: 'navbar',
@@ -601,7 +907,7 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                         </Box>
                       )}
 
-                      {boardsFiltered.count === 0 && filter === FILTER.BOARDS && (
+                      {flattenedItems.boards.length === 0 && filter === FILTER.BOARDS && (
                         <Box className="text-gray-400/90 dark:text-gray-600 text-center mb-1">
                           {t('GlobalSearch:::Nothing found in boards.', {
                             ns: 'navbar',
@@ -609,7 +915,7 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                         </Box>
                       )}
 
-                      {menuItemsFiltered.count === 0 && filter === FILTER.MENUS && (
+                      {flattenedItems.menus.length === 0 && filter === FILTER.MENUS && (
                         <Box className="text-gray-400/90 dark:text-gray-600 text-center mb-1">
                           {t('GlobalSearch:::Nothing found in menus.', {
                             ns: 'navbar',
