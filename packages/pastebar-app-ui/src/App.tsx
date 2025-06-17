@@ -53,13 +53,13 @@ function App() {
   const { i18n, t } = useTranslation()
   const { toast } = useToast()
   const historyWindowOpening = useSignal(false)
-  const [showLanguageSelectionModal, setShowLanguageSelectionModal] = useState(false)
+  const showLanguageSelectionModal = useSignal(false)
 
   const handleLanguageSelected = useCallback(
     (languageCode: string) => {
       settingsStore.updateSetting('userSelectedLanguage', languageCode)
       settingsStore.updateSetting('isFirstRun', false)
-      setShowLanguageSelectionModal(false)
+      showLanguageSelectionModal.value = false
     },
     [settingsStore]
   )
@@ -221,7 +221,7 @@ function App() {
 
         if (settings.isFirstRun?.valueBool) {
           appWindow.setSize(new LogicalSize(1105, 710))
-          setShowLanguageSelectionModal(true)
+          showLanguageSelectionModal.value = true
         }
 
         if (
@@ -596,14 +596,16 @@ function App() {
             <Outlet />
           </div>
         </div>
-        <LanguageSelectionModal
-          open={showLanguageSelectionModal}
-          onClose={() => {
-            setShowLanguageSelectionModal(false)
-            settingsStore.updateSetting('isFirstRun', false)
-          }}
-          onLanguageSelected={handleLanguageSelected}
-        />
+        {settingsStore.isFirstRun && (
+          <LanguageSelectionModal
+            open={showLanguageSelectionModal.value}
+            onClose={() => {
+              showLanguageSelectionModal.value = false
+              settingsStore.updateSetting('isFirstRun', false)
+            }}
+            onLanguageSelected={handleLanguageSelected}
+          />
+        )}
       </ThemeProvider>
     </>
   )

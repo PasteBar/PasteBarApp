@@ -78,8 +78,6 @@ export default function LanguageSelectionModal({
     onLanguageSelected(selectedLanguage)
   }, [selectedLanguage, onLanguageSelected])
 
-  const detectedLang = LANGUAGES.find(lang => lang.code === detectedLanguage)
-
   // Sort languages to put detected language first, then the rest
   const sortedLanguages = [...LANGUAGES].sort((a, b) => {
     if (a.code === detectedLanguage) return -1
