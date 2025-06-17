@@ -24,7 +24,14 @@ Press keys: Press keys
 Quick Paste Window: Quick Paste Window
 Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.: Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
 Set: Set
-Set system OS hotkeys to show/hide the main app window and quick paste window: Set system OS hotkeys to show/hide the main app window and quick paste window
+Set system OS hotkeys to show/hide the main app window and quick paste window. Supports up to 3-key combinations.: Set system OS hotkeys to show/hide the main app window and quick paste window. Supports up to 3-key combinations.
+'How to set hotkeys:': 'How to set hotkeys:'
+Click Set/Change button to start recording: Click Set/Change button to start recording
+Press your desired key combination (e.g., Ctrl+Shift+V): Press your desired key combination (e.g., Ctrl+Shift+V)
+Press Enter to confirm or Escape to cancel: Press Enter to confirm or Escape to cancel
+Press Backspace/Delete to clear the hotkey: Press Backspace/Delete to clear the hotkey
+Press your key combination...: Press your key combination...
+Recording...: Recording...
 Show Boards and Clips Panel Only: Show Boards and Clips Panel Only
 Show Both Panels: Show Both Panels
 Show History Panel Only: Show History Panel Only

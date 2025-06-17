@@ -14,7 +14,14 @@ PasteBar Quick Paste: Pegado rápido PasteBar
 Press keys: Presiona las teclas
 Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.: Eliminar el icono de PasteBar del Dock de macOS mientras mantiene la aplicación ejecutándose en segundo plano. La aplicación permanece accesible a través del icono de la barra de menú. Requiere reiniciar la aplicación para que tenga efecto.
 Set: Establecer
-Set system OS hotkeys to show/hide the main app window and quick paste window: Establecer atajos de teclado del sistema para mostrar/ocultar la ventana principal y la ventana de pegado rápido
+Set system OS hotkeys to show/hide the main app window and quick paste window. Supports up to 3-key combinations.: Establecer atajos de teclado del sistema para mostrar/ocultar la ventana principal y la ventana de pegado rápido. Admite hasta combinaciones de 3 teclas.
+'How to set hotkeys:': 'Cómo establecer atajos de teclado:'
+Click Set/Change button to start recording: Haz clic en el botón Establecer/Cambiar para comenzar a grabar
+Press your desired key combination (e.g., Ctrl+Shift+V): Presiona tu combinación de teclas deseada (ej. Ctrl+Shift+V)
+Press Enter to confirm or Escape to cancel: Presiona Enter para confirmar o Escape para cancelar
+Press Backspace/Delete to clear the hotkey: Presiona Backspace/Delete para borrar el atajo de teclado
+Press your key combination...: Presiona tu combinación de teclas...
+Recording...: Grabando...
 Show Navbar Items Hover: Mostrar elementos de barra al pasar el ratón
 Show collections menu on the navbar: Mostrar menú de colecciones en la barra de navegación
 Show navbar elements on hover only: Mostrar elementos de la barra solo al pasar el ratón

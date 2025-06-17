@@ -121,6 +121,7 @@ export default function UserPreferences() {
 
   const [mainAppHotkey, setMainAppHotkey] = useState('')
   const [quickPasteHotkey, setQuickPasteHotkey] = useState('')
+  const [currentKeyPreview, setCurrentKeyPreview] = useState('')
 
   const [isEditingMainApp, setIsEditingMainApp] = useState(false)
   const [isEditingQuickPaste, setIsEditingQuickPaste] = useState(false)
@@ -143,8 +144,9 @@ export default function UserPreferences() {
     event.preventDefault()
     const { ctrlKey, shiftKey, altKey, metaKey, key } = event
 
-    if (key === 'Escape' || key === 'Esc' || key === 'Backspace') {
+    if (key === 'Escape' || key === 'Esc' || key === 'Backspace' || key === 'Delete') {
       setter('')
+      setCurrentKeyPreview('')
       return
     }
 
@@ -156,38 +158,62 @@ export default function UserPreferences() {
         setHotKeysShowHideQuickPasteWindow(quickPasteHotkey)
         setIsEditingQuickPaste(false)
       }
+      setCurrentKeyPreview('')
       return
     }
 
     const pressedKeys = []
-    let hasModifier = false
+    let modifierCount = 0
     let hasNonModifier = false
 
+    // Collect modifier keys
     if (ctrlKey) {
       pressedKeys.push('Ctrl')
-      hasModifier = true
+      modifierCount++
     }
     if (shiftKey) {
       pressedKeys.push('Shift')
-      hasModifier = true
+      modifierCount++
     }
     if (altKey) {
       pressedKeys.push('Alt')
-      hasModifier = true
+      modifierCount++
     }
     if (metaKey) {
       pressedKeys.push('Cmd')
-      hasModifier = true
+      modifierCount++
     }
 
+    // Add non-modifier key
     if (!['Control', 'Shift', 'Alt', 'Meta'].includes(key)) {
-      pressedKeys.push(key.toUpperCase())
+      let keyName = key
+      // Handle special keys
+      if (key === ' ') {
+        keyName = 'Space'
+      } else if (key.length === 1) {
+        keyName = key.toUpperCase()
+      } else {
+        // Handle function keys, arrow keys, etc.
+        keyName = key.charAt(0).toUpperCase() + key.slice(1)
+      }
+      pressedKeys.push(keyName)
       hasNonModifier = true
     }
 
-    if (hasModifier && hasNonModifier) {
-      setter(pressedKeys.join('+'))
+    const keyCombo = pressedKeys.join('+')
+    setCurrentKeyPreview(keyCombo)
+
+    // Allow combinations with at least 1 modifier and 1 non-modifier key
+    // Support up to 3 modifier keys + 1 regular key (4 keys total)
+    // Example: Ctrl+Alt+Cmd+B (3 modifiers + 1 key)
+    if (hasNonModifier && modifierCount >= 1 && modifierCount <= 3) {
+      setter(keyCombo)
     }
+  }
+
+  const handleKeyUp = () => {
+    // Clear preview when keys are released
+    setCurrentKeyPreview('')
   }
 
   function convertMsToSeconds(milliseconds: number) {
@@ -799,26 +825,51 @@ export default function UserPreferences() {
                     <CardContent>
                       <Text className="text-sm text-muted-foreground mb-4">
                         {t(
-                          'Set system OS hotkeys to show/hide the main app window and quick paste window',
+                          'Set system OS hotkeys to show/hide the main app window and quick paste window. Supports up to 3-key combinations.',
                           { ns: 'settings2' }
                         )}
                       </Text>
+                      <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <Text className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+                          {t('How to set hotkeys:', { ns: 'settings2' })}
+                        </Text>
+                        <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
+                          <li>• {t('Click Set/Change button to start recording', { ns: 'settings2' })}</li>
+                          <li>• {t('Press your desired key combination (e.g., Ctrl+Shift+V)', { ns: 'settings2' })}</li>
+                          <li>• {t('Press Enter to confirm or Escape to cancel', { ns: 'settings2' })}</li>
+                          <li>• {t('Press Backspace/Delete to clear the hotkey', { ns: 'settings2' })}</li>
+                        </ul>
+                      </div>
                       <Box className="mb-4">
-                        <InputField
-                          label={t('Show/Hide Main App Window', { ns: 'settings2' })}
-                          defaultValue={mainAppHotkey}
-                          autoFocus={isEditingMainApp}
-                          disabled={!isEditingMainApp}
-                          onKeyDown={e =>
-                            isEditingMainApp && handleKeyDown(e, setMainAppHotkey)
-                          }
-                          readOnly={!isEditingMainApp}
-                          placeholder={
-                            mainAppHotkey || isEditingMainApp
-                              ? t('Press keys', { ns: 'settings2' })
-                              : t('No keys set', { ns: 'settings2' })
-                          }
-                        />
+                        <div className="relative">
+                          <InputField
+                            label={t('Show/Hide Main App Window', { ns: 'settings2' })}
+                            value={isEditingMainApp ? (currentKeyPreview || mainAppHotkey) : mainAppHotkey}
+                            autoFocus={isEditingMainApp}
+                            disabled={!isEditingMainApp}
+                            onKeyDown={e =>
+                              isEditingMainApp && handleKeyDown(e, setMainAppHotkey)
+                            }
+                            onKeyUp={handleKeyUp}
+                            readOnly={!isEditingMainApp}
+                            placeholder={
+                              isEditingMainApp
+                                ? t('Press your key combination...', { ns: 'settings2' })
+                                : mainAppHotkey || t('No keys set', { ns: 'settings2' })
+                            }
+                            className={`${isEditingMainApp ? 'border-blue-300 dark:border-blue-600' : ''}`}
+                          />
+                          {isEditingMainApp && (
+                            <div className="absolute right-3 top-8 text-xs text-blue-600 dark:text-blue-400">
+                              {currentKeyPreview && (
+                                <div className="flex items-center gap-1">
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                  <span>{t('Recording...', { ns: 'settings2' })}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                         <Flex className="mt-2 gap-2 justify-start">
                           <Button
                             variant="secondary"
@@ -860,21 +911,35 @@ export default function UserPreferences() {
                         </Flex>
                       </Box>
                       <Box>
-                        <InputField
-                          label={t('Show/Hide Quick Paste Window', { ns: 'settings2' })}
-                          defaultValue={quickPasteHotkey}
-                          disabled={!isEditingQuickPaste}
-                          autoFocus={isEditingQuickPaste}
-                          onKeyDown={e =>
-                            isEditingQuickPaste && handleKeyDown(e, setQuickPasteHotkey)
-                          }
-                          readOnly={!isEditingQuickPaste}
-                          placeholder={
-                            quickPasteHotkey || isEditingQuickPaste
-                              ? t('Press keys', { ns: 'settings2' })
-                              : t('No keys set', { ns: 'settings2' })
-                          }
-                        />
+                        <div className="relative">
+                          <InputField
+                            label={t('Show/Hide Quick Paste Window', { ns: 'settings2' })}
+                            value={isEditingQuickPaste ? (currentKeyPreview || quickPasteHotkey) : quickPasteHotkey}
+                            disabled={!isEditingQuickPaste}
+                            autoFocus={isEditingQuickPaste}
+                            onKeyDown={e =>
+                              isEditingQuickPaste && handleKeyDown(e, setQuickPasteHotkey)
+                            }
+                            onKeyUp={handleKeyUp}
+                            readOnly={!isEditingQuickPaste}
+                            placeholder={
+                              isEditingQuickPaste
+                                ? t('Press your key combination...', { ns: 'settings2' })
+                                : quickPasteHotkey || t('No keys set', { ns: 'settings2' })
+                            }
+                            className={`${isEditingQuickPaste ? 'border-blue-300 dark:border-blue-600' : ''}`}
+                          />
+                          {isEditingQuickPaste && (
+                            <div className="absolute right-3 top-8 text-xs text-blue-600 dark:text-blue-400">
+                              {currentKeyPreview && (
+                                <div className="flex items-center gap-1">
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                  <span>{t('Recording...', { ns: 'settings2' })}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                         <Flex className="mt-2 gap-2 justify-start">
                           <Button
                             variant="secondary"
