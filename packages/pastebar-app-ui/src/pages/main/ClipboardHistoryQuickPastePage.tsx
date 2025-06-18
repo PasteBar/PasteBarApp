@@ -122,6 +122,7 @@ export default function ClipboardHistoryQuickPastePage() {
     isQuickPasteCopyOnly,
     isQuickPasteAutoClose,
     isSingleClickToCopyPaste,
+    isSingleClickToCopyPasteQuickWindow,
   } = useAtomValue(settingsStoreAtom)
 
   const [historyFilters, setHistoryFilters] = useState<string[]>([])
@@ -805,7 +806,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               clipboard={item}
                               removeLinkMetaData={removeLinkMetaData}
                               generateLinkMetaData={generateLinkMetaData}
-                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                              isSingleClickToCopyPaste={isSingleClickToCopyPaste || isSingleClickToCopyPasteQuickWindow}
                             />
                           )
                         })}
@@ -1001,7 +1002,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               clipboard={clipboard}
                               removeLinkMetaData={removeLinkMetaData}
                               generateLinkMetaData={generateLinkMetaData}
-                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                              isSingleClickToCopyPaste={isSingleClickToCopyPaste || isSingleClickToCopyPasteQuickWindow}
                               index={index}
                               style={style}
                             />

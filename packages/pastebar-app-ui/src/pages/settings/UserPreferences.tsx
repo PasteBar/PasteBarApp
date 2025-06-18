@@ -99,6 +99,8 @@ export default function UserPreferences() {
     setIsQuickPasteAutoClose,
     isSingleClickToCopyPaste,
     setIsSingleClickToCopyPaste,
+    isSingleClickToCopyPasteQuickWindow,
+    setIsSingleClickToCopyPasteQuickWindow,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
@@ -1267,6 +1269,33 @@ export default function UserPreferences() {
                               } catch (error) {
                                 console.error(
                                   'Failed to update quick paste copy only setting:',
+                                  error
+                                )
+                              }
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Text className="text-[15px] font-extrabold">
+                              {t('Single Click Copy / Paste action', { ns: 'settings2' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {t(
+                                'When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.',
+                                { ns: 'settings2' }
+                              )}
+                            </Text>
+                          </div>
+                          <Switch
+                            checked={isSingleClickToCopyPasteQuickWindow}
+                            onCheckedChange={async checked => {
+                              try {
+                                await setIsSingleClickToCopyPasteQuickWindow(checked)
+                              } catch (error) {
+                                console.error(
+                                  'Failed to update quick window single click setting:',
                                   error
                                 )
                               }
