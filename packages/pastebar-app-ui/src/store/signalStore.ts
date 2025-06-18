@@ -1,5 +1,5 @@
 import { UniqueIdentifier } from '@dnd-kit/core'
-import { effect, signal, Signal } from '@preact/signals-react'
+import { computed, effect, signal, Signal } from '@preact/signals-react'
 import { emit, listen } from '@tauri-apps/api/event'
 import { appWindow } from '@tauri-apps/api/window'
 
@@ -13,6 +13,9 @@ import { Song, SongSourceType } from './playerStore'
 type ValueOf<T> = T[keyof T]
 type ActionType = ValueOf<typeof ACTION_TYPE_COMFIRMATION_MODAL>
 export type AppTourType = ValueOf<typeof APP_TOURS>
+
+export const visibilityCopyPopup = signal(false)
+export const openAddSelectedTextModal = signal(false)
 
 export const recentSearchTerm = signal<string | null>(null)
 export const isAppLocked = signal(false)
@@ -40,6 +43,7 @@ export const isHistoryCopyPasting = signal(false)
 export const showEditTabs = signal(false)
 
 // Clip Dashboard Signals
+export const showDetailsClipId = signal<UniqueIdentifier | null>(null)
 export const showOrganizeLayout = signal(false)
 export const showClipsMoveOnBoardId: Signal<UniqueIdentifier | null> = signal(null)
 export const showClipFindKeyPressed = signal(false)
@@ -136,6 +140,15 @@ export function resetMenuCreateOrEdit() {
   }
 }
 
+export function resetKeyboardNavigation() {
+  currentNavigationContext.value = null
+  keyboardSelectedItemId.value = null
+  hoveringHistoryRowId.value = null
+  keyboardSelectedBoardId.value = null
+  keyboardSelectedClipId.value = null
+  currentBoardIndex.value = 0
+}
+
 export const showInvalidTrackWarningAddSong: Signal<{
   songUrl: string
   id: UniqueIdentifier
@@ -165,6 +178,80 @@ export const showUpdateErrorDownloadingUpdate = signal(false)
 export const showUpdateInstalling = signal(false)
 export const showUpdateErrorPermissionDenied = signal(false)
 export const showRestartAfterUpdate = signal(false)
+
+export const shouldKeyboardNavigationBeDisabled = signal(false)
+
+// Computed signal for all modal and confirmation dialog states
+export const isAnyModalOpen = computed(
+  () =>
+    // Modal states
+    openActionConfirmModal.value ||
+    openAboutPasteBarModal.value ||
+    openContactUsFormModal.value ||
+    openOSXSystemPermissionsModal.value ||
+    showInvalidTrackWarningAddSong.value ||
+    // Confirmation dialogs
+    showHistoryDeleteConfirmationId.value !== null ||
+    showDeleteClipConfirmationId.value !== null ||
+    showDeleteBoardConfirmationId.value !== null ||
+    showDeleteImageClipConfirmationId.value !== null ||
+    showDeleteMenuConfirmationId.value !== null ||
+    showDeleteMenuItemsConfirmation.value ||
+    // Onboarding tour
+    openOnBoardingTourName.value !== null ||
+    visibilityCopyPopup.value ||
+    openAddSelectedTextModal.value
+)
+
+effect(() => {
+  if (
+    // Existing editing states
+    showEditClipId.value ||
+    newClipItemId.value ||
+    showEditTabs.value ||
+    newBoardItemId.value ||
+    editClipItemId.value ||
+    showEditClipNameId.value ||
+    showOrganizeLayout.value ||
+    showEditMenuItemId.value ||
+    isCreatingMenuItem.value ||
+    // Global editing states
+    isClipNameEditing.value ||
+    isBoardNameEditing.value ||
+    isMenuNameEditing.value ||
+    // Modal states
+    isAnyModalOpen.value ||
+    // Creating/creation states
+    createClipBoardItemId.value ||
+    createBoardItemId.value ||
+    creatingClipItemBoardId.value ||
+    createClipHistoryItemIds.value ||
+    creatingMenuItemCurrentMenuId.value ||
+    creatingNewMenuItem.value ||
+    createMenuItemFromHistoryId.value ||
+    createMenuItemFromClipId.value ||
+    // Error/validation states
+    forceSaveEditClipName.value ||
+    forceSaveClipNameEditingError.value ||
+    showBoardNameNotSavedError.value ||
+    showMenuNameNotSavedError.value ||
+    // App security state
+    isAppLocked.value ||
+    // Additional menu states
+    newMenuItemId.value ||
+    addSelectedTextToMenu.value ||
+    // Text selection states
+    addSelectedTextToClipBoard.value
+  ) {
+    // console.log('Disabling keyboard navigation due to edit or delete actions')
+    // Disable keyboard navigation when editing
+    shouldKeyboardNavigationBeDisabled.value = true
+    resetKeyboardNavigation()
+  } else {
+    // console.log('Enabling keyboard navigation')
+    shouldKeyboardNavigationBeDisabled.value = false
+  }
+})
 
 if (!window.isQuickPasteWindow) {
   effect(() => {

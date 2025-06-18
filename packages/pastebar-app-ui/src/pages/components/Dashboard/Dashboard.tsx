@@ -31,16 +31,15 @@ import {
   activeOverTabId,
   collectionsStoreAtom,
   createFirstBoard,
-  currentBoardIndex,
   currentNavigationContext,
   isFullyExpandViewBoard,
   isKeyAltPressed,
   keyboardSelectedBoardId,
   keyboardSelectedClipId,
-  keyboardSelectedItemId,
   playerStoreAtom,
   settingsStoreAtom,
   showClipsMoveOnBoardId,
+  showDetailsClipId,
   showEditClipId,
   showExpandViewBoardId,
   showLinkedClipId,
@@ -151,8 +150,7 @@ function DashboardComponent({
   useGetCollections()
 
   const { t } = useTranslation()
-  const { isShowPinned, setIsShowPinned, isSplitPanelView, isSwapPanels } =
-    useAtomValue(uiStoreAtom)
+  const { isShowPinned, setIsShowPinned, isSplitPanelView } = useAtomValue(uiStoreAtom)
   const [showDetailsItem, setShowDetailsItem] = useState<UniqueIdentifier | null>(null)
   const [dragOverPinnedId, setDragOverPinnedId] = useState<UniqueIdentifier | null>(null)
   const [showDetailsItemPinned, setShowDetailsItemPinned] =
@@ -447,6 +445,10 @@ function DashboardComponent({
 
   const panelHeight = panelHeightRef?.current?.getSizePixels() || 0
   const pinnedPanelHeight = pinnedClipsPanelRef?.current?.getSizePixels() || 0
+
+  useEffect(() => {
+    setShowDetailsItem(showDetailsClipId.value)
+  }, [showDetailsClipId.value])
 
   useEffect(() => {
     if (showLinkedClipId.value || showEditClipId.value) {

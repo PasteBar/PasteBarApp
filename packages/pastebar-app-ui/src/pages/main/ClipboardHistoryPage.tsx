@@ -29,8 +29,11 @@ import {
   keyboardSelectedBoardId,
   keyboardSelectedClipId,
   keyboardSelectedItemId,
+  resetKeyboardNavigation,
   settingsStoreAtom,
+  shouldKeyboardNavigationBeDisabled,
   showClipsMoveOnBoardId,
+  showDetailsClipId,
   showHistoryDeleteConfirmationId,
   showLargeViewClipId,
   showLargeViewHistoryId,
@@ -445,7 +448,9 @@ export default function ClipboardHistoryPage() {
       keyboardSelectedClipId.value = null
       currentBoardIndex.value = 0
     },
-    { enableOnFormTags: ['input'] }
+    {
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
+    }
   )
 
   const currentNavigationContextValue = useMemo(
@@ -481,7 +486,11 @@ export default function ClipboardHistoryPage() {
         }
       }
     },
-    { enabled: currentNavigationContextValue === 'board', enableOnFormTags: ['input'] }
+    {
+      enabled:
+        currentNavigationContextValue === 'board' &&
+        !shouldKeyboardNavigationBeDisabled.value,
+    }
   )
 
   useHotkeys(
@@ -512,7 +521,11 @@ export default function ClipboardHistoryPage() {
         }
       }
     },
-    { enabled: currentNavigationContextValue === 'board', enableOnFormTags: ['input'] }
+    {
+      enabled:
+        currentNavigationContextValue === 'board' &&
+        !shouldKeyboardNavigationBeDisabled.value,
+    }
   )
 
   useHotkeys(
@@ -559,8 +572,7 @@ export default function ClipboardHistoryPage() {
       }
     },
     {
-      enabled: true, // Always enabled, we check context inside the handler
-      enableOnFormTags: ['input'],
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
@@ -608,8 +620,7 @@ export default function ClipboardHistoryPage() {
       }
     },
     {
-      enabled: true,
-      enableOnFormTags: ['input'],
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
@@ -620,17 +631,11 @@ export default function ClipboardHistoryPage() {
       if (showLargeViewHistoryId.value) {
         showLargeViewHistoryId.value = null
       } else {
-        currentNavigationContext.value = null
-        keyboardSelectedItemId.value = null
-        keyboardSelectedItemId.value = null
-        hoveringHistoryRowId.value = null
-        keyboardSelectedBoardId.value = null
-        keyboardSelectedClipId.value = null
-        currentBoardIndex.value = 0
+        resetKeyboardNavigation()
       }
     },
     {
-      enableOnFormTags: ['input'],
+      enableOnFormTags: ['input', 'textarea'],
     }
   )
 
@@ -650,10 +655,10 @@ export default function ClipboardHistoryPage() {
       }
     },
     {
-      enableOnFormTags: ['input'],
       enabled:
-        currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null,
+        (currentNavigationContext.value === 'history' ||
+          currentNavigationContext.value === null) &&
+        !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
@@ -679,10 +684,10 @@ export default function ClipboardHistoryPage() {
       }
     },
     {
-      enableOnFormTags: ['input'],
       enabled:
-        currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null,
+        (currentNavigationContext.value === 'history' ||
+          currentNavigationContext.value === null) &&
+        !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
@@ -690,22 +695,32 @@ export default function ClipboardHistoryPage() {
     ['arrowright'],
     e => {
       e.preventDefault()
-
-      if (keyboardSelectedItemId.value) {
+      if (keyboardSelectedItemId.value || keyboardSelectedClipId.value) {
         if (isSwapPanels) {
           // In swap mode, right arrow closes large view
-          showLargeViewHistoryId.value = null
+          if (
+            currentNavigationContext.value === 'history' ||
+            currentNavigationContext.value === null
+          ) {
+            showLargeViewHistoryId.value = null
+          } else if (currentNavigationContext.value === 'board') {
+            showDetailsClipId.value = null
+          }
         } else {
           // In regular mode, right arrow opens large view
-          showLargeViewHistoryId.value = keyboardSelectedItemId.value
+          if (
+            currentNavigationContext.value === 'history' ||
+            currentNavigationContext.value === null
+          ) {
+            showLargeViewHistoryId.value = keyboardSelectedItemId.value
+          } else if (currentNavigationContext.value === 'board') {
+            showDetailsClipId.value = keyboardSelectedClipId.value
+          }
         }
       }
     },
     {
-      enableOnFormTags: ['input'],
-      enabled:
-        currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null,
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
@@ -713,34 +728,39 @@ export default function ClipboardHistoryPage() {
     ['arrowleft'],
     e => {
       e.preventDefault()
-
       if (isSwapPanels) {
         // In swap mode, left arrow opens large view
-        if (keyboardSelectedItemId.value) {
-          showLargeViewHistoryId.value = keyboardSelectedItemId.value
+        if (keyboardSelectedItemId.value || keyboardSelectedClipId.value) {
+          if (
+            currentNavigationContext.value === 'history' ||
+            currentNavigationContext.value === null
+          ) {
+            showLargeViewHistoryId.value = keyboardSelectedItemId.value
+          } else if (currentNavigationContext.value === 'board') {
+            showDetailsClipId.value = keyboardSelectedClipId.value
+          }
         }
       } else {
         // In regular mode, left arrow closes large view
-        showLargeViewHistoryId.value = null
+        if (
+          currentNavigationContext.value === 'history' ||
+          currentNavigationContext.value === null
+        ) {
+          showLargeViewHistoryId.value = null
+        } else if (currentNavigationContext.value === 'board') {
+          showDetailsClipId.value = null
+        }
       }
     },
     {
-      enableOnFormTags: ['input'],
-      enabled:
-        currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null,
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Control' || e.key === 'Meta') {
-        currentNavigationContext.value = null
-        keyboardSelectedItemId.value = null
-        keyboardSelectedBoardId.value = null
-        keyboardSelectedClipId.value = null
-        currentBoardIndex.value = 0
-        hoveringHistoryRowId.value = null
+        resetKeyboardNavigation()
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -1489,7 +1509,9 @@ export default function ClipboardHistoryPage() {
                                               clipboard={item}
                                               removeLinkMetaData={removeLinkMetaData}
                                               generateLinkMetaData={generateLinkMetaData}
-                                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                                              isSingleClickToCopyPaste={
+                                                isSingleClickToCopyPaste
+                                              }
                                             />
                                           </Box>
                                         )
@@ -2113,7 +2135,9 @@ export default function ClipboardHistoryPage() {
                                               clipboard={clipboard}
                                               removeLinkMetaData={removeLinkMetaData}
                                               generateLinkMetaData={generateLinkMetaData}
-                                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                                              isSingleClickToCopyPaste={
+                                                isSingleClickToCopyPaste
+                                              }
                                               index={index}
                                               style={style}
                                             />
