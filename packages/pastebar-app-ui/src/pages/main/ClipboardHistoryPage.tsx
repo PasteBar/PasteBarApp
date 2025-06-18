@@ -66,6 +66,7 @@ import useResizeObserver from 'use-resize-observer'
 import {
   buildNavigationOrder,
   findCurrentNavigationIndex,
+  findNextNonEmptyBoard,
   navigateToItem,
 } from '~/lib/utils'
 
@@ -528,101 +529,110 @@ export default function ClipboardHistoryPage() {
     }
   )
 
-  useHotkeys(
-    ['tab'],
-    e => {
-      e.preventDefault()
-      e.stopPropagation()
+  // Helper function to reset to history context
+  const resetToHistory = () => {
+    currentNavigationContext.value = 'history'
+    keyboardSelectedBoardId.value = null
+    keyboardSelectedClipId.value = null
+    currentBoardIndex.value = 0
+  }
 
-      showLargeViewHistoryId.value = null
+  // Helper function to check if a board has navigable clips
+  const hasNavigableClips = (boardId: string | number) => {
+    return clipItems.some(
+      clip =>
+        clip.isClip &&
+        clip.parentId === boardId &&
+        clip.tabId === currentTab &&
+        clip.itemId != null
+    )
+  }
 
-      if (
-        currentNavigationContextValue === 'history' ||
-        currentNavigationContextValue === null
-      ) {
-        currentNavigationContext.value = 'board'
-        keyboardSelectedItemId.value = null
+  // Helper function to handle navigation from history context
+  const navigateFromHistory = (direction: 'forward' | 'backward') => {
+    const navigationOrder = buildNavigationOrder(clipItems, currentTab)
+    const startIndex = direction === 'forward' ? 0 : navigationOrder.length
+    const nonEmptyBoard = findNextNonEmptyBoard(
+      navigationOrder,
+      startIndex,
+      direction,
+      clipItems,
+      currentTab
+    )
 
-        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-        if (navigationOrder.length > 1) {
-          const firstBoardItem = navigationOrder[1]
-          navigateToItem(firstBoardItem, clipItems, currentTab)
-        }
+    if (nonEmptyBoard) {
+      currentNavigationContext.value = 'board'
+      keyboardSelectedItemId.value = null
+      navigateToItem(nonEmptyBoard, clipItems, currentTab)
+    } else {
+      // No non-empty boards found, ensure we're in history context
+      if (currentNavigationContext.value === null) {
+        currentNavigationContext.value = 'history'
+      }
+      keyboardSelectedBoardId.value = null
+      keyboardSelectedClipId.value = null
+      currentBoardIndex.value = 0
+    }
+  }
+
+  // Helper function to handle navigation from board context
+  const navigateFromBoard = (direction: 'forward' | 'backward') => {
+    const navigationOrder = buildNavigationOrder(clipItems, currentTab)
+
+    if (navigationOrder.length <= 1) {
+      resetToHistory()
+      return
+    }
+
+    let currentNavIndex = findCurrentNavigationIndex(navigationOrder)
+    const increment = direction === 'forward' ? 1 : -1
+    const shouldWrapToHistory =
+      direction === 'forward'
+        ? (index: number) => index >= navigationOrder.length
+        : (index: number) => index < 1
+
+    while (true) {
+      currentNavIndex += increment
+
+      if (shouldWrapToHistory(currentNavIndex)) {
+        resetToHistory()
         return
       }
 
-      if (currentNavigationContextValue === 'board') {
-        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-        if (navigationOrder.length <= 1) return
+      const candidateBoardNavInfo = navigationOrder[currentNavIndex]
 
-        const currentIndex = findCurrentNavigationIndex(navigationOrder)
-
-        if (currentIndex === navigationOrder.length - 1) {
-          currentNavigationContext.value = 'history'
-          keyboardSelectedBoardId.value = null
-          keyboardSelectedClipId.value = null
-          currentBoardIndex.value = 0
-          return
-        }
-
-        const nextIndex = currentIndex + 1
-        const nextItem = navigationOrder[nextIndex]
-
-        navigateToItem(nextItem, clipItems, currentTab)
-      }
-    },
-    {
-      enabled: !shouldKeyboardNavigationBeDisabled.value,
-    }
-  )
-
-  useHotkeys(
-    ['shift+tab'],
-    e => {
-      e.preventDefault()
-      e.stopPropagation()
-
-      showLargeViewHistoryId.value = null
-
-      if (
-        currentNavigationContextValue === 'history' ||
-        currentNavigationContextValue === null
-      ) {
-        currentNavigationContext.value = 'board'
-        keyboardSelectedItemId.value = null
-
-        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-        if (navigationOrder.length > 1) {
-          const lastBoardItem = navigationOrder[navigationOrder.length - 1]
-          navigateToItem(lastBoardItem, clipItems, currentTab)
-        }
+      if (hasNavigableClips(candidateBoardNavInfo.id)) {
+        navigateToItem(candidateBoardNavInfo, clipItems, currentTab)
         return
       }
-
-      if (currentNavigationContextValue === 'board') {
-        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-        if (navigationOrder.length <= 1) return
-
-        const currentIndex = findCurrentNavigationIndex(navigationOrder)
-
-        if (currentIndex >= navigationOrder.length) {
-          currentNavigationContext.value = 'history'
-          keyboardSelectedBoardId.value = null
-          keyboardSelectedClipId.value = null
-          currentBoardIndex.value = 0
-          return
-        }
-
-        const nextIndex = currentIndex - 1
-        const nextItem = navigationOrder[nextIndex]
-
-        navigateToItem(nextItem, clipItems, currentTab)
-      }
-    },
-    {
-      enabled: !shouldKeyboardNavigationBeDisabled.value,
     }
-  )
+  }
+
+  // Simplified tab navigation handler
+  const handleTabNavigation =
+    (direction: 'forward' | 'backward') => (e: KeyboardEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      showLargeViewHistoryId.value = null
+
+      const isInHistory =
+        currentNavigationContextValue === 'history' ||
+        currentNavigationContextValue === null
+
+      if (isInHistory) {
+        navigateFromHistory(direction)
+      } else if (currentNavigationContextValue === 'board') {
+        navigateFromBoard(direction)
+      }
+    }
+
+  useHotkeys(['tab'], handleTabNavigation('forward'), {
+    enabled: !shouldKeyboardNavigationBeDisabled.value,
+  })
+
+  useHotkeys(['shift+tab'], handleTabNavigation('backward'), {
+    enabled: !shouldKeyboardNavigationBeDisabled.value,
+  })
 
   useHotkeys(
     'esc',
