@@ -420,7 +420,7 @@ export default function MenuCardContextMenu({
               {hasChildren && (
                 <Box className="p-0">
                   <Text className="!text-gray-400/80 text-[10px] group-hover:!text-amber-500">
-                    {t('Submenus will move up one level after delete', { ns: 'common' })}
+                    {t('Submenus will move up one level after delete', { ns: 'common2' })}
                   </Text>
                 </Box>
               )}
