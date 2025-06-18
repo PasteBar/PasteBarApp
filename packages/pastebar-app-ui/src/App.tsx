@@ -207,7 +207,11 @@ function App() {
           isSavedClipsPanelVisibleOnly: settings.isSavedClipsPanelVisibleOnly?.valueBool,
           isSimplifiedLayout: settings.isSimplifiedLayout?.valueBool ?? true,
           isMainWindowOnTop: settings.isMainWindowOnTop?.valueBool ?? false,
+          isQuickPasteCopyOnly: settings.isQuickPasteCopyOnly?.valueBool ?? false,
+          isQuickPasteAutoClose: settings.isQuickPasteAutoClose?.valueBool ?? true,
           isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool ?? false,
+          isSingleClickToCopyPasteQuickWindow:
+            settings.isSingleClickToCopyPasteQuickWindow?.valueBool ?? false,
           isAppReady: true,
         })
         settingsStore.initConstants({

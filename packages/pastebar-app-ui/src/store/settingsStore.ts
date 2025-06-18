@@ -98,6 +98,9 @@ type Settings = {
   isSimplifiedLayout: boolean
   isMainWindowOnTop: boolean
   isSingleClickToCopyPaste: boolean
+  isSingleClickToCopyPasteQuickWindow: boolean
+  isQuickPasteCopyOnly: boolean
+  isQuickPasteAutoClose: boolean
 }
 
 type Constants = {
@@ -181,7 +184,10 @@ export interface SettingsStoreState {
   setShowBothPanels: (isVisible: boolean) => void
   setIsSimplifiedLayout: (isEnabled: boolean) => void
   setIsMainWindowOnTop: (isEnabled: boolean) => void
+  setIsQuickPasteCopyOnly: (isEnabled: boolean) => void
+  setIsQuickPasteAutoClose: (isEnabled: boolean) => void
   setIsSingleClickToCopyPaste: (isEnabled: boolean) => void
+  setIsSingleClickToCopyPasteQuickWindow: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -275,6 +281,9 @@ const initialState: SettingsStoreState & Settings = {
   isSimplifiedLayout: true,
   isMainWindowOnTop: false,
   isSingleClickToCopyPaste: false,
+  isSingleClickToCopyPasteQuickWindow: false,
+  isQuickPasteCopyOnly: false,
+  isQuickPasteAutoClose: true,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -341,6 +350,9 @@ const initialState: SettingsStoreState & Settings = {
   setIsSimplifiedLayout: () => {},
   setIsMainWindowOnTop: () => {},
   setIsSingleClickToCopyPaste: () => {},
+  setIsSingleClickToCopyPasteQuickWindow: () => {},
+  setIsQuickPasteCopyOnly: () => {},
+  setIsQuickPasteAutoClose: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -711,8 +723,19 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsSingleClickToCopyPaste: async (isEnabled: boolean) => {
     get().syncStateUpdate('isSingleClickToCopyPaste', isEnabled)
-
     return get().updateSetting('isSingleClickToCopyPaste', isEnabled)
+  },
+  setIsSingleClickToCopyPasteQuickWindow: async (isEnabled: boolean) => {
+    get().syncStateUpdate('isSingleClickToCopyPasteQuickWindow', isEnabled)
+    return get().updateSetting('isSingleClickToCopyPasteQuickWindow', isEnabled)
+  },
+  setIsQuickPasteCopyOnly: async (isEnabled: boolean) => {
+    get().syncStateUpdate('isQuickPasteCopyOnly', isEnabled)
+    return get().updateSetting('isQuickPasteCopyOnly', isEnabled)
+  },
+  setIsQuickPasteAutoClose: async (isEnabled: boolean) => {
+    get().syncStateUpdate('isQuickPasteAutoClose', isEnabled)
+    return get().updateSetting('isQuickPasteAutoClose', isEnabled)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

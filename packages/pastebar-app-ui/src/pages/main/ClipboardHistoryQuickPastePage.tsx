@@ -89,11 +89,25 @@ const loadPrismComponents = async () => {
   Prism.languages['shell'] = Prism.languages['shell-session']
 }
 
-async function invokeCopyPasteHistoryItem(historyId: UniqueIdentifier) {
+async function invokeCopyPasteHistoryItem(
+  historyId: UniqueIdentifier,
+  isQuickPasteCopyOnly: boolean,
+  isQuickPasteAutoClose: boolean,
+  handleCopyHistoryItem: (id: UniqueIdentifier) => void,
+  handlePasteHistoryItem: (id: UniqueIdentifier, delay?: number) => void
+) {
   try {
-    await invoke('quickpaste_hide_paste_close', { historyId })
+    if (isQuickPasteCopyOnly) {
+      handleCopyHistoryItem(historyId)
+    } else {
+      if (isQuickPasteAutoClose) {
+        await invoke('quickpaste_hide_paste_close', { historyId })
+      } else {
+        handlePasteHistoryItem(historyId, 0)
+      }
+    }
   } catch (error) {
-    console.error('Error copying history item:', error)
+    console.error('Error copying/pasting history item:', error)
   }
 }
 
@@ -105,7 +119,10 @@ export default function ClipboardHistoryQuickPastePage() {
   const {
     isAutoPreviewLinkCardsEnabled,
     isAutoGenerateLinkCardsEnabled,
+    isQuickPasteCopyOnly,
+    isQuickPasteAutoClose,
     isSingleClickToCopyPaste,
+    isSingleClickToCopyPasteQuickWindow,
   } = useAtomValue(settingsStoreAtom)
 
   const [historyFilters, setHistoryFilters] = useState<string[]>([])
@@ -131,6 +148,52 @@ export default function ClipboardHistoryQuickPastePage() {
   const { pinnedClipboardHistory } = useGetPinnedClipboardHistories()
 
   const isDark = themeDark()
+
+  // Hooks for copy and paste operations
+  const [copiedHistoryItem, handleCopyHistoryItem] = useCopyPasteHistoryItem({
+    delay: 100,
+    onCopied: () => {
+      if (isQuickPasteAutoClose) {
+        appWindow?.close()
+      }
+    },
+  })
+
+  const [pastedHistoryItem, pastingCountDown, handlePasteHistoryItem] =
+    usePasteHistoryItem({
+      delay: 100,
+      onPasted: () => {
+        if (isQuickPasteAutoClose) {
+          appWindow?.close()
+        }
+      },
+    })
+
+  // Create wrapper functions for the row component
+  const onCopyHistoryItem = useCallback(
+    (historyId: UniqueIdentifier) => {
+      handleCopyHistoryItem(historyId)
+    },
+    [handleCopyHistoryItem]
+  )
+
+  const onCopyPasteHistoryItem = useCallback(
+    (historyId: UniqueIdentifier) => {
+      invokeCopyPasteHistoryItem(
+        historyId,
+        isQuickPasteCopyOnly,
+        isQuickPasteAutoClose,
+        handleCopyHistoryItem,
+        handlePasteHistoryItem
+      )
+    },
+    [
+      isQuickPasteCopyOnly,
+      isQuickPasteAutoClose,
+      handleCopyHistoryItem,
+      handlePasteHistoryItem,
+    ]
+  )
 
   const {
     setHistoryListSimpleBar,
@@ -248,7 +311,13 @@ export default function ClipboardHistoryQuickPastePage() {
         return
       }
 
-      invokeCopyPasteHistoryItem(itemId)
+      invokeCopyPasteHistoryItem(
+        itemId,
+        isQuickPasteCopyOnly,
+        isQuickPasteAutoClose,
+        handleCopyHistoryItem,
+        handlePasteHistoryItem
+      )
     },
     {
       enableOnFormTags: ['input'],
@@ -266,7 +335,13 @@ export default function ClipboardHistoryQuickPastePage() {
         return
       }
 
-      invokeCopyPasteHistoryItem(itemId)
+      invokeCopyPasteHistoryItem(
+        itemId,
+        isQuickPasteCopyOnly,
+        isQuickPasteAutoClose,
+        handleCopyHistoryItem,
+        handlePasteHistoryItem
+      )
     },
     {
       enabled: !isWindows,
@@ -525,7 +600,13 @@ export default function ClipboardHistoryQuickPastePage() {
           : clipboardHistory[keyboardIndexSelectedItem.value]?.historyId
 
       if (selectedItemId) {
-        invokeCopyPasteHistoryItem(selectedItemId)
+        invokeCopyPasteHistoryItem(
+          selectedItemId,
+          isQuickPasteCopyOnly,
+          isQuickPasteAutoClose,
+          handleCopyHistoryItem,
+          handlePasteHistoryItem
+        )
       }
     }
     if (keyEscape.includes(event.key)) {
@@ -701,8 +782,8 @@ export default function ClipboardHistoryQuickPastePage() {
                                 movePinnedClipboardHistoryUpDown(move)
                               }}
                               setSelectHistoryItem={() => {}}
-                              onCopy={invokeCopyPasteHistoryItem}
-                              onCopyPaste={invokeCopyPasteHistoryItem}
+                              onCopy={onCopyHistoryItem}
+                              onCopyPaste={onCopyPasteHistoryItem}
                               isSaved={historyId === savingItem}
                               setSavingItem={setSavingItem}
                               isDeleting={false}
@@ -725,7 +806,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               clipboard={item}
                               removeLinkMetaData={removeLinkMetaData}
                               generateLinkMetaData={generateLinkMetaData}
-                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                              isSingleClickToCopyPaste={isSingleClickToCopyPaste || isSingleClickToCopyPasteQuickWindow}
                             />
                           )
                         })}
@@ -886,8 +967,8 @@ export default function ClipboardHistoryQuickPastePage() {
                               setHistoryFilters={setHistoryFilters}
                               setAppFilters={setAppFilters}
                               setSelectHistoryItem={() => {}}
-                              onCopy={invokeCopyPasteHistoryItem}
-                              onCopyPaste={invokeCopyPasteHistoryItem}
+                              onCopy={onCopyHistoryItem}
+                              onCopyPaste={onCopyPasteHistoryItem}
                               isKeyboardSelected={keyboardSelectedItemId === historyId}
                               setKeyboardSelected={id => {
                                 const index = clipboardHistory.findIndex(
@@ -921,7 +1002,7 @@ export default function ClipboardHistoryQuickPastePage() {
                               clipboard={clipboard}
                               removeLinkMetaData={removeLinkMetaData}
                               generateLinkMetaData={generateLinkMetaData}
-                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                              isSingleClickToCopyPaste={isSingleClickToCopyPaste || isSingleClickToCopyPasteQuickWindow}
                               index={index}
                               style={style}
                             />

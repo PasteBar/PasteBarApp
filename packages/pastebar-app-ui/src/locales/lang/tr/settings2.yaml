@@ -28,11 +28,9 @@ Show collections menu on the navbar: Gezinme çubuğunda koleksiyonlar menüsün
 Show navbar elements on hover only: Gezinme çubuğu öğelerini yalnızca üzerine gelince göster
 Show/Hide Main App Window: Ana Uygulama Penceresini Göster/Gizle
 Show/Hide Quick Paste Window: Hızlı Yapıştır Penceresini Göster/Gizle
-When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: Etkinleştirildiğinde, menü öğelerine tıklamak içeriği otomatik yapıştırmak yerine yalnızca panoya kopyalar. Bu, içeriğin ne zaman ve nereye yapıştırılacağı konusunda size daha fazla kontrol sağlar.
 Show Note Icons on Clips: Kliplerde not simgelerini göster
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Görsel organizasyonu iyileştirmek ve notları keşfetmeyi kolaylaştırmak için notları olan kliplerde kalıcı simgeler görüntüle.
 Default Note Icon Type: Varsayılan not simgesi türü
-This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Bu, notları olan yeni klipler için varsayılan simge türünü ayarlar. Bağlam menüsü aracılığıyla bireysel klipleri özelleştirebilirsiniz.
 Boards, saved clips and menu items panel visible: Panolar, kaydedilmiş klipler ve menü öğeleri paneli görünür
 Both clipboard history and saved clips panels visible: Hem pano geçmişi hem de kaydedilmiş klipler panelleri görünür
 Clipboard history panel visible: Pano geçmişi paneli görünür
@@ -45,3 +43,18 @@ Show Both Panels: Her iki paneli de göster
 Show History Panel Only: Sadece geçmiş panelini göster
 Show Simplified Layout: Basitleştirilmiş düzeni göster
 Simplified Panel Layout: Sadeleştirilmiş panel düzeni
+Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Çift tıklama gerektirmek yerine pano geçmişi öğelerini ve kaydedilmiş klipleri kopyalamak/yapıştırmak için tek tıklama özelliğini etkinleştir.
+Single Click Copy/Paste action: Tek tıklama Kopyala/Yapıştır eylemi
+Single Click Copy/Paste: Tek tıklama Kopyala/Yapıştır
+Quick Paste Window Options: Hızlı Yapıştır Penceresi Seçenekleri
+Configure the behavior of the Quick Paste window when selecting items: Öğeler seçilirken Hızlı Yapıştır penceresinin davranışını yapılandır
+Copy items only (no auto-paste): Yalnızca öğeleri kopyala (otomatik yapıştır yok)
+Auto-close window after action: Eylem sonrasında pencereyi otomatik kapat
+When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Etkinleştirildiğinde, Hızlı Yapıştır penceresi bir öğeyi kopyaladıktan veya yapıştırdıktan sonra otomatik olarak kapanır.
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Bu, notları olan yeni klipler için varsayılan simge türünü ayarlar. Bağlam menüsü aracılığıyla bireysel klipleri özelleştirebilirsiniz.
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: Etkinleştirildiğinde, menü öğelerine tıklamak içeriği otomatik yapıştırmak yerine yalnızca panoya kopyalar. Bu, içeriğin ne zaman ve nereye yapıştırılacağı konusunda size daha fazla kontrol sağlar.
+? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
+: Etkinleştirildiğinde, Hızlı Yapıştır penceresindeki öğelere tıklamak veya Enter tuşuna basmak bunları otomatik olarak yapıştırmadan yalnızca panoya kopyalar.
+? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
+: Etkinleştirildiğinde, tek tıklama Hızlı Yapıştır penceresindeki öğeleri kopyalar/yapıştırır. Global tek tıklama da etkinleştirilmişse, her iki ayar birlikte çalışır.
