@@ -273,7 +273,7 @@ export default function MenuCardContextMenu({
               newMenuTree.unshift({
                 name:
                   t('Copy of ', { ns: 'common' }) +
-                    newMenuTree.find(item => item.id === id)?.name ??
+                    (newMenuTree.find(item => item.id === id)?.name ?? '') ||
                   t('Menu', { ns: 'common' }),
                 parentId: itemParentId ?? null,
                 orderNumber: itemOrderNumber + 2,
@@ -378,7 +378,6 @@ export default function MenuCardContextMenu({
                 ? '!bg-red-100 dark:!bg-red-900'
                 : ''
             }
-            disabled={hasChildren}
             onClick={e => {
               if (showDeleteMenuConfirmationId.value === id) {
                 deleteMenuItemById({
@@ -405,27 +404,28 @@ export default function MenuCardContextMenu({
               }
             }}
           >
-            <Text className={`${hasChildren ? '!text-gray-500' : '!text-red-500'}`}>
-              {showDeleteMenuConfirmationId.value !== id
-                ? t('Delete', { ns: 'common' })
-                : t('Click to Confirm', { ns: 'common' })}
-            </Text>
-            {!showDeleteMenuConfirmationId.value && (
-              <div className="ml-auto pl-3">
-                <TrashIcon
-                  size={15}
-                  className={`${hasChildren ? '!text-gray-500' : '!text-red-500'}`}
-                />
-              </div>
-            )}
+            <Box>
+              <Flex>
+                <Text className="!text-red-500">
+                  {showDeleteMenuConfirmationId.value !== id
+                    ? t('Delete', { ns: 'common' })
+                    : t('Click to Confirm', { ns: 'common' })}
+                </Text>
+                {!showDeleteMenuConfirmationId.value && (
+                  <div className="ml-auto pl-3">
+                    <TrashIcon size={15} className="!text-red-500" />
+                  </div>
+                )}
+              </Flex>
+              {hasChildren && (
+                <Box className="p-0">
+                  <Text className="!text-gray-400/80 text-[10px] group-hover:!text-amber-500">
+                    {t('Submenus will move up one level after delete', { ns: 'common' })}
+                  </Text>
+                </Box>
+              )}
+            </Box>
           </ContextMenuItem>
-          {hasChildren && (
-            <Flex className="p-0.5">
-              <Text className="!text-gray-400/80 text-[11px] group-hover:!text-amber-500">
-                {t('Remove Submenus First', { ns: 'common' })}
-              </Text>
-            </Flex>
-          )}
         </Box>
       </ContextMenuContent>
     </ContextMenuPortal>

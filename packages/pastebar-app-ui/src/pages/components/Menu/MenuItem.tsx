@@ -307,7 +307,6 @@ export default function MenuItem({
                 isDeleting && '!border-red-400 dark:!border-red-800',
                 showDeleteMenuItemsConfirmation.value &&
                   isSelected &&
-                  !hasChildren &&
                   '!border-red-400 dark:!border-red-800',
                 isOpen ? 'max-w-[340px] min-w-[270px]' : 'w-[270px]',
                 isMenuEdit && 'max-w-[340px] min-w-[340px]',
@@ -356,7 +355,6 @@ export default function MenuItem({
                       'not-active-background bg-slate-100 text-slate-400 line-through dark:bg-slate-900 dark:text-slate-600',
                     showDeleteMenuItemsConfirmation.value &&
                       isSelected &&
-                      !hasChildren &&
                       '!bg-red-50 dark:!bg-red-950/80',
                     (isCopied || isPasted) && '!bg-green-50 dark:!bg-green-900',
                     triggerProps?.className
