@@ -6,12 +6,9 @@ import createFilteredFlatBoardTree from '~/libs/create-filtered-flat-board-tree'
 import createMenuTree from '~/libs/create-menu-tree'
 import {
   collectionsStoreAtom,
-  currentNavigationContext,
   isNavBarHovering,
-  keyboardSelectedBoardId,
-  keyboardSelectedClipId,
-  keyboardSelectedItemId,
   recentSearchTerm,
+  resetKeyboardNavigation,
   settingsStoreAtom,
   uiStoreAtom,
 } from '~/store'
@@ -65,10 +62,12 @@ const FILTER = {
 } as const
 
 // Utility function for selection styles
-const getSelectionStyles = (isSelected: boolean) => clsx(
-  'rounded-md transition-colors',
-  isSelected && 'bg-blue-100 dark:bg-blue-900/30 ring-2 outline-none scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 ring-offset-white dark:ring-offset-gray-800'
-)
+const getSelectionStyles = (isSelected: boolean) =>
+  clsx(
+    'rounded-md transition-colors',
+    isSelected &&
+      'bg-blue-100 dark:bg-blue-900/30 ring-2 outline-none scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 ring-offset-white dark:ring-offset-gray-800'
+  )
 
 export function GlobalSearch({ isDark }: { isDark: boolean }) {
   const { t } = useTranslation()
@@ -106,12 +105,6 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
   const [showSearchModal, setShowSearchModal] = useState(false)
 
   // Reset all keyboard navigation when search opens
-  const resetKeyboardNavigation = () => {
-    currentNavigationContext.value = null
-    keyboardSelectedItemId.value = null
-    keyboardSelectedClipId.value = null
-    keyboardSelectedBoardId.value = null
-  }
 
   const toggleSearch = (e: Event) => {
     e.preventDefault()
@@ -138,7 +131,7 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
 
     const menus = menuItems.length > 0 ? menuItems : collectionWithMenuItems?.items || []
     const data = menus.length > 0 ? createMenuTree(menus, null, false) : []
-    
+
     // Pre-compute lowercase search term
     const lowerSearchTerm = debouncedSearchTerm.toLowerCase()
 
@@ -702,7 +695,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
               autoHide={false}
               role="listbox"
               aria-label="Search results"
-              aria-activedescendant={selectedIndex >= 0 ? `search-item-${selectedIndex}` : undefined}
+              aria-activedescendant={
+                selectedIndex >= 0 ? `search-item-${selectedIndex}` : undefined
+              }
             >
               {filter === FILTER.CLIPS &&
                 clipItemsFiltered.results
@@ -724,10 +719,13 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                           // Find if any clips in this board are selected
                           const currentItems = getCurrentItems()
                           let selectedClipId = null
-                          
+
                           if (selectedIndex >= 0 && selectedIndex < currentItems.length) {
                             const selectedItem = currentItems[selectedIndex]
-                            if (selectedItem?.type === 'clip' && selectedItem?.boardIndex === groupIndex) {
+                            if (
+                              selectedItem?.type === 'clip' &&
+                              selectedItem?.boardIndex === groupIndex
+                            ) {
                               selectedClipId = selectedItem.id
                             }
                           }
@@ -788,7 +786,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                             selectedIndex >= 0 &&
                             currentItems[selectedIndex]?.type === 'board' &&
                             currentItems[selectedIndex]?.id === board.id
-                          const boardGlobalIndex = currentItems.findIndex(item => item.id === board.id)
+                          const boardGlobalIndex = currentItems.findIndex(
+                            item => item.id === board.id
+                          )
                           return (
                             <Box
                               key={`${groupIndex}-${index}`}
@@ -834,7 +834,9 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
                       selectedIndex >= 0 &&
                       currentItems[selectedIndex]?.type === 'menu' &&
                       currentItems[selectedIndex]?.id === item.itemId
-                    const menuGlobalIndex = currentItems.findIndex(menuItem => menuItem.id === item.itemId)
+                    const menuGlobalIndex = currentItems.findIndex(
+                      menuItem => menuItem.id === item.itemId
+                    )
                     return (
                       <AccordionItem key={`${item.itemId}`} value={item.itemId}>
                         <Box

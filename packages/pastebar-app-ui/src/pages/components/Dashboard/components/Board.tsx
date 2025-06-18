@@ -760,7 +760,9 @@ export function BoardComponent({
                                         isKeyboardSelected={
                                           keyboardSelectedClipId?.value === item.id
                                         }
-                                        isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                                        isSingleClickToCopyPaste={
+                                          isSingleClickToCopyPaste
+                                        }
                                       />
                                     )
                                   )}
