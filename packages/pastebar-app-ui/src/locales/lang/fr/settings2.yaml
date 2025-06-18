@@ -20,12 +20,10 @@ Show Navbar Items Hover: Afficher éléments barre au survol
 Show collections menu on the navbar: Afficher le menu des collections dans la barre de navigation
 Show navbar elements on hover only: Afficher les éléments de la barre uniquement au survol
 Show/Hide Quick Paste Window: Afficher/Masquer fenêtre de collage rapide
-When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: Lorsqu'activé, cliquer sur les éléments du menu copiera uniquement le contenu dans le presse-papiers au lieu de le coller automatiquement. Cela vous donne plus de contrôle sur le moment et l'endroit où le contenu est collé.
 Show/Hide Main App Window: Afficher/Masquer la fenêtre principale de l'application
 Show Note Icons on Clips: Afficher les icônes de notes sur les clips
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Afficher des icônes persistantes sur les clips qui ont des notes pour améliorer l'organisation visuelle et faciliter la découverte des notes.
 Default Note Icon Type: Type d'icône de note par défaut
-This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Cela définit le type d'icône par défaut pour les nouveaux clips avec des notes. Vous pouvez personnaliser les clips individuels via le menu contextuel.
 Boards, saved clips and menu items panel visible: Panneau des tableaux, clips sauvegardés et éléments de menu visible
 Both clipboard history and saved clips panels visible: Les deux panneaux d'historique du presse-papiers et de clips sauvegardés visibles
 Clipboard history panel visible: Panneau d'historique du presse-papiers visible

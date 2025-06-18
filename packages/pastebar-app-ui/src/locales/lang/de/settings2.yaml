@@ -21,7 +21,6 @@ Show collections menu on the navbar: Sammlungsmenü in der Navigationsleiste anz
 Show navbar elements on hover only: Navigationsleistenelemente nur bei Hover anzeigen
 Show/Hide Main App Window: Hauptfenster anzeigen/verbergen
 Show/Hide Quick Paste Window: Schnelleinfügen-Fenster anzeigen/verbergen
-When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: Wenn aktiviert, wird beim Klicken auf Menüelemente der Inhalt nur in die Zwischenablage kopiert, anstatt automatisch eingefügt zu werden. Dies gibt Ihnen mehr Kontrolle darüber, wann und wo Inhalte eingefügt werden.
 Show Note Icons on Clips: Notiz-Symbole auf Clips anzeigen
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Dauerhafte Symbole auf Clips mit Notizen anzeigen, um die visuelle Organisation zu verbessern und Notizen leichter auffindbar zu machen.
 Default Note Icon Type: Standard-Notiz-Symbol-Typ
@@ -46,7 +45,6 @@ Configure the behavior of the Quick Paste window when selecting items: Verhalten
 Copy items only (no auto-paste): Nur Elemente kopieren (kein automatisches Einfügen)
 Auto-close window after action: Fenster nach Aktion automatisch schließen
 When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Wenn aktiviert, wird das Schnelleinfügen-Fenster nach dem Kopieren oder Einfügen eines Elements automatisch geschlossen.
-This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Dies legt den Standard-Symbol-Typ für neue Clips mit Notizen fest. Sie können einzelne Clips über das Kontextmenü anpassen.
 ? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
 : Wenn aktiviert, wird beim Klicken auf Menüelemente der Inhalt nur in die Zwischenablage kopiert, anstatt automatisch eingefügt zu werden. Dies gibt Ihnen mehr Kontrolle darüber, wann und wo Inhalte eingefügt werden.
 ? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.

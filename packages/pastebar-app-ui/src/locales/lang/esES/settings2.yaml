@@ -20,12 +20,10 @@ Show collections menu on the navbar: Mostrar menú de colecciones en la barra de
 Show navbar elements on hover only: Mostrar elementos de la barra solo al pasar el ratón
 Show/Hide Main App Window: Mostrar/Ocultar ventana principal
 Show/Hide Quick Paste Window: Mostrar/Ocultar ventana de pegado rápido
-When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: Cuando está habilitado, hacer clic en elementos del menú solo copiará el contenido al portapapeles en lugar de pegarlo automáticamente. Esto te da más control sobre cuándo y dónde se pega el contenido.
 Quick Paste Window: Ventana de pegado rápido
 Show Note Icons on Clips: Mostrar iconos de notas en clips
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Mostrar iconos persistentes en clips que tienen notas para mejorar la organización visual y hacer que las notas sean más fáciles de descubrir.
 Default Note Icon Type: Tipo de icono de nota predeterminado
-This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Esto establece el tipo de icono predeterminado para nuevos clips con notas. Puedes personalizar clips individuales a través del menú contextual.
 Boards, saved clips and menu items panel visible: Panel de tableros, clips guardados y elementos de menú visible
 Both clipboard history and saved clips panels visible: Ambos paneles de historial del portapapeles y clips guardados visibles
 Clipboard history panel visible: Panel de historial del portapapeles visible
