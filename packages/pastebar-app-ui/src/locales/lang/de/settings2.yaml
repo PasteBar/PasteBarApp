@@ -38,3 +38,18 @@ Show Both Panels: Beide Panels anzeigen
 Show History Panel Only: Nur Verlauf-Panel anzeigen
 Show Simplified Layout: Vereinfachtes Layout anzeigen
 Simplified Panel Layout: Vereinfachtes Panel-Layout
+Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Einfachklick zum Kopieren/Einfügen von Zwischenablage-Verlauf und gespeicherten Clips aktivieren, anstatt Doppelklick zu erfordern.
+Single Click Copy/Paste action: Einfachklick Kopieren/Einfügen-Aktion
+Single Click Copy/Paste: Einfachklick Kopieren/Einfügen
+Quick Paste Window Options: Schnelleinfügen-Fenster-Optionen
+Configure the behavior of the Quick Paste window when selecting items: Verhalten des Schnelleinfügen-Fensters beim Auswählen von Elementen konfigurieren
+Copy items only (no auto-paste): Nur Elemente kopieren (kein automatisches Einfügen)
+Auto-close window after action: Fenster nach Aktion automatisch schließen
+When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Wenn aktiviert, wird das Schnelleinfügen-Fenster nach dem Kopieren oder Einfügen eines Elements automatisch geschlossen.
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Dies legt den Standard-Symbol-Typ für neue Clips mit Notizen fest. Sie können einzelne Clips über das Kontextmenü anpassen.
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: Wenn aktiviert, wird beim Klicken auf Menüelemente der Inhalt nur in die Zwischenablage kopiert, anstatt automatisch eingefügt zu werden. Dies gibt Ihnen mehr Kontrolle darüber, wann und wo Inhalte eingefügt werden.
+? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
+: Wenn aktiviert, werden beim Klicken oder Drücken der Eingabetaste auf Elemente im Schnelleinfügen-Fenster diese nur in die Zwischenablage kopiert, ohne sie automatisch einzufügen.
+? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
+: Wenn aktiviert, werden Elemente im Schnelleinfügen-Fenster mit einem einfachen Klick kopiert/eingefügt. Wenn globaler Einfachklick ebenfalls aktiviert ist, funktionieren beide Einstellungen zusammen.

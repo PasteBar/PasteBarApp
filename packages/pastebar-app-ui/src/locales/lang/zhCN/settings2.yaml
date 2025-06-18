@@ -38,3 +38,18 @@ Show Both Panels: 显示两个面板
 Show History Panel Only: 仅显示历史面板
 Show Simplified Layout: 显示简化布局
 Simplified Panel Layout: 简化面板布局
+Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: 启用单击复制/粘贴剪贴板历史记录和保存的剪辑，而不需要双击。
+Single Click Copy/Paste action: 单击复制/粘贴操作
+Single Click Copy/Paste: 单击复制/粘贴
+Quick Paste Window Options: 快速粘贴窗口选项
+Configure the behavior of the Quick Paste window when selecting items: 配置选择项目时快速粘贴窗口的行为
+Copy items only (no auto-paste): 仅复制项目（无自动粘贴）
+Auto-close window after action: 操作后自动关闭窗口
+When enabled, the Quick Paste window will automatically close after copying or pasting an item.: 启用后，快速粘贴窗口将在复制或粘贴项目后自动关闭。
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: 这设置了带有注释的新剪辑的默认图标类型。您可以通过上下文菜单自定义单个剪辑。
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: 启用后，点击菜单项只会将内容复制到剪贴板而不是自动粘贴。这让您更好地控制内容粘贴的时间和位置。
+? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
+: 启用后，在快速粘贴窗口中点击或按Enter键只会将项目复制到剪贴板，而不会自动粘贴。
+? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
+: 启用后，单击将在快速粘贴窗口中复制/粘贴项目。如果全局单击也启用了，两个设置会一起工作。

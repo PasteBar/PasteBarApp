@@ -38,3 +38,18 @@ Show Both Panels: Afficher les deux panneaux
 Show History Panel Only: Afficher uniquement le panneau historique
 Show Simplified Layout: Afficher la mise en page simplifiée
 Simplified Panel Layout: Mise en page de panneau simplifiée
+Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Activer le clic simple pour copier/coller les éléments de l'historique du presse-papiers et les clips sauvegardés au lieu d'exiger un double-clic.
+Single Click Copy/Paste action: Action clic simple Copier/Coller
+Single Click Copy/Paste: Clic simple Copier/Coller
+Quick Paste Window Options: Options de la fenêtre de collage rapide
+Configure the behavior of the Quick Paste window when selecting items: Configurer le comportement de la fenêtre de collage rapide lors de la sélection d'éléments
+Copy items only (no auto-paste): Copier uniquement les éléments (pas de collage automatique)
+Auto-close window after action: Fermer automatiquement la fenêtre après l'action
+When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Lorsqu'activé, la fenêtre de collage rapide se fermera automatiquement après avoir copié ou collé un élément.
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Cela définit le type d'icône par défaut pour les nouveaux clips avec des notes. Vous pouvez personnaliser les clips individuels via le menu contextuel.
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: Lorsqu'activé, cliquer sur les éléments du menu copiera uniquement le contenu dans le presse-papiers au lieu de le coller automatiquement. Cela vous donne plus de contrôle sur le moment et l'endroit où le contenu est collé.
+? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
+: Lorsqu'activé, cliquer ou appuyer sur Entrée sur les éléments dans la fenêtre de collage rapide les copiera uniquement dans le presse-papiers sans les coller automatiquement.
+? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
+: Lorsqu'activé, un clic simple copiera/collera les éléments dans la fenêtre de collage rapide. Si le clic simple global est également activé, les deux paramètres fonctionnent ensemble.

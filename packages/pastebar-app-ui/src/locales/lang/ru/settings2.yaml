@@ -20,7 +20,6 @@ Show navbar elements on hover only: Показывать элементы пан
 Show/Hide Main App Window: Показать/Скрыть главное окно
 Show/Hide Quick Paste Window: Показать/Скрыть окно быстрой вставки
 When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.: При включении нажатие на элементы меню будет только копировать содержимое в буфер обмена вместо автоматической вставки. Это дает вам больше контроля над тем, когда и где вставляется содержимое.
-Quick Paste Window: Окно быстрой вставки
 PasteBar Quick Paste: PasteBar Быстрая Вставка
 Show Note Icons on Clips: Показывать иконку заметок на клипах
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Отображать постоянные значки на клипах с заметками для улучшения визуальной организации и облегчения поиска заметок.
@@ -38,3 +37,19 @@ Show Both Panels: Показывать обе панели
 Show History Panel Only: Показывать только панель истории
 Show Simplified Layout: Показывать упрощённый интерфейс
 Simplified Panel Layout: Упрощённый дизайн панелей
+Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Включить копирование/вставку элементов истории буфера обмена и сохранённых клипов одним кликом вместо двойного клика.
+Single Click Copy/Paste action: Действие копирования/вставки одним кликом
+Single Click Copy/Paste: Копирование/вставка одним кликом
+Quick Paste Window: Окно быстрой вставки
+Quick Paste Window Options: Параметры окна быстрой вставки
+Configure the behavior of the Quick Paste window when selecting items: Настроить поведение окна быстрой вставки при выборе элементов
+Copy items only (no auto-paste): Только копировать элементы (без автовставки)
+Auto-close window after action: Автоматически закрывать окно после действия
+When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Когда включено, окно быстрой вставки будет автоматически закрываться после копирования или вставки элемента.
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Это устанавливает тип иконки по умолчанию для новых клипов с заметками. Вы можете настроить отдельные клипы через контекстное меню.
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: Когда включено, нажатие на элементы меню будет только копировать содержимое в буфер обмена вместо автоматической вставки. Это дает вам больше контроля над тем, когда и где вставляется содержимое.
+? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
+: Когда включено, нажатие или нажатие Enter на элементы в окне быстрой вставки будет только копировать их в буфер обмена без автоматической вставки.
+? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
+: Когда включено, одним кликом будут копироваться/вставляться элементы в окне быстрой вставки. Если глобальный одиночный клик также включен, обе настройки работают вместе.

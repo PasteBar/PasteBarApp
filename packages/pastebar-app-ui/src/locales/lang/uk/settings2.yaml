@@ -38,3 +38,18 @@ Show Both Panels: Показувати обі панелі
 Show History Panel Only: Показувати тільки панель історії
 Show Simplified Layout: Показувати спрощений макет
 Simplified Panel Layout: Спрощений макет панелі
+Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Увімкнути копіювання/вставку елементів історії буфера обміну та збережених кліпів одним кліком замість подвійного кліку.
+Single Click Copy/Paste action: Дія копіювання/вставки одним кліком
+Single Click Copy/Paste: Копіювання/вставка одним кліком
+Quick Paste Window Options: Параметри вікна швидкої вставки
+Configure the behavior of the Quick Paste window when selecting items: Налаштувати поведінку вікна швидкої вставки при виборі елементів
+Copy items only (no auto-paste): Тільки копіювати елементи (без автовставки)
+Auto-close window after action: Автоматично закривати вікно після дії
+When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Коли увімкнено, вікно швидкої вставки буде автоматично закриватися після копіювання або вставки елемента.
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Це встановлює тип іконки за замовчуванням для нових кліпів з нотатками. Ви можете налаштувати окремі кліпи через контекстне меню.
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: Коли увімкнено, натискання на елементи меню буде тільки копіювати вміст до буфера обміну замість автоматичної вставки. Це дає вам більше контролю над тим, коли і де вставляється вміст.
+? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
+: Коли увімкнено, натискання або натискання Enter на елементи у вікні швидкої вставки буде тільки копіювати їх до буфера обміну без автоматичної вставки.
+? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
+: Коли увімкнено, одним кліком будуть копіюватися/вставлятися елементи у вікні швидкої вставки. Якщо глобальний одиночний клік також увімкнено, обидва налаштування працюють разом.

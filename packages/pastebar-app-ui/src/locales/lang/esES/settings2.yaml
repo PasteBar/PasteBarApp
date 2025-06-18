@@ -38,3 +38,18 @@ Show Both Panels: Mostrar ambos paneles
 Show History Panel Only: Mostrar solo panel de historial
 Show Simplified Layout: Mostrar diseño simplificado
 Simplified Panel Layout: Diseño de panel simplificado
+Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Habilitar clic simple para copiar/pegar elementos del historial del portapapeles y clips guardados en lugar de requerir doble clic.
+Single Click Copy/Paste action: Acción de clic simple Copiar/Pegar
+Single Click Copy/Paste: Clic simple Copiar/Pegar
+Quick Paste Window Options: Opciones de la ventana de pegado rápido
+Configure the behavior of the Quick Paste window when selecting items: Configurar el comportamiento de la ventana de pegado rápido al seleccionar elementos
+Copy items only (no auto-paste): Copiar elementos solamente (sin pegado automático)
+Auto-close window after action: Cerrar ventana automáticamente después de la acción
+When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Cuando esté habilitado, la ventana de pegado rápido se cerrará automáticamente después de copiar o pegar un elemento.
+This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Esto establece el tipo de icono predeterminado para nuevos clips con notas. Puedes personalizar clips individuales a través del menú contextual.
+? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
+: Cuando está habilitado, hacer clic en elementos del menú solo copiará el contenido al portapapeles en lugar de pegarlo automáticamente. Esto te da más control sobre cuándo y dónde se pega el contenido.
+? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
+: Cuando está habilitado, hacer clic o presionar Enter en elementos de la ventana de pegado rápido solo los copiará al portapapeles sin pegarlos automáticamente.
+? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
+: Cuando está habilitado, el clic simple copiará/pegará elementos en la ventana de pegado rápido. Si el clic simple global también está habilitado, ambas configuraciones funcionan juntas.
