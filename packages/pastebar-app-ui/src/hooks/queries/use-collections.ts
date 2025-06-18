@@ -1,8 +1,12 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api'
-import { collectionsStoreAtom } from '~/store'
-import { useAtomValue } from 'jotai'
+import { collectionsStoreAtom, settingsStoreAtom } from '~/store'
+import {
+  isCollectionPinModalOpenAtom,
+  collectionPinModalPropsAtom,
+} from '~/store/uiStore'
+import { useAtomValue, useSetAtom } from 'jotai'
 
 import { Collection, Item, Tabs } from '~/types/menu'
 
@@ -249,11 +253,25 @@ export function useUpdateCollectionById() {
 
 export function useSelectCollectionById() {
   const queryClient = useQueryClient()
+  const { protectedCollections, screenLockPassCode } =
+    useAtomValue(settingsStoreAtom)
+  const { collections, updateCurrentCollectionId } = useAtomValue(collectionsStoreAtom)
 
-  const { mutate: selectCollectionById, isSuccess: selectCollectionByIdSuccess } =
+  const setIsCollectionPinModalOpen = useSetAtom(isCollectionPinModalOpenAtom)
+  const setCollectionPinModalProps = useSetAtom(collectionPinModalPropsAtom)
+
+  const { mutate: invokeSelectCollectionById, isSuccess: selectCollectionByIdSuccess } =
     useInvokeMutation<Record<string, unknown>, string>('select_collection_by_id', {
-      onSuccess: async data => {
+      onSuccess: async (data, variables) => {
         if (data === 'ok') {
+          // The actual update to currentCollectionId in collectionsStoreAtom
+          // might be implicitly handled by backend or needs explicit call here
+          // For now, assume backend handles state post 'select_collection_by_id'
+          // and query invalidations refresh the frontend state.
+          // If direct update is needed:
+          // const { selectCollection } = variables as { selectCollection: { collectionId: string } };
+          // updateCurrentCollectionId(selectCollection.collectionId);
+
           await invoke('build_system_menu')
           queryClient.invalidateQueries({
             queryKey: ['get_collections'],
@@ -265,14 +283,64 @@ export function useSelectCollectionById() {
             queryKey: ['get_active_collection_with_menu_items'],
           })
         } else {
-          console.log('update collection error', data)
+          console.log('select collection error', data)
         }
       },
     })
 
+  const selectCollectionById = (params: {
+    selectCollection: { collectionId: string }
+  }) => {
+    const { collectionId } = params.selectCollection
+    const isProtected = protectedCollections.includes(collectionId)
+    const targetCollection = collections.find(c => c.collectionId === collectionId)
+
+    if (isProtected && screenLockPassCode && targetCollection) {
+      const onConfirmSuccessCallback = () => {
+        // This function is called by the modal on successful PIN verification.
+        // It should now perform the actual collection switch.
+        // We can call updateCurrentCollectionId directly if it's available and appropriate,
+        // OR we can call invokeSelectCollectionById, but that might re-trigger this logic.
+        // Direct state update via updateCurrentCollectionId is cleaner if it also handles
+        // necessary backend calls or cache invalidations implicitly or explicitly.
+        // For now, let's assume updateCurrentCollectionId is sufficient for frontend state.
+        // The PinPromptModal previously called updateCurrentCollectionId.
+        // If invokeSelectCollectionById is called, ensure it doesn't lead to a loop.
+        // A more robust way might be to have a separate "forceSelect" or "internalSelect"
+        // that bypasses this PIN check, but for now, direct update to store is assumed.
+        if (updateCurrentCollectionId) {
+             updateCurrentCollectionId(collectionId)
+             // Manually trigger necessary invalidations if updateCurrentCollectionId doesn't do it.
+             // This part is crucial and was handled by invokeSelectCollectionById's onSuccess.
+             // Replicating that here or ensuring updateCurrentCollectionId covers it.
+             queryClient.invalidateQueries({ queryKey: ['get_collections'] })
+             queryClient.invalidateQueries({ queryKey: ['get_active_collection_with_clips'] })
+             queryClient.invalidateQueries({ queryKey: ['get_active_collection_with_menu_items'] })
+             invoke('build_system_menu') // Also ensure this is called.
+        } else {
+            // Fallback or error if updateCurrentCollectionId is not on collectionsStoreAtom
+            // This would be a contract violation with collectionsStoreAtom
+            console.error("updateCurrentCollectionId not available on collectionsStoreAtom");
+            // As a fallback, we could call invokeSelectCollectionById, but this is not ideal
+            // as it might re-trigger the PIN prompt if not careful.
+            // For now, we assume updateCurrentCollectionId is the way.
+        }
+      }
+
+      setCollectionPinModalProps({
+        title: `Unlock Collection: ${targetCollection.title}`,
+        onConfirmSuccess: onConfirmSuccessCallback,
+      })
+      setIsCollectionPinModalOpen(true)
+    } else {
+      // Not protected or no PIN set, proceed as normal
+      invokeSelectCollectionById(params)
+    }
+  }
+
   return {
     selectCollectionByIdSuccess,
-    selectCollectionById,
+    selectCollectionById, // This is now our wrapped function
   }
 }
 

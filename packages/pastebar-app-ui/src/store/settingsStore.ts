@@ -101,6 +101,7 @@ type Settings = {
   isSingleClickToCopyPasteQuickWindow: boolean
   isQuickPasteCopyOnly: boolean
   isQuickPasteAutoClose: boolean
+  protectedCollections: string[]
 }
 
 type Constants = {
@@ -207,6 +208,7 @@ export interface SettingsStoreState {
   initSettings: (settings: Settings) => void
   setClipTextMinLength: (width: number) => void
   setClipTextMaxLength: (height: number) => void
+  setProtectedCollections: (ids: string[]) => void
 }
 
 const initialState: SettingsStoreState & Settings = {
@@ -284,6 +286,7 @@ const initialState: SettingsStoreState & Settings = {
   isSingleClickToCopyPasteQuickWindow: false,
   isQuickPasteCopyOnly: false,
   isQuickPasteAutoClose: true,
+  protectedCollections: [],
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -393,6 +396,7 @@ const initialState: SettingsStoreState & Settings = {
     invoke('delete_os_password', { name }),
   verifyPassword: (password: string, hash: string): Promise<boolean> =>
     invoke('verify_password', { password, hash }),
+  setProtectedCollections: () => {},
 }
 
 export const settingsStore = createStore<SettingsStoreState & Settings>()((set, get) => ({
@@ -452,6 +456,12 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       if (name === 'historyDetectLanguagesPrioritizedList' && typeof value === 'string') {
         return set(() => ({
           historyDetectLanguagesPrioritizedList: value.split(','),
+        }))
+      }
+
+      if (name === 'protectedCollections' && typeof value === 'string') {
+        return set(() => ({
+          protectedCollections: value.split(',').filter(Boolean),
         }))
       }
 
@@ -736,6 +746,9 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   setIsQuickPasteAutoClose: async (isEnabled: boolean) => {
     get().syncStateUpdate('isQuickPasteAutoClose', isEnabled)
     return get().updateSetting('isQuickPasteAutoClose', isEnabled)
+  },
+  setProtectedCollections: async (ids: string[]) => {
+    return get().updateSetting('protectedCollections', ids.join(','))
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

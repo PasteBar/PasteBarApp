@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api'
 import { appWindow, availableMonitors, WebviewWindow } from '@tauri-apps/api/window'
+import { atom } from 'jotai'
 import { atomWithStore } from 'jotai-zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
@@ -251,3 +252,10 @@ export const uiStore = createStore<UIStoreState>()(
 )
 
 export const uiStoreAtom = atomWithStore(uiStore)
+
+// Atoms for Collection PIN Prompt Modal (using LockScreenConfirmationModal)
+export const isCollectionPinModalOpenAtom = atom(false)
+export const collectionPinModalPropsAtom = atom<{
+  title: string
+  onConfirmSuccess: () => void
+} | null>(null)

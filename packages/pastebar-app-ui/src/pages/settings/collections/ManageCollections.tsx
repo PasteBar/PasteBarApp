@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import createMenuTree from '~/libs/create-menu-tree'
 import { collectionsStoreAtom, settingsStoreAtom, uiStoreAtom } from '~/store'
-import { useAtomValue } from 'jotai'
-import { CheckSquare, Trash, Trash2 } from 'lucide-react'
+import { useAtom, useAtomValue } from 'jotai'
+import { CheckSquare, LockKeyhole, Trash, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useHoverIntent } from 'react-use-hoverintent'
@@ -45,8 +45,15 @@ export default function ManageCollectionsSection({
   showAddNewCollection?: boolean
 }) {
   const { t } = useTranslation()
-  const { isShowCollectionNameOnNavBar, setIsShowCollectionNameOnNavBar } =
-    useAtomValue(settingsStoreAtom)
+  const {
+    isShowCollectionNameOnNavBar,
+    setIsShowCollectionNameOnNavBar,
+    screenLockPassCode,
+    protectedCollections,
+    setProtectedCollections,
+  } = useAtomValue(settingsStoreAtom)
+  // collections is already available from collectionsStoreAtom further down
+  // const collectionsAtom = useAtomValue(collectionsStoreAtom)
 
   useGetCollections()
   useUpdateMovedMenuItemsInCollection()
@@ -416,6 +423,65 @@ export default function ManageCollectionsSection({
                       </Text>
                     </CardContent>
                   </Card>
+
+                  {screenLockPassCode && (
+                    <Card>
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                        <CardTitle className="animate-in fade-in text-md font-medium border-red-300 border-1 w-full">
+                          <Flex align="center" gap={2}>
+                            <LockKeyhole size={18} />
+                            {t('Protect Collections with PIN', { ns: 'collections' })}
+                          </Flex>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Text className="text-sm text-muted-foreground mb-3">
+                          {t(
+                            'Selected collections will require PIN entry to access their content.',
+                            { ns: 'collections' }
+                          )}
+                        </Text>
+                        <Box className="max-h-48 overflow-y-auto pr-2 space-y-2">
+                          {collections.map(collection => {
+                            const isProtected = protectedCollections.includes(
+                              collection.collectionId
+                            )
+                            return (
+                              <Flex
+                                key={collection.collectionId}
+                                justify="between"
+                                align="center"
+                                className="py-2 px-3 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800"
+                              >
+                                <Text className="text-sm">{collection.title}</Text>
+                                <Switch
+                                  checked={isProtected}
+                                  onCheckedChange={checked => {
+                                    const currentProtectedIds = [...protectedCollections]
+                                    if (checked) {
+                                      if (
+                                        !currentProtectedIds.includes(collection.collectionId)
+                                      ) {
+                                        currentProtectedIds.push(collection.collectionId)
+                                      }
+                                    } else {
+                                      const index = currentProtectedIds.indexOf(
+                                        collection.collectionId
+                                      )
+                                      if (index > -1) {
+                                        currentProtectedIds.splice(index, 1)
+                                      }
+                                    }
+                                    setProtectedCollections(currentProtectedIds)
+                                  }}
+                                />
+                              </Flex>
+                            )
+                          })}
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  )}
                 </Box>
                 <Spacer h={6} />
               </SimpleBar>
