@@ -67,14 +67,9 @@ export const MenuIconMenu = ({
   })
 
   const selectedItemsWithoutFolders = useMemo(() => {
-    return selectedItemIds.filter(id => {
-      const menuItem = menuItems.find(({ itemId }) => itemId === id)
-      return (
-        menuItem &&
-        menuItems.filter(({ parentId }) => parentId === menuItem.itemId).length === 0
-      )
-    })
-  }, [selectedItemIds, menuItems])
+    // Now we allow deletion of folders with children - they will be repositioned
+    return selectedItemIds
+  }, [selectedItemIds])
 
   const selectedItemsInactive = useMemo(() => {
     return selectedItemIds.filter(id => {

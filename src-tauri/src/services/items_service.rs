@@ -1,8 +1,8 @@
 use std::fs;
 use std::path::Path;
 
-use crate::db::{self, APP_CONSTANTS};
-use crate::models::models::UpdatedItemData;
+use crate::db::{self};
+use crate::models::models::{CollectionMenu, UpdatedItemData};
 use crate::models::Item;
 use crate::services::utils::debug_output;
 use image::ImageFormat;
@@ -106,7 +106,7 @@ pub fn get_item_by_id(item_id: String) -> Result<Item, String> {
       // Transform image path for frontend consumption
       item.transform_image_path_for_frontend();
       Ok(item)
-    },
+    }
     Err(e) => Err(format!("Item not found: {}", e)),
   }
 }
@@ -384,6 +384,67 @@ pub fn delete_items_by_ids(item_ids: &[String], collection_id: String) -> String
 pub fn delete_menu_item_by_id(item_id: String, collection_id: String) -> Result<String, Error> {
   let connection = &mut establish_pool_db_connection();
 
+  // First, get the parent_id and order_number of the item being deleted
+  let menu_item_info: Option<(Option<String>, i32)> = collection_menu
+    .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+    .filter(collection_menu_dsl::item_id.eq(&item_id))
+    .select((
+      collection_menu_dsl::parent_id,
+      collection_menu_dsl::order_number,
+    ))
+    .first(connection)
+    .optional()?;
+
+  if let Some((parent_id, parent_order)) = menu_item_info {
+    // Find all children of the item being deleted
+    let children: Vec<CollectionMenu> = collection_menu
+      .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+      .filter(collection_menu_dsl::parent_id.eq(&item_id))
+      .order(collection_menu_dsl::order_number.asc())
+      .load::<CollectionMenu>(connection)?;
+
+    // Update children to point to their grandparent and adjust order numbers
+    for (index, child) in children.iter().enumerate() {
+      diesel::update(
+        collection_menu
+          .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+          .filter(collection_menu_dsl::item_id.eq(&child.item_id)),
+      )
+      .set((
+        collection_menu_dsl::parent_id.eq(&parent_id),
+        collection_menu_dsl::order_number.eq(parent_order + (index as i32) + 1),
+      ))
+      .execute(connection)?;
+    }
+
+    // Adjust order numbers of siblings that come after the deleted item and its children
+    let shift_amount = children.len() as i32;
+
+    // Handle both cases: when parent_id is NULL and when it has a value
+    match &parent_id {
+      Some(pid) => {
+        diesel::update(
+          collection_menu
+            .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+            .filter(collection_menu_dsl::parent_id.eq(pid))
+            .filter(collection_menu_dsl::order_number.gt(parent_order)),
+        )
+        .set(collection_menu_dsl::order_number.eq(collection_menu_dsl::order_number + shift_amount))
+        .execute(connection)?;
+      }
+      None => {
+        diesel::update(
+          collection_menu
+            .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+            .filter(collection_menu_dsl::parent_id.is_null())
+            .filter(collection_menu_dsl::order_number.gt(parent_order)),
+        )
+        .set(collection_menu_dsl::order_number.eq(collection_menu_dsl::order_number + shift_amount))
+        .execute(connection)?;
+      }
+    }
+  }
+
   // Check if the item is a clip before attempting to delete it from the items table
   let item_clip_status = items
     .find(&item_id)
@@ -420,6 +481,86 @@ pub fn delete_menu_items_by_ids(
   collection_id: String,
 ) -> Result<String, Error> {
   let connection = &mut establish_pool_db_connection();
+
+  // Process each item to handle child repositioning
+  for item_id in item_ids {
+    // Get the parent_id and order_number of the item being deleted
+    let menu_item_info: Option<(Option<String>, i32)> = collection_menu
+      .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+      .filter(collection_menu_dsl::item_id.eq(item_id))
+      .select((
+        collection_menu_dsl::parent_id,
+        collection_menu_dsl::order_number,
+      ))
+      .first(connection)
+      .optional()?;
+
+    if let Some((parent_id, parent_order)) = menu_item_info {
+      // Find all children of the item being deleted
+      let children: Vec<CollectionMenu> = collection_menu
+        .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+        .filter(collection_menu_dsl::parent_id.eq(item_id))
+        .order(collection_menu_dsl::order_number.asc())
+        .load::<CollectionMenu>(connection)?;
+
+      // Update children to point to their grandparent and adjust order numbers
+      for (index, child) in children.iter().enumerate() {
+        // Only update if the child is not also being deleted
+        if !item_ids.contains(&child.item_id) {
+          diesel::update(
+            collection_menu
+              .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+              .filter(collection_menu_dsl::item_id.eq(&child.item_id)),
+          )
+          .set((
+            collection_menu_dsl::parent_id.eq(&parent_id),
+            collection_menu_dsl::order_number.eq(parent_order + (index as i32) + 1),
+          ))
+          .execute(connection)?;
+        }
+      }
+
+      // Count children that will be repositioned (not deleted)
+      let repositioned_children_count = children
+        .iter()
+        .filter(|child| !item_ids.contains(&child.item_id))
+        .count() as i32;
+
+      // Adjust order numbers of siblings that come after the deleted item and its repositioned children
+      if repositioned_children_count > 0 {
+        match &parent_id {
+          Some(pid) => {
+            diesel::update(
+              collection_menu
+                .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+                .filter(collection_menu_dsl::parent_id.eq(pid))
+                .filter(collection_menu_dsl::order_number.gt(parent_order))
+                .filter(collection_menu_dsl::item_id.ne_all(item_ids)),
+            )
+            .set(
+              collection_menu_dsl::order_number
+                .eq(collection_menu_dsl::order_number + repositioned_children_count),
+            )
+            .execute(connection)?;
+          }
+          None => {
+            diesel::update(
+              collection_menu
+                .filter(collection_menu_dsl::collection_id.eq(&collection_id))
+                .filter(collection_menu_dsl::parent_id.is_null())
+                .filter(collection_menu_dsl::order_number.gt(parent_order))
+                .filter(collection_menu_dsl::item_id.ne_all(item_ids)),
+            )
+            .set(
+              collection_menu_dsl::order_number
+                .eq(collection_menu_dsl::order_number + repositioned_children_count),
+            )
+            .execute(connection)?;
+          }
+        }
+      }
+    }
+  }
 
   let clips: Vec<String> = items
     .select(item_id_field)
@@ -543,9 +684,10 @@ pub fn add_image_to_item(item_id: &str, image_full_path: &str) -> Result<String,
   let connection = &mut establish_pool_db_connection();
 
   // Convert absolute path to relative path before storing
-  let relative_image_path = new_image_path.to_str()
+  let relative_image_path = new_image_path
+    .to_str()
     .map(|path| db::to_relative_image_path(path));
-  
+
   diesel::update(items.find(item_id))
     .set((
       image_path_full_res.eq(relative_image_path),
@@ -661,7 +803,8 @@ pub fn save_item_image_from_history_item(
   })?;
 
   // Return relative path instead of absolute path
-  let relative_path = clip_image_file_name.to_str()
+  let relative_path = clip_image_file_name
+    .to_str()
     .map(|path| db::to_relative_image_path(path))
     .unwrap_or_default();
   Ok(relative_path)
@@ -718,9 +861,10 @@ pub fn upload_image_file_to_item_id(
   let connection = &mut establish_pool_db_connection();
 
   // Convert absolute path to relative path before storing
-  let relative_image_path = image_path.to_str()
+  let relative_image_path = image_path
+    .to_str()
     .map(|path| db::to_relative_image_path(path));
-  
+
   let _ = diesel::update(items.find(item_id))
     .set((
       image_path_full_res.eq(relative_image_path),
