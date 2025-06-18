@@ -1251,7 +1251,7 @@ export default function UserPreferences() {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <div>
-                            <Text className="text-[15px] font-extrabold">
+                            <Text className="text-[15px] font-semibold">
                               {t('Copy items only (no auto-paste)', { ns: 'settings2' })}
                             </Text>
                             <Text className="text-xs text-muted-foreground">
@@ -1278,7 +1278,7 @@ export default function UserPreferences() {
 
                         <div className="flex items-center justify-between">
                           <div>
-                            <Text className="text-[15px] font-extrabold">
+                            <Text className="text-[15px] font-semibold">
                               {t('Single Click Copy/Paste action', { ns: 'settings2' })}
                             </Text>
                             <Text className="text-xs text-muted-foreground">
@@ -1305,7 +1305,7 @@ export default function UserPreferences() {
 
                         <div className="flex items-center justify-between">
                           <div>
-                            <Text className="text-[15px] font-extrabold">
+                            <Text className="text-[15px] font-semibold">
                               {t('Auto-close window after action', { ns: 'settings2' })}
                             </Text>
                             <Text className="text-xs text-muted-foreground">
