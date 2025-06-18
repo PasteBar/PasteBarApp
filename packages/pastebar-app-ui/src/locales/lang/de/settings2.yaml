@@ -15,7 +15,14 @@ Press keys: Tasten drücken
 Quick Paste Window: Schnelleinfügen-Fenster
 Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.: PasteBar-App-Symbol aus dem macOS Dock entfernen, während die App im Hintergrund läuft. Die App bleibt über das Menüleistensymbol zugänglich. Erfordert einen App-Neustart, um wirksam zu werden.
 Set: Festlegen
-Set system OS hotkeys to show/hide the main app window and quick paste window: System-Tastenkombinationen zum Anzeigen/Verbergen des Hauptfensters und des Schnelleinfügen-Fensters festlegen
+Set system OS hotkeys to show/hide the main app window and quick paste window. Supports up to 3-key combinations.: System-Tastenkombinationen zum Anzeigen/Verbergen des Hauptfensters und des Schnelleinfügen-Fensters festlegen. Unterstützt bis zu 3-Tasten-Kombinationen.
+'How to set hotkeys:': 'So stellen Sie Hotkeys ein:'
+Click Set/Change button to start recording: Klicken Sie auf die Schaltfläche Festlegen/Ändern, um die Aufzeichnung zu starten
+Press your desired key combination (e.g., Ctrl+Shift+V): Drücken Sie Ihre gewünschte Tastenkombination (z.B. Ctrl+Shift+V)
+Press Enter to confirm or Escape to cancel: Drücken Sie Enter zum Bestätigen oder Escape zum Abbrechen
+Press Backspace/Delete to clear the hotkey: Drücken Sie Backspace/Delete, um den Hotkey zu löschen
+Press your key combination...: Drücken Sie Ihre Tastenkombination...
+Recording...: Aufzeichnen...
 Show Navbar Items Hover: Navigationsleistenelemente bei Hover anzeigen
 Show collections menu on the navbar: Sammlungsmenü in der Navigationsleiste anzeigen
 Show navbar elements on hover only: Navigationsleistenelemente nur bei Hover anzeigen

@@ -15,7 +15,14 @@ Press keys: Premi i tasti
 Quick Paste Window: Finestra incolla rapido
 Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.: Rimuovi l'icona di PasteBar dal Dock di macOS mantenendo l'app in esecuzione in background. L'app rimane accessibile tramite l'icona della barra dei menu. Richiede un riavvio dell'app per avere effetto.
 Set: Imposta
-Set system OS hotkeys to show/hide the main app window and quick paste window: Imposta i tasti di scelta rapida del sistema per mostrare/nascondere la finestra principale e la finestra incolla rapido
+Set system OS hotkeys to show/hide the main app window and quick paste window: Imposta i tasti di scelta rapida del sistema per mostrare/nascondere la finestra principale e la finestra incolla rapido. Supporta combinazioni fino a 3 tasti.
+'How to set hotkeys:': 'Come impostare i tasti di scelta rapida:'
+Click Set/Change button to start recording: Fai clic sul pulsante Imposta/Modifica per iniziare la registrazione
+Press your desired key combination (e.g., Ctrl+Shift+V): Premi la combinazione di tasti desiderata (ad esempio, Ctrl+Shift+V)
+Press Enter to confirm or Escape to cancel: Premi Invio per confermare o Esc per annullare
+Press Backspace/Delete to clear the hotkey: Premi Backspace/Canc per cancellare il tasto di scelta rapida
+Press your key combination...: Premi la tua combinazione di tasti...
+Recording...: Registrazione...
 Show Navbar Items Hover: Mostra elementi barra al passaggio del mouse
 Show collections menu on the navbar: Mostra il menu delle collezioni nella barra di navigazione
 Show navbar elements on hover only: Mostra elementi della barra solo al passaggio del mouse

@@ -13,7 +13,14 @@ No keys set: Клавиши не установлены
 Press keys: Нажмите клавиши
 Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.: Удалить иконку PasteBar из macOS Dock, оставляя приложение запущенным в фоне. Приложение остается доступным через иконку в строке меню. Требуется перезапуск приложения.
 Set: Установить
-Set system OS hotkeys to show/hide the main app window and quick paste window: Установить системные горячие клавиши для показа/скрытия главного окна и окна быстрой вставки
+Set system OS hotkeys to show/hide the main app window and quick paste window: Установить системные горячие клавиши для показа/скрытия главного окна и окна быстрой вставки. Поддерживает комбинации до 3 клавиш.
+'How to set hotkeys:': 'Как установить горячие клавиши:'
+Click Set/Change button to start recording: Нажмите кнопку Установить/Изменить для начала записи
+Press your desired key combination (e.g., Ctrl+Shift+V): Нажмите желаемую комбинацию клавиш (например, Ctrl+Shift+V)
+Press Enter to confirm or Escape to cancel: Нажмите Enter для подтверждения или Escape для отмены
+Press Backspace/Delete to clear the hotkey: Нажмите Backspace/Delete для очистки горячей клавиши
+Press your key combination...: Нажмите вашу комбинацию клавиш...
+Recording...: Запись...
 Show Navbar Items Hover: Показывать элементы панели при наведении
 Show collections menu on the navbar: Показывать меню коллекций на панели навигации
 Show navbar elements on hover only: Показывать элементы панели только при наведении
