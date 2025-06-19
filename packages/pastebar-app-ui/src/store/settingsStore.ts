@@ -101,6 +101,7 @@ type Settings = {
   isSingleClickToCopyPasteQuickWindow: boolean
   isQuickPasteCopyOnly: boolean
   isQuickPasteAutoClose: boolean
+  hasPinProtectedCollections: boolean
   protectedCollections: string[]
 }
 
@@ -209,6 +210,7 @@ export interface SettingsStoreState {
   setClipTextMinLength: (width: number) => void
   setClipTextMaxLength: (height: number) => void
   setProtectedCollections: (ids: string[]) => void
+  setHasPinProtectedCollections: (hasPinProtectedCollections: boolean) => void
 }
 
 const initialState: SettingsStoreState & Settings = {
@@ -287,6 +289,8 @@ const initialState: SettingsStoreState & Settings = {
   isQuickPasteCopyOnly: false,
   isQuickPasteAutoClose: true,
   protectedCollections: [],
+  hasPinProtectedCollections: false,
+  setHasPinProtectedCollections: () => {},
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -438,6 +442,12 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       if (name === 'historyDetectLanguagesEnabledList' && typeof value === 'string') {
         return set(() => ({
           historyDetectLanguagesEnabledList: value.split(','),
+        }))
+      }
+
+      if (name === 'protectedCollections' && typeof value === 'string') {
+        return set(() => ({
+          protectedCollections: value.split(','),
         }))
       }
 
@@ -749,6 +759,9 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setProtectedCollections: async (ids: string[]) => {
     return get().updateSetting('protectedCollections', ids.join(','))
+  },
+  setHasPinProtectedCollections: (hasPinProtectedCollections: boolean) => {
+    return set(() => ({ hasPinProtectedCollections }))
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

@@ -19,6 +19,7 @@ import {
   openContactUsFormModal,
   openOnBoardingTourName,
   openOSXSystemPermissionsModal,
+  openProtectedContentModal,
   playerStoreAtom,
   resetPassCodeNextDelayInSeconds,
   resetPassCodeNumberOfTried,
@@ -615,6 +616,23 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
           element={onBoardingTourSingleElements.value}
         />
       )}
+      {openProtectedContentModal.value && (
+        <ModalLockScreenConfirmationWithPasscodeOrPassword
+          open={openProtectedContentModal.value}
+          title={'Test Protected Content'}
+          isLockScreen={false} // Important: This makes it cancellable and not the full lock screen
+          showPasscode={true} // We need PIN (passcode) input
+          onConfirmSuccess={() => {
+            openProtectedContentModal.value = false
+            // modalProps.onConfirmSuccess()
+            // setIsOpen(false)
+            // setModalProps(null) // Clear props after success
+          }}
+          onClose={() => {
+            openProtectedContentModal.value = false
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -684,5 +702,32 @@ export const Component = () => {
     </div>
   )
 }
+
+// function RenderCollectionPinModal() {
+//   const [isOpen, setIsOpen] = useAtom(isCollectionPinModalOpenAtom)
+//   const [modalProps, setModalProps] = useAtom(collectionPinModalPropsAtom)
+
+//   if (!isOpen || !modalProps) {
+//     return null
+//   }
+
+//   return (
+//     <ModalLockScreenConfirmationWithPasscodeOrPassword
+//       open={isOpen}
+//       title={modalProps.title}
+//       isLockScreen={false} // Important: This makes it cancellable and not the full lock screen
+//       showPasscode={true} // We need PIN (passcode) input
+//       onConfirmSuccess={() => {
+//         modalProps.onConfirmSuccess()
+//         setIsOpen(false)
+//         setModalProps(null) // Clear props after success
+//       }}
+//       onClose={() => {
+//         setIsOpen(false)
+//         setModalProps(null) // Clear props on close
+//       }}
+//     />
+//   )
+// }
 
 export const MainContainer = forwardRef(Container)

@@ -6,12 +6,11 @@ import { type } from '@tauri-apps/api/os'
 import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow, LogicalSize, WebviewWindow } from '@tauri-apps/api/window'
 import { NavBar } from '~/layout/NavBar'
-import { useAtomValue, useSetAtom, useAtom } from 'jotai' // Added useSetAtom and useAtom
+import { useAtomValue } from 'jotai'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import LanguageSelectionModal from '~/components/organisms/modals/language-selection-modal'
-import ModalLockScreenConfirmationWithPasscodeOrPassword from '~/components/organisms/modals/lock-screen-confirmation-modal' // Updated import
 import { ThemeProvider } from '~/components/theme-provider'
 
 import useKeyPressAlt from '~/hooks/use-keypress-alt'
@@ -35,8 +34,6 @@ import {
   settingsStoreAtom,
   themeStoreAtom,
   uiStoreAtom,
-  isCollectionPinModalOpenAtom, // New import
-  collectionPinModalPropsAtom, // New import
 } from './store'
 
 const appIdleEvents = ['mousemove', 'keydown', 'scroll', 'keypress', 'mousedown']
@@ -213,6 +210,9 @@ function App() {
           isQuickPasteCopyOnly: settings.isQuickPasteCopyOnly?.valueBool ?? false,
           isQuickPasteAutoClose: settings.isQuickPasteAutoClose?.valueBool ?? true,
           isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool ?? false,
+          hasPinProtectedCollections:
+            settings.hasPinProtectedCollections?.valueBool ?? false,
+          protectedCollections: settings.protectedCollections?.valueText.split(','),
           isSingleClickToCopyPasteQuickWindow:
             settings.isSingleClickToCopyPasteQuickWindow?.valueBool ?? false,
           isAppReady: true,
@@ -615,38 +615,8 @@ function App() {
             onLanguageSelected={handleLanguageSelected}
           />
         )}
-        {/* Render ModalLockScreenConfirmationWithPasscodeOrPassword for Collection PIN */}
-        <RenderCollectionPinModal />
       </ThemeProvider>
     </>
-  )
-}
-
-// Helper component to manage atoms for ModalLockScreenConfirmationWithPasscodeOrPassword
-function RenderCollectionPinModal() {
-  const [isOpen, setIsOpen] = useAtom(isCollectionPinModalOpenAtom)
-  const [modalProps, setModalProps] = useAtom(collectionPinModalPropsAtom)
-
-  if (!isOpen || !modalProps) {
-    return null
-  }
-
-  return (
-    <ModalLockScreenConfirmationWithPasscodeOrPassword
-      open={isOpen}
-      title={modalProps.title}
-      isLockScreen={false} // Important: This makes it cancellable and not the full lock screen
-      showPasscode={true} // We need PIN (passcode) input
-      onConfirmSuccess={() => {
-        modalProps.onConfirmSuccess()
-        setIsOpen(false)
-        setModalProps(null) // Clear props after success
-      }}
-      onClose={() => {
-        setIsOpen(false)
-        setModalProps(null) // Clear props on close
-      }}
-    />
   )
 }
 

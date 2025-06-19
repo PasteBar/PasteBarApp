@@ -2,12 +2,21 @@ import { useEffect, useState } from 'react'
 import createMenuTree from '~/libs/create-menu-tree'
 import { collectionsStoreAtom, settingsStoreAtom, uiStoreAtom } from '~/store'
 import { useAtom, useAtomValue } from 'jotai'
-import { CheckSquare, ChevronDown, ListFilter, LockKeyhole, Trash, Trash2 } from 'lucide-react' // Added ChevronDown, ListFilter
+import {
+  CheckSquare,
+  ChevronDown,
+  ListFilter,
+  LockKeyhole,
+  Trash,
+  Trash2,
+} from 'lucide-react'
+// Added ChevronDown, ListFilter
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useHoverIntent } from 'react-use-hoverintent'
 import AutoSize from 'react-virtualized-auto-sizer'
 
+import { Badge } from '~/components/ui/badge' // Added Badge import
 import {
   Card,
   CardContent,
@@ -15,7 +24,6 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
-import { Badge } from '~/components/ui/badge' // Added Badge import
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -23,7 +31,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu' // Added DropdownMenu components
+} from '~/components/ui/dropdown-menu'
+// Added DropdownMenu components
 import { Switch } from '~/components/ui/switch'
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip'
 import mergeRefs from '~/components/atoms/merge-refs'
@@ -59,6 +68,8 @@ export default function ManageCollectionsSection({
     setIsShowCollectionNameOnNavBar,
     screenLockPassCode,
     protectedCollections,
+    hasPinProtectedCollections,
+    setHasPinProtectedCollections,
     setProtectedCollections,
   } = useAtomValue(settingsStoreAtom)
   // collections is already available from collectionsStoreAtom further down
@@ -437,18 +448,24 @@ export default function ManageCollectionsSection({
                     <Card>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                         <CardTitle className="animate-in fade-in text-md font-medium border-red-300 border-1 w-full">
-                          <Flex align="center" gap={2}>
+                          <Flex className="flex flex-row items-center justify-start space-y-0 pb-1 gap-2">
                             <LockKeyhole size={18} />
                             {t('Protect Collections with PIN', { ns: 'collections' })}
                           </Flex>
                         </CardTitle>
+                        <Switch
+                          checked={isShowCollectionNameOnNavBar}
+                          className="ml-auto"
+                          onCheckedChange={() => {
+                            setHasPinProtectedCollections(!hasPinProtectedCollections)
+                          }}
+                        />
                       </CardHeader>
                       <CardContent>
                         <Text className="text-sm text-muted-foreground mb-3">
-                          {t(
-                            'Choose which collections require PIN entry for access.',
-                            { ns: 'collections' }
-                          )}
+                          {t('Choose which collections require PIN entry for access.', {
+                            ns: 'collections',
+                          })}
                         </Text>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -459,17 +476,23 @@ export default function ManageCollectionsSection({
                           </DropdownMenuTrigger>
                           <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
                             <DropdownMenuLabel>
-                              {t('Mark collections as protected', { ns: 'collections' })}
+                              {t('Select protected collections', { ns: 'collections' })}
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             {collections.map(collection => (
                               <DropdownMenuCheckboxItem
                                 key={collection.collectionId}
-                                checked={protectedCollections.includes(collection.collectionId)}
+                                checked={protectedCollections.includes(
+                                  collection.collectionId
+                                )}
                                 onCheckedChange={checked => {
                                   const currentProtectedIds = [...protectedCollections]
                                   if (checked) {
-                                    if (!currentProtectedIds.includes(collection.collectionId)) {
+                                    if (
+                                      !currentProtectedIds.includes(
+                                        collection.collectionId
+                                      )
+                                    ) {
                                       currentProtectedIds.push(collection.collectionId)
                                     }
                                   } else {
@@ -490,14 +513,20 @@ export default function ManageCollectionsSection({
                         </DropdownMenu>
                         <Box className="mt-4">
                           <Text className="text-sm font-medium mb-1">
-                            {t('Currently Protected', { ns: 'collections' })}:
+                            {t('Pin Protected Collections', { ns: 'collections' })}:
                           </Text>
                           {protectedCollections.length > 0 ? (
-                            <Flex wrap="wrap" gap={2}>
+                            <Flex className="flex-wrap gap-2">
                               {protectedCollections.map(id => {
-                                const collection = collections.find(c => c.collectionId === id)
+                                const collection = collections.find(
+                                  c => c.collectionId === id
+                                )
                                 return collection ? (
-                                  <Badge key={id} variant="secondary" className="font-normal">
+                                  <Badge
+                                    key={id}
+                                    variant="secondary"
+                                    className="font-normal"
+                                  >
                                     {collection.title}
                                   </Badge>
                                 ) : null
