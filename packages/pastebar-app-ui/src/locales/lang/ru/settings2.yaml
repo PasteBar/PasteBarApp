@@ -58,3 +58,9 @@ This sets the default icon type for new clips with notes. You can customize indi
 : Когда включено, нажатие или нажатие Enter на элементы в окне быстрой вставки будет только копировать их в буфер обмена без автоматической вставки.
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : Когда включено, одним кликом будут копироваться/вставляться элементы в окне быстрой вставки. Если глобальный одиночный клик также включен, обе настройки работают вместе.
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Настройте, какие элементы сохранять при очистке истории буфера обмена (как вручную, так и автоматически).
+Keep Items on Clear: Сохранять элементы при очистке
+Keep Pinned Items: Сохранять закрепленные элементы
+Keep Starred Items: Сохранять избранные элементы
+Preserve pinned items when clearing history: Сохранять закрепленные элементы при очистке истории
+Preserve starred items when clearing history: Сохранять избранные элементы при очистке истории

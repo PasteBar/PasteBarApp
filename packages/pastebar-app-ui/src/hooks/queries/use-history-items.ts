@@ -372,7 +372,12 @@ export function useDeleteClipboardHistoryByIds() {
 export function useClearClipboardHistoryOlderThan() {
   const queryClient = useQueryClient()
   const { mutate: clearClipboardHistoryOlderThan } = useInvokeMutation<
-    { durationType: string; olderThen: string },
+    {
+      durationType: string
+      olderThen: string
+      keepPinned?: boolean
+      keepStarred?: boolean
+    },
     UniqueIdentifier
   >('clear_clipboard_history_older_than', {
     onSuccess: data => {
@@ -398,7 +403,12 @@ export function useClearClipboardHistoryOlderThan() {
 export function useClearRecentClipboardHistory() {
   const queryClient = useQueryClient()
   const { mutate: clearRecentClipboardHistory } = useInvokeMutation<
-    { durationType: string; duration: string },
+    {
+      durationType: string
+      duration: string
+      keepPinned?: boolean
+      keepStarred?: boolean
+    },
     UniqueIdentifier
   >('clear_recent_clipboard_history', {
     onSuccess: data => {

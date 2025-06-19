@@ -289,10 +289,11 @@ pub fn add_clipboard_history_from_image(
     let _ = image.save(&image_file_name);
 
     // Convert absolute path to relative path before storing
-    let relative_image_path = image_file_name.to_str()
+    let relative_image_path = image_file_name
+      .to_str()
       .map(|path| db::to_relative_image_path(path))
       .unwrap_or_default();
-    
+
     let new_history = create_new_history(
       _history_id,
       _image_data_low_res,
@@ -640,19 +641,36 @@ pub fn get_clipboard_history_by_id(history_id_value: &String) -> Option<Clipboar
 
   // Transform image path for frontend consumption
   result.transform_image_path_for_frontend();
-  
+
   Some(result)
 }
 
-pub fn delete_clipboard_history_older_than(age: Duration) -> Result<String, diesel::result::Error> {
+pub fn delete_clipboard_history_older_than(
+  age: Duration,
+  keep_pinned: bool,
+  keep_starred: bool,
+) -> Result<String, diesel::result::Error> {
   let connection = &mut establish_pool_db_connection();
 
   let now = Utc::now().timestamp_millis();
   let threshold_timestamp = now - age.num_milliseconds();
 
+  // Build filter conditions
+  let mut filter_conditions = clipboard_history::table
+    .filter(updated_at.lt(threshold_timestamp))
+    .into_boxed();
+
+  if keep_pinned {
+    filter_conditions = filter_conditions.filter(is_pinned.ne(true).or(is_pinned.is_null()));
+  }
+
+  if keep_starred {
+    filter_conditions = filter_conditions.filter(is_favorite.ne(true).or(is_favorite.is_null()));
+  }
+
   // Handle image files
-  let image_items_to_delete = clipboard_history::table
-    .filter(updated_at.lt(threshold_timestamp).and(is_image.eq(true)))
+  let image_items_to_delete = filter_conditions
+    .filter(is_image.eq(true))
     .load::<ClipboardHistory>(connection)?;
 
   for item in image_items_to_delete.iter() {
@@ -663,9 +681,23 @@ pub fn delete_clipboard_history_older_than(age: Duration) -> Result<String, dies
     }
   }
 
-  // Handle link items
-  let links_items_to_delete = clipboard_history::table
-    .filter(updated_at.lt(threshold_timestamp).and(is_link.eq(true)))
+  // Handle link items - rebuild filter conditions for links
+  let mut link_filter_conditions = clipboard_history::table
+    .filter(updated_at.lt(threshold_timestamp))
+    .into_boxed();
+
+  if keep_pinned {
+    link_filter_conditions =
+      link_filter_conditions.filter(is_pinned.ne(true).or(is_pinned.is_null()));
+  }
+
+  if keep_starred {
+    link_filter_conditions =
+      link_filter_conditions.filter(is_favorite.ne(true).or(is_favorite.is_null()));
+  }
+
+  let links_items_to_delete = link_filter_conditions
+    .filter(is_link.eq(true))
     .load::<ClipboardHistory>(connection)?;
 
   let history_ids_to_delete: Vec<String> = links_items_to_delete
@@ -673,10 +705,29 @@ pub fn delete_clipboard_history_older_than(age: Duration) -> Result<String, dies
     .map(|item| item.history_id.clone())
     .collect();
 
-  // Perform the main delete operation
-  let deleted_count =
-    diesel::delete(clipboard_history::table.filter(updated_at.lt(threshold_timestamp)))
-      .execute(connection)?;
+  // Get the IDs to delete based on filters for the main deletion
+  let ids_to_delete: Vec<String> = {
+    let mut query = clipboard_history::table
+      .filter(updated_at.lt(threshold_timestamp))
+      .select(history_id)
+      .into_boxed();
+    
+    if keep_pinned {
+      query = query.filter(is_pinned.ne(true).or(is_pinned.is_null()));
+    }
+    
+    if keep_starred {
+      query = query.filter(is_favorite.ne(true).or(is_favorite.is_null()));
+    }
+    
+    query.load::<String>(connection)?
+  };
+
+  let deleted_count = if !ids_to_delete.is_empty() {
+    diesel::delete(clipboard_history.filter(history_id.eq_any(&ids_to_delete))).execute(connection)?
+  } else {
+    0
+  };
 
   // Delete associated link metadata
   delete_link_metadata_by_history_ids(&history_ids_to_delete);
@@ -686,16 +737,29 @@ pub fn delete_clipboard_history_older_than(age: Duration) -> Result<String, dies
 
 pub fn delete_recent_clipboard_history(
   delete_duration: Duration,
+  keep_pinned: bool,
+  keep_starred: bool,
 ) -> Result<String, diesel::result::Error> {
   let connection = &mut establish_pool_db_connection();
 
   let now = Utc::now().timestamp_millis();
   let delete_threshold = now - delete_duration.num_milliseconds();
 
-  // Find records to delete (newer than delete_threshold)
-  let records_to_delete = clipboard_history::table
+  // Build filter conditions for recent records
+  let mut filter_conditions = clipboard_history::table
     .filter(updated_at.gt(delete_threshold))
-    .load::<ClipboardHistory>(connection)?;
+    .into_boxed();
+
+  if keep_pinned {
+    filter_conditions = filter_conditions.filter(is_pinned.ne(true).or(is_pinned.is_null()));
+  }
+
+  if keep_starred {
+    filter_conditions = filter_conditions.filter(is_favorite.ne(true).or(is_favorite.is_null()));
+  }
+
+  // Find records to delete (newer than delete_threshold)
+  let records_to_delete = filter_conditions.load::<ClipboardHistory>(connection)?;
 
   // Handle image files
   let image_items: Vec<&ClipboardHistory> = records_to_delete
@@ -722,10 +786,29 @@ pub fn delete_recent_clipboard_history(
     .map(|item| item.history_id.clone())
     .collect();
 
-  // Perform the main delete operation
-  let deleted_count =
-    diesel::delete(clipboard_history::table.filter(updated_at.gt(delete_threshold)))
-      .execute(connection)?;
+  // Get the IDs to delete based on filters for recent deletion
+  let ids_to_delete_recent: Vec<String> = {
+    let mut query = clipboard_history::table
+      .filter(updated_at.gt(delete_threshold))
+      .select(history_id)
+      .into_boxed();
+    
+    if keep_pinned {
+      query = query.filter(is_pinned.ne(true).or(is_pinned.is_null()));
+    }
+    
+    if keep_starred {
+      query = query.filter(is_favorite.ne(true).or(is_favorite.is_null()));
+    }
+    
+    query.load::<String>(connection)?
+  };
+
+  let deleted_count = if !ids_to_delete_recent.is_empty() {
+    diesel::delete(clipboard_history.filter(history_id.eq_any(&ids_to_delete_recent))).execute(connection)?
+  } else {
+    0
+  };
 
   // Delete associated link metadata
   delete_link_metadata_by_history_ids(&history_ids_to_delete);
@@ -736,18 +819,68 @@ pub fn delete_recent_clipboard_history(
   ))
 }
 
-pub fn delete_all_clipboard_histories() -> String {
+pub fn delete_all_clipboard_histories(keep_pinned: bool, keep_starred: bool) -> String {
   let connection = &mut establish_pool_db_connection();
 
-  let folder_path = db::get_clipboard_images_dir();
+  if !keep_pinned && !keep_starred {
+    // Delete everything - original behavior
+    let folder_path = db::get_clipboard_images_dir();
+    let _ = remove_dir_if_exists(&folder_path);
+    let _ = diesel::delete(clipboard_history)
+      .execute(connection)
+      .expect("Error deleting all clipboard histories");
+    delete_all_link_metadata_with_history_ids();
+  } else {
+    // Selective deletion - preserve pinned and/or starred items
+    // First, get all items that will be deleted
+    let mut items_query = clipboard_history.into_boxed();
+    
+    if keep_pinned {
+      items_query = items_query.filter(is_pinned.ne(true).or(is_pinned.is_null()));
+    }
+    
+    if keep_starred {
+      items_query = items_query.filter(is_favorite.ne(true).or(is_favorite.is_null()));
+    }
 
-  let _ = remove_dir_if_exists(&folder_path);
+    // Get items to delete for image and link cleanup
+    let items_to_delete = items_query
+      .load::<ClipboardHistory>(connection)
+      .expect("Error loading items to delete");
 
-  let _ = diesel::delete(clipboard_history)
-    .execute(connection)
-    .expect("Error deleting all clipboard histories");
+    // Delete image files for items being deleted
+    for item in items_to_delete.iter() {
+      if item.is_image == Some(true) {
+        if let Some(ref path) = item.image_path_full_res {
+          if let Err(e) = delete_file_and_maybe_parent(&Path::new(path)) {
+            eprintln!("Error deleting image file {}: {}", path, e);
+          }
+        }
+      }
+    }
 
-  delete_all_link_metadata_with_history_ids();
+    // Get history IDs for link metadata cleanup
+    let history_ids_to_delete: Vec<String> = items_to_delete
+      .iter()
+      .filter(|item| item.is_link == Some(true))
+      .map(|item| item.history_id.clone())
+      .collect();
+
+    // Delete the filtered records by ID
+    let item_ids_to_delete: Vec<String> = items_to_delete
+      .iter()
+      .map(|item| item.history_id.clone())
+      .collect();
+
+    if !item_ids_to_delete.is_empty() {
+      let _ = diesel::delete(clipboard_history.filter(history_id.eq_any(&item_ids_to_delete)))
+        .execute(connection)
+        .expect("Error deleting filtered clipboard histories");
+    }
+
+    // Delete associated link metadata
+    delete_link_metadata_by_history_ids(&history_ids_to_delete);
+  }
 
   "ok".to_string()
 }

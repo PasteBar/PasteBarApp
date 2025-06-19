@@ -34,8 +34,22 @@ fn run_history_cleanup_job() {
       .and_then(|s| s.value_int)
       .unwrap_or(1);
 
-    let deleted_count =
-      history_commands::clear_clipboard_history_older_than(duration_type, duration.to_string());
+    let keep_pinned = locked_settings
+      .get("isKeepPinnedOnClearEnabled")
+      .and_then(|s| s.value_bool)
+      .unwrap_or(false);
+    
+    let keep_starred = locked_settings
+      .get("isKeepStarredOnClearEnabled")
+      .and_then(|s| s.value_bool)
+      .unwrap_or(false);
+
+    let deleted_count = history_commands::clear_clipboard_history_older_than(
+      duration_type, 
+      duration.to_string(),
+      Some(keep_pinned),
+      Some(keep_starred)
+    );
 
     debug_output(|| {
       println!("Deleted {} items from clipboard history", deleted_count);

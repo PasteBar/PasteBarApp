@@ -60,3 +60,9 @@ This sets the default icon type for new clips with notes. You can customize indi
 : When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).
+Keep Items on Clear: Keep Items on Clear
+Keep Pinned Items: Keep Pinned Items
+Keep Starred Items: Keep Starred Items
+Preserve pinned items when clearing history: Preserve pinned items when clearing history
+Preserve starred items when clearing history: Preserve starred items when clearing history

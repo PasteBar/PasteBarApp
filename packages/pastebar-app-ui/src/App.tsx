@@ -218,6 +218,10 @@ function App() {
           isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool ?? false,
           isSingleClickToCopyPasteQuickWindow:
             settings.isSingleClickToCopyPasteQuickWindow?.valueBool ?? false,
+          isKeepPinnedOnClearEnabled:
+            settings.isKeepPinnedOnClearEnabled?.valueBool ?? false,
+          isKeepStarredOnClearEnabled:
+            settings.isKeepStarredOnClearEnabled?.valueBool ?? false,
           isAppReady: true,
         })
         settingsStore.initConstants({
