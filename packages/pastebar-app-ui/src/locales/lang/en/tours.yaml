@@ -179,7 +179,7 @@ NAVBAR_TOUR:
       prefferedSide: bottom
   - element: '#navbar-toggle-history-split'
     popover:
-      title: Toggle Split History Window
+      title: Toggle History Window
       description: Click this icon to open or close the clipboard history in a separate window. Use this feature to manage your clipboard history independently from the main window.
       alignment: center
       preferredSide: bottom
