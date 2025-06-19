@@ -449,31 +449,25 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
 
       if (name === 'historyDetectLanguagesEnabledList' && typeof value === 'string') {
         return set(() => ({
-          historyDetectLanguagesEnabledList: value.split(','),
-        }))
-      }
-
-      if (name === 'protectedCollections' && typeof value === 'string') {
-        return set(() => ({
-          protectedCollections: value.split(','),
+          historyDetectLanguagesEnabledList: value.split(',').filter(Boolean),
         }))
       }
 
       if (name === 'appToursCompletedList' && typeof value === 'string') {
         return set(() => ({
-          appToursCompletedList: value.split(','),
+          appToursCompletedList: value.split(',').filter(Boolean),
         }))
       }
 
       if (name === 'appToursSkippedList' && typeof value === 'string') {
         return set(() => ({
-          appToursSkippedList: value.split(','),
+          appToursSkippedList: value.split(',').filter(Boolean),
         }))
       }
 
       if (name === 'historyDetectLanguagesPrioritizedList' && typeof value === 'string') {
         return set(() => ({
-          historyDetectLanguagesPrioritizedList: value.split(','),
+          historyDetectLanguagesPrioritizedList: value.split(',').filter(Boolean),
         }))
       }
 
