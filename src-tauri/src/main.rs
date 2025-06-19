@@ -945,6 +945,12 @@ async fn main() {
           }
         }
       },
+      #[cfg(target_os = "windows")]
+      SystemTrayEvent::LeftClick { .. } => {
+        let window = app.get_window("main").unwrap();
+        window.show().unwrap();
+        window.set_focus().unwrap();
+      }
       _ => {}
     })
     .on_window_event(|event| {
