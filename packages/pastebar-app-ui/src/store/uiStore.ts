@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api'
 import { appWindow, availableMonitors, WebviewWindow } from '@tauri-apps/api/window'
+import { atom } from 'jotai'
 import { atomWithStore } from 'jotai-zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'

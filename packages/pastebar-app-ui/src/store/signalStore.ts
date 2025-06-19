@@ -11,7 +11,7 @@ import { ACTION_TYPE_COMFIRMATION_MODAL, APP_TOURS } from './constants'
 import { Song, SongSourceType } from './playerStore'
 
 type ValueOf<T> = T[keyof T]
-type ActionType = ValueOf<typeof ACTION_TYPE_COMFIRMATION_MODAL>
+export type ActionType = ValueOf<typeof ACTION_TYPE_COMFIRMATION_MODAL>
 export type AppTourType = ValueOf<typeof APP_TOURS>
 
 export const visibilityCopyPopup = signal(false)
@@ -26,6 +26,8 @@ export const openActionConfirmModal = signal(false)
 export const openAboutPasteBarModal = signal(false)
 export const openContactUsFormModal = signal(false)
 export const openOnBoardingTourName = signal<AppTourType | null>(null)
+export const openProtectedContentModal = signal(false)
+export const pendingProtectedCollectionId = signal<string | null>(null)
 export const onBoardingTourSingleElements = signal<string | string[] | null>(null)
 export const openOSXSystemPermissionsModal = signal(false)
 export const actionNameForConfirmModal = signal<string | null>(null)

@@ -17,3 +17,9 @@ Show collection name on the navbar: 在导航栏显示收藏名称
 Switch collections: 切换收藏
 You can add the selected text to your clips or menu. Please select the option below.: 您可以将所选文本添加到剪辑或菜单。请在下方选择选项。
 You need to select a different collection before deleting the current one.: 删除当前收藏前，您需要先选择一个不同的收藏。
+Choose which collections require PIN entry for access.: 选择哪些集合需要输入PIN才能访问。
+Pin Protected Collections: PIN保护的集合
+Protect Collections with PIN: 使用PIN保护集合
+Protected Collection: 受保护的集合
+Select Collections: 选择集合
+Select protected collections: 选择受保护的集合

@@ -20,6 +20,8 @@ import {
   openContactUsFormModal,
   openOnBoardingTourName,
   openOSXSystemPermissionsModal,
+  openProtectedContentModal,
+  pendingProtectedCollectionId,
   playerStoreAtom,
   resetPassCodeNextDelayInSeconds,
   resetPassCodeNumberOfTried,
@@ -56,9 +58,9 @@ import ModalLockScreenConfirmationWithPasscodeOrPassword from '~/components/orga
 import ModalOSXSystemPermissions from '~/components/organisms/modals/system-permissions-osx-modal'
 import { Box, Button, Flex, Text } from '~/components/ui'
 
+import { useSelectCollectionById } from '~/hooks/queries/use-collections'
 import { useClipboardPaste, useCopyPaste } from '~/hooks/use-copypaste'
 import { useLocalStorage } from '~/hooks/use-localstorage'
-import { useSignal } from '~/hooks/use-signal'
 
 import { CreateDashboardItemType } from '~/types/menu'
 
@@ -89,6 +91,7 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
   const { historyListSimpleBar, clipboardHistory } = useAtomValue(
     clipboardHistoryStoreAtom
   )
+  const { selectCollectionById } = useSelectCollectionById()
 
   const {
     appToursCompletedList,
@@ -543,10 +546,7 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
       )}
       {openActionConfirmModal.value && (
         <ModalLockScreenConfirmationWithPasscodeOrPassword
-          title={t('Confirm {{action}}', {
-            ns: 'common',
-            action: actionNameForConfirmModal.value,
-          })}
+          title={actionNameForConfirmModal.value ?? undefined}
           open
           onClose={() => {
             openActionConfirmModal.value = false
@@ -613,6 +613,30 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
             }
           }}
           element={onBoardingTourSingleElements.value}
+        />
+      )}
+      {openProtectedContentModal.value && (
+        <ModalLockScreenConfirmationWithPasscodeOrPassword
+          open={openProtectedContentModal.value}
+          // no need to translate this will be done in the modal
+          title="Enter PIN to Access Protected Collection"
+          isLockScreen={false}
+          showPasscode={true}
+          onConfirmSuccess={() => {
+            openProtectedContentModal.value = false
+            if (pendingProtectedCollectionId.value) {
+              selectCollectionById({
+                selectCollection: {
+                  collectionId: pendingProtectedCollectionId.value,
+                },
+              })
+              pendingProtectedCollectionId.value = null
+            }
+          }}
+          onClose={() => {
+            openProtectedContentModal.value = false
+            pendingProtectedCollectionId.value = null
+          }}
         />
       )}
     </div>

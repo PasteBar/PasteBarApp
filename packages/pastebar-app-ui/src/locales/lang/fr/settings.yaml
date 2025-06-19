@@ -64,7 +64,7 @@ Enable screen unlock requirement on app launch for enhanced security, safeguardi
 Enhance security by automatically locking the application screen after a set period of user inactivity.: Renforcez la sécurité en verrouillant automatiquement l'écran de l'application après une période déterminée d'inactivité de l'utilisateur.
 Enter Passcode length: Saisir la longueur du code d'accès
 Enter recovery password to reset passcode.: Saisir le mot de passe de récupération pour réinitialiser le code d'accès.
-Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Entrez votre code à <strong>{{screenLockPassCodeLength}} chiffres</strong>
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Entrez votre code à <strong>{{screenLockPassCodeLength}} chiffres</strong>
 Entered Passcode is invalid: Code saisi non valide
 Excluded Apps List: Liste applicationss exclues
 Execute Web Requests: Exécuter requêtes web

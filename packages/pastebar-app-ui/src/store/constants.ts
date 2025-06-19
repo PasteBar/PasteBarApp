@@ -29,6 +29,8 @@ export const CONTENT_TYPE_LANGUAGE = {
 export const ACTION_TYPE_COMFIRMATION_MODAL = {
   resetPassword: 'RESET_PASSWORD',
   resetPasscode: 'RESET_PASSCODE',
+  toggleProtection: 'TOGGLE_PROTECTION',
+  changeProtectedCollections: 'CHANGE_PROTECTED_COLLECTIONS',
 } as const
 
 export const APP_TOURS = {

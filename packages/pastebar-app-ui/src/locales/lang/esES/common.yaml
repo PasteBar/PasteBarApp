@@ -54,9 +54,8 @@ Confirm Passcode: Confirmar Código de Acceso
 Confirm Password: Confirmar Contraseña
 Confirm Remove: Confirmar Eliminación
 Confirm Your Passcode: Confirma tu Código de Acceso
-Confirm passcode reset: Confirmar reinicio del código de acceso
-Confirm password reset: Confirmar reinicio de contraseña
-Confirm password reset action: Confirmar acción de reinicio de contraseña
+Confirm Passcode Reset: Confirmar reinicio del código de acceso
+Confirm Password Reset: Confirmar reinicio de contraseña
 Confirm your action: Confirma tu acción
 Confirm {{action}}: Confirmar {{action}}
 Contact Form: Formulario de Contacto
@@ -99,6 +98,7 @@ Enter Passcode: Introduce el Código de Acceso
 Enter Password: Introduce la Contraseña
 Enter Recovery Password: Introduce la Contraseña de Recuperación
 Enter passcode or password to unlock: Introduce el código de acceso o la contraseña para desbloquear
+Enter PIN to Access Protected Collection: Introduce el PIN para acceder a la colección protegida
 Errors:
   Error loading link: Error al cargar el enlace
   Cant save to file: No se puede guardar en el archivo
@@ -350,3 +350,7 @@ seconds: segundos
 show less: mostrar menos
 www.site: www.pastebar.app
 Size: Tamaño
+Confirm Add To Protected Collections: Confirmar agregar a colecciones protegidas
+Confirm Disable PIN Protection: Confirmar deshabilitar protección con PIN
+Confirm Remove From Protected Collections: Confirmar eliminar de colecciones protegidas
+Confirm Enable PIN Protection: Confirmar habilitar protección con PIN

@@ -103,6 +103,8 @@ type Settings = {
   isQuickPasteAutoClose: boolean
   isKeepPinnedOnClearEnabled: boolean
   isKeepStarredOnClearEnabled: boolean
+  hasPinProtectedCollections: boolean
+  protectedCollections: string[]
 }
 
 type Constants = {
@@ -211,6 +213,8 @@ export interface SettingsStoreState {
   initSettings: (settings: Settings) => void
   setClipTextMinLength: (width: number) => void
   setClipTextMaxLength: (height: number) => void
+  setProtectedCollections: (ids: string[]) => void
+  setHasPinProtectedCollections: (hasPinProtectedCollections: boolean) => Promise<void>
 }
 
 const initialState: SettingsStoreState & Settings = {
@@ -290,6 +294,9 @@ const initialState: SettingsStoreState & Settings = {
   isQuickPasteAutoClose: true,
   isKeepPinnedOnClearEnabled: false,
   isKeepStarredOnClearEnabled: false,
+  protectedCollections: [],
+  hasPinProtectedCollections: false,
+  setHasPinProtectedCollections: async () => {},
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -401,6 +408,7 @@ const initialState: SettingsStoreState & Settings = {
     invoke('delete_os_password', { name }),
   verifyPassword: (password: string, hash: string): Promise<boolean> =>
     invoke('verify_password', { password, hash }),
+  setProtectedCollections: () => {},
 }
 
 export const settingsStore = createStore<SettingsStoreState & Settings>()((set, get) => ({
@@ -445,6 +453,12 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
         }))
       }
 
+      if (name === 'protectedCollections' && typeof value === 'string') {
+        return set(() => ({
+          protectedCollections: value.split(','),
+        }))
+      }
+
       if (name === 'appToursCompletedList' && typeof value === 'string') {
         return set(() => ({
           appToursCompletedList: value.split(','),
@@ -460,6 +474,12 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       if (name === 'historyDetectLanguagesPrioritizedList' && typeof value === 'string') {
         return set(() => ({
           historyDetectLanguagesPrioritizedList: value.split(','),
+        }))
+      }
+
+      if (name === 'protectedCollections' && typeof value === 'string') {
+        return set(() => ({
+          protectedCollections: value.split(',').filter(Boolean),
         }))
       }
 
@@ -752,6 +772,12 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   setIsKeepStarredOnClearEnabled: async (isEnabled: boolean) => {
     get().syncStateUpdate('isKeepStarredOnClearEnabled', isEnabled)
     return get().updateSetting('isKeepStarredOnClearEnabled', isEnabled)
+  },
+  setProtectedCollections: async (ids: string[]) => {
+    return get().updateSetting('protectedCollections', ids.join(','))
+  },
+  setHasPinProtectedCollections: async (hasPinProtectedCollections: boolean) => {
+    return get().updateSetting('hasPinProtectedCollections', hasPinProtectedCollections)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

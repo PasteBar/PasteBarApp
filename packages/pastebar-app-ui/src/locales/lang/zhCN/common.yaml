@@ -54,11 +54,8 @@ Confirm Passcode: 确认密码
 Confirm Password: 确认密码
 Confirm Remove: 确认移除
 Confirm Your Passcode: 确认您的密码
-Confirm passcode reset: 确认密码重置
-Confirm password reset: 确认密码重置
-Confirm password reset action: 确认密码重置操作
-Confirm your action: 确认您的操作
-'Confirm {{action}}': 确认 {{action}}
+Confirm Passcode Reset: 确认密码重置
+Confirm Password Reset: 确认密码重置
 Contact Form: 联系表单
 Copied: 已复制
 Copy: 复制
@@ -99,6 +96,7 @@ Enter Passcode: 输入密码
 Enter Password: 输入密码
 Enter Recovery Password: 输入恢复密码
 Enter passcode or password to unlock: 输入密码或密码以解锁
+Enter PIN to Access Protected Collection: 输入PIN以访问受保护的集合
 Errors:
   Error loading link: 加载链接错误
   Cant save to file: 无法保存到文件
@@ -351,3 +349,7 @@ show less: 显示更少
 www.site: www.pastebar.app
 Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: 在模板中找到字段 <b>{{Clipboard}}</b>。这允许您将文本复制到剪贴板，然后将其插入模板中。
 Size: 大小
+Confirm Add To Protected Collections: 确认添加到受保护的集合
+Confirm Disable PIN Protection: 确认禁用PIN保护
+Confirm Remove From Protected Collections: 确认从受保护的集合中移除
+Confirm Enable PIN Protection: 确认启用PIN保护

@@ -17,6 +17,8 @@ import {
   openAboutPasteBarModal,
   openContactUsFormModal,
   openOnBoardingTourName,
+  openProtectedContentModal,
+  pendingProtectedCollectionId,
   playerStoreAtom,
   settingsStoreAtom,
   showInvalidTrackWarningAddSong,
@@ -44,6 +46,7 @@ import {
   ExternalLink,
   FileCog,
   LibrarySquare,
+  LockKeyhole,
   Maximize,
   Minus,
   Pause,
@@ -214,6 +217,8 @@ export function NavBar() {
     setIsSimplifiedLayout,
     isMainWindowOnTop,
     setIsMainWindowOnTop,
+    hasPinProtectedCollections,
+    protectedCollections,
   } = useAtomValue(settingsStoreAtom)
 
   const {
@@ -1264,7 +1269,7 @@ export function NavBar() {
                     height: 'auto',
                     maxHeight: '400px',
                     width: '100%',
-                    minWidth: '200px',
+                    minWidth: '220px',
                   }}
                   autoHide={false}
                 >
@@ -1291,16 +1296,40 @@ export function NavBar() {
                           value={collectionId}
                           disabled={!isEnabled}
                           onClick={() => {
-                            selectCollectionById({
-                              selectCollection: {
-                                collectionId,
-                              },
-                            })
+                            const isProtectedCollection =
+                              hasPinProtectedCollections &&
+                              protectedCollections.includes(collectionId)
+
+                            if (isProtectedCollection) {
+                              pendingProtectedCollectionId.value = collectionId
+                              openProtectedContentModal.value = true
+                            } else {
+                              selectCollectionById({
+                                selectCollection: {
+                                  collectionId,
+                                },
+                              })
+                            }
                           }}
                         >
-                          <span className={isSelected ? 'font-semibold' : ''}>
-                            {title}
-                          </span>
+                          <Flex
+                            className={`${
+                              isSelected ? 'font-semibold' : ''
+                            } items-center justify-start gap-2`}
+                          >
+                            {hasPinProtectedCollections &&
+                            protectedCollections.includes(collectionId) ? (
+                              <>
+                                <span className="truncate max-w-[150px]">{title}</span>
+                                <LockKeyhole
+                                  size={12}
+                                  className="text-gray-600 dark:text-gray-500 flex-shrink-0"
+                                />
+                              </>
+                            ) : (
+                              <span className="truncate max-w-[210px]">{title}</span>
+                            )}
+                          </Flex>
                         </MenubarRadioItem>
                       ))}
                   </MenubarRadioGroup>

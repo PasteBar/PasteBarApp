@@ -216,6 +216,11 @@ function App() {
           isQuickPasteCopyOnly: settings.isQuickPasteCopyOnly?.valueBool ?? false,
           isQuickPasteAutoClose: settings.isQuickPasteAutoClose?.valueBool ?? true,
           isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool ?? false,
+          hasPinProtectedCollections:
+            settings.hasPinProtectedCollections?.valueBool ?? false,
+          protectedCollections: settings.protectedCollections?.valueText
+            ? settings.protectedCollections.valueText.split(',').filter(Boolean)
+            : [],
           isSingleClickToCopyPasteQuickWindow:
             settings.isSingleClickToCopyPasteQuickWindow?.valueBool ?? false,
           isKeepPinnedOnClearEnabled:

@@ -64,7 +64,7 @@ Enable screen unlock requirement on app launch for enhanced security, safeguardi
 Enhance security by automatically locking the application screen after a set period of user inactivity.: 通过在设定的用户不活动时间后自动锁定应用程序屏幕来增强安全性。
 Enter Passcode length: 输入密码长度
 Enter recovery password to reset passcode.: 输入恢复密码以重置密码。
-Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: 输入您的 <strong>{{screenLockPassCodeLength}} 位数字</strong> 密码
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: 输入您的 <strong>{{screenLockPassCodeLength}} 位数字</strong> 密码
 Entered Passcode is invalid: 输入的密码无效
 Excluded Apps List: 排除的应用列表
 Execute Web Requests: 执行Web请求

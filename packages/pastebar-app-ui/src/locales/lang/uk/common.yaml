@@ -3,6 +3,8 @@
 About PasteBar: Про PasteBar
 Action Menu: Контекстне меню
 Activation Error: Помилка активації
+? Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Додайте поле <b>{{Clipboard}}</b> до шаблону. Це дозволить копіювати текст до буфера обміну, і він буде вставлений у шаблон
 Add Clip: Додати Кліп
 Add First Option: Додати перший варіант
 Add Link Card: Додати картку посилання
@@ -30,6 +32,7 @@ Check: Перевірити
 Check / Done: Перевірити / Готово
 Check and Close: Перевірити та закрити
 Check and Done: Перевірити та готово
+Clear History: Очистити історію
 Clear Tracks: Очистити треки
 Clear found results and filters: Очистити знайдені результати та фільтри
 Click to Confirm: Натисніть для підтвердження
@@ -45,23 +48,25 @@ Close Find: Закрити пошук
 Close History Window: Закрити Вікно Історії
 Close modal and continue in browser: Закрити вікно і продовжити в браузері
 Confirm: Підтвердити
+Confirm Add To Protected Collections: Підтвердити додавання до захищених колекцій
 Confirm Delete: Підтвердити видалення
+Confirm Disable PIN Protection: Підтвердити вимкнення захисту PIN
 Confirm Email: Підтвердити видалення
+Confirm Enable PIN Protection: Підтвердити увімкнення захисту PIN
 Confirm Passcode: Підтвердіть код
 Confirm Password: Підтвердіть пароль
+Confirm Password Reset: Підтвердити скидання пароля
 Confirm Remove: Підтвердити видалення
+Confirm Remove From Protected Collections: Підтвердити видалення із захищених колекцій
 Confirm Your Passcode: Підтвердіть ваш код доступу
-Confirm action: Підтвердити дію
-Confirm password reset: Підтвердити скидання пароля
-Confirm password reset action: Підтвердити дію скидання пароля
 Confirm your action: Підтвердіть вашу дію
-Confirm {{action}}: Підтвердити {{action}}
 Contact Form: Форма зв'язку
 Copied: Скопійовано
 Copy: Копіювати
 Copy & Paste: Копіювати та вставити
 Copy and Paste: Копіювати та вставити
 Copy of: Копія
+'Copy of ': 'Копія '
 Copy to Clipboard: Копіювати до буфера обміну
 Create: Створити
 Created: Створено
@@ -92,6 +97,7 @@ Enabled: Увімкнено
 Enter Current Passcode: Введіть поточний код доступу
 Enter Digits Only Passcode: Введіть код доступу, що складається лише з цифр
 Enter Email: Введіть email
+Enter PIN to Access Protected Collection: Введіть PIN для доступу до захищеної колекції
 Enter Passcode: Введіть код доступу
 Enter Password: Введіть пароль
 Enter Recovery Password: Введіть пароль відновлення
@@ -101,8 +107,11 @@ Errors:
   Cant save file: Неможливо зберегти файл
   Something went wrong! {{err}} Please try again.: Щось пішло не так! {{err}} Будь ласка, спробуйте ще раз.
 Expand Edit: Розгорнути редагування
+? Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Поле <b>{{Clipboard}}</b> знайдено в шаблоні. Це дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
 Field is not found in the template: Поле не знайдено в шаблоні
-Field {{Clipboard}} has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: Поле <b>{{Clipboard}}</b> знайдено в шаблоні. Це дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
+? Field {{Clipboard}} has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: Поле <b>{{Clipboard}}</b> знайдено в шаблоні. Це дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
 Find Clip: Знайти кліп
 Find History: Знайти в історії
 Found in template but missing from fields definition: Знайдено в шаблоні, але відсутнє у визначенні полів
@@ -145,6 +154,7 @@ Number of lines: Кількість рядків
 Ok, but later: Добре, але пізніше
 Open: Відкрити
 Open Accessibility: Відкрити Спеціальні можливості
+Open History Window: Відкрити вікно з історією буфера
 Open Window: Відкрити вікно
 Open contact form in browser: Відкрити форму зв'язку в браузері
 Open payment in browser: Відкрити платіж у браузері
@@ -162,7 +172,8 @@ Pasted: Вставлено
 Path: Шлях
 Pause: Пауза
 Pause Playing: Пауза
-'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.': 'Помилка перевірки: PasteBar не був успішно доданий до налаштувань Спеціальних можливостей. Будь ласка, надайте необхідні дозволи та натисніть «Готово» ще раз.'
+? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+: 'Помилка перевірки: PasteBar не був успішно доданий до налаштувань Спеціальних можливостей. Будь ласка, надайте необхідні дозволи та натисніть «Готово» ще раз.'
 Pin Selected: Закріпити вибране
 Pinned: Закріплений
 Pinned_few: Закріплених
@@ -230,9 +241,9 @@ Set: Встановити
 Set Password: Встановити пароль
 Show Large View: Збільшений вигляд
 Show all: Показати все
+Size: Розмір
 Something goes wrong! Please try again.: Щось пішло не так! Будь ласка, спробуйте ще раз.
 Source: Джерело
-Open History Window: Відкрити вікно з історією буфера
 Star: Обране
 Star Selected: Додати до обраного
 Stay here: Залишитися
@@ -320,6 +331,7 @@ Unlock Pro features: Розблокувати функції Pro
 Unlock Screen: Розблокувати екран
 Unlock all features: Розблокувати всі функції
 Unsaved label: Незбережена назва
+Update Error: Помилка оновлення
 Update history list: Оновити список історії
 Updated: Оновлено
 Upgrade to Pro: Перейти на Pro
@@ -335,7 +347,8 @@ View Edit: Редагування у збільшеному вигляді
 Views:
   Paste Menu: Меню вставки
 We apologize but you found a bug. Please report this issue to us and try again: Просимо вибачення, але ви виявили помилку. Будь ласка, повідомте нам про цю проблему та спробуйте ще раз
-We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.: Ми не змогли підтвердити безпеку цього файлу. Не вдалося перевірити ID3-теги та цілісність файлу. MP3-файли можуть потенційно містити шкідливий код. Будь ласка, будьте обережні.
+? We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
+: Ми не змогли підтвердити безпеку цього файлу. Не вдалося перевірити ID3-теги та цілісність файлу. MP3-файли можуть потенційно містити шкідливий код. Будь ласка, будьте обережні.
 Yes: Так
 Yes, activate: Так, активувати
 chars: символів
@@ -350,9 +363,4 @@ second: секунда
 seconds: секунди
 show less: показати менше
 www.site: www.pastebar.app
-Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template: Додайте поле <b>{{Clipboard}}</b> до шаблону. Це дозволить копіювати текст до буфера обміну, і він буде вставлений у шаблон
-Clear History: Очистити історію
-'Copy of ': 'Копія '
-Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template: Поле <b>{{Clipboard}}</b> знайдено в шаблоні. Це дозволяє копіювати текст до буфера обміну, і він буде вставлений у шаблон
-Size: Розмір
-Update Error: Помилка оновлення
+Введіть PIN для доступу до захищеної колекції: Введіть PIN для доступу до захищеної колекції

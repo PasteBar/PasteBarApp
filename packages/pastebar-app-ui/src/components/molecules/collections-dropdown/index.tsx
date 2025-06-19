@@ -1,8 +1,13 @@
 // import clsx from 'clsx'
 import { ReactElement } from 'react'
-import { collectionsStoreAtom, settingsStoreAtom } from '~/store'
+import {
+  collectionsStoreAtom,
+  openProtectedContentModal,
+  pendingProtectedCollectionId,
+  settingsStoreAtom,
+} from '~/store'
 import { useAtomValue } from 'jotai'
-import { Settings } from 'lucide-react'
+import { LockKeyhole, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -18,6 +23,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Flex,
 } from '../../ui'
 
 export default function CollectionsDropDown({ children }: { children: ReactElement }) {
@@ -26,7 +32,11 @@ export default function CollectionsDropDown({ children }: { children: ReactEleme
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const { isShowDisabledCollectionsOnNavBarMenu } = useAtomValue(settingsStoreAtom)
+  const {
+    protectedCollections,
+    hasPinProtectedCollections,
+    isShowDisabledCollectionsOnNavBarMenu,
+  } = useAtomValue(settingsStoreAtom)
 
   return (
     <DropdownMenu>
@@ -44,7 +54,7 @@ export default function CollectionsDropDown({ children }: { children: ReactEleme
             height: 'auto',
             maxHeight: '400px',
             width: '100%',
-            minWidth: '200px',
+            minWidth: '220px',
           }}
           autoHide={false}
         >
@@ -70,14 +80,38 @@ export default function CollectionsDropDown({ children }: { children: ReactEleme
                   value={collectionId}
                   disabled={!isEnabled}
                   onClick={() => {
-                    selectCollectionById({
-                      selectCollection: {
-                        collectionId,
-                      },
-                    })
+                    const isProtectedCollection =
+                      hasPinProtectedCollections &&
+                      protectedCollections.includes(collectionId)
+
+                    if (isProtectedCollection) {
+                      pendingProtectedCollectionId.value = collectionId
+                      openProtectedContentModal.value = true
+                    } else {
+                      selectCollectionById({
+                        selectCollection: { collectionId },
+                      })
+                    }
                   }}
                 >
-                  <span className={isSelected ? 'font-semibold' : ''}>{title}</span>
+                  <Flex
+                    className={`${
+                      isSelected ? 'font-semibold' : ''
+                    } items-center justify-start gap-2`}
+                  >
+                    {hasPinProtectedCollections &&
+                    protectedCollections.includes(collectionId) ? (
+                      <>
+                        <span className="truncate max-w-[150px]">{title}</span>
+                        <LockKeyhole
+                          size={12}
+                          className="text-gray-600 dark:text-gray-500 flex-shrink-0"
+                        />
+                      </>
+                    ) : (
+                      <span className="truncate max-w-[210px]">{title}</span>
+                    )}
+                  </Flex>
                 </DropdownMenuRadioItem>
               ))}
           </DropdownMenuRadioGroup>

@@ -1,13 +1,26 @@
 import { useEffect, useState } from 'react'
 import createMenuTree from '~/libs/create-menu-tree'
-import { collectionsStoreAtom, settingsStoreAtom, uiStoreAtom } from '~/store'
+import {
+  ACTION_TYPE_COMFIRMATION_MODAL,
+  actionNameForConfirmModal,
+  actionTypeConfirmed,
+  actionTypeForConfirmModal,
+  collectionsStoreAtom,
+  openActionConfirmModal,
+  openProtectedContentModal,
+  pendingProtectedCollectionId,
+  settingsStoreAtom,
+  uiStoreAtom,
+} from '~/store'
 import { useAtomValue } from 'jotai'
-import { CheckSquare, Trash, Trash2 } from 'lucide-react'
+import { CheckSquare, ChevronDown, LockKeyhole, Trash, Trash2 } from 'lucide-react'
+// Added ChevronDown, ListFilter
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useHoverIntent } from 'react-use-hoverintent'
 import AutoSize from 'react-virtualized-auto-sizer'
 
+import { Badge } from '~/components/ui/badge' // Added Badge import
 import {
   Card,
   CardContent,
@@ -15,6 +28,15 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
+// Added DropdownMenu components
 import { Switch } from '~/components/ui/switch'
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip'
 import mergeRefs from '~/components/atoms/merge-refs'
@@ -45,8 +67,15 @@ export default function ManageCollectionsSection({
   showAddNewCollection?: boolean
 }) {
   const { t } = useTranslation()
-  const { isShowCollectionNameOnNavBar, setIsShowCollectionNameOnNavBar } =
-    useAtomValue(settingsStoreAtom)
+  const {
+    isShowCollectionNameOnNavBar,
+    setIsShowCollectionNameOnNavBar,
+    screenLockPassCode,
+    protectedCollections,
+    hasPinProtectedCollections,
+    setHasPinProtectedCollections,
+    setProtectedCollections,
+  } = useAtomValue(settingsStoreAtom)
 
   useGetCollections()
   useUpdateMovedMenuItemsInCollection()
@@ -75,6 +104,17 @@ export default function ManageCollectionsSection({
   const [confirmDeleteCollectionId, setConfirmDeleteCollectionId] = useState<
     string | null
   >(null)
+  const [pendingProtectionToggle, setPendingProtectionToggle] = useState(false)
+  const [pendingProtectedCollectionChange, setPendingProtectedCollectionChange] =
+    useState<{
+      collectionId: string
+      checked: boolean
+    } | null>(null)
+
+  // Use action types from constants
+  const ACTION_TOGGLE_PROTECTION = ACTION_TYPE_COMFIRMATION_MODAL.toggleProtection
+  const ACTION_CHANGE_PROTECTED_COLLECTIONS =
+    ACTION_TYPE_COMFIRMATION_MODAL.changeProtectedCollections
 
   useEffect(() => {
     if (collectionCardEditId) {
@@ -95,6 +135,43 @@ export default function ManageCollectionsSection({
   useEffect(() => {
     setData(menuItems.length > 0 ? createMenuTree(menuItems) : [])
   }, [menuItems, menuItems.length])
+
+  // Handle confirmed actions after PIN verification
+  useEffect(() => {
+    if (actionTypeConfirmed.value === ACTION_TOGGLE_PROTECTION) {
+      setHasPinProtectedCollections(pendingProtectionToggle).then(() => {
+        setPendingProtectionToggle(false)
+        actionTypeConfirmed.value = null
+      })
+    } else if (
+      actionTypeConfirmed.value === ACTION_CHANGE_PROTECTED_COLLECTIONS &&
+      pendingProtectedCollectionChange
+    ) {
+      const currentProtectedIds = [...protectedCollections]
+      if (pendingProtectedCollectionChange.checked) {
+        if (
+          !currentProtectedIds.includes(pendingProtectedCollectionChange.collectionId)
+        ) {
+          currentProtectedIds.push(pendingProtectedCollectionChange.collectionId)
+        }
+      } else {
+        const index = currentProtectedIds.indexOf(
+          pendingProtectedCollectionChange.collectionId
+        )
+        if (index > -1) {
+          currentProtectedIds.splice(index, 1)
+        }
+      }
+      setProtectedCollections(currentProtectedIds)
+      setPendingProtectedCollectionChange(null)
+      actionTypeConfirmed.value = null
+    }
+  }, [
+    actionTypeConfirmed.value,
+    pendingProtectionToggle,
+    pendingProtectedCollectionChange,
+    protectedCollections,
+  ])
 
   return (
     <AutoSize disableWidth>
@@ -178,7 +255,7 @@ export default function ManageCollectionsSection({
                                 }}
                               />
                             ) : (
-                              <Text
+                              <Flex
                                 className={`${
                                   isSelected
                                     ? isEnabled
@@ -187,19 +264,42 @@ export default function ManageCollectionsSection({
                                     : 'hover:text-slate-500'
                                 } !font-medium ${
                                   isEnabled ? 'cursor-pointer' : 'text-muted-foreground'
-                                }`}
+                                } items-center gap-2`}
                                 onClick={() => {
                                   if (isEnabled && !isSelected) {
-                                    selectCollectionById({
-                                      selectCollection: {
-                                        collectionId,
-                                      },
-                                    })
+                                    const isProtectedCollection =
+                                      hasPinProtectedCollections &&
+                                      protectedCollections.includes(collectionId)
+
+                                    if (isProtectedCollection) {
+                                      pendingProtectedCollectionId.value = collectionId
+                                      openProtectedContentModal.value = true
+                                    } else {
+                                      selectCollectionById({
+                                        selectCollection: {
+                                          collectionId,
+                                        },
+                                      })
+                                    }
                                   }
                                 }}
                               >
-                                {title}
-                              </Text>
+                                <Text className="font-medium truncate">{title}</Text>
+                                {hasPinProtectedCollections &&
+                                  protectedCollections.includes(collectionId) && (
+                                    <ToolTip
+                                      text={t('Protected Collection', {
+                                        ns: 'collections',
+                                      })}
+                                      isCompact
+                                    >
+                                      <LockKeyhole
+                                        size={15}
+                                        className="text-gray-600 dark:text-gray-500 flex-shrink-0"
+                                      />
+                                    </ToolTip>
+                                  )}
+                              </Flex>
                             )}
                           </CardTitle>
                           {!isCardEdit && isEnabled && (
@@ -217,11 +317,21 @@ export default function ManageCollectionsSection({
                                   size="xs"
                                   variant="outline"
                                   onClick={() => {
-                                    selectCollectionById({
-                                      selectCollection: {
-                                        collectionId,
-                                      },
-                                    })
+                                    // Check if collection is protected
+                                    const isProtectedCollection =
+                                      hasPinProtectedCollections &&
+                                      protectedCollections.includes(collectionId)
+
+                                    if (isProtectedCollection) {
+                                      pendingProtectedCollectionId.value = collectionId
+                                      openProtectedContentModal.value = true
+                                    } else {
+                                      selectCollectionById({
+                                        selectCollection: {
+                                          collectionId,
+                                        },
+                                      })
+                                    }
                                   }}
                                 >
                                   {t('Select', { ns: 'common' })}
@@ -414,6 +524,136 @@ export default function ManageCollectionsSection({
                           { ns: 'collections' }
                         )}
                       </Text>
+                    </CardContent>
+                  </Card>
+
+                  <Card
+                    className={`${
+                      (!hasPinProtectedCollections || !screenLockPassCode) &&
+                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium border-red-300 border-1 w-full">
+                        <Flex className="flex flex-row items-center justify-start space-y-0 pb-1 gap-2">
+                          <LockKeyhole size={18} />
+                          {t('Protect Collections with PIN', { ns: 'collections' })}
+                        </Flex>
+                      </CardTitle>
+                      <Switch
+                        checked={hasPinProtectedCollections}
+                        className="ml-auto"
+                        onCheckedChange={checked => {
+                          if (hasPinProtectedCollections) {
+                            setPendingProtectionToggle(checked)
+                            // no need to translate this will be done in the modal
+                            actionNameForConfirmModal.value = checked
+                              ? 'Confirm Enable PIN Protection'
+                              : 'Confirm Disable PIN Protection'
+                            actionTypeForConfirmModal.value = ACTION_TOGGLE_PROTECTION
+                            openActionConfirmModal.value = true
+                          } else {
+                            setHasPinProtectedCollections(checked)
+                          }
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground mb-3">
+                        {t('Choose which collections require PIN entry for access.', {
+                          ns: 'collections',
+                        })}
+                      </Text>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-between">
+                            {t('Select Collections', { ns: 'collections' })}
+                            <ChevronDown className="ml-2 h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                          <DropdownMenuLabel>
+                            {t('Select protected collections', { ns: 'collections' })}
+                          </DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          {collections.map(collection => (
+                            <DropdownMenuCheckboxItem
+                              key={collection.collectionId}
+                              disabled={
+                                !hasPinProtectedCollections || !screenLockPassCode
+                              }
+                              checked={protectedCollections.includes(
+                                collection.collectionId
+                              )}
+                              onCheckedChange={checked => {
+                                // If PIN protection is enabled, require PIN to change protected collections
+                                if (hasPinProtectedCollections) {
+                                  setPendingProtectedCollectionChange({
+                                    collectionId: collection.collectionId,
+                                    checked,
+                                  })
+                                  // no need to translate this will be done in the modal
+                                  actionNameForConfirmModal.value = checked
+                                    ? 'Confirm Add To Protected Collections'
+                                    : 'Confirm Remove From Protected Collections'
+                                  actionTypeForConfirmModal.value =
+                                    ACTION_CHANGE_PROTECTED_COLLECTIONS
+                                  openActionConfirmModal.value = true
+                                } else {
+                                  // If PIN protection is not enabled, allow changes without PIN
+                                  const currentProtectedIds = [...protectedCollections]
+                                  if (checked) {
+                                    if (
+                                      !currentProtectedIds.includes(
+                                        collection.collectionId
+                                      )
+                                    ) {
+                                      currentProtectedIds.push(collection.collectionId)
+                                    }
+                                  } else {
+                                    const index = currentProtectedIds.indexOf(
+                                      collection.collectionId
+                                    )
+                                    if (index > -1) {
+                                      currentProtectedIds.splice(index, 1)
+                                    }
+                                  }
+                                  setProtectedCollections(currentProtectedIds)
+                                }
+                              }}
+                            >
+                              {collection.title}
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <Box className="mt-4">
+                        <Text className="text-sm font-medium my-2">
+                          {t('Pin Protected Collections', { ns: 'collections' })}:
+                        </Text>
+                        {protectedCollections.length > 0 ? (
+                          <Flex className="flex-wrap gap-2 justify-start">
+                            {protectedCollections.map(id => {
+                              const collection = collections.find(
+                                c => c.collectionId === id
+                              )
+                              return collection ? (
+                                <Badge
+                                  key={id}
+                                  variant="graySecondary"
+                                  className="font-normal"
+                                >
+                                  {collection.title}
+                                </Badge>
+                              ) : null
+                            })}
+                          </Flex>
+                        ) : (
+                          <Text className="text-sm text-muted-foreground">
+                            {t('None', { ns: 'common' })}
+                          </Text>
+                        )}
+                      </Box>
                     </CardContent>
                   </Card>
                 </Box>

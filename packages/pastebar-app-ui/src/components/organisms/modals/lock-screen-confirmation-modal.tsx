@@ -42,7 +42,7 @@ type Props = {
 
 export default function ModalLockScreenConfirmationWithPasscodeOrPassword({
   open,
-  title = 'Unlock Application Screen',
+  title = 'Confirm Passcode',
   isLockScreen = false,
   showPasscode = true,
   onConfirmSuccess,
@@ -170,6 +170,16 @@ export default function ModalLockScreenConfirmationWithPasscodeOrPassword({
   useEffect(() => {
     setFocusField(confirmPasscodeCurrentFocus.value)
   }, [confirmPasscodeCurrentFocus.value])
+
+  // Set initial focus when modal opens
+  useEffect(() => {
+    if (open && showPasscode && screenLockPassCode) {
+      setTimeout(() => {
+        confirmPasscodeCurrentFocus.value = 0
+        setFocusField(0)
+      }, 100)
+    }
+  }, [open, showPasscode])
 
   return (
     <Modal
@@ -316,7 +326,7 @@ export default function ModalLockScreenConfirmationWithPasscodeOrPassword({
                     ) : (
                       <Text>
                         <Trans
-                          i18nKey="Enter your&nbsp;<strong>{{screenLockPassCodeLength}} digits</strong>&nbsp;passcode"
+                          i18nKey="Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode"
                           values={{ screenLockPassCodeLength }}
                           ns="settings"
                         />

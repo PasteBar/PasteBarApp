@@ -51,10 +51,13 @@ Confirm Password: Conferma Password
 Confirm Remove: Conferma Rimozione
 Confirm Your Passcode: Conferma il Tuo Codice di Accesso
 Confirm action: Conferma azione
-Confirm password reset: Conferma reset password
-Confirm password reset action: Conferma azione di reset password
+Confirm Password Reset: Conferma reset password
 Confirm your action: Conferma la tua azione
 Confirm {{action}}: Conferma {{action}}
+Confirm Add To Protected Collections: Conferma aggiunta alle collezioni protette
+Confirm Disable PIN Protection: Conferma disabilitazione protezione con PIN
+Confirm Remove From Protected Collections: Conferma rimozione dalle collezioni protette
+Confirm Enable PIN Protection: Conferma abilitazione protezione con PIN
 Contact Form: Modulo di Contatto
 Copied: Copiato
 Copy: Copia
@@ -95,6 +98,7 @@ Enter Passcode: Inserisci Codice di Accesso
 Enter Password: Inserisci Password
 Enter Recovery Password: Inserisci Password di Recupero
 Enter passcode or password to unlock: Inserisci codice di accesso o password per sbloccare
+Enter PIN to Access Protected Collection: Inserisci il PIN per accedere alla collezione protetta
 Errors:
   Error loading link: Errore nel caricamento del link
   Cant save file: Impossibile salvare il file
