@@ -18,9 +18,18 @@ Manage Collections: Manage Collections
 Mark collections as protected: Mark collections as protected
 Pin Protected Collections: Pin Protected Collections
 Protect Collections with PIN: Protect Collections with PIN
+Protected Collection: Protected Collection
 Select Collections: Select Collections
 Select protected collections: Select protected collections
 Show collection name on the navbar: Show collection name on the navbar
 Switch collections: Switch collections
 You can add the selected text to your clips or menu. Please select the option below.: You can add the selected text to your clips or menu. Please select the option below.
 You need to select a different collection before deleting the current one.: You need to select a different collection before deleting the current one.
+Enable PIN Protection: Enable PIN Protection
+Disable PIN Protection: Disable PIN Protection
+Add To Protected Collections: Add To Protected Collections
+Remove From Protected Collections: Remove From Protected Collections
+Confirm Add To Protected Collections: Confirm Add To Protected Collections
+Confirm Disable PIN Protection: Confirm Disable PIN Protection
+Confirm Remove From Protected Collections: Confirm Remove From Protected Collections
+Enter PIN to Access Protected Collection: Enter PIN to Access Protected Collection

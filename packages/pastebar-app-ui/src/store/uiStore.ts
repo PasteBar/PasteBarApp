@@ -252,10 +252,3 @@ export const uiStore = createStore<UIStoreState>()(
 )
 
 export const uiStoreAtom = atomWithStore(uiStore)
-
-// Atoms for Collection PIN Prompt Modal (using LockScreenConfirmationModal)
-export const isCollectionPinModalOpenAtom = atom(false)
-export const collectionPinModalPropsAtom = atom<{
-  title: string
-  onConfirmSuccess: () => void
-} | null>(null)

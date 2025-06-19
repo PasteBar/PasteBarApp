@@ -214,7 +214,7 @@ export interface SettingsStoreState {
   setClipTextMinLength: (width: number) => void
   setClipTextMaxLength: (height: number) => void
   setProtectedCollections: (ids: string[]) => void
-  setHasPinProtectedCollections: (hasPinProtectedCollections: boolean) => void
+  setHasPinProtectedCollections: (hasPinProtectedCollections: boolean) => Promise<void>
 }
 
 const initialState: SettingsStoreState & Settings = {
@@ -296,7 +296,7 @@ const initialState: SettingsStoreState & Settings = {
   isKeepStarredOnClearEnabled: false,
   protectedCollections: [],
   hasPinProtectedCollections: false,
-  setHasPinProtectedCollections: () => {},
+  setHasPinProtectedCollections: async () => {},
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -776,8 +776,8 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   setProtectedCollections: async (ids: string[]) => {
     return get().updateSetting('protectedCollections', ids.join(','))
   },
-  setHasPinProtectedCollections: (hasPinProtectedCollections: boolean) => {
-    return set(() => ({ hasPinProtectedCollections }))
+  setHasPinProtectedCollections: async (hasPinProtectedCollections: boolean) => {
+    return get().updateSetting('hasPinProtectedCollections', hasPinProtectedCollections)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()
