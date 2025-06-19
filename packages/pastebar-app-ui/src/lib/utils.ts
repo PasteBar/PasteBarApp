@@ -140,7 +140,7 @@ export function findCurrentNavigationIndex(navigationOrder: NavigationItem[]): n
 }
 
 // Find the next non-empty board in the navigation order (skipping empty boards)
-function findNextNonEmptyBoard(
+export function findNextNonEmptyBoard(
   navigationOrder: NavigationItem[],
   startIndex: number,
   direction: 'forward' | 'backward',
@@ -174,16 +174,17 @@ function findNextNonEmptyBoard(
       continue
     }
 
-    // Check if this board has clips
-    const clipsInBoard = clipItems.filter(
+    // Check if this board has actual navigable clips (with non-null itemIds)
+    const hasNavigableClips = clipItems.some(
       clipItem =>
         clipItem.isClip &&
         clipItem.parentId === candidateItem.id &&
-        clipItem.tabId === currentTab
+        clipItem.tabId === currentTab &&
+        clipItem.itemId != null // Crucial check: ensure the clip itself is navigable
     )
 
-    // If board has clips, return it
-    if (clipsInBoard.length > 0) {
+    // If board has navigable clips, return it
+    if (hasNavigableClips) {
       return candidateItem
     }
   }
@@ -203,9 +204,10 @@ export function navigateToItem(
     keyboardSelectedBoardId.value = null
     keyboardSelectedClipId.value = null
     currentBoardIndex.value = 0
-    // Let ClipboardHistoryPage handle history item selection
+    // History item selection (e.g., selecting the first history item)
+    // is typically handled by the calling component (ClipboardHistoryPage)
+    // when currentNavigationContext.value changes to 'history'.
   } else if (item.type === 'board') {
-    // Check if the target board has clips
     const clipsInBoard = clipItems
       .filter(
         clipItem =>
@@ -215,52 +217,27 @@ export function navigateToItem(
       )
       .sort((a, b) => a.orderNumber - b.orderNumber)
 
-    // If the board is empty, try to find a non-empty board
-    if (clipsInBoard.length === 0) {
-      // Build navigation order to find alternatives
-      const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-      const currentIndex = navigationOrder.findIndex(navItem => navItem.id === item.id)
+    currentNavigationContext.value = 'board' // We are attempting to navigate to a board context
+    keyboardSelectedBoardId.value = item.id // Select the target board ID
 
-      // Try to find next non-empty board in forward direction first
-      let alternativeBoard = findNextNonEmptyBoard(
-        navigationOrder,
-        currentIndex,
-        'forward',
-        clipItems,
-        currentTab
-      )
+    // Find the first clip in the sorted list that has a valid itemId.
+    // The 'item' (board) passed to this function should be guaranteed by
+    // findNextNonEmptyBoard to have at least one such clip.
+    const firstValidClip = clipsInBoard.find(clip => clip.itemId != null)
 
-      // If no forward board found, try backward direction
-      if (!alternativeBoard) {
-        alternativeBoard = findNextNonEmptyBoard(
-          navigationOrder,
-          currentIndex,
-          'backward',
-          clipItems,
-          currentTab
-        )
-      }
-
-      // If we found an alternative non-empty board, navigate to it instead
-      if (alternativeBoard) {
-        navigateToItem(alternativeBoard, clipItems, currentTab)
-        return
-      }
-
-      // If no non-empty boards found anywhere, go to history
-      currentNavigationContext.value = 'history'
-      keyboardSelectedBoardId.value = null
+    if (firstValidClip) {
+      // Board has at least one navigable clip, select it.
+      keyboardSelectedClipId.value = firstValidClip.itemId
+    } else {
+      // This case should ideally not be reached if findNextNonEmptyBoard works correctly,
+      // as it implies the board was deemed "non-empty" but no valid clips were found here.
+      // For safety, ensure no clip is selected. The calling hotkey logic in
+      // ClipboardHistoryPage (the while loops) will then continue to the next board.
       keyboardSelectedClipId.value = null
-      currentBoardIndex.value = 0
-      return
     }
 
-    // Board has clips, proceed with normal navigation
-    currentNavigationContext.value = 'board'
-    keyboardSelectedBoardId.value = item.id
-    keyboardSelectedClipId.value = clipsInBoard[0].itemId // Select first clip
-
-    // Update board index - for subboards, find the root parent
+    // Update board index (for UI, e.g., highlighting the top-level board tab)
+    // This logic finds the root parent of the selected board.
     const topLevelBoards = clipItems
       .filter(
         boardItem =>
@@ -270,23 +247,36 @@ export function navigateToItem(
       )
       .sort((a, b) => a.orderNumber - b.orderNumber)
 
-    // Find the root parent board for subboards
-    const currentBoard = clipItems.find(boardItem => boardItem.itemId === item.id)
-    if (currentBoard) {
-      let rootParent = currentBoard
+    const currentBoardData = clipItems.find(boardItem => boardItem.itemId === item.id)
+    if (currentBoardData) {
+      let rootParent = currentBoardData
+      // Traverse up to find the root parent board
       while (rootParent.parentId !== null) {
-        rootParent = clipItems.find(boardItem => boardItem.itemId === rootParent.parentId)
-        if (!rootParent) break
-      }
-      if (rootParent) {
-        currentBoardIndex.value = topLevelBoards.findIndex(
-          board => board.itemId === rootParent.itemId
+        const parentBoard = clipItems.find(
+          boardItem =>
+            boardItem.itemId === rootParent.parentId &&
+            boardItem.isBoard &&
+            boardItem.tabId === currentTab
         )
-      } else {
-        currentBoardIndex.value = topLevelBoards.findIndex(
-          board => board.itemId === item.id
-        )
+        if (!parentBoard) {
+          // Parent not found, treat current as root (should ideally not happen with consistent data)
+          break
+        }
+        rootParent = parentBoard
       }
+      currentBoardIndex.value = topLevelBoards.findIndex(
+        board => board.itemId === rootParent.itemId
+      )
+    } else {
+      // Fallback if currentBoardData is not found (e.g., item.id is invalid)
+      // This might reset or clear the board index, or default to the first top-level board.
+      // For now, if the board itself isn't found, the index might become -1 or an existing value.
+      // Consider if a default (e.g., 0 or -1) is more appropriate if item.id is not a valid board.
+      const directMatchIndex = topLevelBoards.findIndex(board => board.itemId === item.id)
+      if (directMatchIndex !== -1) {
+        currentBoardIndex.value = directMatchIndex
+      }
+      // If not a top-level board and data is missing, currentBoardIndex might remain unchanged or be -1.
     }
   }
 }

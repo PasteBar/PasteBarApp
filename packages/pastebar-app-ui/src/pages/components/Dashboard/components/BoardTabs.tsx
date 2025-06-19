@@ -19,6 +19,7 @@ import {
   isWindowsOS,
   newBoardItemId,
   newClipItemId,
+  resetKeyboardNavigation,
   settingsStoreAtom,
   showClipsMoveOnBoardId,
   showEditClipId,
@@ -298,8 +299,6 @@ export default function BoardTabs({
         addSelectedTextToClipBoard.value = null
       }
 
-      creatingClipItemBoardId.value = boardId
-
       const targetBoardTree = createBoardTree(clipItems, currentTab, boardId?.toString())
 
       targetBoardTree
@@ -329,6 +328,9 @@ export default function BoardTabs({
     async function processClips() {
       let newClipId: string | null = null
       if (createClipBoardItemId.value && !creatingClipItemBoardId.value) {
+        // Set the flag immediately to prevent duplicate processing
+        creatingClipItemBoardId.value = createClipBoardItemId.value
+
         for (const historyId of createClipHistoryItemIds.value ?? [null]) {
           newClipId = await doCreateNewClip(historyId, createClipBoardItemId.value)
         }
@@ -342,8 +344,11 @@ export default function BoardTabs({
       }
     }
 
-    processClips()
-  }, [createClipBoardItemId.value, doCreateNewClip, updateMovedClips])
+    if (createClipBoardItemId.value !== null) {
+      resetKeyboardNavigation()
+      processClips()
+    }
+  }, [createClipBoardItemId.value])
 
   useEffect(() => {
     async function processBoard() {

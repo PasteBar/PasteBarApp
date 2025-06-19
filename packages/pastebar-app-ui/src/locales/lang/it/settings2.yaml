@@ -58,3 +58,9 @@ This sets the default icon type for new clips with notes. You can customize indi
 : Quando abilitato, cliccando o premendo Invio sugli elementi nella finestra incolla rapido li copierà solo negli appunti senza incollarli automaticamente.
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : Quando abilitato, il clic singolo copierà/incollerà elementi nella finestra incolla rapido. Se anche il clic singolo globale è abilitato, entrambe le impostazioni funzionano insieme.
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Configura quali elementi conservare durante la cancellazione della cronologia degli appunti (sia manuale che automatica).
+Keep Items on Clear: Conserva elementi durante la cancellazione
+Keep Pinned Items: Conserva elementi fissati
+Keep Starred Items: Conserva elementi preferiti
+Preserve pinned items when clearing history: Conserva elementi fissati durante la cancellazione della cronologia
+Preserve starred items when clearing history: Conserva elementi preferiti durante la cancellazione della cronologia

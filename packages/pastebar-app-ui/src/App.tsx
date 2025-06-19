@@ -54,6 +54,7 @@ function App() {
   const { toast } = useToast()
   const historyWindowOpening = useSignal(false)
   const showLanguageSelectionModal = useSignal(false)
+  const permissionsTrustedSignal = useSignal<boolean | null>(null)
 
   const handleLanguageSelected = useCallback(
     (languageCode: string) => {
@@ -93,7 +94,12 @@ function App() {
       if (res === null) return
 
       try {
-        const { constants, settings, permissionstrusted } = JSON.parse(res)
+        const {
+          constants,
+          settings,
+          permissionstrusted: initialPermissionsTrusted,
+        } = JSON.parse(res)
+        permissionsTrustedSignal.value = initialPermissionsTrusted
 
         const {
           app_dev_data_dir: appDevDataDir,
@@ -215,6 +221,10 @@ function App() {
           protectedCollections: settings.protectedCollections?.valueText.split(','),
           isSingleClickToCopyPasteQuickWindow:
             settings.isSingleClickToCopyPasteQuickWindow?.valueBool ?? false,
+          isKeepPinnedOnClearEnabled:
+            settings.isKeepPinnedOnClearEnabled?.valueBool ?? false,
+          isKeepStarredOnClearEnabled:
+            settings.isKeepStarredOnClearEnabled?.valueBool ?? false,
           isAppReady: true,
         })
         settingsStore.initConstants({
@@ -280,60 +290,7 @@ function App() {
           }
         }
 
-        if (
-          !settings.appToursCompletedList?.valueText
-            .split(',')
-            .includes(APP_TOURS.historyPanelTour) &&
-          !settings.appToursSkippedList?.valueText
-            .split(',')
-            .includes(APP_TOURS.historyPanelTour) &&
-          permissionstrusted
-        ) {
-          const welcomeTour = toast({
-            title: `${t('Welcome to PasteBar', { ns: 'help' })} 🎉`,
-            id: 'welcome-tour',
-            duration: 0,
-            description: (
-              <>
-                {t(`WelcomeDescription`, { ns: 'help' })}
-                <Flex className="mt-3">{t(`WelcomeTour`, { ns: 'help' })}</Flex>
-                <Flex className="justify-between">
-                  <Button
-                    className="bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800 hover:bg-blue-600 px-4 mt-3 text-white"
-                    onClick={() => {
-                      openOnBoardingTourName.value = APP_TOURS.historyPanelTour
-                      welcomeTour?.dismiss()
-                    }}
-                  >
-                    {t('Start Tour', { ns: 'help' })}
-                  </Button>
-                  <Flex className="gap-3">
-                    <Button
-                      variant="light"
-                      className="text-gray-800 px-4 mt-3 dark:bg-slate-800 dark:text-gray-400 hover:dark:text-gray-300"
-                      onClick={() => {
-                        welcomeTour?.dismiss()
-                      }}
-                    >
-                      {t('Later', { ns: 'help' })}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="text-gray-800 px-4 mt-3"
-                      onClick={() => {
-                        welcomeTour?.dismiss()
-                        const tours = Object.values(APP_TOURS)
-                        settingsStore.setAppToursSkippedList([...tours])
-                      }}
-                    >
-                      {t('Skip All Tours', { ns: 'help' })}
-                    </Button>
-                  </Flex>
-                </Flex>
-              </>
-            ),
-          })
-        }
+        // Welcome tour logic moved to a separate useEffect
 
         if (!settings.isSkipAutoStartPrompt?.valueBool) {
           invoke('is_autostart_enabled').then(async isAutoStartEnabled => {
@@ -347,9 +304,7 @@ function App() {
           })
         }
 
-        if (permissionstrusted === false) {
-          openOSXSystemPermissionsModal.value = true
-        }
+        // OSX Permissions modal logic moved to a separate useEffect
       } catch (e) {
         console.error(e)
       }
@@ -555,6 +510,142 @@ function App() {
       appIdleEvents.forEach(event => window.removeEventListener(event, handleActivity))
     }
   }, [])
+
+  // Effect to show OSX System Permissions Modal
+  useEffect(() => {
+    // Wait until permissions status is known and settings are initialized
+    if (permissionsTrustedSignal.value === null || !settingsStore.isAppReady) {
+      return
+    }
+
+    // If it's the first run and the language selection modal is active,
+    // wait for it to be closed before checking/showing the permissions modal.
+    if (settingsStore.isFirstRun && showLanguageSelectionModal.value) {
+      return
+    }
+
+    // Proceed if:
+    // - It's not the first run OR
+    // - It was the first run AND the language modal is now closed.
+    if (permissionsTrustedSignal.value === false) {
+      if (!openOSXSystemPermissionsModal.value) {
+        openOSXSystemPermissionsModal.value = true
+      }
+    } else if (permissionsTrustedSignal.value === true) {
+      // If permissions are trusted, ensure the modal is not trying to be shown.
+      // This can be useful if the modal was opened and then permissions were granted.
+      if (openOSXSystemPermissionsModal.value) {
+        openOSXSystemPermissionsModal.value = false
+      }
+    }
+  }, [
+    permissionsTrustedSignal.value,
+    showLanguageSelectionModal.value,
+    settingsStore.isFirstRun,
+    settingsStore.isAppReady,
+    // openOSXSystemPermissionsModal // signal itself, stable reference
+  ])
+
+  useEffect(() => {
+    if (
+      permissionsTrustedSignal.value === false &&
+      openOSXSystemPermissionsModal.value === false
+    ) {
+      permissionsTrustedSignal.value = true
+    }
+  }, [openOSXSystemPermissionsModal.value])
+
+  // Effect to show Welcome Tour toast
+  useEffect(() => {
+    let welcomeTourToast: { dismiss: () => void } | undefined
+
+    // Ensure all prerequisites are met: settings ready, permission status known,
+    // and relevant modals (language, OSX permissions) are not active.
+    if (
+      !settingsStore.isAppReady ||
+      permissionsTrustedSignal.value === null ||
+      (settingsStore.isFirstRun && showLanguageSelectionModal.value) ||
+      openOSXSystemPermissionsModal.value === true
+    ) {
+      return () => {
+        welcomeTourToast?.dismiss()
+      }
+    }
+
+    // If we've passed the early exit, language and permissions modals are closed.
+    // Now, only show the tour if permissions are actually trusted.
+    if (permissionsTrustedSignal.value) {
+      const tourCompleted = settingsStore.appToursCompletedList?.includes(
+        APP_TOURS.historyPanelTour
+      )
+      const tourSkipped = settingsStore.appToursSkippedList?.includes(
+        APP_TOURS.historyPanelTour
+      )
+
+      if (!tourCompleted && !tourSkipped) {
+        welcomeTourToast = toast({
+          title: `${t('Welcome to PasteBar', { ns: 'help' })} 🎉`,
+          id: 'welcome-tour',
+          duration: 0, // Stays until dismissed
+          description: (
+            <>
+              {t(`WelcomeDescription`, { ns: 'help' })}
+              <Flex className="mt-3">{t(`WelcomeTour`, { ns: 'help' })}</Flex>
+              <Flex className="justify-between">
+                <Button
+                  className="bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800 hover:bg-blue-600 px-4 mt-3 text-white"
+                  onClick={() => {
+                    openOnBoardingTourName.value = APP_TOURS.historyPanelTour
+                    welcomeTourToast?.dismiss()
+                  }}
+                >
+                  {t('Start Tour', { ns: 'help' })}
+                </Button>
+                <Flex className="gap-3">
+                  <Button
+                    variant="light"
+                    className="text-gray-800 px-4 mt-3 dark:bg-slate-800 dark:text-gray-400 hover:dark:text-gray-300"
+                    onClick={() => {
+                      welcomeTourToast?.dismiss()
+                    }}
+                  >
+                    {t('Later', { ns: 'help' })}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="text-gray-800 px-4 mt-3"
+                    onClick={() => {
+                      welcomeTourToast?.dismiss()
+                      const tours = Object.values(APP_TOURS)
+                      settingsStore.setAppToursSkippedList([...tours])
+                    }}
+                  >
+                    {t('Skip All Tours', { ns: 'help' })}
+                  </Button>
+                </Flex>
+              </Flex>
+            </>
+          ),
+        })
+      }
+    }
+
+    return () => {
+      welcomeTourToast?.dismiss() // Dismiss if this effect instance created it
+    }
+  }, [
+    settingsStore.isAppReady,
+    showLanguageSelectionModal.value,
+    settingsStore.isFirstRun,
+    permissionsTrustedSignal.value,
+    openOSXSystemPermissionsModal.value, // Added dependency
+    settingsStore.appToursCompletedList,
+    settingsStore.appToursSkippedList,
+    settingsStore, // For setAppToursSkippedList and accessing properties
+    t,
+    toast,
+    openOnBoardingTourName,
+  ])
 
   const uiState = useAtomValue(uiStoreAtom)
 

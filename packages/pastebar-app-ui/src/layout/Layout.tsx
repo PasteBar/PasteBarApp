@@ -16,6 +16,7 @@ import {
   onBoardingTourSingleElements,
   openAboutPasteBarModal,
   openActionConfirmModal,
+  openAddSelectedTextModal,
   openContactUsFormModal,
   openOnBoardingTourName,
   openOSXSystemPermissionsModal,
@@ -31,6 +32,7 @@ import {
   showUpdateChecking,
   uiStore,
   uiStoreAtom,
+  visibilityCopyPopup,
 } from '~/store'
 import { clsx } from 'clsx'
 import { useAtomValue } from 'jotai'
@@ -106,8 +108,6 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
 
   const [isCopied, copyToClipboard] = useCopyPaste({})
   const [pastedText, pastedItemCountDown, pasteToClipboard] = useClipboardPaste({})
-  const visibilityCopyPopup = useSignal(false)
-  const openAddSelectedTextModal = useSignal(false)
 
   const [positionCopyPopup, setPositionCopyPopup] = useState({ top: 0, left: 0 })
 
@@ -124,7 +124,7 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
       const refRect = mainContentRef.current
         ? mainContentRef.current.getBoundingClientRect()
         : new DOMRect(0)
-      const top = rect.top - refRect.top
+      const top = rect.top - refRect.top - 10
       const left =
         maxWidth > 0
           ? rect.left + rect.width / 2 - refRect.left > maxWidth

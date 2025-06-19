@@ -58,3 +58,9 @@ When enabled, the Quick Paste window will automatically close after copying or p
 : Wenn aktiviert, werden beim Klicken oder Drücken der Eingabetaste auf Elemente im Schnelleinfügen-Fenster diese nur in die Zwischenablage kopiert, ohne sie automatisch einzufügen.
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : Wenn aktiviert, werden Elemente im Schnelleinfügen-Fenster mit einem einfachen Klick kopiert/eingefügt. Wenn globaler Einfachklick ebenfalls aktiviert ist, funktionieren beide Einstellungen zusammen.
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Konfigurieren Sie, welche Elemente beim Löschen des Zwischenablageverlaufs beibehalten werden sollen (sowohl manuell als auch automatisch).
+Keep Items on Clear: Elemente beim Löschen beibehalten
+Keep Pinned Items: Angehängte Elemente beibehalten
+Keep Starred Items: Mit Stern markierte Elemente beibehalten
+Preserve pinned items when clearing history: Angehängte Elemente beim Löschen des Verlaufs beibehalten
+Preserve starred items when clearing history: Mit Stern markierte Elemente beim Löschen des Verlaufs beibehalten

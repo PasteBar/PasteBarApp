@@ -871,7 +871,7 @@ export function NavBar() {
               >
                 {isSplitPanelView
                   ? t('Close History Window', { ns: 'common' })
-                  : t('Split History Window', { ns: 'common' })}
+                  : t('Open History Window', { ns: 'common' })}
                 <MenubarShortcut className="ml-2">
                   <Shortcut keys="CTRL+N" />
                 </MenubarShortcut>
@@ -1340,7 +1340,7 @@ export function NavBar() {
                     toggleIsSplitPanelView()
                   }}
                   id="navbar-toggle-history-split"
-                  title={t('Split History Window', { ns: 'common' })}
+                  title={t('Open History Window', { ns: 'common' })}
                   variant="ghost"
                   className="relative h-7 focus:outline-none px-2 mr-0 ml-2 !bg-slate-50 text-slate-400 dark:!bg-slate-900 dark:hover:!bg-slate-800 hover:text-slate-600 dark:text-slate-400"
                 >

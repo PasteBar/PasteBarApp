@@ -29,8 +29,11 @@ import {
   keyboardSelectedBoardId,
   keyboardSelectedClipId,
   keyboardSelectedItemId,
+  resetKeyboardNavigation,
   settingsStoreAtom,
+  shouldKeyboardNavigationBeDisabled,
   showClipsMoveOnBoardId,
+  showDetailsClipId,
   showHistoryDeleteConfirmationId,
   showLargeViewClipId,
   showLargeViewHistoryId,
@@ -63,6 +66,7 @@ import useResizeObserver from 'use-resize-observer'
 import {
   buildNavigationOrder,
   findCurrentNavigationIndex,
+  findNextNonEmptyBoard,
   navigateToItem,
 } from '~/lib/utils'
 
@@ -445,7 +449,9 @@ export default function ClipboardHistoryPage() {
       keyboardSelectedClipId.value = null
       currentBoardIndex.value = 0
     },
-    { enableOnFormTags: ['input'] }
+    {
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
+    }
   )
 
   const currentNavigationContextValue = useMemo(
@@ -481,7 +487,11 @@ export default function ClipboardHistoryPage() {
         }
       }
     },
-    { enabled: currentNavigationContextValue === 'board', enableOnFormTags: ['input'] }
+    {
+      enabled:
+        currentNavigationContextValue === 'board' &&
+        !shouldKeyboardNavigationBeDisabled.value,
+    }
   )
 
   useHotkeys(
@@ -512,106 +522,117 @@ export default function ClipboardHistoryPage() {
         }
       }
     },
-    { enabled: currentNavigationContextValue === 'board', enableOnFormTags: ['input'] }
-  )
-
-  useHotkeys(
-    ['tab'],
-    e => {
-      e.preventDefault()
-      e.stopPropagation()
-
-      showLargeViewHistoryId.value = null
-
-      if (
-        currentNavigationContextValue === 'history' ||
-        currentNavigationContextValue === null
-      ) {
-        currentNavigationContext.value = 'board'
-        keyboardSelectedItemId.value = null
-
-        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-        if (navigationOrder.length > 1) {
-          const firstBoardItem = navigationOrder[1]
-          navigateToItem(firstBoardItem, clipItems, currentTab)
-        }
-        return
-      }
-
-      if (currentNavigationContextValue === 'board') {
-        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-        if (navigationOrder.length <= 1) return
-
-        const currentIndex = findCurrentNavigationIndex(navigationOrder)
-
-        if (currentIndex === navigationOrder.length - 1) {
-          currentNavigationContext.value = 'history'
-          keyboardSelectedBoardId.value = null
-          keyboardSelectedClipId.value = null
-          currentBoardIndex.value = 0
-          return
-        }
-
-        const nextIndex = currentIndex + 1
-        const nextItem = navigationOrder[nextIndex]
-
-        navigateToItem(nextItem, clipItems, currentTab)
-      }
-    },
     {
-      enabled: true, // Always enabled, we check context inside the handler
-      enableOnFormTags: ['input'],
+      enabled:
+        currentNavigationContextValue === 'board' &&
+        !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
-  useHotkeys(
-    ['shift+tab'],
-    e => {
-      e.preventDefault()
-      e.stopPropagation()
+  // Helper function to reset to history context
+  const resetToHistory = () => {
+    currentNavigationContext.value = 'history'
+    keyboardSelectedBoardId.value = null
+    keyboardSelectedClipId.value = null
+    currentBoardIndex.value = 0
+  }
 
-      showLargeViewHistoryId.value = null
+  // Helper function to check if a board has navigable clips
+  const hasNavigableClips = (boardId: string | number) => {
+    return clipItems.some(
+      clip =>
+        clip.isClip &&
+        clip.parentId === boardId &&
+        clip.tabId === currentTab &&
+        clip.itemId != null
+    )
+  }
 
-      if (
-        currentNavigationContextValue === 'history' ||
-        currentNavigationContextValue === null
-      ) {
-        currentNavigationContext.value = 'board'
-        keyboardSelectedItemId.value = null
+  // Helper function to handle navigation from history context
+  const navigateFromHistory = (direction: 'forward' | 'backward') => {
+    const navigationOrder = buildNavigationOrder(clipItems, currentTab)
+    const startIndex = direction === 'forward' ? 0 : navigationOrder.length
+    const nonEmptyBoard = findNextNonEmptyBoard(
+      navigationOrder,
+      startIndex,
+      direction,
+      clipItems,
+      currentTab
+    )
 
-        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-        if (navigationOrder.length > 1) {
-          const lastBoardItem = navigationOrder[navigationOrder.length - 1]
-          navigateToItem(lastBoardItem, clipItems, currentTab)
-        }
+    if (nonEmptyBoard) {
+      currentNavigationContext.value = 'board'
+      keyboardSelectedItemId.value = null
+      navigateToItem(nonEmptyBoard, clipItems, currentTab)
+    } else {
+      // No non-empty boards found, ensure we're in history context
+      if (currentNavigationContext.value === null) {
+        currentNavigationContext.value = 'history'
+      }
+      keyboardSelectedBoardId.value = null
+      keyboardSelectedClipId.value = null
+      currentBoardIndex.value = 0
+    }
+  }
+
+  // Helper function to handle navigation from board context
+  const navigateFromBoard = (direction: 'forward' | 'backward') => {
+    const navigationOrder = buildNavigationOrder(clipItems, currentTab)
+
+    if (navigationOrder.length <= 1) {
+      resetToHistory()
+      return
+    }
+
+    let currentNavIndex = findCurrentNavigationIndex(navigationOrder)
+    const increment = direction === 'forward' ? 1 : -1
+    const shouldWrapToHistory =
+      direction === 'forward'
+        ? (index: number) => index >= navigationOrder.length
+        : (index: number) => index < 1
+
+    while (true) {
+      currentNavIndex += increment
+
+      if (shouldWrapToHistory(currentNavIndex)) {
+        resetToHistory()
         return
       }
 
-      if (currentNavigationContextValue === 'board') {
-        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
-        if (navigationOrder.length <= 1) return
+      const candidateBoardNavInfo = navigationOrder[currentNavIndex]
 
-        const currentIndex = findCurrentNavigationIndex(navigationOrder)
-
-        if (currentIndex >= navigationOrder.length) {
-          currentNavigationContext.value = 'history'
-          keyboardSelectedBoardId.value = null
-          keyboardSelectedClipId.value = null
-          currentBoardIndex.value = 0
-          return
-        }
-
-        const nextIndex = currentIndex - 1
-        const nextItem = navigationOrder[nextIndex]
-
-        navigateToItem(nextItem, clipItems, currentTab)
+      if (hasNavigableClips(candidateBoardNavInfo.id)) {
+        navigateToItem(candidateBoardNavInfo, clipItems, currentTab)
+        return
       }
-    },
-    {
-      enabled: true,
-      enableOnFormTags: ['input'],
     }
-  )
+  }
+
+  // Simplified tab navigation handler
+  const handleTabNavigation =
+    (direction: 'forward' | 'backward') => (e: KeyboardEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      showLargeViewHistoryId.value = null
+
+      const isInHistory =
+        currentNavigationContextValue === 'history' ||
+        currentNavigationContextValue === null
+
+      if (isInHistory) {
+        navigateFromHistory(direction)
+      } else if (currentNavigationContextValue === 'board') {
+        navigateFromBoard(direction)
+      }
+    }
+
+  useHotkeys(['tab'], handleTabNavigation('forward'), {
+    enabled: !shouldKeyboardNavigationBeDisabled.value,
+  })
+
+  useHotkeys(['shift+tab'], handleTabNavigation('backward'), {
+    enabled: !shouldKeyboardNavigationBeDisabled.value,
+  })
 
   useHotkeys(
     'esc',
@@ -620,17 +641,11 @@ export default function ClipboardHistoryPage() {
       if (showLargeViewHistoryId.value) {
         showLargeViewHistoryId.value = null
       } else {
-        currentNavigationContext.value = null
-        keyboardSelectedItemId.value = null
-        keyboardSelectedItemId.value = null
-        hoveringHistoryRowId.value = null
-        keyboardSelectedBoardId.value = null
-        keyboardSelectedClipId.value = null
-        currentBoardIndex.value = 0
+        resetKeyboardNavigation()
       }
     },
     {
-      enableOnFormTags: ['input'],
+      enableOnFormTags: ['input', 'textarea'],
     }
   )
 
@@ -650,10 +665,10 @@ export default function ClipboardHistoryPage() {
       }
     },
     {
-      enableOnFormTags: ['input'],
       enabled:
-        currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null,
+        (currentNavigationContext.value === 'history' ||
+          currentNavigationContext.value === null) &&
+        !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
@@ -679,10 +694,10 @@ export default function ClipboardHistoryPage() {
       }
     },
     {
-      enableOnFormTags: ['input'],
       enabled:
-        currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null,
+        (currentNavigationContext.value === 'history' ||
+          currentNavigationContext.value === null) &&
+        !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
@@ -690,22 +705,32 @@ export default function ClipboardHistoryPage() {
     ['arrowright'],
     e => {
       e.preventDefault()
-
-      if (keyboardSelectedItemId.value) {
+      if (keyboardSelectedItemId.value || keyboardSelectedClipId.value) {
         if (isSwapPanels) {
           // In swap mode, right arrow closes large view
-          showLargeViewHistoryId.value = null
+          if (
+            currentNavigationContext.value === 'history' ||
+            currentNavigationContext.value === null
+          ) {
+            showLargeViewHistoryId.value = null
+          } else if (currentNavigationContext.value === 'board') {
+            showDetailsClipId.value = null
+          }
         } else {
           // In regular mode, right arrow opens large view
-          showLargeViewHistoryId.value = keyboardSelectedItemId.value
+          if (
+            currentNavigationContext.value === 'history' ||
+            currentNavigationContext.value === null
+          ) {
+            showLargeViewHistoryId.value = keyboardSelectedItemId.value
+          } else if (currentNavigationContext.value === 'board') {
+            showDetailsClipId.value = keyboardSelectedClipId.value
+          }
         }
       }
     },
     {
-      enableOnFormTags: ['input'],
-      enabled:
-        currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null,
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
@@ -713,34 +738,39 @@ export default function ClipboardHistoryPage() {
     ['arrowleft'],
     e => {
       e.preventDefault()
-
       if (isSwapPanels) {
         // In swap mode, left arrow opens large view
-        if (keyboardSelectedItemId.value) {
-          showLargeViewHistoryId.value = keyboardSelectedItemId.value
+        if (keyboardSelectedItemId.value || keyboardSelectedClipId.value) {
+          if (
+            currentNavigationContext.value === 'history' ||
+            currentNavigationContext.value === null
+          ) {
+            showLargeViewHistoryId.value = keyboardSelectedItemId.value
+          } else if (currentNavigationContext.value === 'board') {
+            showDetailsClipId.value = keyboardSelectedClipId.value
+          }
         }
       } else {
         // In regular mode, left arrow closes large view
-        showLargeViewHistoryId.value = null
+        if (
+          currentNavigationContext.value === 'history' ||
+          currentNavigationContext.value === null
+        ) {
+          showLargeViewHistoryId.value = null
+        } else if (currentNavigationContext.value === 'board') {
+          showDetailsClipId.value = null
+        }
       }
     },
     {
-      enableOnFormTags: ['input'],
-      enabled:
-        currentNavigationContext.value === 'history' ||
-        currentNavigationContext.value === null,
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
     }
   )
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Control' || e.key === 'Meta') {
-        currentNavigationContext.value = null
-        keyboardSelectedItemId.value = null
-        keyboardSelectedBoardId.value = null
-        keyboardSelectedClipId.value = null
-        currentBoardIndex.value = 0
-        hoveringHistoryRowId.value = null
+        resetKeyboardNavigation()
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -1489,7 +1519,9 @@ export default function ClipboardHistoryPage() {
                                               clipboard={item}
                                               removeLinkMetaData={removeLinkMetaData}
                                               generateLinkMetaData={generateLinkMetaData}
-                                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                                              isSingleClickToCopyPaste={
+                                                isSingleClickToCopyPaste
+                                              }
                                             />
                                           </Box>
                                         )
@@ -2113,7 +2145,9 @@ export default function ClipboardHistoryPage() {
                                               clipboard={clipboard}
                                               removeLinkMetaData={removeLinkMetaData}
                                               generateLinkMetaData={generateLinkMetaData}
-                                              isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                                              isSingleClickToCopyPaste={
+                                                isSingleClickToCopyPaste
+                                              }
                                               index={index}
                                               style={style}
                                             />

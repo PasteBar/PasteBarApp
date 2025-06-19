@@ -216,57 +216,111 @@ export function getValuePreview(
 ): {
   valuePreview: string
   morePreviewLines: number | null
-  morePreviewChars: number | null
+  morePreviewChars: number | null // This will always be null for non-image data
 } {
   if (!value || isLargeView) {
+    // For large view or no value, return full value or specific preview for image data
     return {
       valuePreview:
-        isImageData && value ? value.substring(0, 200) + '...' : value || 'No content',
+        isImageData && value && value.length > 200
+          ? value.substring(0, 200) + '...'
+          : value || 'No content',
       morePreviewLines: null,
       morePreviewChars: null,
     }
   }
 
-  const normalizedValue = value.replace(/\r\n/g, '\n')
-  const valueLines = normalizedValue.split('\n')
-
-  if (valueLines.length >= 5 && !isImageData) {
-    const valueLines = normalizedValue.split('\n')
-
-    const previewLines = valueLines.slice(0, 5).join('\n')
-    const morePreviewLines = normalizedValue.split('\n').length - 5
-
-    return {
-      valuePreview: bbCode.closeTags(previewLines),
-      morePreviewLines: morePreviewLines > 0 ? morePreviewLines : null,
-      morePreviewChars: !morePreviewLines ? normalizedValue.length - 160 : null,
-    }
-  }
-  if (normalizedValue.length > 60 && !isImageData) {
-    const morePreviewChars = normalizedValue.length - 60
-
-    return {
-      valuePreview: bbCode.closeTags(normalizedValue.substring(0, 60)) + '...',
-      morePreviewLines: null,
-      morePreviewChars: morePreviewChars > 0 ? morePreviewChars : null,
-    }
-  } else {
-    const previewLines = normalizedValue.split('\n')
-    const morePreviewLines = normalizedValue.split('\n').length - previewLines.length
-
-    if (isImageData) {
+  // Handle image data separately with simple character truncation
+  if (isImageData) {
+    if (value.length > 60) {
       return {
-        valuePreview: normalizedValue.substring(0, 60) + '...',
+        valuePreview: value.substring(0, 60) + '...',
+        morePreviewLines: null, // Line count isn't primary for image data preview
+        morePreviewChars: value.length - 60,
+      }
+    } else {
+      return {
+        valuePreview: value,
         morePreviewLines: null,
         morePreviewChars: null,
       }
     }
+  }
 
-    return {
-      valuePreview: normalizedValue,
-      morePreviewLines: morePreviewLines > 0 ? morePreviewLines : null,
-      morePreviewChars: null,
+  // For non-image data, proceed with line-based truncation
+  const MAX_PREVIEW_LINES = 5
+  const normalizedValue = value.replace(/\r\n/g, '\n')
+  const allLines = normalizedValue.split('\n')
+
+  let previewLinesArray: string[] = []
+  let linesTakenCount = 0
+  let openCopyTagCount = 0 // Tracks balance of [copy] and [/copy] tags
+
+  if (allLines.length <= MAX_PREVIEW_LINES) {
+    // If content is within line limits, no truncation needed by lines
+    previewLinesArray = [...allLines]
+    // Still, check for unclosed tags in the whole short content
+    for (const line of previewLinesArray) {
+      openCopyTagCount += (line.match(/\[copy\]/g) || []).length
+      openCopyTagCount -= (line.match(/\[\/copy\]/g) || []).length
     }
+    openCopyTagCount = Math.max(0, openCopyTagCount)
+  } else {
+    // Content exceeds max lines, apply careful truncation
+    for (let i = 0; i < allLines.length; i++) {
+      const currentLine = allLines[i]
+
+      if (linesTakenCount >= MAX_PREVIEW_LINES) {
+        if (openCopyTagCount > 0) {
+          // If a [copy] tag is open, include the current line hoping it's the closer
+          previewLinesArray.push(currentLine)
+          linesTakenCount++ // Account for this extra line
+          // Update openCopyTagCount based on this newly added line
+          openCopyTagCount += (currentLine.match(/\[copy\]/g) || []).length
+          openCopyTagCount -= (currentLine.match(/\[\/copy\]/g) || []).length
+          openCopyTagCount = Math.max(0, openCopyTagCount)
+          // Break after attempting to close the tag to prevent very long previews
+          break
+        } else {
+          // Not inside an open [copy] tag and over limit, safe to break.
+          break
+        }
+      }
+
+      previewLinesArray.push(currentLine)
+      linesTakenCount++
+
+      // Update openCopyTagCount based on the line just added
+      openCopyTagCount += (currentLine.match(/\[copy\]/g) || []).length
+      openCopyTagCount -= (currentLine.match(/\[\/copy\]/g) || []).length
+      openCopyTagCount = Math.max(0, openCopyTagCount)
+    }
+  }
+
+  let finalPreviewText = previewLinesArray.join('\n')
+  const calculatedMorePreviewLines = allLines.length - previewLinesArray.length
+
+  // Apply bbCode.closeTags if truncation happened or if tags might be open
+  if (calculatedMorePreviewLines > 0 || openCopyTagCount > 0) {
+    finalPreviewText = bbCode.closeTags(finalPreviewText)
+  }
+
+  if (calculatedMorePreviewLines > 0) {
+    // Add ellipsis if lines were actually truncated.
+    // Avoid adding if bbCode.closeTags might have added its own form of ellipsis or if preview ends with one.
+    if (!finalPreviewText.trim().endsWith('...')) {
+      // Check if the last line of previewText is just "..." from a previous logic
+      const linesInPreview = finalPreviewText.split('\n')
+      if (linesInPreview[linesInPreview.length - 1] !== '...') {
+        finalPreviewText += '\n...'
+      }
+    }
+  }
+
+  return {
+    valuePreview: finalPreviewText,
+    morePreviewLines: calculatedMorePreviewLines > 0 ? calculatedMorePreviewLines : null,
+    morePreviewChars: null, // Character-based truncation is removed for non-image data
   }
 }
 
