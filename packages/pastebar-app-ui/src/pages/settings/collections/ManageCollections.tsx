@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import createMenuTree from '~/libs/create-menu-tree'
 import { collectionsStoreAtom, settingsStoreAtom, uiStoreAtom } from '~/store'
 import { useAtom, useAtomValue } from 'jotai'
-import { CheckSquare, LockKeyhole, Trash, Trash2 } from 'lucide-react'
+import { CheckSquare, ChevronDown, ListFilter, LockKeyhole, Trash, Trash2 } from 'lucide-react' // Added ChevronDown, ListFilter
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useHoverIntent } from 'react-use-hoverintent'
@@ -15,6 +15,15 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import { Badge } from '~/components/ui/badge' // Added Badge import
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu' // Added DropdownMenu components
 import { Switch } from '~/components/ui/switch'
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip'
 import mergeRefs from '~/components/atoms/merge-refs'
@@ -437,47 +446,68 @@ export default function ManageCollectionsSection({
                       <CardContent>
                         <Text className="text-sm text-muted-foreground mb-3">
                           {t(
-                            'Selected collections will require PIN entry to access their content.',
+                            'Choose which collections require PIN entry for access.',
                             { ns: 'collections' }
                           )}
                         </Text>
-                        <Box className="max-h-48 overflow-y-auto pr-2 space-y-2">
-                          {collections.map(collection => {
-                            const isProtected = protectedCollections.includes(
-                              collection.collectionId
-                            )
-                            return (
-                              <Flex
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="w-full justify-between">
+                              {t('Select Collections', { ns: 'collections' })}
+                              <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                            <DropdownMenuLabel>
+                              {t('Mark collections as protected', { ns: 'collections' })}
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {collections.map(collection => (
+                              <DropdownMenuCheckboxItem
                                 key={collection.collectionId}
-                                justify="between"
-                                align="center"
-                                className="py-2 px-3 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800"
-                              >
-                                <Text className="text-sm">{collection.title}</Text>
-                                <Switch
-                                  checked={isProtected}
-                                  onCheckedChange={checked => {
-                                    const currentProtectedIds = [...protectedCollections]
-                                    if (checked) {
-                                      if (
-                                        !currentProtectedIds.includes(collection.collectionId)
-                                      ) {
-                                        currentProtectedIds.push(collection.collectionId)
-                                      }
-                                    } else {
-                                      const index = currentProtectedIds.indexOf(
-                                        collection.collectionId
-                                      )
-                                      if (index > -1) {
-                                        currentProtectedIds.splice(index, 1)
-                                      }
+                                checked={protectedCollections.includes(collection.collectionId)}
+                                onCheckedChange={checked => {
+                                  const currentProtectedIds = [...protectedCollections]
+                                  if (checked) {
+                                    if (!currentProtectedIds.includes(collection.collectionId)) {
+                                      currentProtectedIds.push(collection.collectionId)
                                     }
-                                    setProtectedCollections(currentProtectedIds)
-                                  }}
-                                />
-                              </Flex>
-                            )
-                          })}
+                                  } else {
+                                    const index = currentProtectedIds.indexOf(
+                                      collection.collectionId
+                                    )
+                                    if (index > -1) {
+                                      currentProtectedIds.splice(index, 1)
+                                    }
+                                  }
+                                  setProtectedCollections(currentProtectedIds)
+                                }}
+                              >
+                                {collection.title}
+                              </DropdownMenuCheckboxItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Box className="mt-4">
+                          <Text className="text-sm font-medium mb-1">
+                            {t('Currently Protected', { ns: 'collections' })}:
+                          </Text>
+                          {protectedCollections.length > 0 ? (
+                            <Flex wrap="wrap" gap={2}>
+                              {protectedCollections.map(id => {
+                                const collection = collections.find(c => c.collectionId === id)
+                                return collection ? (
+                                  <Badge key={id} variant="secondary" className="font-normal">
+                                    {collection.title}
+                                  </Badge>
+                                ) : null
+                              })}
+                            </Flex>
+                          ) : (
+                            <Text className="text-sm text-muted-foreground">
+                              {t('None', { ns: 'common' })}
+                            </Text>
+                          )}
                         </Box>
                       </CardContent>
                     </Card>

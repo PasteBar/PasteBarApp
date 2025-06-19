@@ -291,39 +291,33 @@ export function useSelectCollectionById() {
   const selectCollectionById = (params: {
     selectCollection: { collectionId: string }
   }) => {
-    const { collectionId } = params.selectCollection
-    const isProtected = protectedCollections.includes(collectionId)
-    const targetCollection = collections.find(c => c.collectionId === collectionId)
+    const { collectionId: targetCollectionId } = params.selectCollection // Renamed for clarity in logs
+    const isProtected = protectedCollections.includes(targetCollectionId)
+    const targetCollection = collections.find(c => c.collectionId === targetCollectionId)
 
     if (isProtected && screenLockPassCode && targetCollection) {
-      const onConfirmSuccessCallback = () => {
-        // This function is called by the modal on successful PIN verification.
-        // It should now perform the actual collection switch.
-        // We can call updateCurrentCollectionId directly if it's available and appropriate,
-        // OR we can call invokeSelectCollectionById, but that might re-trigger this logic.
-        // Direct state update via updateCurrentCollectionId is cleaner if it also handles
-        // necessary backend calls or cache invalidations implicitly or explicitly.
-        // For now, let's assume updateCurrentCollectionId is sufficient for frontend state.
-        // The PinPromptModal previously called updateCurrentCollectionId.
-        // If invokeSelectCollectionById is called, ensure it doesn't lead to a loop.
-        // A more robust way might be to have a separate "forceSelect" or "internalSelect"
-        // that bypasses this PIN check, but for now, direct update to store is assumed.
-        if (updateCurrentCollectionId) {
-             updateCurrentCollectionId(collectionId)
-             // Manually trigger necessary invalidations if updateCurrentCollectionId doesn't do it.
-             // This part is crucial and was handled by invokeSelectCollectionById's onSuccess.
-             // Replicating that here or ensuring updateCurrentCollectionId covers it.
-             queryClient.invalidateQueries({ queryKey: ['get_collections'] })
-             queryClient.invalidateQueries({ queryKey: ['get_active_collection_with_clips'] })
-             queryClient.invalidateQueries({ queryKey: ['get_active_collection_with_menu_items'] })
-             invoke('build_system_menu') // Also ensure this is called.
-        } else {
-            // Fallback or error if updateCurrentCollectionId is not on collectionsStoreAtom
-            // This would be a contract violation with collectionsStoreAtom
-            console.error("updateCurrentCollectionId not available on collectionsStoreAtom");
-            // As a fallback, we could call invokeSelectCollectionById, but this is not ideal
-            // as it might re-trigger the PIN prompt if not careful.
-            // For now, we assume updateCurrentCollectionId is the way.
+      console.log(`[Debug] Setting up PIN prompt for collection: ${targetCollectionId}, Title: ${targetCollection.title}`);
+
+      const onConfirmSuccessCallback = async () => { // Make callback async
+        console.log(`[Debug] PIN Confirmed! Attempting to switch to collection via invoke: ${targetCollectionId}`);
+        try {
+          // Instead of directly updating UI state, invoke the backend to select the collection.
+          // The backend will then trigger state updates through query invalidations via the mutation's onSuccess.
+          await invoke('select_collection_by_id', { collectionId: targetCollectionId });
+          console.log(`[Debug] Invoke 'select_collection_by_id' for ${targetCollectionId} successful.`);
+
+          // Explicitly call query invalidations and menu build,
+          // as this path is outside the direct TanStack Mutation onSuccess flow.
+          console.log('[Debug] Manually triggering query invalidations and menu build post-PIN success.');
+          queryClient.invalidateQueries({ queryKey: ['get_collections'] });
+          queryClient.invalidateQueries({ queryKey: ['get_active_collection_with_clips'] });
+          queryClient.invalidateQueries({ queryKey: ['get_active_collection_with_menu_items'] });
+          await invoke('build_system_menu');
+          console.log('[Debug] Explicit query invalidations and menu build complete after PIN.');
+
+        } catch (error) {
+          console.error(`[Debug] Error invoking 'select_collection_by_id' for ${targetCollectionId}:`, error);
+          // Handle error appropriately, e.g., show a toast message to the user
         }
       }
 
