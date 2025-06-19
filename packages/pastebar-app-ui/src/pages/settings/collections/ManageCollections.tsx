@@ -76,8 +76,6 @@ export default function ManageCollectionsSection({
     setHasPinProtectedCollections,
     setProtectedCollections,
   } = useAtomValue(settingsStoreAtom)
-  // collections is already available from collectionsStoreAtom further down
-  // const collectionsAtom = useAtomValue(collectionsStoreAtom)
 
   useGetCollections()
   useUpdateMovedMenuItemsInCollection()
@@ -168,7 +166,12 @@ export default function ManageCollectionsSection({
       setPendingProtectedCollectionChange(null)
       actionTypeConfirmed.value = null
     }
-  }, [actionTypeConfirmed.value, pendingProtectionToggle, pendingProtectedCollectionChange, protectedCollections])
+  }, [
+    actionTypeConfirmed.value,
+    pendingProtectionToggle,
+    pendingProtectedCollectionChange,
+    protectedCollections,
+  ])
 
   return (
     <AutoSize disableWidth>
@@ -264,17 +267,14 @@ export default function ManageCollectionsSection({
                                 } items-center gap-2`}
                                 onClick={() => {
                                   if (isEnabled && !isSelected) {
-                                    // Check if collection is protected
                                     const isProtectedCollection =
                                       hasPinProtectedCollections &&
                                       protectedCollections.includes(collectionId)
 
                                     if (isProtectedCollection) {
-                                      // Store pending collection and show PIN modal
                                       pendingProtectedCollectionId.value = collectionId
                                       openProtectedContentModal.value = true
                                     } else {
-                                      // Switch directly
                                       selectCollectionById({
                                         selectCollection: {
                                           collectionId,
