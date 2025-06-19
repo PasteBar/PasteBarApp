@@ -359,12 +359,19 @@ export default function ClipboardHistoryQuickPastePage() {
   }
 
   useEffect(() => {
-    if (searchHistoryInputRef?.current) {
-      setTimeout(() => {
-        searchHistoryInputRef?.current?.focus()
-      }, 100)
+    if (searchHistoryInputRef?.current && isShowSearch.value) {
+      searchHistoryInputRef?.current?.focus()
+      // Set cursor position to end when search is activated with initial text
+      if (searchTerm.length > 0) {
+        requestAnimationFrame(() => {
+          searchHistoryInputRef?.current?.setSelectionRange(
+            searchTerm.length,
+            searchTerm.length
+          )
+        })
+      }
     }
-  }, [searchHistoryInputRef.current])
+  }, [isShowSearch.value])
 
   useHotkeys(['ctrl+f', 'meta+f', 'ctrl+k', 'meta+k', '/'], toggleSearch)
 
@@ -488,6 +495,48 @@ export default function ClipboardHistoryQuickPastePage() {
       isKeyCtrlPressed.value = true
     }
 
+    // Auto-activate search when typing letters or numbers
+    if (
+      !isShowSearch.value &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.altKey &&
+      event.key.length === 1 &&
+      /^[\p{L}\p{N}]$/u.test(event.key)
+    ) {
+      event.preventDefault()
+      isShowSearch.value = true
+      setSearchTerm(event.key)
+      // Focus will be handled by the useEffect that watches searchHistoryInputRef
+      return
+    }
+
+    // Handle Escape key before the early return for search input
+    if (keyEscape.includes(event.key)) {
+      event.preventDefault()
+      if (isShowSearch.value && searchTerm.length > 0) {
+        setSearchTerm('')
+      } else if (isShowSearch.value && searchTerm.length === 0) {
+        isShowSearch.value = false
+      } else if (!isShowSearch.value) {
+        appWindow?.close()
+      }
+      return
+    }
+
+    // If search is active and input is focused, only process navigation keys
+    if (isShowSearch.value && document.activeElement === searchHistoryInputRef?.current) {
+      // Allow navigation keys to be processed
+      if (!keyUp.includes(event.key) && 
+          !keyDown.includes(event.key) && 
+          !keyPageUp.includes(event.key) && 
+          !keyPageDown.includes(event.key) &&
+          !keyHome.includes(event.key) &&
+          !keyEnter.includes(event.key)) {
+        return
+      }
+    }
+
     if (keyHome.includes(event.key)) {
       if (!isShowSearch.value) {
         event.preventDefault()
@@ -607,16 +656,6 @@ export default function ClipboardHistoryQuickPastePage() {
           handleCopyHistoryItem,
           handlePasteHistoryItem
         )
-      }
-    }
-    if (keyEscape.includes(event.key)) {
-      event.preventDefault()
-      if (isShowSearch.value && searchTerm.length > 0) {
-        setSearchTerm('')
-      } else if (isShowSearch.value && searchTerm.length === 0) {
-        isShowSearch.value = false
-      } else if (!isShowSearch.value) {
-        appWindow?.close()
       }
     }
     return
@@ -806,7 +845,10 @@ export default function ClipboardHistoryQuickPastePage() {
                               clipboard={item}
                               removeLinkMetaData={removeLinkMetaData}
                               generateLinkMetaData={generateLinkMetaData}
-                              isSingleClickToCopyPaste={isSingleClickToCopyPaste || isSingleClickToCopyPasteQuickWindow}
+                              isSingleClickToCopyPaste={
+                                isSingleClickToCopyPaste ||
+                                isSingleClickToCopyPasteQuickWindow
+                              }
                             />
                           )
                         })}
@@ -1002,7 +1044,10 @@ export default function ClipboardHistoryQuickPastePage() {
                               clipboard={clipboard}
                               removeLinkMetaData={removeLinkMetaData}
                               generateLinkMetaData={generateLinkMetaData}
-                              isSingleClickToCopyPaste={isSingleClickToCopyPaste || isSingleClickToCopyPasteQuickWindow}
+                              isSingleClickToCopyPaste={
+                                isSingleClickToCopyPaste ||
+                                isSingleClickToCopyPasteQuickWindow
+                              }
                               index={index}
                               style={style}
                             />
@@ -1059,6 +1104,18 @@ const SearchInput = React.memo(
         iconLeft={<Search className="h-4 w-4" />}
         classNameInput="w-full pr-0"
         className="text-md ring-offset-0 bg-slate-100 dark:bg-slate-700 border-r-0 border-t-0 border-b-0"
+        onKeyDown={e => {
+          // Allow navigation keys and Escape to bubble up
+          if (!keyEscape.includes(e.key) && 
+              !keyUp.includes(e.key) && 
+              !keyDown.includes(e.key) && 
+              !keyPageUp.includes(e.key) && 
+              !keyPageDown.includes(e.key) &&
+              !keyHome.includes(e.key) &&
+              !keyEnter.includes(e.key)) {
+            e.stopPropagation()
+          }
+        }}
       />
     </Box>
   )
