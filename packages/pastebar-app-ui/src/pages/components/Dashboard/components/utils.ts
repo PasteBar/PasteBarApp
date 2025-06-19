@@ -308,7 +308,7 @@ export function getValuePreview(
   if (calculatedMorePreviewLines > 0) {
     // Add ellipsis if lines were actually truncated.
     // Avoid adding if bbCode.closeTags might have added its own form of ellipsis or if preview ends with one.
-    if (!finalPreviewText.endsWith('...')) {
+    if (!finalPreviewText.trim().endsWith('...')) {
       // Check if the last line of previewText is just "..." from a previous logic
       const linesInPreview = finalPreviewText.split('\n')
       if (linesInPreview[linesInPreview.length - 1] !== '...') {
