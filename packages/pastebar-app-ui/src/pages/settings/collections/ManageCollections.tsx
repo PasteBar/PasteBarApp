@@ -527,135 +527,135 @@ export default function ManageCollectionsSection({
                     </CardContent>
                   </Card>
 
-                  {screenLockPassCode && (
-                    <Card
-                      className={`${
-                        !hasPinProtectedCollections &&
-                        'opacity-80 bg-gray-100 dark:bg-gray-900/80'
-                      }`}
-                    >
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
-                        <CardTitle className="animate-in fade-in text-md font-medium border-red-300 border-1 w-full">
-                          <Flex className="flex flex-row items-center justify-start space-y-0 pb-1 gap-2">
-                            <LockKeyhole size={18} />
-                            {t('Protect Collections with PIN', { ns: 'collections' })}
-                          </Flex>
-                        </CardTitle>
-                        <Switch
-                          checked={hasPinProtectedCollections}
-                          className="ml-auto"
-                          onCheckedChange={checked => {
-                            if (hasPinProtectedCollections) {
-                              setPendingProtectionToggle(checked)
-                              // no need to translate this will be done in the modal
-                              actionNameForConfirmModal.value = checked
-                                ? 'Confirm Enable PIN Protection'
-                                : 'Confirm Disable PIN Protection'
-                              actionTypeForConfirmModal.value = ACTION_TOGGLE_PROTECTION
-                              openActionConfirmModal.value = true
-                            } else {
-                              setHasPinProtectedCollections(checked)
-                            }
-                          }}
-                        />
-                      </CardHeader>
-                      <CardContent>
-                        <Text className="text-sm text-muted-foreground mb-3">
-                          {t('Choose which collections require PIN entry for access.', {
-                            ns: 'collections',
-                          })}
-                        </Text>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full justify-between">
-                              {t('Select Collections', { ns: 'collections' })}
-                              <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
-                            <DropdownMenuLabel>
-                              {t('Select protected collections', { ns: 'collections' })}
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            {collections.map(collection => (
-                              <DropdownMenuCheckboxItem
-                                key={collection.collectionId}
-                                disabled={!hasPinProtectedCollections}
-                                checked={protectedCollections.includes(
-                                  collection.collectionId
-                                )}
-                                onCheckedChange={checked => {
-                                  // If PIN protection is enabled, require PIN to change protected collections
-                                  if (hasPinProtectedCollections) {
-                                    setPendingProtectedCollectionChange({
-                                      collectionId: collection.collectionId,
-                                      checked,
-                                    })
-                                    // no need to translate this will be done in the modal
-                                    actionNameForConfirmModal.value = checked
-                                      ? 'Confirm Add To Protected Collections'
-                                      : 'Confirm Remove From Protected Collections'
-                                    actionTypeForConfirmModal.value =
-                                      ACTION_CHANGE_PROTECTED_COLLECTIONS
-                                    openActionConfirmModal.value = true
-                                  } else {
-                                    // If PIN protection is not enabled, allow changes without PIN
-                                    const currentProtectedIds = [...protectedCollections]
-                                    if (checked) {
-                                      if (
-                                        !currentProtectedIds.includes(
-                                          collection.collectionId
-                                        )
-                                      ) {
-                                        currentProtectedIds.push(collection.collectionId)
-                                      }
-                                    } else {
-                                      const index = currentProtectedIds.indexOf(
+                  <Card
+                    className={`${
+                      (!hasPinProtectedCollections || !screenLockPassCode) &&
+                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium border-red-300 border-1 w-full">
+                        <Flex className="flex flex-row items-center justify-start space-y-0 pb-1 gap-2">
+                          <LockKeyhole size={18} />
+                          {t('Protect Collections with PIN', { ns: 'collections' })}
+                        </Flex>
+                      </CardTitle>
+                      <Switch
+                        checked={hasPinProtectedCollections}
+                        className="ml-auto"
+                        onCheckedChange={checked => {
+                          if (hasPinProtectedCollections) {
+                            setPendingProtectionToggle(checked)
+                            // no need to translate this will be done in the modal
+                            actionNameForConfirmModal.value = checked
+                              ? 'Confirm Enable PIN Protection'
+                              : 'Confirm Disable PIN Protection'
+                            actionTypeForConfirmModal.value = ACTION_TOGGLE_PROTECTION
+                            openActionConfirmModal.value = true
+                          } else {
+                            setHasPinProtectedCollections(checked)
+                          }
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground mb-3">
+                        {t('Choose which collections require PIN entry for access.', {
+                          ns: 'collections',
+                        })}
+                      </Text>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-between">
+                            {t('Select Collections', { ns: 'collections' })}
+                            <ChevronDown className="ml-2 h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                          <DropdownMenuLabel>
+                            {t('Select protected collections', { ns: 'collections' })}
+                          </DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          {collections.map(collection => (
+                            <DropdownMenuCheckboxItem
+                              key={collection.collectionId}
+                              disabled={
+                                !hasPinProtectedCollections || !screenLockPassCode
+                              }
+                              checked={protectedCollections.includes(
+                                collection.collectionId
+                              )}
+                              onCheckedChange={checked => {
+                                // If PIN protection is enabled, require PIN to change protected collections
+                                if (hasPinProtectedCollections) {
+                                  setPendingProtectedCollectionChange({
+                                    collectionId: collection.collectionId,
+                                    checked,
+                                  })
+                                  // no need to translate this will be done in the modal
+                                  actionNameForConfirmModal.value = checked
+                                    ? 'Confirm Add To Protected Collections'
+                                    : 'Confirm Remove From Protected Collections'
+                                  actionTypeForConfirmModal.value =
+                                    ACTION_CHANGE_PROTECTED_COLLECTIONS
+                                  openActionConfirmModal.value = true
+                                } else {
+                                  // If PIN protection is not enabled, allow changes without PIN
+                                  const currentProtectedIds = [...protectedCollections]
+                                  if (checked) {
+                                    if (
+                                      !currentProtectedIds.includes(
                                         collection.collectionId
                                       )
-                                      if (index > -1) {
-                                        currentProtectedIds.splice(index, 1)
-                                      }
+                                    ) {
+                                      currentProtectedIds.push(collection.collectionId)
                                     }
-                                    setProtectedCollections(currentProtectedIds)
+                                  } else {
+                                    const index = currentProtectedIds.indexOf(
+                                      collection.collectionId
+                                    )
+                                    if (index > -1) {
+                                      currentProtectedIds.splice(index, 1)
+                                    }
                                   }
-                                }}
-                              >
-                                {collection.title}
-                              </DropdownMenuCheckboxItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        <Box className="mt-4">
-                          <Text className="text-sm font-medium my-2">
-                            {t('Pin Protected Collections', { ns: 'collections' })}:
+                                  setProtectedCollections(currentProtectedIds)
+                                }
+                              }}
+                            >
+                              {collection.title}
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <Box className="mt-4">
+                        <Text className="text-sm font-medium my-2">
+                          {t('Pin Protected Collections', { ns: 'collections' })}:
+                        </Text>
+                        {protectedCollections.length > 0 ? (
+                          <Flex className="flex-wrap gap-2 justify-start">
+                            {protectedCollections.map(id => {
+                              const collection = collections.find(
+                                c => c.collectionId === id
+                              )
+                              return collection ? (
+                                <Badge
+                                  key={id}
+                                  variant="graySecondary"
+                                  className="font-normal"
+                                >
+                                  {collection.title}
+                                </Badge>
+                              ) : null
+                            })}
+                          </Flex>
+                        ) : (
+                          <Text className="text-sm text-muted-foreground">
+                            {t('None', { ns: 'common' })}
                           </Text>
-                          {protectedCollections.length > 0 ? (
-                            <Flex className="flex-wrap gap-2 justify-start">
-                              {protectedCollections.map(id => {
-                                const collection = collections.find(
-                                  c => c.collectionId === id
-                                )
-                                return collection ? (
-                                  <Badge
-                                    key={id}
-                                    variant="graySecondary"
-                                    className="font-normal"
-                                  >
-                                    {collection.title}
-                                  </Badge>
-                                ) : null
-                              })}
-                            </Flex>
-                          ) : (
-                            <Text className="text-sm text-muted-foreground">
-                              {t('None', { ns: 'common' })}
-                            </Text>
-                          )}
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  )}
+                        )}
+                      </Box>
+                    </CardContent>
+                  </Card>
                 </Box>
                 <Spacer h={6} />
               </SimpleBar>
