@@ -999,7 +999,7 @@ export default function ClipboardHistorySettings() {
                       <Text className="text-sm text-muted-foreground mb-4">
                         {t(
                           'Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).',
-                          { ns: 'settings' }
+                          { ns: 'settings2' }
                         )}
                       </Text>
                       <Flex className="flex-col gap-4">
