@@ -326,7 +326,7 @@ export default function ModalLockScreenConfirmationWithPasscodeOrPassword({
                     ) : (
                       <Text>
                         <Trans
-                          i18nKey="Enter your&nbsp;<strong>{{screenLockPassCodeLength}} digits</strong>&nbsp;passcode"
+                          i18nKey="Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode"
                           values={{ screenLockPassCodeLength }}
                           ns="settings"
                         />

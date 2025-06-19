@@ -61,7 +61,6 @@ import { Box, Button, Flex, Text } from '~/components/ui'
 import { useSelectCollectionById } from '~/hooks/queries/use-collections'
 import { useClipboardPaste, useCopyPaste } from '~/hooks/use-copypaste'
 import { useLocalStorage } from '~/hooks/use-localstorage'
-import { useSignal } from '~/hooks/use-signal'
 
 import { CreateDashboardItemType } from '~/types/menu'
 
@@ -547,10 +546,7 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
       )}
       {openActionConfirmModal.value && (
         <ModalLockScreenConfirmationWithPasscodeOrPassword
-          title={t('Confirm {{action}}', {
-            ns: 'common',
-            action: actionNameForConfirmModal.value,
-          })}
+          title={actionNameForConfirmModal.value ?? undefined}
           open
           onClose={() => {
             openActionConfirmModal.value = false
@@ -622,7 +618,8 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
       {openProtectedContentModal.value && (
         <ModalLockScreenConfirmationWithPasscodeOrPassword
           open={openProtectedContentModal.value}
-          title={t('Enter PIN to Access Protected Collection', { ns: 'collections' })}
+          // no need to translate this will be done in the modal
+          title="Enter PIN to Access Protected Collection"
           isLockScreen={false}
           showPasscode={true}
           onConfirmSuccess={() => {
@@ -711,32 +708,5 @@ export const Component = () => {
     </div>
   )
 }
-
-// function RenderCollectionPinModal() {
-//   const [isOpen, setIsOpen] = useAtom(isCollectionPinModalOpenAtom)
-//   const [modalProps, setModalProps] = useAtom(collectionPinModalPropsAtom)
-
-//   if (!isOpen || !modalProps) {
-//     return null
-//   }
-
-//   return (
-//     <ModalLockScreenConfirmationWithPasscodeOrPassword
-//       open={isOpen}
-//       title={modalProps.title}
-//       isLockScreen={false} // Important: This makes it cancellable and not the full lock screen
-//       showPasscode={true} // We need PIN (passcode) input
-//       onConfirmSuccess={() => {
-//         modalProps.onConfirmSuccess()
-//         setIsOpen(false)
-//         setModalProps(null) // Clear props after success
-//       }}
-//       onClose={() => {
-//         setIsOpen(false)
-//         setModalProps(null) // Clear props on close
-//       }}
-//     />
-//   )
-// }
 
 export const MainContainer = forwardRef(Container)

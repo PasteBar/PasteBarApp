@@ -54,11 +54,12 @@ Confirm Passcode: Confirmer le code d'accès
 Confirm Password: Confirmer le mot de passe
 Confirm Remove: Confirmer la suppression
 Confirm Your Passcode: Confirmer votre code d'accès
-Confirm passcode reset: Confirmer la réinitialisation du code d'accès
-Confirm password reset: Confirmer la réinitialisation du mot de passe
-Confirm password reset action: Confirmer l'action de réinitialisation du mot de passe
-Confirm your action: Confirmer votre action
-Confirm {{action}}: Confirmer {{action}}
+Confirm Passcode Reset: Confirmer la réinitialisation du code d'accès
+Confirm Password Reset: Confirmer la réinitialisation du mot de passe
+Confirm Add To Protected Collections: Confirmer l'ajout aux collections protégées
+Confirm Disable PIN Protection: Confirmer la désactivation de la protection par PIN
+Confirm Remove From Protected Collections: Confirmer la suppression des collections protégées
+Confirm Enable PIN Protection: Confirmer l'activation de la protection par PIN
 Contact Form: Formulaire de contact
 Copied: Copié
 Copy: Copier

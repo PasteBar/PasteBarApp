@@ -49,20 +49,18 @@ Close History Window: Close History Window
 Close modal and continue in browser: Close modal and continue in browser
 Confirm: Confirm
 Confirm  action: Confirm  action
-Confirm Add To Protected Collections: Confirm Add To Protected Collections
 Confirm Delete: Confirm Delete
-Confirm Disable PIN Protection: Confirm Disable PIN Protection
 Confirm Email: Confirm Email
 Confirm Passcode: Confirm Passcode
 Confirm Password: Confirm Password
 Confirm Remove: Confirm Remove
-Confirm Remove From Protected Collections: Confirm Remove From Protected Collections
 Confirm Your Passcode: Confirm Your Passcode
-Confirm passcode reset: Confirm passcode reset
-Confirm password reset: Confirm password reset
-Confirm password reset action: Confirm password reset action
-Confirm your action: Confirm your action
-Confirm {{action}}: Confirm {{action}}
+Confirm Passcode Reset: Confirm Passcode Reset
+Confirm Password Reset: Confirm Password Reset
+Confirm Add To Protected Collections: Confirm add to protected collections
+Confirm Disable PIN Protection: Confirm disable PIN protection
+Confirm Remove From Protected Collections: Confirm remove from protected collections
+Confirm Enable PIN Protection: Confirm enable PIN protection
 Contact Form: Contact Form
 Copied: Copied
 Copy: Copy

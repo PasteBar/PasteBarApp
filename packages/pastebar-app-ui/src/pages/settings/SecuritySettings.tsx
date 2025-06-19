@@ -366,9 +366,8 @@ export default function SecuritySettings() {
                               openActionConfirmModal.value = true
                               actionTypeForConfirmModal.value =
                                 ACTION_TYPE_COMFIRMATION_MODAL.resetPasscode
-                              actionNameForConfirmModal.value = t('passcode reset', {
-                                ns: 'settings',
-                              })
+                              // no need to translate this will be done in the modal
+                              actionNameForConfirmModal.value = 'Confirm Passcode Reset'
                             }}
                             className="text-sm bg-slate-200 dark:bg-slate-700 dark:text-slate-200 mt-2"
                           >
@@ -621,10 +620,8 @@ export default function SecuritySettings() {
                                       openActionConfirmModal.value = true
                                       actionTypeForConfirmModal.value =
                                         ACTION_TYPE_COMFIRMATION_MODAL.resetPassword
-                                      actionNameForConfirmModal.value = t(
-                                        'password reset',
-                                        { ns: 'settings' }
-                                      )
+                                      actionNameForConfirmModal.value =
+                                        'Confirm Password Reset'
                                     }}
                                     className={`text-sm bg-gray-200 dark:bg-gray-700 dark:text-slate-200`}
                                   >

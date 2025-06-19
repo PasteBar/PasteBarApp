@@ -87,7 +87,7 @@ Enable screen unlock requirement on app launch for enhanced security, safeguardi
 Enter Passcode length: Passcode-Länge eingeben
 Enter new directory path or leave empty for default on next revert: Neuen Verzeichnispfad eingeben oder für Standard beim nächsten Zurücksetzen leer lassen
 Enter recovery password to reset passcode.: Wiederherstellungspasswort eingeben, um Passcode zurückzusetzen.
-Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Geben Sie Ihren <strong>{{screenLockPassCodeLength}}-stelligen</strong> Passcode ein
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: Geben Sie Ihren <strong>{{screenLockPassCodeLength}}-stelligen</strong> Passcode ein
 Entered Passcode is invalid: Eingegebener Passcode ist ungültig
 Excluded Apps List: Liste ausgeschlossener Apps
 Execute Web Requests: Web-Anfragen ausführen

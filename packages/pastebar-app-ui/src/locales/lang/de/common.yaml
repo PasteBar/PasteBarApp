@@ -55,11 +55,9 @@ Confirm Passcode: Passcode bestätigen
 Confirm Password: Passwort bestätigen
 Confirm Remove: Entfernen bestätigen
 Confirm Your Passcode: Ihren Passcode bestätigen
-Confirm passcode reset: Passcode-Zurücksetzung bestätigen
-Confirm password reset: Passwort-Zurücksetzung bestätigen
-Confirm password reset action: Passwort-Zurücksetzung bestätigen
+Confirm Passcode Reset: Passcode-Zurücksetzung bestätigen
+Confirm Password Reset: Passwort-Zurücksetzung bestätigen
 Confirm your action: Ihre Aktion bestätigen
-Confirm {{action}}: '{{action}} bestätigen'
 Contact Form: Kontaktformular
 Copied: Kopiert
 Copy: Kopieren
@@ -353,3 +351,7 @@ second: Sekunde
 seconds: Sekunden
 show less: weniger anzeigen
 www.site: www.pastebar.app
+Confirm Add To Protected Collections: Hinzufügen zu geschützten Sammlungen bestätigen
+Confirm Disable PIN Protection: Deaktivierung des PIN-Schutzes bestätigen
+Confirm Remove From Protected Collections: Entfernen aus geschützten Sammlungen bestätigen
+Confirm Enable PIN Protection: PIN-Schutz aktivieren bestätigen

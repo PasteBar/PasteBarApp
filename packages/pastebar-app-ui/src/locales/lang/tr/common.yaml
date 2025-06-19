@@ -53,11 +53,8 @@ Confirm Passcode: Şifreyi onayla
 Confirm Password: Parolayı onayla
 Confirm Remove: Kaldırmayı onayla
 Confirm Your Passcode: Şifrenizi onaylayın
-Confirm passcode reset: Şifre sıfırlamayı onaylayın
-Confirm password reset: Parola sıfırlamayı onaylayın
-Confirm password reset action: Parola sıfırlama eylemini onaylayın
-Confirm your action: Eyleminizi onaylayın
-Confirm {{action}}: Onaylayın {{action}}
+Confirm Passcode Reset: Şifre sıfırlamayı onaylayın
+Confirm Password Reset: Parola sıfırlamayı onaylayın
 Contact Form: Iletişim Formu
 Copied: Kopyalandı
 Copy: Kopyala
@@ -350,3 +347,7 @@ seconds: saniyeler
 show less: az göster
 www.site: www.pastebar.app
 Size: Boyut
+Confirm Add To Protected Collections: Korumalı koleksiyonlara eklemeyi onayla
+Confirm Disable PIN Protection: PIN korumasını devre dışı bırakmayı onayla
+Confirm Remove From Protected Collections: Korumalı koleksiyonlardan çıkarmayı onayla
+Confirm Enable PIN Protection: PIN korumasını etkinleştirmeyi onayla

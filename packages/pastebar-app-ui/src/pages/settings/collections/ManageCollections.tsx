@@ -547,9 +547,10 @@ export default function ManageCollectionsSection({
                           onCheckedChange={checked => {
                             if (hasPinProtectedCollections) {
                               setPendingProtectionToggle(checked)
+                              // no need to translate this will be done in the modal
                               actionNameForConfirmModal.value = checked
-                                ? t('Enable PIN Protection', { ns: 'collections' })
-                                : t('Disable PIN Protection', { ns: 'collections' })
+                                ? 'Confirm Enable PIN Protection'
+                                : 'Confirm Disable PIN Protection'
                               actionTypeForConfirmModal.value = ACTION_TOGGLE_PROTECTION
                               openActionConfirmModal.value = true
                             } else {
@@ -590,13 +591,10 @@ export default function ManageCollectionsSection({
                                       collectionId: collection.collectionId,
                                       checked,
                                     })
+                                    // no need to translate this will be done in the modal
                                     actionNameForConfirmModal.value = checked
-                                      ? t('Add To Protected Collections', {
-                                          ns: 'collections',
-                                        })
-                                      : t('Remove From Protected Collections', {
-                                          ns: 'collections',
-                                        })
+                                      ? 'Confirm Add To Protected Collections'
+                                      : 'Confirm Remove From Protected Collections'
                                     actionTypeForConfirmModal.value =
                                       ACTION_CHANGE_PROTECTED_COLLECTIONS
                                     openActionConfirmModal.value = true

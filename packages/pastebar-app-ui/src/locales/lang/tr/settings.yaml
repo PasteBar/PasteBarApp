@@ -64,7 +64,7 @@ Enable screen unlock requirement on app launch for enhanced security, safeguardi
 Enhance security by automatically locking the application screen after a set period of user inactivity.: Kullanıcının belirli bir süre hareketsiz kalması durumunda uygulama ekranını otomatik olarak kilitleyerek güvenliği artırın.
 Enter Passcode length: Şifre uzunluğunu girin
 Enter recovery password to reset passcode.: Şifreyi sıfırlamak için kurtarma parolasını girin.
-Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: <strong>{{screenLockPassCodeLength}} haneli</strong> şifrenizi girin
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: <strong>{{screenLockPassCodeLength}} haneli</strong> şifrenizi girin
 Entered Passcode is invalid: Girilen Parola geçersiz
 Excluded Apps List: Hariç Tutulan Uygulamalar Listesi
 Execute Web Requests: Web Isteklerini Yürüt
