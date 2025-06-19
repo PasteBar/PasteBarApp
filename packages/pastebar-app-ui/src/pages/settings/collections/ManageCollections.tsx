@@ -168,7 +168,7 @@ export default function ManageCollectionsSection({
       setPendingProtectedCollectionChange(null)
       actionTypeConfirmed.value = null
     }
-  }, [actionTypeConfirmed.value])
+  }, [actionTypeConfirmed.value, pendingProtectionToggle, pendingProtectedCollectionChange, protectedCollections])
 
   return (
     <AutoSize disableWidth>
