@@ -99,6 +99,7 @@ Enter Passcode: Introduce el Código de Acceso
 Enter Password: Introduce la Contraseña
 Enter Recovery Password: Introduce la Contraseña de Recuperación
 Enter passcode or password to unlock: Introduce el código de acceso o la contraseña para desbloquear
+Enter PIN to Access Protected Collection: Introduce el PIN para acceder a la colección protegida
 Errors:
   Error loading link: Error al cargar el enlace
   Cant save to file: No se puede guardar en el archivo

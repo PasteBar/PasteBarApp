@@ -98,6 +98,7 @@ Enter Passcode: Parolayı gir
 Enter Password: Şifreyi gir
 Enter Recovery Password: Kurtarma şifresini gir
 Enter passcode or password to unlock: Açmak için şifre veya parolayı giriniz
+Enter PIN to Access Protected Collection: Korunan koleksiyona erişmek için PIN girin
 Errors:
   Error loading link: Bağlantıyı yüklerken hata oluştu
   Cant save to file: Dosyayı kaydedemiyoruz

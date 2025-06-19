@@ -17,3 +17,17 @@ Show collection name on the navbar: Mostrar el nombre de la colección en la bar
 Switch collections: Cambiar colecciones
 You can add the selected text to your clips or menu. Please select the option below.: Puedes añadir el texto seleccionado a tus clips o menú. Por favor, selecciona la opción de abajo.
 You need to select a different collection before deleting the current one.: Necesitas seleccionar una colección diferente antes de eliminar la actual.
+Choose which collections require PIN entry for access.: Elige qué colecciones requieren entrada de PIN para acceder.
+Pin Protected Collections: Colecciones protegidas con PIN
+Protect Collections with PIN: Proteger colecciones con PIN
+Protected Collection: Colección protegida
+Select Collections: Seleccionar colecciones
+Select protected collections: Seleccionar colecciones protegidas
+Enable PIN Protection: Habilitar protección con PIN
+Disable PIN Protection: Deshabilitar protección con PIN
+Add To Protected Collections: Agregar a colecciones protegidas
+Remove From Protected Collections: Eliminar de colecciones protegidas
+Confirm Add To Protected Collections: Confirmar agregar a colecciones protegidas
+Confirm Disable PIN Protection: Confirmar deshabilitar protección con PIN
+Confirm Remove From Protected Collections: Confirmar eliminar de colecciones protegidas
+Enter PIN to Access Protected Collection: Introduce el PIN para acceder a la colección protegida

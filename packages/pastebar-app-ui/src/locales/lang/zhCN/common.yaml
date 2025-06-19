@@ -99,6 +99,7 @@ Enter Passcode: 输入密码
 Enter Password: 输入密码
 Enter Recovery Password: 输入恢复密码
 Enter passcode or password to unlock: 输入密码或密码以解锁
+Enter PIN to Access Protected Collection: 输入PIN以访问受保护的集合
 Errors:
   Error loading link: 加载链接错误
   Cant save to file: 无法保存到文件

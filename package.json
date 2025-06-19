@@ -20,7 +20,7 @@
     "changeset": "changeset",
     "version:sync": "node scripts/sync-version.js",
     "version": "changeset version && npm run version:sync",
-    "translation-audit": "ts-node scripts/translation-audit.ts"
+    "translation-audit": "npx tsx scripts/translation-audit.ts"
   },
   "dependencies": {
     "@codastic/react-positioning-portal": "^0.7.0",
@@ -183,7 +183,6 @@
     "tailwind-merge": "^2.0.0",
     "tailwindcss": "^3.3.5",
     "taze": "^0.12.2",
-    "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vite": "^6.0.6",
     "vite-plugin-tauri": "^4.0.0"

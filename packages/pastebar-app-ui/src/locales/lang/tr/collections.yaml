@@ -17,3 +17,17 @@ Show collection name on the navbar: Koleksiyon adını gezinme çubuğunda göst
 Switch collections: Koleksiyonları değiştir
 You can add the selected text to your clips or menu. Please select the option below.: Seçili metni kliplerinize veya menünüze ekleyebilirsiniz. Lütfen aşağıdakı seçeneği işaretleyin.
 You need to select a different collection before deleting the current one.: Mevcut koleksiyonu silmeden önce farklı bir koleksiyon seçmeniz gerekiyor.
+Choose which collections require PIN entry for access.: Hangi koleksiyonların erişim için PIN girişi gerektirdiğini seçin.
+Pin Protected Collections: PIN korumalı koleksiyonlar
+Protect Collections with PIN: Koleksiyonları PIN ile koruyun
+Protected Collection: Korumalı koleksiyon
+Select Collections: Koleksiyonları seçin
+Select protected collections: Korumalı koleksiyonları seçin
+Enable PIN Protection: PIN korumasını etkinleştir
+Disable PIN Protection: PIN korumasını devre dışı bırak
+Add To Protected Collections: Korumalı koleksiyonlara ekle
+Remove From Protected Collections: Korumalı koleksiyonlardan çıkar
+Confirm Add To Protected Collections: Korumalı koleksiyonlara eklemeyi onayla
+Confirm Disable PIN Protection: PIN korumasını devre dışı bırakmayı onayla
+Confirm Remove From Protected Collections: Korumalı koleksiyonlardan çıkarmayı onayla
+Enter PIN to Access Protected Collection: Korumalı koleksiyona erişmek için PIN girin

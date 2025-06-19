@@ -96,6 +96,7 @@ Enter Passcode: Введіть код доступу
 Enter Password: Введіть пароль
 Enter Recovery Password: Введіть пароль відновлення
 Enter passcode or password to unlock: Введіть код доступу або пароль для розблокування
+Enter PIN to Access Protected Collection: Введіть PIN для доступу до захищеної колекції
 Errors:
   Error loading link: Помилка завантаження посилання
   Cant save file: Неможливо зберегти файл
