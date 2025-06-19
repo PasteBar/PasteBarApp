@@ -58,3 +58,9 @@ This sets the default icon type for new clips with notes. You can customize indi
 : Lorsqu'activé, cliquer ou appuyer sur Entrée sur les éléments dans la fenêtre de collage rapide les copiera uniquement dans le presse-papiers sans les coller automatiquement.
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : Lorsqu'activé, un clic simple copiera/collera les éléments dans la fenêtre de collage rapide. Si le clic simple global est également activé, les deux paramètres fonctionnent ensemble.
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Configurez les éléments à conserver lors de l'effacement de l'historique du presse-papiers (manuellement ou automatiquement).
+Keep Items on Clear: Conserver les éléments lors de l'effacement
+Keep Pinned Items: Conserver les éléments épinglés
+Keep Starred Items: Conserver les éléments favoris
+Preserve pinned items when clearing history: Conserver les éléments épinglés lors de l'effacement de l'historique
+Preserve starred items when clearing history: Conserver les éléments favoris lors de l'effacement de l'historique

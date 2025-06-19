@@ -125,6 +125,10 @@ export default function ClipboardHistorySettings() {
     setAutoClearSettingsDuration,
     autoClearSettingsDurationType,
     setAutoClearSettingsDurationType,
+    isKeepPinnedOnClearEnabled,
+    setIsKeepPinnedOnClearEnabled,
+    isKeepStarredOnClearEnabled,
+    setIsKeepStarredOnClearEnabled,
     isAppReady,
     CONST: { APP_DETECT_LANGUAGES_SUPPORTED: languageList },
   } = useAtomValue(settingsStoreAtom)
@@ -980,6 +984,62 @@ export default function ClipboardHistorySettings() {
                           </Flex>
                         </Flex>
                       )}
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="mt-4 max-w-xl animate-in fade-in">
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Keep Items on Clear', { ns: 'settings2' })}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground mb-4">
+                        {t(
+                          'Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).',
+                          { ns: 'settings' }
+                        )}
+                      </Text>
+                      <Flex className="flex-col gap-4">
+                        <Flex className="items-center justify-between w-full">
+                          <Flex className="flex-col justify-start items-start">
+                            <Text className="text-[15px] font-semibold">
+                              {t('Keep Pinned Items', { ns: 'settings2' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {t('Preserve pinned items when clearing history', {
+                                ns: 'settings2',
+                              })}
+                            </Text>
+                          </Flex>
+                          <Switch
+                            checked={isKeepPinnedOnClearEnabled}
+                            onCheckedChange={checked => {
+                              setIsKeepPinnedOnClearEnabled(checked)
+                            }}
+                          />
+                        </Flex>
+                        <Flex className="items-center justify-between w-full">
+                          <Flex className="flex-col justify-start items-start">
+                            <Text className="text-[15px] font-semibold">
+                              {t('Keep Starred Items', { ns: 'settings2' })}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {t('Preserve starred items when clearing history', {
+                                ns: 'settings2',
+                              })}
+                            </Text>
+                          </Flex>
+                          <Switch
+                            checked={isKeepStarredOnClearEnabled}
+                            onCheckedChange={checked => {
+                              setIsKeepStarredOnClearEnabled(checked)
+                            }}
+                          />
+                        </Flex>
+                      </Flex>
                     </CardContent>
                   </Card>
                 </Box>

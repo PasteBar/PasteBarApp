@@ -9,6 +9,7 @@ Clear All History: Clear All History
 Clear History: Clear History
 Confirm Clear All History: Confirm Clear All History
 Do you really want to remove ALL clipboard history items?: Do you really want to remove ALL clipboard history items?
+Do you want to remove all recent clipboard history older than {{olderThen}} {{durationType}}: Do you want to remove all recent clipboard history older than {{olderThen}} {{durationType}}
 Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}
 Enable Capture History: Enable Capture History
 Enable Image Capture: Enable Image Capture

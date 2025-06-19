@@ -58,3 +58,9 @@ This sets the default icon type for new clips with notes. You can customize indi
 : Cuando está habilitado, hacer clic o presionar Enter en elementos de la ventana de pegado rápido solo los copiará al portapapeles sin pegarlos automáticamente.
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : Cuando está habilitado, el clic simple copiará/pegará elementos en la ventana de pegado rápido. Si el clic simple global también está habilitado, ambas configuraciones funcionan juntas.
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Configure qué elementos conservar al borrar el historial del portapapeles (tanto manual como automáticamente).
+Keep Items on Clear: Conservar elementos al borrar
+Keep Pinned Items: Conservar elementos fijados
+Keep Starred Items: Conservar elementos destacados
+Preserve pinned items when clearing history: Conservar elementos fijados al borrar el historial
+Preserve starred items when clearing history: Conservar elementos destacados al borrar el historial

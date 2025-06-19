@@ -58,3 +58,9 @@ This sets the default icon type for new clips with notes. You can customize indi
 : Etkinleştirildiğinde, Hızlı Yapıştır penceresindeki öğelere tıklamak veya Enter tuşuna basmak bunları otomatik olarak yapıştırmadan yalnızca panoya kopyalar.
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : Etkinleştirildiğinde, tek tıklama Hızlı Yapıştır penceresindeki öğeleri kopyalar/yapıştırır. Global tek tıklama da etkinleştirilmişse, her iki ayar birlikte çalışır.
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Pano geçmişini temizlerken hangi öğelerin korunacağını yapılandırın (hem manuel hem de otomatik temizleme işlemleri).
+Keep Items on Clear: Temizlerken öğeleri koru
+Keep Pinned Items: Sabitlenmiş öğeleri koru
+Keep Starred Items: Favorilenmiş öğeleri koru
+Preserve pinned items when clearing history: Geçmişi temizlerken sabitlenmiş öğeleri koru
+Preserve starred items when clearing history: Geçmişi temizlerken favorilenmiş öğeleri koru

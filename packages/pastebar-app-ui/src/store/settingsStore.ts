@@ -101,6 +101,8 @@ type Settings = {
   isSingleClickToCopyPasteQuickWindow: boolean
   isQuickPasteCopyOnly: boolean
   isQuickPasteAutoClose: boolean
+  isKeepPinnedOnClearEnabled: boolean
+  isKeepStarredOnClearEnabled: boolean
 }
 
 type Constants = {
@@ -188,6 +190,8 @@ export interface SettingsStoreState {
   setIsQuickPasteAutoClose: (isEnabled: boolean) => void
   setIsSingleClickToCopyPaste: (isEnabled: boolean) => void
   setIsSingleClickToCopyPasteQuickWindow: (isEnabled: boolean) => void
+  setIsKeepPinnedOnClearEnabled: (isEnabled: boolean) => void
+  setIsKeepStarredOnClearEnabled: (isEnabled: boolean) => void
   hashPassword: (pass: string) => Promise<string>
   isNotTourCompletedOrSkipped: (tourName: string) => boolean
   verifyPassword: (pass: string, hash: string) => Promise<boolean>
@@ -284,6 +288,8 @@ const initialState: SettingsStoreState & Settings = {
   isSingleClickToCopyPasteQuickWindow: false,
   isQuickPasteCopyOnly: false,
   isQuickPasteAutoClose: true,
+  isKeepPinnedOnClearEnabled: false,
+  isKeepStarredOnClearEnabled: false,
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
   },
@@ -353,6 +359,8 @@ const initialState: SettingsStoreState & Settings = {
   setIsSingleClickToCopyPasteQuickWindow: () => {},
   setIsQuickPasteCopyOnly: () => {},
   setIsQuickPasteAutoClose: () => {},
+  setIsKeepPinnedOnClearEnabled: () => {},
+  setIsKeepStarredOnClearEnabled: () => {},
   initConstants: () => {},
   setAppDataDir: () => {}, // Keep if used for other general app data
   setCustomDbPath: () => {},
@@ -736,6 +744,14 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   setIsQuickPasteAutoClose: async (isEnabled: boolean) => {
     get().syncStateUpdate('isQuickPasteAutoClose', isEnabled)
     return get().updateSetting('isQuickPasteAutoClose', isEnabled)
+  },
+  setIsKeepPinnedOnClearEnabled: async (isEnabled: boolean) => {
+    get().syncStateUpdate('isKeepPinnedOnClearEnabled', isEnabled)
+    return get().updateSetting('isKeepPinnedOnClearEnabled', isEnabled)
+  },
+  setIsKeepStarredOnClearEnabled: async (isEnabled: boolean) => {
+    get().syncStateUpdate('isKeepStarredOnClearEnabled', isEnabled)
+    return get().updateSetting('isKeepStarredOnClearEnabled', isEnabled)
   },
   isNotTourCompletedOrSkipped: (tourName: string) => {
     const { appToursCompletedList, appToursSkippedList } = get()

@@ -77,6 +77,8 @@ export const ClipboardHistoryIconMenu = ({
     setIsHistoryEnabled,
     isHistoryAutoUpdateOnCaputureEnabled,
     setIsHistoryAutoUpdateOnCaputureEnabled,
+    isKeepPinnedOnClearEnabled,
+    isKeepStarredOnClearEnabled,
   } = useAtomValue(settingsStoreAtom)
 
   useHotkeys(['alt+s'], () => {
@@ -179,9 +181,19 @@ export const ClipboardHistoryIconMenu = ({
           }
         }
         if (isRecent) {
-          await clearRecentClipboardHistory({ durationType, duration: olderThen })
+          await clearRecentClipboardHistory({ 
+            durationType, 
+            duration: olderThen,
+            keepPinned: isKeepPinnedOnClearEnabled,
+            keepStarred: isKeepStarredOnClearEnabled
+          })
         } else {
-          await clearClipboardHistoryOlderThan({ durationType, olderThen })
+          await clearClipboardHistoryOlderThan({ 
+            durationType, 
+            olderThen,
+            keepPinned: isKeepPinnedOnClearEnabled,
+            keepStarred: isKeepStarredOnClearEnabled
+          })
         }
         setTimeout(() => {
           setSelectedHistoryItems([])

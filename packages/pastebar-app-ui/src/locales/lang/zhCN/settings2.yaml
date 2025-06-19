@@ -58,3 +58,9 @@ This sets the default icon type for new clips with notes. You can customize indi
 : 启用后，在快速粘贴窗口中点击或按Enter键只会将项目复制到剪贴板，而不会自动粘贴。
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : 启用后，单击将在快速粘贴窗口中复制/粘贴项目。如果全局单击也启用了，两个设置会一起工作。
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: 配置在清除剪贴板历史记录时要保留的项目（包括手动和自动清除操作）。
+Keep Items on Clear: 清除时保留项目
+Keep Pinned Items: 保留已固定项目
+Keep Starred Items: 保留已星标项目
+Preserve pinned items when clearing history: 清除历史记录时保留已固定项目
+Preserve starred items when clearing history: 清除历史记录时保留已星标项目
