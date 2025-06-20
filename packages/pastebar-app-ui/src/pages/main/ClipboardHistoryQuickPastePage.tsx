@@ -123,6 +123,7 @@ export default function ClipboardHistoryQuickPastePage() {
     isQuickPasteAutoClose,
     isSingleClickToCopyPaste,
     isSingleClickToCopyPasteQuickWindow,
+    historyPreviewLineLimit,
   } = useAtomValue(settingsStoreAtom)
 
   const [historyFilters, setHistoryFilters] = useState<string[]>([])
@@ -849,6 +850,7 @@ export default function ClipboardHistoryQuickPastePage() {
                                 isSingleClickToCopyPaste ||
                                 isSingleClickToCopyPasteQuickWindow
                               }
+                              historyPreviewLineLimit={historyPreviewLineLimit}
                             />
                           )
                         })}
@@ -1048,6 +1050,7 @@ export default function ClipboardHistoryQuickPastePage() {
                                 isSingleClickToCopyPaste ||
                                 isSingleClickToCopyPasteQuickWindow
                               }
+                              historyPreviewLineLimit={historyPreviewLineLimit}
                               index={index}
                               style={style}
                             />

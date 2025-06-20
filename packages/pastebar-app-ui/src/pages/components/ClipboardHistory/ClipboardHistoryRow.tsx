@@ -122,6 +122,7 @@ interface ClipboardHistoryRowProps {
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
   isSingleClickToCopyPaste?: boolean
+  historyPreviewLineLimit?: number
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -180,6 +181,7 @@ export function ClipboardHistoryRowComponent({
   setHistoryFilters = () => {},
   setAppFilters = () => {},
   isSingleClickToCopyPaste = false,
+  historyPreviewLineLimit = 5,
 }: ClipboardHistoryRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
@@ -618,13 +620,23 @@ export function ClipboardHistoryRowComponent({
                         language={clipboard.detectedLanguage}
                       >
                         {({ className, style, tokens, getLineProps, getTokenProps }) => {
+                          const limitedTokens =
+                            historyPreviewLineLimit && historyPreviewLineLimit > 0 && !isExpanded
+                              ? tokens.slice(0, historyPreviewLineLimit)
+                              : tokens
+                          const remainingLines = tokens.length - limitedTokens.length
                           return (
                             <code className={`${className}`} style={style}>
-                              {tokens.map((line, i) => {
-                                const isLastLine =
-                                  i === tokens.length - 1 &&
-                                  clipboard.valueMorePreviewLines &&
+                              {limitedTokens.map((line, i) => {
+                                const isLastLineOfPreview = i === limitedTokens.length - 1
+                                const isActuallyLastLineOfAllTokens = i === tokens.length - 1
+
+                                const showEllipsis =
+                                  isLastLineOfPreview &&
+                                  !isActuallyLastLineOfAllTokens &&
+                                  remainingLines > 0 &&
                                   !isExpanded
+
                                 return (
                                   <div
                                     key={i}
@@ -649,7 +661,7 @@ export function ClipboardHistoryRowComponent({
                                             )}
                                       </span>
                                     ))}
-                                    {isLastLine && (
+                                    {showEllipsis && (
                                       <span className="select-none">...</span>
                                     )}
                                   </div>
@@ -659,7 +671,7 @@ export function ClipboardHistoryRowComponent({
                           )
                         }}
                       </Highlight>
-                      {clipboard.valueMorePreviewLines && (
+                      {(remainingLines > 0 || clipboard.valueMorePreviewLines) && !isExpanded && (
                         <Box className="select-none"> {'\u00A0'} </Box>
                       )}
                     </Box>
@@ -694,31 +706,38 @@ export function ClipboardHistoryRowComponent({
                           {searchTerm
                             ? highlightMatchedText(stringValue, searchTerm)
                             : hyperlinkText(stringValue, clipboard.arrLinks)}
-                          {clipboard.valueMorePreviewChars && (
+                          {clipboard.valueMorePreviewChars && !isExpanded && (
                             <Box className="select-none"> {'\u00A0'} </Box>
                           )}
                         </code>
                       ) : (
                         <code className="justify-start cursor-pointer whitespace-pre">
-                          {searchTerm
-                            ? highlightWithPreviewMatchedText(
-                                stringValue ?? '',
-                                searchTerm
-                              )
-                            : hyperlinkTextWithPreview({
-                                previewLinkCard: !hasLinkCard && isLinkCardPreviewEnabled,
-                                isPreviewError: hasClipboardHistoryURLErrors,
-                                value: clipboard.valuePreview ?? '',
-                                links: clipboard.arrLinks,
-                                itemId: null,
-                                historyId: clipboard.historyId,
-                              })}
-                          {clipboard.valueMorePreviewChars && (
-                            <>
-                              <span className="select-none">...</span>
-                              <Box className="select-none"> {'\u00A0'} </Box>
-                            </>
-                          )}
+                          {hyperlinkTextWithPreview({
+                            previewLinkCard: !hasLinkCard && isLinkCardPreviewEnabled,
+                            isPreviewError: hasClipboardHistoryURLErrors,
+                            value:
+                              historyPreviewLineLimit && historyPreviewLineLimit > 0
+                                ? stringValue
+                                    .split('\n')
+                                    .slice(0, historyPreviewLineLimit)
+                                    .join('\n')
+                                : clipboard.valuePreview ?? '',
+                            links: clipboard.arrLinks,
+                            itemId: null,
+                            historyId: clipboard.historyId,
+                            searchTerm: searchTerm,
+                          })}
+                          {(historyPreviewLineLimit &&
+                          historyPreviewLineLimit > 0 &&
+                          stringValue.split('\n').length > historyPreviewLineLimit
+                            ? true
+                            : clipboard.valueMorePreviewChars) &&
+                            !isExpanded && (
+                              <>
+                                <span className="select-none">...</span>
+                                <Box className="select-none"> {'\u00A0'} </Box>
+                              </>
+                            )}
                           {isMp3 && (
                             <PlayButton
                               src={stringValue}
@@ -734,7 +753,13 @@ export function ClipboardHistoryRowComponent({
                       )}
                     </Box>
                   )}
-                  {(clipboard.valueMorePreviewLines ||
+                  {((historyPreviewLineLimit &&
+                  historyPreviewLineLimit > 0 &&
+                  !isExpanded &&
+                  (stringValue.split('\n').length > historyPreviewLineLimit ||
+                    (clipboard.detectedLanguage &&
+                      clipboard.valuePreview &&
+                      clipboard.value.split('\n').length > historyPreviewLineLimit))) ||
                     clipboard.valueMorePreviewChars) && (
                     <Box
                       className={`absolute left-1 bottom-1 flex flex-row items-center rounded mb-[2px] pl-0.5 ${bgToolsPanel}`}
@@ -754,17 +779,33 @@ export function ClipboardHistoryRowComponent({
                           sideOffset={10}
                         >
                           {!isExpanded ? (
-                            clipboard?.valueMorePreviewChars ? (
+                              historyPreviewLineLimit &&
+                              historyPreviewLineLimit > 0 &&
+                              (stringValue.split('\n').length > historyPreviewLineLimit ||
+                                (clipboard.detectedLanguage &&
+                                  clipboard.valuePreview &&
+                                  clipboard.value.split('\n').length >
+                                    historyPreviewLineLimit)) ? (
+                                <>
+                                  +
+                                  {clipboard.detectedLanguage
+                                    ? clipboard.value.split('\n').length -
+                                      historyPreviewLineLimit
+                                    : stringValue.split('\n').length -
+                                      historyPreviewLineLimit}{' '}
+                                  {t('lines', { ns: 'common' })}
+                                </>
+                              ) : clipboard?.valueMorePreviewChars ? (
                               <>
                                 +{clipboard.valueMorePreviewChars}{' '}
                                 {t('chars', { ns: 'common' })}
                               </>
-                            ) : (
+                              ) : clipboard?.valueMorePreviewLines ? (
                               <>
                                 +{clipboard.valueMorePreviewLines}{' '}
                                 {t('lines', { ns: 'common' })}
                               </>
-                            )
+                              ) : null
                           ) : (
                             <>- {t('show less', { ns: 'common' })}</>
                           )}

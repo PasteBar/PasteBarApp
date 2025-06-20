@@ -103,6 +103,7 @@ interface ClipboardHistoryQuickPasteRowProps {
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
   isSingleClickToCopyPaste?: boolean
+  historyPreviewLineLimit?: number
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -155,6 +156,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
   isDragPreview = false,
   setRowHeight = () => {},
   isSingleClickToCopyPaste = false,
+  historyPreviewLineLimit = 5,
 }: ClipboardHistoryQuickPasteRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
@@ -541,12 +543,21 @@ export function ClipboardHistoryQuickPasteRowComponent({
                     language={clipboard.detectedLanguage}
                   >
                     {({ className, style, tokens, getLineProps, getTokenProps }) => {
+                      const limitedTokens =
+                        historyPreviewLineLimit && historyPreviewLineLimit > 0 && !isExpanded
+                          ? tokens.slice(0, historyPreviewLineLimit)
+                          : tokens
+                      const remainingLines = tokens.length - limitedTokens.length
                       return (
                         <code className={`${className}`} style={style}>
-                          {tokens.map((line, i) => {
-                            const isLastLine =
-                              i === tokens.length - 1 &&
-                              clipboard.valueMorePreviewLines &&
+                          {limitedTokens.map((line, i) => {
+                            const isLastLineOfPreview = i === limitedTokens.length - 1
+                            const isActuallyLastLineOfAllTokens = i === tokens.length - 1
+
+                            const showEllipsis =
+                              isLastLineOfPreview &&
+                              !isActuallyLastLineOfAllTokens &&
+                              remainingLines > 0 &&
                               !isExpanded
                             return (
                               <div
@@ -567,7 +578,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
                                       : highlightMatchedText(token.content, searchTerm)}
                                   </span>
                                 ))}
-                                {isLastLine && <span className="select-none">...</span>}
+                                {showEllipsis && <span className="select-none">...</span>}
                               </div>
                             )
                           })}
@@ -575,7 +586,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
                       )
                     }}
                   </Highlight>
-                  {clipboard.valueMorePreviewLines && (
+                  {(remainingLines > 0 || clipboard.valueMorePreviewLines) && !isExpanded && (
                     <Box className="select-none"> {'\u00A0'} </Box>
                   )}
                 </Box>
@@ -610,28 +621,38 @@ export function ClipboardHistoryQuickPasteRowComponent({
                       {searchTerm
                         ? highlightMatchedText(textValue, searchTerm)
                         : hyperlinkText(textValue, clipboard.arrLinks)}
-                      {clipboard.valueMorePreviewChars && (
+                      {clipboard.valueMorePreviewChars && !isExpanded && (
                         <Box className="select-none"> {'\u00A0'} </Box>
                       )}
                     </code>
                   ) : (
-                    <code className="justify-start cursor-pointer">
-                      {searchTerm
-                        ? highlightWithPreviewMatchedText(textValue ?? '', searchTerm)
-                        : hyperlinkTextWithPreview({
-                            previewLinkCard: !hasLinkCard && isLinkCardPreviewEnabled,
-                            isPreviewError: hasClipboardHistoryURLErrors,
-                            value: clipboard.valuePreview ?? '',
-                            links: clipboard.arrLinks,
-                            itemId: null,
-                            historyId: clipboard.historyId,
-                          })}
-                      {clipboard.valueMorePreviewChars && (
-                        <>
-                          <span className="select-none">...</span>
-                          <Box className="select-none"> {'\u00A0'} </Box>
-                        </>
-                      )}
+                    <code className="justify-start cursor-pointer whitespace-pre">
+                      {hyperlinkTextWithPreview({
+                        previewLinkCard: !hasLinkCard && isLinkCardPreviewEnabled,
+                        isPreviewError: hasClipboardHistoryURLErrors,
+                        value:
+                          historyPreviewLineLimit && historyPreviewLineLimit > 0
+                            ? textValue
+                                .split('\n')
+                                .slice(0, historyPreviewLineLimit)
+                                .join('\n')
+                            : clipboard.valuePreview ?? '',
+                        links: clipboard.arrLinks,
+                        itemId: null,
+                        historyId: clipboard.historyId,
+                        searchTerm: searchTerm,
+                      })}
+                      {(historyPreviewLineLimit &&
+                      historyPreviewLineLimit > 0 &&
+                      textValue.split('\n').length > historyPreviewLineLimit
+                        ? true
+                        : clipboard.valueMorePreviewChars) &&
+                        !isExpanded && (
+                          <>
+                            <span className="select-none">...</span>
+                            <Box className="select-none"> {'\u00A0'} </Box>
+                          </>
+                        )}
                       {isMp3 && (
                         <PlayButton
                           src={textValue}
@@ -647,7 +668,14 @@ export function ClipboardHistoryQuickPasteRowComponent({
                   )}
                 </Box>
               )}
-              {(clipboard.valueMorePreviewLines || clipboard.valueMorePreviewChars) && (
+              {((historyPreviewLineLimit &&
+              historyPreviewLineLimit > 0 &&
+              !isExpanded &&
+              (textValue.split('\n').length > historyPreviewLineLimit ||
+                (clipboard.detectedLanguage &&
+                  clipboard.valuePreview &&
+                  clipboard.value.split('\n').length > historyPreviewLineLimit))) ||
+                clipboard.valueMorePreviewChars) && (
                 <Box
                   className={`absolute left-1 bottom-1 flex flex-row items-center rounded mb-[2px] pl-0.5 ${bgToolsPanel}`}
                 >
@@ -666,17 +694,30 @@ export function ClipboardHistoryQuickPasteRowComponent({
                       sideOffset={10}
                     >
                       {!isExpanded ? (
-                        clipboard?.valueMorePreviewChars ? (
+                        historyPreviewLineLimit &&
+                        historyPreviewLineLimit > 0 &&
+                        (textValue.split('\n').length > historyPreviewLineLimit ||
+                          (clipboard.detectedLanguage &&
+                            clipboard.valuePreview &&
+                            clipboard.value.split('\n').length > historyPreviewLineLimit)) ? (
+                          <>
+                            +
+                            {clipboard.detectedLanguage
+                              ? clipboard.value.split('\n').length - historyPreviewLineLimit
+                              : textValue.split('\n').length - historyPreviewLineLimit}{' '}
+                            {t('lines', { ns: 'common' })}
+                          </>
+                        ) : clipboard?.valueMorePreviewChars ? (
                           <>
                             +{clipboard.valueMorePreviewChars}{' '}
                             {t('chars', { ns: 'common' })}
                           </>
-                        ) : (
+                        ) : clipboard?.valueMorePreviewLines ? (
                           <>
                             +{clipboard.valueMorePreviewLines}{' '}
                             {t('lines', { ns: 'common' })}
                           </>
-                        )
+                        ) : null
                       ) : (
                         <>- {t('show less', { ns: 'common' })}</>
                       )}

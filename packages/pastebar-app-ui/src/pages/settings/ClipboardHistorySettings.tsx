@@ -84,8 +84,10 @@ export default function ClipboardHistorySettings() {
     isHistoryEnabled,
     clipTextMinLength,
     clipTextMaxLength,
+    historyPreviewLineLimit,
     setClipTextMinLength,
     setClipTextMaxLength,
+    setHistoryPreviewLineLimit,
     setIsHistoryEnabled,
     isImageCaptureDisabled,
     setIsImageCaptureDisabled,
@@ -348,6 +350,64 @@ export default function ClipboardHistorySettings() {
                             onClick={() => {
                               setClipTextMinLength(0)
                               setClipTextMaxLength(5000)
+                            }}
+                            className="text-sm bg-slate-200 dark:bg-slate-700 dark:text-slate-200 mt-1"
+                          >
+                            {t('Reset', { ns: 'common' })}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </Box>
+
+                    <Box className="max-w-xl mt-4 animate-in fade-in">
+                      <Card>
+                        <CardHeader className="pb-1">
+                          <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                            {t('History Item Preview Line Limit', {
+                              ns: 'settings',
+                            })}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <Text className="text-sm text-muted-foreground">
+                            {t(
+                              'Set the maximum number of lines to display in the preview of a history item. Setting it to 0 means unlimited.',
+                              {
+                                ns: 'settings',
+                              }
+                            )}
+                          </Text>
+                          <Flex className="w-full gap-10 my-4 items-start justify-start">
+                            <InputField
+                              className="text-md !w-36"
+                              type="number"
+                              step="1"
+                              min={0}
+                              small
+                              label={t('Line limit', { ns: 'common' })}
+                              value={historyPreviewLineLimit}
+                              onBlur={() => {
+                                if (historyPreviewLineLimit < 0) {
+                                  setHistoryPreviewLineLimit(0)
+                                }
+                              }}
+                              onChange={e => {
+                                const value = e.target.value
+                                if (value === '') {
+                                  setHistoryPreviewLineLimit(0)
+                                } else {
+                                  const number = parseInt(value)
+                                  setHistoryPreviewLineLimit(number)
+                                }
+                              }}
+                            />
+                          </Flex>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            disabled={historyPreviewLineLimit === 5}
+                            onClick={() => {
+                              setHistoryPreviewLineLimit(5)
                             }}
                             className="text-sm bg-slate-200 dark:bg-slate-700 dark:text-slate-200 mt-1"
                           >
