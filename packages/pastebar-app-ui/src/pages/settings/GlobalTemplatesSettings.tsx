@@ -90,72 +90,72 @@ export default function GlobalTemplatesSettings() {
 
           {globalTemplatesEnabled && (
             <Box className="mt-4">
-              {/* Existing Templates */}
               {globalTemplates && globalTemplates.length > 0 && (
                 <Box className="space-y-3 mb-4">
                   {globalTemplates.map(template => (
                     <Box
                       key={template.id}
-                      className="p-3 border rounded-lg bg-slate-50 dark:bg-slate-900/50"
+                      className={`p-3 border rounded-lg ${
+                        template.isEnabled
+                          ? 'bg-slate-50 dark:bg-slate-900/50'
+                          : 'bg-gray-100 dark:bg-gray-800/50 opacity-70'
+                      }`}
                     >
                       <Flex className="items-start gap-3">
-                        <Box className="flex-1 space-y-2">
-                          <ToolTip
-                            text={t(
-                              'Template name cannot be changed after creation. Delete and recreate to change name.',
-                              { ns: 'templates' }
-                            )}
-                            sideOffset={5}
-                            isCompact
-                            side="bottom"
-                          >
-                            {template.isEnabled ? (
-                              <Badge
-                                variant="outline"
-                                className="!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800 text-normal pr-2.5"
-                              >
-                                <Check
-                                  size={12}
-                                  className="mr-0.5 text-purple-600 dark:text-purple-400"
-                                />
-                                {template.name}
-                              </Badge>
-                            ) : (
-                              <Badge
-                                variant="outline"
-                                className="!text-gray-700 dark:!text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-800 text-normal pr-2.5"
-                              >
-                                <X
-                                  size={12}
-                                  className="mr-0.5 text-gray-600 dark:text-gray-400"
-                                />
-                                {template.name}
-                              </Badge>
-                            )}
-                            {/* <InputField
-                            small
-                            disabled={true}
-                            classNameInput="border rounded-sm pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-purple-300 !text-purple-900 dark:bg-slate-900"
-                            // label={t('templateNameLabel', { ns: 'templates' })}
-                            value={template.name}
-                            title={t(
-                              'Template name cannot be changed after creation. Delete and recreate to change name.',
-                              { ns: 'templates' }
-                            )}
-                          /> */}
-                          </ToolTip>
-                          <InputField
-                            small
-                            label={t('templateValueLabel', { ns: 'templates' })}
-                            defaultValue={template.value}
-                            classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 bg-transparent dark:!text-slate-300"
-                            onBlur={e =>
-                              updateGlobalTemplate({
-                                id: template.id,
-                                value: e.target.value,
-                              })
-                            }
-                          />
+                        <Box className="flex-1">
+                          <Flex className="items-center gap-3">
+                            <ToolTip
+                              text={t(
+                                'Template name cannot be changed after creation. Delete and recreate to change name.',
+                                { ns: 'templates' }
+                              )}
+                              sideOffset={5}
+                              isCompact
+                              side="bottom"
+                            >
+                              {template.isEnabled ? (
+                                <Badge
+                                  variant="outline"
+                                  className="!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800 text-normal pr-2.5 flex-shrink-0"
+                                >
+                                  <Check
+                                    size={12}
+                                    className="mr-0.5 text-purple-600 dark:text-purple-400"
+                                  />
+                                  {template.name}
+                                </Badge>
+                              ) : (
+                                <Badge
+                                  variant="outline"
+                                  className="!text-gray-700 dark:!text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-800 text-normal pr-2.5 flex-shrink-0"
+                                >
+                                  <X
+                                    size={12}
+                                    className="mr-0.5 text-gray-600 dark:text-gray-400"
+                                  />
+                                  {template.name}
+                                </Badge>
+                              )}
+                            </ToolTip>
+                            <InputField
+                              small
+                              disabled={!template.isEnabled}
+                              placeholder={t('templateValueLabel', { ns: 'templates' })}
+                              defaultValue={template.value}
+                              classNameInput={`text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 bg-transparent ${
+                                !template.isEnabled
+                                  ? '!text-gray-500 dark:!text-gray-600'
+                                  : 'dark:!text-slate-300'
+                              }`}
+                              className="flex-1"
+                              onBlur={e =>
+                                updateGlobalTemplate({
+                                  id: template.id,
+                                  value: e.target.value,
+                                })
+                              }
+                            />
+                          </Flex>
                         </Box>
 
                         <Flex className="flex-col items-center gap-2">
