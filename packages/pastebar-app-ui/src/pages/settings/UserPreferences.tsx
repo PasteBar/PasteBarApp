@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api'
+import { confirm } from '@tauri-apps/api/dialog'
 import i18n from '~/locales'
 import { LANGUAGES } from '~/locales/languges'
 import {
@@ -19,6 +20,8 @@ import {
   MessageSquareDashed,
   MessageSquareText,
   NotebookPen,
+  Plus,
+  Trash2,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
@@ -101,6 +104,13 @@ export default function UserPreferences() {
     setIsSingleClickToCopyPaste,
     isSingleClickToCopyPasteQuickWindow,
     setIsSingleClickToCopyPasteQuickWindow,
+    globalTemplatesEnabled,
+    setGlobalTemplatesEnabled,
+    globalTemplates,
+    addGlobalTemplate,
+    updateGlobalTemplate,
+    deleteGlobalTemplate,
+    toggleGlobalTemplateEnabledState,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
@@ -872,17 +882,42 @@ export default function UserPreferences() {
                           {t('How to set hotkeys:', { ns: 'settings2' })}
                         </Text>
                         <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
-                          <li>• {t('Click Set/Change button to start recording', { ns: 'settings2' })}</li>
-                          <li>• {t('Press your desired key combination (e.g., Ctrl+Shift+V)', { ns: 'settings2' })}</li>
-                          <li>• {t('Press Enter to confirm or Escape to cancel', { ns: 'settings2' })}</li>
-                          <li>• {t('Press Backspace/Delete to clear the hotkey', { ns: 'settings2' })}</li>
+                          <li>
+                            •{' '}
+                            {t('Click Set/Change button to start recording', {
+                              ns: 'settings2',
+                            })}
+                          </li>
+                          <li>
+                            •{' '}
+                            {t(
+                              'Press your desired key combination (e.g., Ctrl+Shift+V)',
+                              { ns: 'settings2' }
+                            )}
+                          </li>
+                          <li>
+                            •{' '}
+                            {t('Press Enter to confirm or Escape to cancel', {
+                              ns: 'settings2',
+                            })}
+                          </li>
+                          <li>
+                            •{' '}
+                            {t('Press Backspace/Delete to clear the hotkey', {
+                              ns: 'settings2',
+                            })}
+                          </li>
                         </ul>
                       </div>
                       <Box className="mb-4">
                         <div className="relative">
                           <InputField
                             label={t('Show/Hide Main App Window', { ns: 'settings2' })}
-                            value={isEditingMainApp ? (currentKeyPreview || mainAppHotkey) : mainAppHotkey}
+                            value={
+                              isEditingMainApp
+                                ? currentKeyPreview || mainAppHotkey
+                                : mainAppHotkey
+                            }
                             autoFocus={isEditingMainApp}
                             disabled={!isEditingMainApp}
                             onKeyDown={e =>
@@ -895,7 +930,11 @@ export default function UserPreferences() {
                                 ? t('Press your key combination...', { ns: 'settings2' })
                                 : mainAppHotkey || t('No keys set', { ns: 'settings2' })
                             }
-                            className={`${isEditingMainApp ? 'border-blue-300 dark:border-blue-600' : ''}`}
+                            className={`${
+                              isEditingMainApp
+                                ? 'border-blue-300 dark:border-blue-600'
+                                : ''
+                            }`}
                           />
                           {isEditingMainApp && (
                             <div className="absolute right-3 top-8 text-xs text-blue-600 dark:text-blue-400">
@@ -952,7 +991,11 @@ export default function UserPreferences() {
                         <div className="relative">
                           <InputField
                             label={t('Show/Hide Quick Paste Window', { ns: 'settings2' })}
-                            value={isEditingQuickPaste ? (currentKeyPreview || quickPasteHotkey) : quickPasteHotkey}
+                            value={
+                              isEditingQuickPaste
+                                ? currentKeyPreview || quickPasteHotkey
+                                : quickPasteHotkey
+                            }
                             disabled={!isEditingQuickPaste}
                             autoFocus={isEditingQuickPaste}
                             onKeyDown={e =>
@@ -963,9 +1006,14 @@ export default function UserPreferences() {
                             placeholder={
                               isEditingQuickPaste
                                 ? t('Press your key combination...', { ns: 'settings2' })
-                                : quickPasteHotkey || t('No keys set', { ns: 'settings2' })
+                                : quickPasteHotkey ||
+                                  t('No keys set', { ns: 'settings2' })
                             }
-                            className={`${isEditingQuickPaste ? 'border-blue-300 dark:border-blue-600' : ''}`}
+                            className={`${
+                              isEditingQuickPaste
+                                ? 'border-blue-300 dark:border-blue-600'
+                                : ''
+                            }`}
                           />
                           {isEditingQuickPaste && (
                             <div className="absolute right-3 top-8 text-xs text-blue-600 dark:text-blue-400">
@@ -1508,6 +1556,130 @@ export default function UserPreferences() {
                   </Card>
                 </Box>
 
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('globalTemplatesTitle', { ns: 'templates' })}
+                      </CardTitle>
+                      <Switch
+                        checked={globalTemplatesEnabled}
+                        className="ml-auto"
+                        onCheckedChange={setGlobalTemplatesEnabled}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t('globalTemplatesDescription', { ns: 'templates' })}
+                      </Text>
+                      {globalTemplatesEnabled && (
+                        <Box className="mt-4">
+                          {globalTemplates && globalTemplates.length > 0 ? (
+                            <Box className="space-y-3">
+                              {globalTemplates.map(template => (
+                                <Box
+                                  key={template.id}
+                                  className="p-1.5 border rounded-md"
+                                >
+                                  <Flex className="items-center gap-2">
+                                    <InputField
+                                      small
+                                      classNameInput="border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-slate-300 dark:bg-slate-900"
+                                      label={t('templateNameLabel', { ns: 'templates' })}
+                                      defaultValue={template.name}
+                                      onBlur={e =>
+                                        updateGlobalTemplate({
+                                          id: template.id,
+                                          name: e.target.value,
+                                        })
+                                      }
+                                      className="flex-1"
+                                    />
+                                    <InputField
+                                      small
+                                      label={t('templateValueLabel', { ns: 'templates' })}
+                                      defaultValue={template.value}
+                                      classNameInput="border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-slate-300 dark:bg-slate-900"
+                                      onBlur={e =>
+                                        updateGlobalTemplate({
+                                          id: template.id,
+                                          value: e.target.value,
+                                        })
+                                      }
+                                      className="flex-1"
+                                    />
+                                    <Flex className="flex-col items-center self-end">
+                                      <Switch
+                                        title={t('Enable / Disable', {
+                                          ns: 'common',
+                                        })}
+                                        className="mb-1.5 ml-1"
+                                        checked={template.isEnabled}
+                                        onCheckedChange={() =>
+                                          toggleGlobalTemplateEnabledState(template.id)
+                                        }
+                                      />
+                                    </Flex>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="text-red-500 hover:text-red-600 self-end"
+                                      title={t('deleteTemplateButtonTooltip', {
+                                        ns: 'templates',
+                                      })}
+                                      onClick={async () => {
+                                        const confirmed = await confirm(
+                                          t('confirmDeleteTemplateMessage', {
+                                            ns: 'templates',
+                                            name: template.name,
+                                          }),
+                                          {
+                                            title: t('confirmDeleteTemplateTitle', {
+                                              ns: 'templates',
+                                            }),
+                                            type: 'warning',
+                                          }
+                                        )
+                                        if (confirmed) {
+                                          deleteGlobalTemplate(template.id)
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 size={20} />
+                                    </Button>
+                                  </Flex>
+                                  <Box>
+                                    {template.name && (
+                                      <Badge
+                                        variant="secondary"
+                                        className="text-sm font-medium ml-0.5 mt-2"
+                                      >{`{{${template.name}}}`}</Badge>
+                                    )}
+                                  </Box>
+                                </Box>
+                              ))}
+                            </Box>
+                          ) : (
+                            <Text className="text-sm text-muted-foreground mt-2">
+                              {t('noGlobalTemplatesYet', {
+                                ns: 'templates',
+                              })}
+                            </Text>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => addGlobalTemplate({ name: '', value: '' })}
+                            className="my-3"
+                          >
+                            <Plus size={16} className="mr-2" />
+                            {t('addTemplateButton', { ns: 'templates' })}
+                          </Button>
+                        </Box>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Box>
                 <Spacer h={6} />
                 <Link to={returnRoute} replace>
                   <Button

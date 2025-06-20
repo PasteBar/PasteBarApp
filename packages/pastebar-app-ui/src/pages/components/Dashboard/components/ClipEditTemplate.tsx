@@ -1,8 +1,10 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { useRef } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
-import { Signal } from '@preact/signals-react'
+import { Signal, useSignal as useSignalPreact } from '@preact/signals-react' // Renamed to avoid conflict
 import MaskIcon from '~/assets/icons/mask-square'
+import { settingsStoreAtom } from '~/store'
+import { useAtomValue } from 'jotai'
 import {
   AlertTriangle,
   AlignEndVertical,
@@ -69,13 +71,16 @@ export function ClipEditTemplate({
   localOptions: Signal<ClipFormTemplateOptions>
 }) {
   const { t } = useTranslation()
-  const editFieldId = useSignal<string | null>(null)
-  const editSelectOptionFieldId = useSignal<string | null>(null)
+  const { globalTemplates, globalTemplatesEnabled } = useAtomValue(settingsStoreAtom)
+  const editFieldId = useSignalPreact<string | null>(null)
+  const editSelectOptionFieldId = useSignalPreact<string | null>(null)
   const addSelectOptionFieldId = useSignal<string | null>(null)
-  const editSelectOptionOriginalValue = useSignal<string | null>(null)
+  const editSelectOptionOriginalValue = useSignalPreact<string | null>(null)
   const textAreaRef = useRef<TextAreaRef>(null)
-  const showAllLabelsMustBeUniqueMessage = useSignal<boolean>(false)
-  const defaultValueResetKey = useSignal<string>(Date.now().toString())
+  const showAllLabelsMustBeUniqueMessage = useSignalPreact<boolean>(false)
+  const showGlobalConflictWarning = useSignalPreact<boolean>(false)
+  const conflictingGlobalLabel = useSignalPreact<string | null>(null)
+  const defaultValueResetKey = useSignalPreact<string>(Date.now().toString())
 
   const FIELD_TYPES = ['text', 'textarea', 'select'] as const
   type FieldType = (typeof FIELD_TYPES)[number]
@@ -108,6 +113,8 @@ export function ClipEditTemplate({
                   key={type}
                   onClick={() => {
                     editFieldId.value = null
+                    showGlobalConflictWarning.value = false
+                    conflictingGlobalLabel.value = null
                     if (!localOptions.value.templateOptions) {
                       localOptions.value.templateOptions = []
                     }
@@ -122,13 +129,25 @@ export function ClipEditTemplate({
                       return field
                     })
 
+                    const newLabel = `${type.charAt(0).toUpperCase() + type.slice(1)}`
                     newFields.push({
                       id: Date.now().toString(),
                       type,
-                      label: `${type.charAt(0).toUpperCase() + type.slice(1)}`,
+                      label: newLabel,
                       isEnable: true,
                       value: '',
                     })
+
+                    // Check for global conflict
+                    if (globalTemplatesEnabled) {
+                      const conflictingGlobal = globalTemplates.find(
+                        gt => gt.isEnabled && gt.name === newLabel
+                      )
+                      if (conflictingGlobal) {
+                        showGlobalConflictWarning.value = true
+                        conflictingGlobalLabel.value = newLabel
+                      }
+                    }
 
                     localOptions.value = {
                       ...localOptions.value,
@@ -167,6 +186,8 @@ export function ClipEditTemplate({
                         }
 
                         showAllLabelsMustBeUniqueMessage.value = false
+                        showGlobalConflictWarning.value = false
+                        conflictingGlobalLabel.value = null
 
                         const newFields = [...localOptions.value.templateOptions]
 
@@ -211,6 +232,17 @@ export function ClipEditTemplate({
                           value: '',
                         })
 
+                        // Check for global conflict
+                        if (globalTemplatesEnabled) {
+                          const conflictingGlobal = globalTemplates.find(
+                            gt => gt.isEnabled && gt.name === newLabel
+                          )
+                          if (conflictingGlobal) {
+                            showGlobalConflictWarning.value = true
+                            conflictingGlobalLabel.value = newLabel
+                          }
+                        }
+
                         localOptions.value = {
                           ...localOptions.value,
                           templateOptions: newFields,
@@ -240,6 +272,8 @@ export function ClipEditTemplate({
                   if (!localOptions.value.templateOptions) {
                     localOptions.value.templateOptions = []
                   }
+                  showGlobalConflictWarning.value = false
+                  conflictingGlobalLabel.value = null
 
                   const isClipboardFieldExists = localOptions.value.templateOptions?.some(
                     field => field.label === 'Clipboard'
@@ -263,7 +297,7 @@ export function ClipEditTemplate({
                   newFields.push({
                     id: Date.now().toString(),
                     type: 'text',
-                    label: 'Clipboard',
+                    label: 'Clipboard', // 'Clipboard' is a special keyword, unlikely to conflict with user global templates
                     isEnable: true,
                     value: '',
                   })
@@ -365,18 +399,35 @@ export function ClipEditTemplate({
                         if (e.key === 'Enter' || e.key === 'Escape') {
                           editFieldId.value = null
                           showAllLabelsMustBeUniqueMessage.value = false
+                          showGlobalConflictWarning.value = false // Reset on action
+                          conflictingGlobalLabel.value = null
+
+                          const finalLabel = field.label?.trim() || ''
 
                           const isLabelUnique = localOptions.value.templateOptions?.every(
                             (f, index) => {
                               if (index !== i) {
-                                return f.label !== field.label
+                                return f.label !== finalLabel
                               }
                               return true
                             }
                           )
 
                           if (!isLabelUnique) {
-                            field.label = `${field.label} ${i + 1}`
+                            field.label = `${finalLabel} ${i + 1}`
+                          } else {
+                            field.label = finalLabel // Ensure trimmed label is set
+                          }
+
+                          // Check for global conflict
+                          if (globalTemplatesEnabled && field.label) {
+                            const conflictingGlobal = globalTemplates.find(
+                              gt => gt.isEnabled && gt.name === field.label
+                            )
+                            if (conflictingGlobal) {
+                              showGlobalConflictWarning.value = true
+                              conflictingGlobalLabel.value = field.label
+                            }
                           }
 
                           localOptions.value = {
@@ -395,6 +446,23 @@ export function ClipEditTemplate({
                       className="ml-1 h-8 w-9 text-blue-500 dark:bg-slate-800"
                       onClick={() => {
                         editFieldId.value = null
+                        // Final check for conflicts when 'Done' is clicked
+                        const finalLabelOnClick = field.label?.trim() || ''
+                        if (finalLabelOnClick) {
+                          field.label = finalLabelOnClick // Ensure trimmed label is set
+                          if (globalTemplatesEnabled) {
+                            const conflictingGlobal = globalTemplates.find(
+                              gt => gt.isEnabled && gt.name === finalLabelOnClick
+                            )
+                            if (conflictingGlobal) {
+                              showGlobalConflictWarning.value = true
+                              conflictingGlobalLabel.value = finalLabelOnClick
+                            } else {
+                              showGlobalConflictWarning.value = false
+                              conflictingGlobalLabel.value = null
+                            }
+                          }
+                        }
                         localOptions.value = {
                           ...localOptions.value,
                           templateOptions: [...localOptions.value.templateOptions],
@@ -1073,6 +1141,23 @@ export function ClipEditTemplate({
             size={14}
             onClick={() => {
               showAllLabelsMustBeUniqueMessage.value = false
+            }}
+          />
+        </Text>
+      )}
+      {showGlobalConflictWarning.value && conflictingGlobalLabel.value && (
+        <Text className="!text-orange-800 dark:!text-orange-400 text-[13px] my-2 bg-orange-50 dark:bg-orange-900/70 p-2 relative">
+          <AlertTriangle size={13} className="mr-1 inline-block" />
+          {t('localTemplateConflictWarning', {
+            ns: 'templates',
+            label: conflictingGlobalLabel.value,
+          })}
+          <X
+            className="absolute top-0 right-0 m-2 bg-orange-50 dark:bg-orange-900/70 z-10 cursor-pointer hover:bg-orange-100 dark:hover:bg-orange-800"
+            size={14}
+            onClick={() => {
+              showGlobalConflictWarning.value = false
+              conflictingGlobalLabel.value = null
             }}
           />
         </Text>
