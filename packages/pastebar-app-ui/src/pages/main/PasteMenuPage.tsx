@@ -168,11 +168,11 @@ export default function PasteMenuPage() {
         const menuItemFound = menuItems.find(menuItem => menuItem.itemId === item.id)
 
         if (menuItemFound && isMatchOrHasMatchingDescendant) {
-          const newItem = { 
-            ...menuItemFound, 
-            indent: depth, 
+          const newItem = {
+            ...menuItemFound,
+            indent: depth,
             id: item.id,
-            hasChildren: item.children && item.children.length > 0
+            hasChildren: item.children && item.children.length > 0,
           }
           flatList.push(newItem)
 

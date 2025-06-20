@@ -21,8 +21,7 @@ Add Section: 添加部分
 Add Tab: 添加标签
 Add Template Field: 添加模板字段
 Add a Tab: 添加一个标签
-'Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template': '将字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> 添加到模板中'
-'Add field <b>{{<b>{{name}}</b>}}</b> into the template': 将字段 <b>{{<b>{{name}}</b>}}</b> 添加到模板中
+Add field {{name}} into the template: 将字段 {{name}} 添加到模板中
 Add image: 添加图片
 Add note: 添加注释
 Add to Board: 添加到面板
@@ -83,7 +82,7 @@ Delete field: 删除字段
 Delete tab: 删除标签
 Detect Template Fields: 检测模板字段
 Detect for Template Fields: 检测模板字段
-'Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template': '在模板中找到禁用字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b>'
+Disabled field {{name}} has been found in the template: 在模板中找到禁用字段 {{name}}
 Done Create Clip: 完成创建剪辑
 Done Edit: 完成编辑
 Done Edit Tabs: 完成编辑标签
@@ -135,7 +134,7 @@ FILTERED_TYPES:
   RegEx Replace: 正则表达式替换
   Remove Quotes: 移除引号
 Field: 字段
-'Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template': '在模板中找到字段 <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b>'
+Field {{name}} has been found in the template: 在模板中找到字段 {{name}}
 Field Options: 字段选项
 Fields Value: 字段值
 File, folder or app path does not exist: 文件、文件夹或应用程序路径不存在

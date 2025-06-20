@@ -14,6 +14,9 @@ import {
 } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { bbCode } from '~/libs/bbcode'
+import { settingsStoreAtom } from '~/store'
+import { useAtomValue } from 'jotai'
+import { Check } from 'lucide-react'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 
 import { ensureUrlPrefix, escapeRegExp, maskValue } from '~/lib/utils'
@@ -22,8 +25,9 @@ import { LinkMetadata } from '~/types/history'
 
 import LinkCard from '../atoms/link-card/link-card'
 import mergeRefs from '../atoms/merge-refs'
+import ToolTip from '../atoms/tooltip'
 import { CardSocialEmbed } from '../social-embend/CardSocialEmbed'
-import { Box, TextNormal } from '../ui'
+import { Badge, Box, TextNormal } from '../ui'
 import YoutubeEmbed from '../video-player/YoutubeEmbed'
 
 const highlightSearchTermInNode = (
@@ -99,6 +103,47 @@ const highlightSearchTermInNode = (
   }
 }
 
+const renderWithGlobalTemplateBadges = (
+  value: string,
+  globalTemplates: any[] = []
+): ReactNode[] => {
+  const templateFieldRegex = /\{\{\s*(.*?)\s*\}\}/g
+  const parts = value.split(templateFieldRegex)
+
+  return parts.map((part: string, index: number): ReactNode => {
+    // Check if this is a template reference (odd indices are matches from regex split)
+    if (index % 2 === 1) {
+      const matchedGlobalTemplate = globalTemplates.find(
+        gt => gt.isEnabled && gt.name?.toLowerCase() === part.toLowerCase()
+      )
+
+      if (matchedGlobalTemplate) {
+        // Render as a badge for existing global templates
+        return (
+          <ToolTip
+            key={index}
+            text={matchedGlobalTemplate.value || part}
+            isCompact
+            side="top"
+            className="bg-purple-50 dark:bg-purple-900 text-purple-600 dark:text-purple-300"
+          >
+            <Badge className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-800 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-700 cursor-default">
+              <Check size={12} className="text-purple-600 dark:text-purple-400" />
+              <span className="text-xs font-medium">{part}</span>
+            </Badge>
+          </ToolTip>
+        )
+      } else {
+        // Template reference doesn't exist - return the full {{templateName}} format
+        return <span key={index}>{`{{${part}}}`}</span>
+      }
+    }
+
+    // Return the plain text part
+    return <span key={index}>{part}</span>
+  })
+}
+
 interface CardValueViewerProps {
   isWrapped: boolean
   valuePreview: string
@@ -144,6 +189,24 @@ export const CardValueViewer: FC<CardValueViewerProps> = ({
 }) => {
   const highlightedRefs = useRef<React.RefObject<HTMLElement>[]>([])
   const wrapped = isLink || isVideo || isPath || isWrapped
+  const settings = useAtomValue(settingsStoreAtom)
+
+  // Get global templates from settings
+  const globalTemplatesEnabled = settings.globalTemplatesEnabled || false
+  const globalTemplates = useMemo(() => {
+    if (!globalTemplatesEnabled) return []
+    try {
+      if (typeof settings.globalTemplates === 'string') {
+        return JSON.parse(settings.globalTemplates || '[]')
+      }
+      if (Array.isArray(settings.globalTemplates)) {
+        return settings.globalTemplates
+      }
+      return []
+    } catch {
+      return []
+    }
+  }, [settings.globalTemplates, globalTemplatesEnabled])
 
   const isTwitter =
     metadataLinkByItemId?.linkDomain === 'x.com' ||
@@ -154,17 +217,41 @@ export const CardValueViewer: FC<CardValueViewerProps> = ({
 
   const valuePreviewParsed = useMemo(() => {
     if (!isImageData && !isCode && !isImage && valuePreview) {
-      return isMasked
+      const processedValue = isMasked
         ? maskValue(bbCode.remove(valuePreview))
         : bbCode.parse(valuePreview)
+
+      // Apply global template badges if enabled and templates exist
+      if (
+        globalTemplatesEnabled &&
+        globalTemplates.length > 0 &&
+        typeof processedValue === 'string'
+      ) {
+        return renderWithGlobalTemplateBadges(processedValue, globalTemplates)
+      }
+
+      return processedValue
     }
-  }, [valuePreview])
+  }, [valuePreview, globalTemplatesEnabled, globalTemplates, isMasked])
 
   const valueParsed = useMemo(() => {
     if (!isImageData && !isCode && !isImage && textValue) {
-      return isMasked ? maskValue(bbCode.remove(textValue)) : bbCode.parse(textValue)
+      const processedValue = isMasked
+        ? maskValue(bbCode.remove(textValue))
+        : bbCode.parse(textValue)
+
+      // Apply global template badges if enabled and templates exist
+      if (
+        globalTemplatesEnabled &&
+        globalTemplates.length > 0 &&
+        typeof processedValue === 'string'
+      ) {
+        return renderWithGlobalTemplateBadges(processedValue, globalTemplates)
+      }
+
+      return processedValue
     }
-  }, [textValue])
+  }, [textValue, globalTemplatesEnabled, globalTemplates, isMasked])
 
   const highlightedContent = useMemo(() => {
     if (searchTerm.length > 1) {

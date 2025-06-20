@@ -1,0 +1,24 @@
+Create New Template: Створити Новий Шаблон
+Create Template: Створити Шаблон
+Enter template content...: Введіть вміст шаблону...
+Enter template name (e.g., "signature", "email"): Введіть ім'я шаблону (наприклад, "підпис", "email")
+Global: Глобальний
+Global Template: Глобальний Шаблон
+Global Templates: Глобальні Шаблони
+Preview usage: Попередній перегляд використання
+Template Usage: Використання Шаблону
+Template name already exists: Ім'я шаблону вже існує. Будь ласка, оберіть інше ім'я.
+Template name cannot be changed after creation. Delete and recreate to change name.: Ім'я шаблону не можна змінити після створення. Видаліть і створіть заново, щоб змінити ім'я.
+Use Global Template: Використовувати Глобальний Шаблон
+addTemplateButton: Додати Шаблон
+confirmDeleteTemplateMessage: Ви впевнені, що хочете видалити глобальний шаблон '{{name}}'?
+confirmDeleteTemplateTitle: Підтвердити Видалення
+deleteTemplateButtonTooltip: Видалити Шаблон
+enableGlobalTemplatesLabel: Увімкнути Глобальні Шаблони
+globalTemplatesDescription: Керуйте багаторазовими фрагментами тексту, які можна вставити в будь-який кліп, використовуючи {{template_name}}.
+globalTemplatesTitle: Глобальні Шаблони
+localTemplateConflictWarning: Глобальний шаблон з ім'ям '{{label}}' також існує. Локальний шаблон матиме пріоритет у формі цього кліпа.
+noGlobalTemplatesYet: Глобальні шаблони поки не визначені. Натисніть 'Додати Шаблон', щоб створити один.
+templateEnabledLabel: Увімкнено
+templateNameLabel: Ім'я
+templateValueLabel: Значення

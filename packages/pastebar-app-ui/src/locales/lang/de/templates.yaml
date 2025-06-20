@@ -1,0 +1,24 @@
+Create New Template: Neue Vorlage erstellen
+Create Template: Vorlage erstellen
+Enter template content...: Vorlageninhalt eingeben...
+Enter template name (e.g., "signature", "email"): Vorlagenname eingeben (z.B. "Signatur", "E-Mail")
+Global: Global
+Global Template: Globale Vorlage
+Global Templates: Globale Vorlagen
+Preview usage: Verwendung vorschau
+Template Usage: Vorlagen-Verwendung
+Template name already exists: Vorlagenname existiert bereits. Bitte wählen Sie einen anderen Namen.
+Template name cannot be changed after creation. Delete and recreate to change name.: Der Vorlagenname kann nach der Erstellung nicht geändert werden. Löschen und neu erstellen, um den Namen zu ändern.
+Use Global Template: Globale Vorlage verwenden
+addTemplateButton: Vorlage hinzufügen
+confirmDeleteTemplateMessage: "Sind Sie sicher, dass Sie die globale Vorlage '{{name}}' löschen möchten?"
+confirmDeleteTemplateTitle: Löschen bestätigen
+deleteTemplateButtonTooltip: Vorlage löschen
+enableGlobalTemplatesLabel: Globale Vorlagen aktivieren
+globalTemplatesDescription: Verwalten Sie wiederverwendbare Textfragmente, die mit {{template_name}} in jeden Clip eingefügt werden können.
+globalTemplatesTitle: Globale Vorlagen
+localTemplateConflictWarning: "Eine globale Vorlage namens '{{label}}' existiert ebenfalls. Die lokale Vorlage hat Vorrang innerhalb dieses Clip-Formulars."
+noGlobalTemplatesYet: Noch keine globalen Vorlagen definiert. Klicken Sie auf 'Vorlage hinzufügen', um eine zu erstellen.
+templateEnabledLabel: Aktiviert
+templateNameLabel: Name
+templateValueLabel: Wert

@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api'
-import { emit, listen, TauriEvent } from '@tauri-apps/api/event'
+import { emit, listen } from '@tauri-apps/api/event'
 import { relaunch } from '@tauri-apps/api/process'
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater'
 import { semverCompare } from '~/libs/utils'
@@ -105,6 +105,8 @@ type Settings = {
   isKeepStarredOnClearEnabled: boolean
   hasPinProtectedCollections: boolean
   protectedCollections: string[]
+  globalTemplatesEnabled: boolean
+  globalTemplates: Array<{ id: string; name: string; value: string; isEnabled: boolean }>
 }
 
 type Constants = {
@@ -215,6 +217,16 @@ export interface SettingsStoreState {
   setClipTextMaxLength: (height: number) => void
   setProtectedCollections: (ids: string[]) => void
   setHasPinProtectedCollections: (hasPinProtectedCollections: boolean) => Promise<void>
+  setGlobalTemplatesEnabled: (isEnabled: boolean) => void
+  addGlobalTemplate: (template: { name: string; value: string }) => void
+  updateGlobalTemplate: (template: {
+    id: string
+    name?: string
+    value?: string
+    isEnabled?: boolean
+  }) => void
+  deleteGlobalTemplate: (templateId: string) => void
+  toggleGlobalTemplateEnabledState: (templateId: string) => void
 }
 
 const initialState: SettingsStoreState & Settings = {
@@ -296,6 +308,8 @@ const initialState: SettingsStoreState & Settings = {
   isKeepStarredOnClearEnabled: false,
   protectedCollections: [],
   hasPinProtectedCollections: false,
+  globalTemplatesEnabled: true,
+  globalTemplates: [],
   setHasPinProtectedCollections: async () => {},
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
@@ -409,6 +423,11 @@ const initialState: SettingsStoreState & Settings = {
   verifyPassword: (password: string, hash: string): Promise<boolean> =>
     invoke('verify_password', { password, hash }),
   setProtectedCollections: () => {},
+  setGlobalTemplatesEnabled: () => {},
+  addGlobalTemplate: () => {},
+  updateGlobalTemplate: () => {},
+  deleteGlobalTemplate: () => {},
+  toggleGlobalTemplateEnabledState: () => {},
 }
 
 export const settingsStore = createStore<SettingsStoreState & Settings>()((set, get) => ({
@@ -475,6 +494,18 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
         return set(() => ({
           protectedCollections: value.split(',').filter(Boolean),
         }))
+      }
+
+      if (name === 'globalTemplates' && typeof value === 'string') {
+        try {
+          const parsedTemplates = JSON.parse(value)
+          return set(() => ({
+            globalTemplates: Array.isArray(parsedTemplates) ? parsedTemplates : [],
+          }))
+        } catch (e) {
+          console.error('Failed to parse globalTemplates from settings:', e)
+          return set(() => ({ globalTemplates: [] })) // Fallback to empty array on parse error
+        }
       }
 
       return set(() => ({ [name]: value }))
@@ -767,6 +798,64 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
     get().syncStateUpdate('isKeepStarredOnClearEnabled', isEnabled)
     return get().updateSetting('isKeepStarredOnClearEnabled', isEnabled)
   },
+  setGlobalTemplatesEnabled: async (isEnabled: boolean) => {
+    get().syncStateUpdate('globalTemplatesEnabled', isEnabled)
+    return get().updateSetting('globalTemplatesEnabled', isEnabled)
+  },
+  addGlobalTemplate: async (template: { name: string; value: string }) => {
+    const newTemplate = {
+      id: Date.now().toString(),
+      name: template.name,
+      value: template.value,
+      isEnabled: true,
+    }
+    const currentTemplates = get().globalTemplates || []
+    const updatedTemplates = [...currentTemplates, newTemplate]
+    get().syncStateUpdate('globalTemplates', updatedTemplates)
+
+    // Do not persist templates with empty name or value
+    if (newTemplate.name.trim() === '' || newTemplate.value.trim() === '') {
+      return
+    }
+
+    return get().updateSetting('globalTemplates', JSON.stringify(updatedTemplates))
+  },
+  updateGlobalTemplate: async (templateToUpdate: {
+    id: string
+    name?: string
+    value?: string
+    isEnabled?: boolean
+  }) => {
+    const currentTemplates = get().globalTemplates || []
+
+    const updatedTemplates = currentTemplates.map(t =>
+      t.id === templateToUpdate.id
+        ? {
+            ...t,
+            ...templateToUpdate,
+            ...(typeof templateToUpdate.name === 'string' && {
+              name: templateToUpdate.name.trim(),
+            }),
+          }
+        : t
+    )
+
+    return get().updateSetting('globalTemplates', JSON.stringify(updatedTemplates))
+  },
+  deleteGlobalTemplate: async (templateId: string) => {
+    const currentTemplates = get().globalTemplates || []
+    const updatedTemplates = currentTemplates.filter(t => t.id !== templateId)
+    get().syncStateUpdate('globalTemplates', updatedTemplates)
+    return get().updateSetting('globalTemplates', JSON.stringify(updatedTemplates))
+  },
+  toggleGlobalTemplateEnabledState: async (templateId: string) => {
+    const currentTemplates = get().globalTemplates || []
+    const updatedTemplates = currentTemplates.map(t =>
+      t.id === templateId ? { ...t, isEnabled: !t.isEnabled } : t
+    )
+    get().syncStateUpdate('globalTemplates', updatedTemplates)
+    return get().updateSetting('globalTemplates', JSON.stringify(updatedTemplates))
+  },
   setProtectedCollections: async (ids: string[]) => {
     return get().updateSetting('protectedCollections', ids.join(','))
   },
@@ -1017,6 +1106,26 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
       },
       {} as Settings
     )
+
+    // Parse globalTemplates if it's a string from loaded settings
+    if (
+      newInitSettings.globalTemplates &&
+      typeof newInitSettings.globalTemplates === 'string'
+    ) {
+      try {
+        const parsed = JSON.parse(newInitSettings.globalTemplates as string) // Explicit cast
+        newInitSettings.globalTemplates = Array.isArray(parsed) ? parsed : []
+      } catch (e) {
+        console.error(
+          'Error parsing globalTemplates from storage during initSettings:',
+          e
+        )
+        newInitSettings.globalTemplates = [] // Fallback to empty array
+      }
+    } else if (!Array.isArray(newInitSettings.globalTemplates)) {
+      // Ensure it's an array if it's not a string (e.g. null, undefined, or already an object but not array)
+      newInitSettings.globalTemplates = []
+    }
 
     set(prev => ({
       ...prev,

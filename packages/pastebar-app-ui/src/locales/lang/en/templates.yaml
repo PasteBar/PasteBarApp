@@ -1,0 +1,24 @@
+Create New Template: Create New Template
+Create Template: Create Template
+Enter template content...: Enter template content...
+Enter template name (e.g., "signature", "email"): Enter template name (e.g., "signature", "email")
+Global: Global
+Global Template: Global Template
+Global Templates: Global Templates
+Preview usage: Preview usage
+Template Usage: Template Usage
+Template name already exists: Template name already exists. Please choose a different name.
+Template name cannot be changed after creation. Delete and recreate to change name.: Template name cannot be changed after creation. Delete and recreate to change name.
+Use Global Template: Use Global Template
+addTemplateButton: Add Template
+confirmDeleteTemplateMessage: Are you sure you want to delete the global template '{{name}}'?
+confirmDeleteTemplateTitle: Confirm Delete
+deleteTemplateButtonTooltip: Delete Template
+enableGlobalTemplatesLabel: Enable Global Templates
+globalTemplatesDescription: Manage reusable text snippets that can be inserted into any clip using {{template_name}}.
+globalTemplatesTitle: Global Templates
+localTemplateConflictWarning: A global template named '{{label}}' also exists. The local template will take precedence within this clip's form.
+noGlobalTemplatesYet: No global templates defined yet. Click 'Add Template' to create one.
+templateEnabledLabel: Enabled
+templateNameLabel: Name
+templateValueLabel: Value

@@ -227,6 +227,10 @@ function App() {
             settings.isKeepPinnedOnClearEnabled?.valueBool ?? false,
           isKeepStarredOnClearEnabled:
             settings.isKeepStarredOnClearEnabled?.valueBool ?? false,
+          globalTemplatesEnabled: settings.globalTemplatesEnabled?.valueBool ?? true, // Default to true
+          globalTemplates: settings.globalTemplates?.valueText
+            ? settings.globalTemplates.valueText // Will be parsed by initSettings in store
+            : [], // Default to empty array
           isAppReady: true,
         })
         settingsStore.initConstants({

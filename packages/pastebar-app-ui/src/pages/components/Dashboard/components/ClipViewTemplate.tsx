@@ -5,8 +5,9 @@ import { invoke } from '@tauri-apps/api'
 import { readText } from '@tauri-apps/api/clipboard'
 import { listen } from '@tauri-apps/api/event'
 import MaskIcon from '~/assets/icons/mask-square'
-import { isKeyAltPressed, showEditClipId } from '~/store'
+import { isKeyAltPressed, settingsStoreAtom, showEditClipId } from '~/store'
 import DOMPurify from 'dompurify'
+import { useAtomValue } from 'jotai'
 import {
   AlertTriangle,
   Check,
@@ -64,9 +65,11 @@ const renderWithBadges = (
     label: string | undefined
     isValueMasked: boolean | undefined
     isEnable: boolean | undefined
+    isGlobal?: boolean | undefined
   }[] = [],
   clipboardValue: null | string,
-  showValues = false
+  showValues = false,
+  globalTemplates: any[] = []
 ): ReactNode[] => {
   const templateFieldRegex = /\{\{\s*(.*?)\s*\}\}/g
 
@@ -75,6 +78,10 @@ const renderWithBadges = (
   return parts.map((part: string, index: number): ReactNode => {
     const matchedField = templateFields.find(
       f => f.label?.toLocaleLowerCase() === part.toLocaleLowerCase()
+    )
+
+    const matchedGlobalTemplate = globalTemplates.find(
+      gt => gt.isEnabled && gt.name?.toLocaleLowerCase() === part.toLocaleLowerCase()
     )
 
     if (matchedField) {
@@ -86,6 +93,7 @@ const renderWithBadges = (
         isFound: templateFoundFields.includes(part.toLowerCase()),
         isMissing: templateMissingFields.includes(part.toLowerCase()),
         isEnable: matchedField.isEnable,
+        isGlobal: matchedField.isGlobal || false,
       }
 
       const showValuesInTemplate = showValues && field.value
@@ -95,7 +103,9 @@ const renderWithBadges = (
           key={index}
           className={`${
             field.isEnable
-              ? '!text-green-600 dark:!text-green-400'
+              ? field.isGlobal
+                ? '!text-purple-600 dark:!text-purple-400'
+                : '!text-green-600 dark:!text-green-400'
               : '!text-gray-400 dark:!text-gray-600'
           } !font-normal inline-flex`}
           size="xs"
@@ -107,11 +117,13 @@ const renderWithBadges = (
                   variant="outline"
                   className={`${
                     field.isEnable
-                      ? '!text-green-600 dark:!text-green-400 bg-green-100 dark:bg-green-900 hover:bg-green-100 dark:hover:bg-green-900 border-green-200 dark:border-green-800'
+                      ? field.isGlobal
+                        ? '!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800'
+                        : '!text-green-600 dark:!text-green-400 bg-green-100 dark:bg-green-900 hover:bg-green-100 dark:hover:bg-green-900 border-green-200 dark:border-green-800'
                       : 'dark:!text-gray-300 text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200/80 dark:border-gray-700/80'
                   } text-normal pr-2.5`}
                 >
-                  <Check size={12} className="mr-0.5" />
+                  <Check size={12} className={`mr-0.5 ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`} />
                   {field.label}
                 </Badge>
               }
@@ -124,7 +136,9 @@ const renderWithBadges = (
                 variant="outline"
                 className={`${
                   field.isEnable
-                    ? '!text-green-600 dark:!text-green-400 bg-green-100/80 dark:bg-green-900 hover:bg-green-50/80 dark:hover:bg-green-900/70 border-green-100 hover:border-green-200 dark:border-green-800 dark:hover:border-green-700'
+                    ? field.isGlobal
+                      ? '!text-purple-700 dark:!text-purple-300 bg-purple-100/80 dark:bg-purple-800 hover:bg-purple-200/80 dark:hover:bg-purple-700/70 border-purple-100 hover:border-purple-200 dark:border-purple-800 dark:hover:border-purple-700'
+                      : '!text-green-600 dark:!text-green-400 bg-green-100/80 dark:bg-green-900 hover:bg-green-50/80 dark:hover:bg-green-900/70 border-green-100 hover:border-green-200 dark:border-green-800 dark:hover:border-green-700'
                     : 'dark:!text-gray-600 text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200/80 dark:border-gray-700/80'
                 } text-[14px] !font-normal px-1 rounded-sm`}
               >
@@ -143,11 +157,73 @@ const renderWithBadges = (
                 variant="outline"
                 className={`${
                   field.isEnable
-                    ? 'bg-green-100 dark:bg-green-900 hover:bg-green-100 dark:hover:bg-green-900 border-green-200 dark:border-green-800'
+                    ? field.isGlobal
+                      ? '!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800'
+                      : 'bg-green-100 dark:bg-green-900 hover:bg-green-100 dark:hover:bg-green-900 border-green-200 dark:border-green-800'
                     : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200/80 dark:border-gray-700/80'
                 } text-normal pr-2.5`}
               >
-                <Check size={12} className="mr-0.5" />
+                <Check size={12} className={`mr-0.5 ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`} />
+                {field.label}
+              </Badge>
+            </ToolTip>
+          )}
+        </Text>
+      )
+    } else if (matchedGlobalTemplate) {
+      const field = {
+        label: part,
+        isValueMasked: false,
+        value: matchedGlobalTemplate.value,
+        isFound: true,
+        isMissing: false,
+        isEnable: true,
+        isGlobal: true,
+      }
+
+      const showValuesInTemplate = showValues && field.value
+
+      return (
+        <Text
+          key={index}
+          className="!text-purple-600 dark:!text-purple-400 !font-normal inline-flex"
+          size="xs"
+        >
+          {showValuesInTemplate ? (
+            <ToolTip
+              text={
+                <Badge
+                  variant="outline"
+                  className="!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800 text-normal pr-2.5"
+                >
+                  <Check size={12} className="mr-0.5 text-purple-600 dark:text-purple-400" />
+                  {field.label} (Global)
+                </Badge>
+              }
+              className="bg-transparent border-0"
+              side="top"
+              isCompact
+              asChild
+            >
+              <Badge
+                variant="outline"
+                className="!text-purple-700 dark:!text-purple-300 bg-purple-100/80 dark:bg-purple-800 hover:bg-purple-200/80 dark:hover:bg-purple-700/70 border-purple-100 hover:border-purple-200 dark:border-purple-800 dark:hover:border-purple-700 text-[14px] !font-normal px-1 rounded-sm"
+              >
+                {field.value}
+              </Badge>
+            </ToolTip>
+          ) : (
+            <ToolTip
+              text={`${field.value} (Global Template)`}
+              side="top"
+              isCompact
+              asChild
+            >
+              <Badge
+                variant="outline"
+                className="!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800 text-normal pr-2.5"
+              >
+                <Check size={12} className="mr-0.5 text-purple-600 dark:text-purple-400" />
                 {field.label}
               </Badge>
             </ToolTip>
@@ -170,6 +246,7 @@ export function ClipViewTemplate({
   formTemplateOptions: string | null | undefined
 }) {
   const { t } = useTranslation()
+  const { globalTemplates, globalTemplatesEnabled } = useAtomValue(settingsStoreAtom)
   const defaultValueResetKey = useSignal<string>(Date.now().toString())
   const valueChangeKey = useSignal<string>(Date.now().toString())
   const showAllLabelsMustBeUniqueMessage = useSignal<boolean>(false)
@@ -207,18 +284,30 @@ export function ClipViewTemplate({
         matches.forEach((match, index) => {
           matches[index] = match.replace(/[\n\r{}]+/g, '').trim()
           templateFoundFields.value.push(matches[index].toLocaleLowerCase())
+
+          // Check local templates first
           const field = localOptions.value.templateOptions.find(
             f => f.label?.toLocaleLowerCase() === matches[index].toLocaleLowerCase()
           )
-          if (!field) {
+
+          // Check global templates if no local field found
+          const globalTemplate =
+            globalTemplatesEnabled &&
+            globalTemplates.find(
+              gt =>
+                gt.isEnabled &&
+                gt.name?.toLocaleLowerCase() === matches[index].toLocaleLowerCase()
+            )
+
+          if (!field && !globalTemplate) {
             templateMissingFields.value.push(matches[index])
-          } else {
+          } else if (field) {
             field.isFound = true
           }
         })
       }
     },
-    [localOptions.value.templateOptions]
+    [localOptions.value.templateOptions, globalTemplates, globalTemplatesEnabled]
   )
 
   useEffect(() => {
@@ -316,14 +405,23 @@ export function ClipViewTemplate({
       templateMissingFields.value,
       localOptions.value.templateOptions
         .filter(f => f.label !== undefined)
-        .map(({ label, isEnable, value, isValueMasked }) => ({
-          label,
-          isValueMasked,
-          value,
-          isEnable,
-        })),
+        .map(({ label, isEnable, value, isValueMasked, isGlobal }) => {
+          // For global templates, get the current value from globalTemplates
+          const actualValue = isGlobal && globalTemplatesEnabled
+            ? globalTemplates.find(gt => gt.isEnabled && gt.name === label)?.value || ''
+            : value;
+          
+          return {
+            label,
+            isValueMasked,
+            value: actualValue,
+            isEnable,
+            isGlobal,
+          };
+        }),
       clipboardValueSignal.value,
-      templateShowFormat.value === 'values'
+      templateShowFormat.value === 'values',
+      globalTemplatesEnabled ? globalTemplates : []
     )
   }, [
     value,
@@ -333,6 +431,8 @@ export function ClipViewTemplate({
     localOptions.value.templateOptions,
     clipboardValueSignal.value,
     templateShowFormat.value,
+    globalTemplates,
+    globalTemplatesEnabled,
   ])
 
   return (
@@ -487,6 +587,8 @@ export function ClipViewTemplate({
                   <span
                     className={`whitespace-nowrap pr-1 min-w-[80px] overflow-hidden text-ellipsis block ${
                       isLabelOnTop ? 'text-left' : 'text-right max-w-[160px]'
+                    } ${
+                      field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''
                     }`}
                   >
                     {field.label}
@@ -658,23 +760,50 @@ export function ClipViewTemplate({
                         </DropdownMenu>
                       </Flex>
                     ) : field.label?.toLocaleLowerCase() !== 'clipboard' ? (
-                      <InputField
-                        small
-                        key={defaultValueResetKey.value}
-                        placeholder={t('Enter field value', { ns: 'dashboard' })}
-                        autoFocus={Boolean(localOptions.value.templateOptions[i].label)}
-                        classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-slate-300 dark:bg-slate-900"
-                        disabled={isEnable}
-                        type={field.type === 'number' ? 'number' : 'text'}
-                        className={`${
-                          isEnable ? 'bg-gray-100 opacity-50 dark:bg-gray-900' : ''
-                        } w-full`}
-                        onChange={e => {
-                          field.value = e.target.value.trim()
-                          valueChangeKey.value = Date.now().toString()
-                        }}
-                        defaultValue={field.value}
-                      />
+                      field.isGlobal ? (
+                        // For global templates, show the value but make it non-editable
+                        <Flex className="items-center gap-2 w-full">
+                          <InputField
+                            small
+                            key={defaultValueResetKey.value}
+                            placeholder=""
+                            value={
+                              globalTemplates.find(
+                                gt => gt.isEnabled && gt.name === field.label
+                              )?.value || ''
+                            }
+                            classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-purple-300 dark:bg-slate-900 opacity-75"
+                            disabled={true}
+                            type="text"
+                            className={`${
+                              isEnable ? 'bg-gray-100 opacity-50 dark:bg-gray-900' : ''
+                            } w-full`}
+                            title={`Global Template: ${field.label}`}
+                          />
+                          <Badge className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-800 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-700 cursor-default text-xs py-0.5 px-1.5">
+                            <Check size={12} className="text-purple-600 dark:text-purple-400" />
+                            {t('Global', { ns: 'templates' })}
+                          </Badge>
+                        </Flex>
+                      ) : (
+                        <InputField
+                          small
+                          key={defaultValueResetKey.value}
+                          placeholder={t('Enter field value', { ns: 'dashboard' })}
+                          autoFocus={Boolean(localOptions.value.templateOptions[i].label)}
+                          classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-slate-300 dark:bg-slate-900"
+                          disabled={isEnable}
+                          type={field.type === 'number' ? 'number' : 'text'}
+                          className={`${
+                            isEnable ? 'bg-gray-100 opacity-50 dark:bg-gray-900' : ''
+                          } w-full`}
+                          onChange={e => {
+                            field.value = e.target.value.trim()
+                            valueChangeKey.value = Date.now().toString()
+                          }}
+                          defaultValue={field.value}
+                        />
+                      )
                     ) : (
                       <>
                         <InputField
@@ -861,13 +990,29 @@ export function ClipViewTemplate({
               :
             </Text>
             {templateMissingFields?.value.map((field, i) => {
+              // Check if this field exists as a global template
+              const globalTemplate =
+                globalTemplatesEnabled &&
+                globalTemplates.find(
+                  gt =>
+                    gt.isEnabled &&
+                    gt.name?.toLocaleLowerCase() === field.toLocaleLowerCase()
+                )
+
               return (
                 <Box key={i}>
                   <Badge
                     variant="outline"
-                    className="bg-red-50 !text-red-500 dark:!text-red-400 dark:bg-red-950/80 border-red-100 dark:border-red-900 text-normal px-2"
+                    className={`${
+                      globalTemplate
+                        ? 'bg-purple-50 !text-purple-500 dark:!text-purple-400 dark:bg-purple-950/80 border-purple-100 dark:border-purple-900'
+                        : 'bg-red-50 !text-red-500 dark:!text-red-400 dark:bg-red-950/80 border-red-100 dark:border-red-900'
+                    } text-normal px-2`}
                   >
                     {field}
+                    {globalTemplate && (
+                      <Text className="ml-1 text-xs opacity-70">(Global)</Text>
+                    )}
                   </Badge>
                 </Box>
               )

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api'
+import { confirm } from '@tauri-apps/api/dialog'
+import { CopyComponent } from '~/libs/bbcode'
 import i18n from '~/locales'
 import { LANGUAGES } from '~/locales/languges'
 import {
@@ -19,6 +21,8 @@ import {
   MessageSquareDashed,
   MessageSquareText,
   NotebookPen,
+  Plus,
+  Trash2,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
@@ -49,6 +53,7 @@ import md from '~/store/example.md?raw'
 
 import { NoteIconType } from '../components/Dashboard/components/utils'
 import CustomDatabaseLocationSettings from './CustomDatabaseLocationSettings'
+import GlobalTemplatesSettings from './GlobalTemplatesSettings'
 
 export default function UserPreferences() {
   const { t } = useTranslation()
@@ -336,9 +341,9 @@ export default function UserPreferences() {
                   </Card>
                 </Box>
 
-                {/* ------------- Custom Database Location Settings Card ------------- */}
                 <CustomDatabaseLocationSettings />
-                {/* ------------------------------------------------------------------ */}
+
+                <Spacer h={6} />
 
                 <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card>
@@ -872,17 +877,42 @@ export default function UserPreferences() {
                           {t('How to set hotkeys:', { ns: 'settings2' })}
                         </Text>
                         <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
-                          <li>• {t('Click Set/Change button to start recording', { ns: 'settings2' })}</li>
-                          <li>• {t('Press your desired key combination (e.g., Ctrl+Shift+V)', { ns: 'settings2' })}</li>
-                          <li>• {t('Press Enter to confirm or Escape to cancel', { ns: 'settings2' })}</li>
-                          <li>• {t('Press Backspace/Delete to clear the hotkey', { ns: 'settings2' })}</li>
+                          <li>
+                            •{' '}
+                            {t('Click Set/Change button to start recording', {
+                              ns: 'settings2',
+                            })}
+                          </li>
+                          <li>
+                            •{' '}
+                            {t(
+                              'Press your desired key combination (e.g., Ctrl+Shift+V)',
+                              { ns: 'settings2' }
+                            )}
+                          </li>
+                          <li>
+                            •{' '}
+                            {t('Press Enter to confirm or Escape to cancel', {
+                              ns: 'settings2',
+                            })}
+                          </li>
+                          <li>
+                            •{' '}
+                            {t('Press Backspace/Delete to clear the hotkey', {
+                              ns: 'settings2',
+                            })}
+                          </li>
                         </ul>
                       </div>
                       <Box className="mb-4">
                         <div className="relative">
                           <InputField
                             label={t('Show/Hide Main App Window', { ns: 'settings2' })}
-                            value={isEditingMainApp ? (currentKeyPreview || mainAppHotkey) : mainAppHotkey}
+                            value={
+                              isEditingMainApp
+                                ? currentKeyPreview || mainAppHotkey
+                                : mainAppHotkey
+                            }
                             autoFocus={isEditingMainApp}
                             disabled={!isEditingMainApp}
                             onKeyDown={e =>
@@ -895,7 +925,11 @@ export default function UserPreferences() {
                                 ? t('Press your key combination...', { ns: 'settings2' })
                                 : mainAppHotkey || t('No keys set', { ns: 'settings2' })
                             }
-                            className={`${isEditingMainApp ? 'border-blue-300 dark:border-blue-600' : ''}`}
+                            className={`${
+                              isEditingMainApp
+                                ? 'border-blue-300 dark:border-blue-600'
+                                : ''
+                            }`}
                           />
                           {isEditingMainApp && (
                             <div className="absolute right-3 top-8 text-xs text-blue-600 dark:text-blue-400">
@@ -952,7 +986,11 @@ export default function UserPreferences() {
                         <div className="relative">
                           <InputField
                             label={t('Show/Hide Quick Paste Window', { ns: 'settings2' })}
-                            value={isEditingQuickPaste ? (currentKeyPreview || quickPasteHotkey) : quickPasteHotkey}
+                            value={
+                              isEditingQuickPaste
+                                ? currentKeyPreview || quickPasteHotkey
+                                : quickPasteHotkey
+                            }
                             disabled={!isEditingQuickPaste}
                             autoFocus={isEditingQuickPaste}
                             onKeyDown={e =>
@@ -963,9 +1001,14 @@ export default function UserPreferences() {
                             placeholder={
                               isEditingQuickPaste
                                 ? t('Press your key combination...', { ns: 'settings2' })
-                                : quickPasteHotkey || t('No keys set', { ns: 'settings2' })
+                                : quickPasteHotkey ||
+                                  t('No keys set', { ns: 'settings2' })
                             }
-                            className={`${isEditingQuickPaste ? 'border-blue-300 dark:border-blue-600' : ''}`}
+                            className={`${
+                              isEditingQuickPaste
+                                ? 'border-blue-300 dark:border-blue-600'
+                                : ''
+                            }`}
                           />
                           {isEditingQuickPaste && (
                             <div className="absolute right-3 top-8 text-xs text-blue-600 dark:text-blue-400">
@@ -1507,7 +1550,7 @@ export default function UserPreferences() {
                     </CardContent>
                   </Card>
                 </Box>
-
+                <GlobalTemplatesSettings />
                 <Spacer h={6} />
                 <Link to={returnRoute} replace>
                   <Button

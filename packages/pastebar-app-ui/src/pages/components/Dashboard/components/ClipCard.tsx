@@ -117,6 +117,7 @@ export type ClipFormTemplateOptions = {
     defaultValue?: string
     selectOptions?: string[]
     isFound?: boolean
+    isGlobal?: boolean
     type?:
       | 'password'
       | 'number'
@@ -719,14 +720,15 @@ export function ClipCard({
                   }
                 } else if (isSingleClickToCopyPaste && !copyDisabled) {
                   // Check if click is on context menu button or its children
-                  const isContextMenuClick = contextMenuButtonRef.current && 
-                    (contextMenuButtonRef.current.contains(e.target as Node) || 
-                     contextMenuButtonRef.current === e.target)
-                  
+                  const isContextMenuClick =
+                    contextMenuButtonRef.current &&
+                    (contextMenuButtonRef.current.contains(e.target as Node) ||
+                      contextMenuButtonRef.current === e.target)
+
                   if (isContextMenuClick) {
                     return // Don't copy/paste if clicking on context menu
                   }
-                  
+
                   // Single-click copy mode
                   if (e.altKey || e.metaKey) {
                     if (clip.isForm) {

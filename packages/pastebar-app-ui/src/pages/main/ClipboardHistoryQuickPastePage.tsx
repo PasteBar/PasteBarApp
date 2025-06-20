@@ -527,12 +527,14 @@ export default function ClipboardHistoryQuickPastePage() {
     // If search is active and input is focused, only process navigation keys
     if (isShowSearch.value && document.activeElement === searchHistoryInputRef?.current) {
       // Allow navigation keys to be processed
-      if (!keyUp.includes(event.key) && 
-          !keyDown.includes(event.key) && 
-          !keyPageUp.includes(event.key) && 
-          !keyPageDown.includes(event.key) &&
-          !keyHome.includes(event.key) &&
-          !keyEnter.includes(event.key)) {
+      if (
+        !keyUp.includes(event.key) &&
+        !keyDown.includes(event.key) &&
+        !keyPageUp.includes(event.key) &&
+        !keyPageDown.includes(event.key) &&
+        !keyHome.includes(event.key) &&
+        !keyEnter.includes(event.key)
+      ) {
         return
       }
     }
@@ -1106,13 +1108,15 @@ const SearchInput = React.memo(
         className="text-md ring-offset-0 bg-slate-100 dark:bg-slate-700 border-r-0 border-t-0 border-b-0"
         onKeyDown={e => {
           // Allow navigation keys and Escape to bubble up
-          if (!keyEscape.includes(e.key) && 
-              !keyUp.includes(e.key) && 
-              !keyDown.includes(e.key) && 
-              !keyPageUp.includes(e.key) && 
-              !keyPageDown.includes(e.key) &&
-              !keyHome.includes(e.key) &&
-              !keyEnter.includes(e.key)) {
+          if (
+            !keyEscape.includes(e.key) &&
+            !keyUp.includes(e.key) &&
+            !keyDown.includes(e.key) &&
+            !keyPageUp.includes(e.key) &&
+            !keyPageDown.includes(e.key) &&
+            !keyHome.includes(e.key) &&
+            !keyEnter.includes(e.key)
+          ) {
             e.stopPropagation()
           }
         }}

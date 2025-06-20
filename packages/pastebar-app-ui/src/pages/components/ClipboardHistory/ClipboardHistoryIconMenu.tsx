@@ -181,18 +181,18 @@ export const ClipboardHistoryIconMenu = ({
           }
         }
         if (isRecent) {
-          await clearRecentClipboardHistory({ 
-            durationType, 
+          await clearRecentClipboardHistory({
+            durationType,
             duration: olderThen,
             keepPinned: isKeepPinnedOnClearEnabled,
-            keepStarred: isKeepStarredOnClearEnabled
+            keepStarred: isKeepStarredOnClearEnabled,
           })
         } else {
-          await clearClipboardHistoryOlderThan({ 
-            durationType, 
+          await clearClipboardHistoryOlderThan({
+            durationType,
             olderThen,
             keepPinned: isKeepPinnedOnClearEnabled,
-            keepStarred: isKeepStarredOnClearEnabled
+            keepStarred: isKeepStarredOnClearEnabled,
           })
         }
         setTimeout(() => {

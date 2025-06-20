@@ -1,6 +1,7 @@
 use crate::models::models::UpdatedItemData;
 use crate::services::history_service;
 
+use crate::models::Setting;
 use crate::services::items_service::update_item_by_id;
 use crate::services::request_service::{
   run_web_request, run_web_scraping, HttpRequest, HttpScraping,
@@ -9,7 +10,8 @@ use crate::services::shell_service::{
   run_shell_command, ExecHomeDir, OutputRegexFilter, OutputTemplate,
 };
 use crate::services::utils::{
-  ensure_url_or_email_prefix, ensure_url_prefix, mask_value, remove_special_bbcode_tags,
+  apply_global_templates, ensure_url_or_email_prefix, ensure_url_prefix, mask_value,
+  remove_special_bbcode_tags,
 };
 use crate::{constants, services::items_service::get_item_by_id};
 use arboard::{Clipboard, ImageData};
@@ -19,6 +21,7 @@ use inputbot::KeybdKey::*;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::collections::HashMap;
+use std::sync::Mutex;
 use std::{thread, time::Duration};
 use tauri::{self, AppHandle};
 use tauri::{ClipboardManager, Manager};
@@ -76,6 +79,7 @@ pub struct TemplateOption {
   pub is_value_masked: Option<bool>,
   pub select_options: Option<Vec<String>>,
   pub is_enable: Option<bool>,
+  pub is_global: Option<bool>,
 }
 
 #[tauri::command]
@@ -140,7 +144,7 @@ pub fn copy_history_item(app_handle: AppHandle, history_id: String) -> String {
             IMAGE_NOT_FOUND_BASE64.to_string()
           }
         }
-      },
+      }
       None => IMAGE_NOT_FOUND_BASE64.to_string(),
     };
 
@@ -234,14 +238,19 @@ pub async fn copy_clip_item(
       match all_options {
         Ok(options) => {
           match run_template_fill(
-            app_handle,
+            app_handle.clone(),
             item.value.clone(),
             options.template_options,
             None,
           ) {
             Ok(filled_template) => {
+              // Apply global templates after local template processing
+              let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
+              let settings_map = app_settings.lock().unwrap();
+              let final_text = apply_global_templates(&filled_template, &settings_map);
+
               manager
-                .write_text(&filled_template)
+                .write_text(&final_text)
                 .expect("Failed to write to clipboard");
 
               "ok".to_string()
@@ -426,7 +435,7 @@ pub async fn copy_clip_item(
             IMAGE_NOT_FOUND_BASE64.to_string()
           }
         }
-      },
+      }
       None => IMAGE_NOT_FOUND_BASE64.to_string(),
     };
 
@@ -444,7 +453,12 @@ pub async fn copy_clip_item(
       remove_special_bbcode_tags(&text)
     };
 
-    match manager.write_text(clean_text) {
+    // Apply global templates
+    let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
+    let settings_map = app_settings.lock().unwrap();
+    let final_text = apply_global_templates(&clean_text, &settings_map);
+
+    match manager.write_text(final_text) {
       Ok(_) => "ok".to_string(),
       Err(e) => {
         eprintln!("Failed to write to clipboard: {}", e);
@@ -620,12 +634,51 @@ pub fn run_template_fill(
     return Ok("".to_string());
   }
 
+  // Get global templates from settings for use in the loop
+  let app_settings = app_handle.state::<Mutex<HashMap<String, Setting>>>();
+  let settings_map = app_settings.lock().unwrap();
+  
+  // Get global templates from settings
+  let global_templates_enabled = settings_map
+    .get("globalTemplatesEnabled")
+    .and_then(|s| s.value_bool)
+    .unwrap_or(false);
+  
+  let global_templates_json = settings_map
+    .get("globalTemplates")
+    .and_then(|s| s.value_text.as_ref())
+    .cloned()
+    .unwrap_or_else(|| "[]".to_string());
+  
+  let global_templates: Vec<serde_json::Value> = serde_json::from_str(&global_templates_json)
+    .unwrap_or_else(|_| Vec::new());
+
   for field in template_options
     .iter()
     .filter(|f| f.is_enable.unwrap_or(false))
   {
     if let Some(true) = field.is_enable {
-      if let Some(value) = &field.value {
+      let field_value = if field.is_global.unwrap_or(false) && global_templates_enabled {
+        // For global templates, fetch the current value from global templates
+        let field_label = field.label.as_deref().unwrap_or_default();
+        global_templates
+          .iter()
+          .find(|gt| {
+            gt.get("name")
+              .and_then(|n| n.as_str())
+              .map(|n| n.eq_ignore_ascii_case(field_label))
+              .unwrap_or(false)
+              && gt.get("isEnabled").and_then(|e| e.as_bool()).unwrap_or(false)
+          })
+          .and_then(|gt| gt.get("value"))
+          .and_then(|v| v.as_str())
+          .map(|s| s.to_string())
+          .or_else(|| field.value.clone())
+      } else {
+        field.value.clone()
+      };
+      
+      if let Some(value) = field_value {
         let regex = regex::Regex::new(&format!(
           r"(?i)\{{\{{\s*{}\s*\}}\}}",
           regex::escape(field.label.as_deref().unwrap_or_default())
@@ -659,12 +712,16 @@ pub fn run_template_fill(
     }
   }
 
+  // Remove any unmatched template placeholders
   replaced_template = regex::Regex::new(r"(?i)\{\{\s*[^}]*\s*\}\}")
     .unwrap()
     .replace_all(&replaced_template, "")
     .to_string();
 
-  Ok(replaced_template)
+  // Apply remaining global templates that weren't handled as local fields
+  let final_text = apply_global_templates(&replaced_template, &settings_map);
+
+  Ok(final_text)
 }
 
 pub fn paste_clipboard(delay: i32) -> String {
