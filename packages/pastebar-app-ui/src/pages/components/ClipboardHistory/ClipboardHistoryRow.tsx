@@ -463,14 +463,15 @@ export function ClipboardHistoryRowComponent({
                     setLargeViewItemId(clipboard.historyId)
                   } else if (isSingleClickToCopyPaste && !getSelectedText().text) {
                     // Check if click is on context menu button or its children
-                    const isContextMenuClick = contextMenuButtonRef.current && 
-                      (contextMenuButtonRef.current.contains(e.target as Node) || 
-                       contextMenuButtonRef.current === e.target)
-                    
+                    const isContextMenuClick =
+                      contextMenuButtonRef.current &&
+                      (contextMenuButtonRef.current.contains(e.target as Node) ||
+                        contextMenuButtonRef.current === e.target)
+
                     if (isContextMenuClick) {
                       return // Don't copy/paste if clicking on context menu
                     }
-                    
+
                     if (
                       e.altKey ||
                       (e.metaKey && isWindows) ||

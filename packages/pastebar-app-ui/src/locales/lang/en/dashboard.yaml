@@ -21,8 +21,7 @@ Add Section: Add Section
 Add Tab: Add Tab
 Add Template Field: Add Template Field
 Add a Tab: Add a Tab
-Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template
-Add field <b>{{<b>{{name}}</b>}}</b> into the template: Add field <b>{{<b>{{name}}</b>}}</b> into the template
+Add field {{name}} into the template: Add field {{name}} into the template
 Add image: Add image
 Add note: Add note
 Add to Board: Add to Board
@@ -83,7 +82,7 @@ Delete field: Delete field
 Delete tab: Delete tab
 Detect Template Fields: Detect Template Fields
 Detect for Template Fields: Detect for Template Fields
-Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template
+Disabled field {{name}} has been found in the template: Disabled field {{name}} has been found in the template
 Done Create Clip: Done Create Clip
 Done Edit: Done Edit
 Done Edit Tabs: Done Edit Tabs
@@ -135,8 +134,8 @@ FILTERED_TYPES:
   RegEx Replace: RegEx Replace
   Remove Quotes: Remove Quotes
 Field: Field
-Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template
 Field Options: Field Options
+Field {{name}} has been found in the template: Field {{name}} has been found in the template
 Fields Value: Fields Value
 File, folder or app path does not exist: File, folder or app path does not exist
 File, folder or app path is valid: File, folder or app path is valid

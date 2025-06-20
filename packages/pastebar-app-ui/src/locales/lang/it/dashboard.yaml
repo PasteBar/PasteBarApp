@@ -21,8 +21,7 @@ Add Section: Aggiungi Sezione
 Add Tab: Aggiungi Scheda
 Add Template Field: Aggiungi Campo Modello
 Add a Tab: Aggiungi una Scheda
-Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Aggiungi il campo <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> al modello
-Add field <b>{{<b>{{name}}</b>}}</b> into the template: Aggiungi il campo <b>{{<b>{{name}}</b>}}</b> al modello
+Add field {{name}} into the template: Aggiungi il campo {{name}} al modello
 Add image: Aggiungi immagine
 Add note: Aggiungi nota
 Add to Board: Aggiungi alla Bacheca
@@ -85,7 +84,7 @@ Delete field: Elimina campo
 Delete tab: Elimina scheda
 Detect Template Fields: Rileva Campi del Modello
 Detect for Template Fields: Rileva Campi del Modello
-Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Il campo disabilitato <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> è stato trovato nel modello
+Disabled field {{name}} has been found in the template: Il campo disabilitato {{name}} è stato trovato nel modello
 Done Create Clip: Creazione Clip Completata
 Done Edit: Modifica Completata
 Done Edit Tabs: Modifica Schede Completata
@@ -137,7 +136,7 @@ FILTERED_TYPES:
   RegEx Replace: Sostituzione con Espressione Regolare
   Remove Quotes: Rimuovi Virgolette
 Field: Campo
-Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Il campo <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> è stato trovato nel modello
+Field {{name}} has been found in the template: Il campo {{name}} è stato trovato nel modello
 Field Options: Opzioni Campo
 Fields Value: Valore Campi
 File, folder or app path does not exist: Il percorso del file, cartella o app non esiste

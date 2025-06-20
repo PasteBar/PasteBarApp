@@ -21,8 +21,7 @@ Add Section: Додати розділ
 Add Tab: Додати вкладку
 Add Template Field: Додати поле шаблону
 Add a Tab: Додати вкладку
-Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Додати поле <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> в шаблон
-Add field <b>{{<b>{{name}}</b>}}</b> into the template: Додати поле <b>{{<b>{{name}}</b>}}</b> в шаблон
+Add field {{name}} into the template: Додати поле {{name}} в шаблон
 Add image: Додати зображення
 Add note: Додати примітку
 Add to Board: Додати на дошку
@@ -85,7 +84,7 @@ Delete field: Видалити поле
 Delete tab: Видалити вкладку
 Detect Template Fields: Виявити поля шаблону
 Detect for Template Fields: Виявити поля шаблону
-Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Вимкнене поле <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> знайдено в шаблоні
+Disabled field {{name}} has been found in the template: Вимкнене поле {{name}} знайдено в шаблоні
 Done Create Clip: Завершити
 Done Edit: Завершити
 Done Edit Tabs: Завершити
@@ -137,7 +136,7 @@ FILTERED_TYPES:
   RegEx Replace: Заміна регулярного виразу
   Remove Quotes: Видалити лапки
 Field: Поле
-Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Поле <b>&#123;&#123;<b>{{name}}<b>&#123;&#123;<b> знайдено в шаблоні
+Field {{name}} has been found in the template: Поле {{name}} знайдено в шаблоні
 Field Options: Параметри поля
 Fields Value: Значення полів
 File, folder or app path does not exist: Шлях до файлу, папки або додатку не існує

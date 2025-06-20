@@ -1,0 +1,24 @@
+Create New Template: 创建新模板
+Create Template: 创建模板
+Enter template content...: 输入模板内容...
+Enter template name (e.g., "signature", "email"): 输入模板名称（例如："签名"、"邮件"）
+Global: 全局
+Global Template: 全局模板
+Global Templates: 全局模板
+Preview usage: 预览用法
+Template Usage: 模板用法
+Template name already exists: 模板名称已存在。请选择不同的名称。
+Template name cannot be changed after creation. Delete and recreate to change name.: 创建后无法更改模板名称。删除并重新创建以更改名称。
+Use Global Template: 使用全局模板
+addTemplateButton: 添加模板
+confirmDeleteTemplateMessage: 您确定要删除全局模板 '{{name}}' 吗？
+confirmDeleteTemplateTitle: 确认删除
+deleteTemplateButtonTooltip: 删除模板
+enableGlobalTemplatesLabel: 启用全局模板
+globalTemplatesDescription: 管理可重复使用的文本片段，可以使用 {{template_name}} 插入到任何剪辑中。
+globalTemplatesTitle: 全局模板
+localTemplateConflictWarning: 也存在名为 '{{label}}' 的全局模板。本地模板将在此剪辑的表单中优先使用。
+noGlobalTemplatesYet: 尚未定义全局模板。点击"添加模板"创建一个。
+templateEnabledLabel: 已启用
+templateNameLabel: 名称
+templateValueLabel: 值

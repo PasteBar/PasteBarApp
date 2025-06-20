@@ -4,8 +4,10 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use serde::Serialize;
 use serde_json::Value;
+use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
+use std::sync::Mutex;
 
 #[cfg(target_os = "windows")]
 use winreg::RegKey;
@@ -14,8 +16,16 @@ use tld;
 use url::Url;
 
 use crate::menu::AssociatedItemTree;
+use crate::models::Setting;
 
 use super::collections_service;
+
+// Global regex cache for template patterns
+lazy_static! {
+  static ref REGEX_CACHE: Mutex<HashMap<String, Regex>> = Mutex::new(HashMap::new());
+}
+
+pub const GLOBAL_TEMPLATES_ENABLED_KEY: &str = "globalTemplatesEnabled";
 
 pub fn pretty_print_json<T: Serialize>(data: &Result<T, diesel::result::Error>) -> String {
   data
@@ -205,6 +215,73 @@ pub fn remove_special_bbcode_tags(text: &str) -> String {
 
 pub fn is_valid_json(text: &str) -> bool {
   serde_json::from_str::<Value>(text).is_ok()
+}
+
+pub fn apply_global_templates(text: &str, settings_map: &HashMap<String, Setting>) -> String {
+  // Check if global templates are enabled
+  let is_enabled = settings_map
+    .get(GLOBAL_TEMPLATES_ENABLED_KEY)
+    .and_then(|s| s.value_bool)
+    .unwrap_or(false);
+
+  if !is_enabled {
+    return text.to_string();
+  }
+
+  // Get global templates from settings
+  let templates_json = match settings_map
+    .get("globalTemplates")
+    .and_then(|s| s.value_text.as_ref())
+  {
+    Some(json) => json,
+    None => return text.to_string(),
+  };
+
+  // Parse templates JSON
+  let templates: Vec<serde_json::Value> = match serde_json::from_str(templates_json) {
+    Ok(t) => t,
+    Err(_) => return text.to_string(),
+  };
+
+  let mut result = text.to_string();
+
+  // Apply each enabled template
+  for template in templates {
+    let is_template_enabled = template
+      .get("isEnabled")
+      .and_then(|v| v.as_bool())
+      .unwrap_or(false);
+
+    if !is_template_enabled {
+      continue;
+    }
+
+    let name = match template.get("name").and_then(|v| v.as_str()) {
+      Some(n) => n,
+      None => continue,
+    };
+
+    let value = match template.get("value").and_then(|v| v.as_str()) {
+      Some(v) => v,
+      None => continue,
+    };
+
+    // Check if regex is already cached
+    let re = {
+      let mut cache = REGEX_CACHE.lock().unwrap();
+      cache
+        .entry(name.to_string())
+        .or_insert_with(|| {
+          let pattern = format!(r"(?i)\{{\{{\s*{}\s*\}}\}}", regex::escape(name));
+          Regex::new(&pattern).unwrap()
+        })
+        .clone()
+    };
+
+    result = re.replace_all(&result, value).to_string();
+  }
+
+  result
 }
 
 pub fn debug_output<F: FnOnce()>(f: F) {

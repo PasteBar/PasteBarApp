@@ -1,8 +1,10 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { useRef } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
-import { Signal } from '@preact/signals-react'
+import { Signal, useSignal as useSignalPreact } from '@preact/signals-react' // Renamed to avoid conflict
 import MaskIcon from '~/assets/icons/mask-square'
+import { settingsStoreAtom } from '~/store'
+import { useAtomValue } from 'jotai'
 import {
   AlertTriangle,
   AlignEndVertical,
@@ -69,16 +71,21 @@ export function ClipEditTemplate({
   localOptions: Signal<ClipFormTemplateOptions>
 }) {
   const { t } = useTranslation()
-  const editFieldId = useSignal<string | null>(null)
-  const editSelectOptionFieldId = useSignal<string | null>(null)
+  const { globalTemplates, globalTemplatesEnabled } = useAtomValue(settingsStoreAtom)
+  const editFieldId = useSignalPreact<string | null>(null)
+  const editSelectOptionFieldId = useSignalPreact<string | null>(null)
   const addSelectOptionFieldId = useSignal<string | null>(null)
-  const editSelectOptionOriginalValue = useSignal<string | null>(null)
+  const editSelectOptionOriginalValue = useSignalPreact<string | null>(null)
   const textAreaRef = useRef<TextAreaRef>(null)
-  const showAllLabelsMustBeUniqueMessage = useSignal<boolean>(false)
-  const defaultValueResetKey = useSignal<string>(Date.now().toString())
+  const showAllLabelsMustBeUniqueMessage = useSignalPreact<boolean>(false)
+  const showGlobalConflictWarning = useSignalPreact<boolean>(false)
+  const conflictingGlobalLabel = useSignalPreact<string | null>(null)
+  const defaultValueResetKey = useSignalPreact<string>(Date.now().toString())
 
   const FIELD_TYPES = ['text', 'textarea', 'select'] as const
   type FieldType = (typeof FIELD_TYPES)[number]
+
+  // No need to update values - they're fetched dynamically
 
   return (
     <Box className="select-none mt-1">
@@ -108,6 +115,8 @@ export function ClipEditTemplate({
                   key={type}
                   onClick={() => {
                     editFieldId.value = null
+                    showGlobalConflictWarning.value = false
+                    conflictingGlobalLabel.value = null
                     if (!localOptions.value.templateOptions) {
                       localOptions.value.templateOptions = []
                     }
@@ -122,13 +131,25 @@ export function ClipEditTemplate({
                       return field
                     })
 
+                    const newLabel = `${type.charAt(0).toUpperCase() + type.slice(1)}`
                     newFields.push({
                       id: Date.now().toString(),
                       type,
-                      label: `${type.charAt(0).toUpperCase() + type.slice(1)}`,
+                      label: newLabel,
                       isEnable: true,
                       value: '',
                     })
+
+                    // Check for global conflict
+                    if (globalTemplatesEnabled) {
+                      const conflictingGlobal = globalTemplates.find(
+                        gt => gt.isEnabled && gt.name === newLabel
+                      )
+                      if (conflictingGlobal) {
+                        showGlobalConflictWarning.value = true
+                        conflictingGlobalLabel.value = newLabel
+                      }
+                    }
 
                     localOptions.value = {
                       ...localOptions.value,
@@ -167,6 +188,8 @@ export function ClipEditTemplate({
                         }
 
                         showAllLabelsMustBeUniqueMessage.value = false
+                        showGlobalConflictWarning.value = false
+                        conflictingGlobalLabel.value = null
 
                         const newFields = [...localOptions.value.templateOptions]
 
@@ -211,6 +234,17 @@ export function ClipEditTemplate({
                           value: '',
                         })
 
+                        // Check for global conflict
+                        if (globalTemplatesEnabled) {
+                          const conflictingGlobal = globalTemplates.find(
+                            gt => gt.isEnabled && gt.name === newLabel
+                          )
+                          if (conflictingGlobal) {
+                            showGlobalConflictWarning.value = true
+                            conflictingGlobalLabel.value = newLabel
+                          }
+                        }
+
                         localOptions.value = {
                           ...localOptions.value,
                           templateOptions: newFields,
@@ -240,6 +274,8 @@ export function ClipEditTemplate({
                   if (!localOptions.value.templateOptions) {
                     localOptions.value.templateOptions = []
                   }
+                  showGlobalConflictWarning.value = false
+                  conflictingGlobalLabel.value = null
 
                   const isClipboardFieldExists = localOptions.value.templateOptions?.some(
                     field => field.label === 'Clipboard'
@@ -263,7 +299,7 @@ export function ClipEditTemplate({
                   newFields.push({
                     id: Date.now().toString(),
                     type: 'text',
-                    label: 'Clipboard',
+                    label: 'Clipboard', // 'Clipboard' is a special keyword, unlikely to conflict with user global templates
                     isEnable: true,
                     value: '',
                   })
@@ -281,6 +317,82 @@ export function ClipEditTemplate({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {globalTemplatesEnabled && globalTemplates.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="mini"
+                  className="cursor-pointer hover:bg-transparent !px-2 !py-0"
+                >
+                  <Text
+                    className="!text-purple-500 dark:!text-purple-400 hover:underline"
+                    size="xs"
+                  >
+                    {t('Global Template', { ns: 'templates' })}
+                    <ChevronDown size={12} className="ml-1" />
+                  </Text>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                sideOffset={12}
+                align="center"
+                className="max-w-[300px]"
+              >
+                <DropdownMenuItem
+                  className="text-center items-center justify-center py-0.5 text-xs"
+                  disabled={true}
+                >
+                  <Text>{t('Global Templates', { ns: 'templates' })}</Text>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <SimpleBar
+                  className="code-filter"
+                  style={{ height: 'auto', maxHeight: '260px' }}
+                  autoHide={false}
+                >
+                  {globalTemplates
+                    .filter(template => template.isEnabled)
+                    .map((template, idx) => (
+                      <DropdownMenuItem
+                        key={idx}
+                        className="text-xs py-1"
+                        onClick={() => {
+                          // Add global template as a local field with isGlobal flag
+                          if (!localOptions.value.templateOptions) {
+                            localOptions.value.templateOptions = []
+                          }
+
+                          const newFields = [...localOptions.value.templateOptions]
+                          newFields.push({
+                            id: Date.now().toString(),
+                            type: 'text',
+                            label: template.name,
+                            value: '', // Don't store value for global templates
+                            isGlobal: true,
+                            isEnable: true,
+                          })
+
+                          localOptions.value = {
+                            ...localOptions.value,
+                            templateOptions: newFields,
+                          }
+
+                          // Trigger template field check
+                          checkForTemplateFieldsCallback()
+                        }}
+                      >
+                        <Flex className="flex items-center justify-between w-full">
+                          <Text className="text-purple-600 dark:text-purple-400 font-medium">
+                            {template.name}
+                          </Text>
+                        </Flex>
+                      </DropdownMenuItem>
+                    ))}
+                </SimpleBar>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -350,7 +462,7 @@ export function ClipEditTemplate({
                   <span
                     className={`whitespace-nowrap pr-1 min-w-[80px] overflow-hidden text-ellipsis block ${
                       isLabelOnTop ? 'text-left' : 'text-right max-w-[160px]'
-                    }`}
+                    } ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`}
                   >
                     {field.label}
                   </span>
@@ -365,18 +477,35 @@ export function ClipEditTemplate({
                         if (e.key === 'Enter' || e.key === 'Escape') {
                           editFieldId.value = null
                           showAllLabelsMustBeUniqueMessage.value = false
+                          showGlobalConflictWarning.value = false // Reset on action
+                          conflictingGlobalLabel.value = null
+
+                          const finalLabel = field.label?.trim() || ''
 
                           const isLabelUnique = localOptions.value.templateOptions?.every(
                             (f, index) => {
                               if (index !== i) {
-                                return f.label !== field.label
+                                return f.label !== finalLabel
                               }
                               return true
                             }
                           )
 
                           if (!isLabelUnique) {
-                            field.label = `${field.label} ${i + 1}`
+                            field.label = `${finalLabel} ${i + 1}`
+                          } else {
+                            field.label = finalLabel // Ensure trimmed label is set
+                          }
+
+                          // Check for global conflict
+                          if (globalTemplatesEnabled && field.label) {
+                            const conflictingGlobal = globalTemplates.find(
+                              gt => gt.isEnabled && gt.name === field.label
+                            )
+                            if (conflictingGlobal) {
+                              showGlobalConflictWarning.value = true
+                              conflictingGlobalLabel.value = field.label
+                            }
                           }
 
                           localOptions.value = {
@@ -395,6 +524,23 @@ export function ClipEditTemplate({
                       className="ml-1 h-8 w-9 text-blue-500 dark:bg-slate-800"
                       onClick={() => {
                         editFieldId.value = null
+                        // Final check for conflicts when 'Done' is clicked
+                        const finalLabelOnClick = field.label?.trim() || ''
+                        if (finalLabelOnClick) {
+                          field.label = finalLabelOnClick // Ensure trimmed label is set
+                          if (globalTemplatesEnabled) {
+                            const conflictingGlobal = globalTemplates.find(
+                              gt => gt.isEnabled && gt.name === finalLabelOnClick
+                            )
+                            if (conflictingGlobal) {
+                              showGlobalConflictWarning.value = true
+                              conflictingGlobalLabel.value = finalLabelOnClick
+                            } else {
+                              showGlobalConflictWarning.value = false
+                              conflictingGlobalLabel.value = null
+                            }
+                          }
+                        }
                         localOptions.value = {
                           ...localOptions.value,
                           templateOptions: [...localOptions.value.templateOptions],
@@ -774,24 +920,56 @@ export function ClipEditTemplate({
                       )}
                     </Flex>
                   ) : field.label?.toLocaleLowerCase() !== 'clipboard' ? (
-                    <InputField
-                      small
-                      key={defaultValueResetKey.value}
-                      placeholder={t('Enter default value', { ns: 'dashboard' })}
-                      autoFocus={localOptions.value.templateOptions[i].label !== 'Text'}
-                      classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-slate-300 dark:bg-slate-900"
-                      disabled={field.isEnable === false}
-                      type={field.type === 'number' ? 'number' : 'text'}
-                      className={`${
-                        field.isEnable === false
-                          ? 'bg-gray-100 opacity-50 dark:bg-gray-900'
-                          : ''
-                      } w-full`}
-                      onChange={e => {
-                        field.value = e.target.value.trim()
-                      }}
-                      defaultValue={field.value}
-                    />
+                    field.isGlobal ? (
+                      // For global templates, show the value but make it non-editable
+                      <Flex className="items-center gap-2 w-full">
+                        <InputField
+                          small
+                          key={defaultValueResetKey.value}
+                          placeholder=""
+                          value={
+                            globalTemplates.find(
+                              gt => gt.isEnabled && gt.name === field.label
+                            )?.value || ''
+                          }
+                          classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-purple-300 dark:bg-slate-900 opacity-75"
+                          disabled={true}
+                          type="text"
+                          className={`${
+                            field.isEnable === false
+                              ? 'bg-gray-100 opacity-50 dark:bg-gray-900'
+                              : ''
+                          } w-full`}
+                          title={`Global Template: ${field.label}`}
+                        />
+                        <Badge className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-800 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-700 cursor-default text-xs py-0.5 px-1.5">
+                          <Check
+                            size={12}
+                            className="text-purple-600 dark:text-purple-400"
+                          />
+                          {t('Global', { ns: 'templates' })}
+                        </Badge>
+                      </Flex>
+                    ) : (
+                      <InputField
+                        small
+                        key={defaultValueResetKey.value}
+                        placeholder={t('Enter default value', { ns: 'dashboard' })}
+                        autoFocus={localOptions.value.templateOptions[i].label !== 'Text'}
+                        classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-slate-300 dark:bg-slate-900"
+                        disabled={field.isEnable === false}
+                        type={field.type === 'number' ? 'number' : 'text'}
+                        className={`${
+                          field.isEnable === false
+                            ? 'bg-gray-100 opacity-50 dark:bg-gray-900'
+                            : ''
+                        } w-full`}
+                        onChange={e => {
+                          field.value = e.target.value.trim()
+                        }}
+                        defaultValue={field.value}
+                      />
+                    )
                   ) : (
                     <>
                       <InputField
@@ -960,26 +1138,27 @@ export function ClipEditTemplate({
                       </div>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {field.label?.toLocaleLowerCase() !== 'clipboard' && (
-                      <DropdownMenuItem
-                        onClick={() => {
-                          if (isEdit) {
-                            editFieldId.value = null
-                          } else {
-                            editFieldId.value = field.id ?? null
-                          }
-                        }}
-                      >
-                        {isEdit ? (
-                          <Text size="xs">{t('Done Edit', { ns: 'common' })}</Text>
-                        ) : (
-                          <Text size="xs">{t('Edit Label', { ns: 'common' })}</Text>
-                        )}
-                        <div className="ml-auto">
-                          <SquarePen size={13} />
-                        </div>
-                      </DropdownMenuItem>
-                    )}
+                    {field.label?.toLocaleLowerCase() !== 'clipboard' &&
+                      !field.isGlobal && (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            if (isEdit) {
+                              editFieldId.value = null
+                            } else {
+                              editFieldId.value = field.id ?? null
+                            }
+                          }}
+                        >
+                          {isEdit ? (
+                            <Text size="xs">{t('Done Edit', { ns: 'common' })}</Text>
+                          ) : (
+                            <Text size="xs">{t('Edit Label', { ns: 'common' })}</Text>
+                          )}
+                          <div className="ml-auto">
+                            <SquarePen size={13} />
+                          </div>
+                        </DropdownMenuItem>
+                      )}
                     {field.isLabelOnTop ? (
                       <DropdownMenuItem
                         onClick={() => {
@@ -1073,6 +1252,23 @@ export function ClipEditTemplate({
             size={14}
             onClick={() => {
               showAllLabelsMustBeUniqueMessage.value = false
+            }}
+          />
+        </Text>
+      )}
+      {showGlobalConflictWarning.value && conflictingGlobalLabel.value && (
+        <Text className="!text-orange-800 dark:!text-orange-400 text-[13px] my-2 bg-orange-50 dark:bg-orange-900/70 p-2 relative">
+          <AlertTriangle size={13} className="mr-1 inline-block" />
+          {t('localTemplateConflictWarning', {
+            ns: 'templates',
+            label: conflictingGlobalLabel.value,
+          })}
+          <X
+            className="absolute top-0 right-0 m-2 bg-orange-50 dark:bg-orange-900/70 z-10 cursor-pointer hover:bg-orange-100 dark:hover:bg-orange-800"
+            size={14}
+            onClick={() => {
+              showGlobalConflictWarning.value = false
+              conflictingGlobalLabel.value = null
             }}
           />
         </Text>
@@ -1182,19 +1378,19 @@ export function ClipEditTemplate({
                     field.isEnable ? (
                       field.label === 'Clipboard' ? (
                         <Trans
-                          i18nKey="Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template"
+                          i18nKey="Field {{Clipboard}} has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template"
                           ns="common"
                         />
                       ) : (
                         <Trans
-                          i18nKey="Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template"
+                          i18nKey="Field {{name}} has been found in the template"
                           ns="dashboard"
                           values={{ name: field.label }}
                         />
                       )
                     ) : (
                       <Trans
-                        i18nKey="Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template"
+                        i18nKey="Disabled field {{name}} has been found in the template"
                         ns="dashboard"
                         values={{ name: field.label }}
                       />
@@ -1206,7 +1402,9 @@ export function ClipEditTemplate({
                   <Text
                     className={`${
                       field.isEnable
-                        ? '!text-green-600 dark:!text-green-400'
+                        ? field.isGlobal
+                          ? '!text-purple-600 dark:!text-purple-400'
+                          : '!text-green-600 dark:!text-green-400'
                         : '!text-gray-400 dark:!text-gray-500'
                     } !font-normal group`}
                     size="xs"
@@ -1215,11 +1413,18 @@ export function ClipEditTemplate({
                       variant="outline"
                       className={`${
                         field.isEnable
-                          ? 'bg-green-100 dark:bg-green-900 hover:bg-green-100/70 dark:hover:bg-green-900 border-green-200 dark:border-green-800'
+                          ? field.isGlobal
+                            ? 'bg-purple-100 dark:bg-purple-800 hover:bg-purple-200/70 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800'
+                            : 'bg-green-100 dark:bg-green-900 hover:bg-green-100/70 dark:hover:bg-green-900 border-green-200 dark:border-green-800'
                           : 'bg-gray-100 dark:bg-gray-800/70 hover:bg-gray-100/70 dark:hover:bg-gray-700/70 border-gray-200 dark:border-gray-700'
                       } text-normal pr-2.5 group-hover:pr-1.5`}
                     >
-                      <Check size={12} className="mr-0.5" />
+                      <Check
+                        size={12}
+                        className={`mr-0.5 ${
+                          field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''
+                        }`}
+                      />
                       {field.label}
                       <ToolTip
                         text={t('Remove from template', { ns: 'common' })}
@@ -1287,7 +1492,9 @@ export function ClipEditTemplate({
                       variant="outline"
                       className={`${
                         field.isEnable
-                          ? 'bg-white dark:bg-slate-300/90 hover:bg-blue-50 dark:hover:bg-blue-300 border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-800'
+                          ? field.isGlobal
+                            ? 'bg-white dark:bg-slate-300/90 hover:bg-purple-50 dark:hover:bg-purple-300 border-slate-200 dark:border-slate-700 hover:border-purple-200 dark:hover:border-purple-800'
+                            : 'bg-white dark:bg-slate-300/90 hover:bg-blue-50 dark:hover:bg-blue-300 border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-800'
                           : 'bg-gray-50 dark:bg-gray-800/80 hover:bg-gray-50 dark:hover:bg-gray-800 border-gray-100 dark:border-gray-700'
                       } text-normal pr-2.5`}
                     >

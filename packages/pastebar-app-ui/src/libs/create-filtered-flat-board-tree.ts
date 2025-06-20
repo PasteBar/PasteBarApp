@@ -25,12 +25,10 @@ export default function createFilteredFlatBoardTreeWithClips(
         const nameMatches = item.name.toLowerCase().includes(lowerFind)
 
         const valueMatches =
-          !isSearchNameOrLabelOnly &&
-          item.value?.toLowerCase().includes(lowerFind)
+          !isSearchNameOrLabelOnly && item.value?.toLowerCase().includes(lowerFind)
 
         const descriptionMatches =
-          !isSearchNameOrLabelOnly &&
-          item.description?.toLowerCase().includes(lowerFind)
+          !isSearchNameOrLabelOnly && item.description?.toLowerCase().includes(lowerFind)
 
         return nameMatches || valueMatches || descriptionMatches
       })
