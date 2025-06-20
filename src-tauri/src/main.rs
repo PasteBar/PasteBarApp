@@ -50,7 +50,7 @@ use crate::models::Setting;
 use crate::services::history_service;
 use crate::services::settings_service::get_all_settings;
 use crate::services::translations::translations::Translations;
-use crate::services::utils::ensure_url_or_email_prefix;
+use crate::services::utils::{apply_global_templates, ensure_url_or_email_prefix};
 use crate::services::utils::remove_special_bbcode_tags;
 use commands::backup_restore_commands;
 use commands::clipboard_commands;
@@ -767,11 +767,13 @@ async fn main() {
                 let url = item.value.as_deref().unwrap_or("");
                 if is_copy_only {
                   // Copy URL to clipboard instead of opening it
+                  // Apply global templates
+                  let final_text = apply_global_templates(url, &settings_map);
                   debug_output(|| {
-                    println!("Copying URL to clipboard: {}", url);
+                    println!("Copying URL to clipboard: {}", final_text);
                   });
                   manager
-                    .write_text(url)
+                    .write_text(final_text)
                     .expect("failed to write to clipboard");
                 } else {
                   let _ = opener::open(ensure_url_or_email_prefix(url))
@@ -781,30 +783,36 @@ async fn main() {
                 let path = item.value.as_deref().unwrap_or("");
                 if is_copy_only {
                   // Copy path to clipboard instead of opening it
+                  // Apply global templates
+                  let final_text = apply_global_templates(path, &settings_map);
                   debug_output(|| {
-                    println!("Copying path to clipboard: {}", path);
+                    println!("Copying path to clipboard: {}", final_text);
                   });
                   manager
-                    .write_text(path)
+                    .write_text(final_text)
                     .expect("failed to write to clipboard");
                 } else {
                   let _ = opener::open(path).map_err(|e| format!("Failed to open path: {}", e));
                 }
               } else {
                 if item.value.as_deref().unwrap_or("").is_empty() {
+                  // Apply global templates to item name
+                  let final_text = apply_global_templates(&item.name, &settings_map);
                   debug_output(|| {
-                    println!("Copying item name to clipboard: {}", &item.name);
+                    println!("Copying item name to clipboard: {}", final_text);
                   });
                   manager
-                    .write_text(&item.name)
+                    .write_text(final_text)
                     .expect("failed to write to clipboard");
                 } else if let Some(ref item_value) = item.value {
                   let text_to_copy = remove_special_bbcode_tags(item_value);
+                  // Apply global templates
+                  let final_text = apply_global_templates(&text_to_copy, &settings_map);
                   debug_output(|| {
-                    println!("Copying item value to clipboard: {}", text_to_copy);
+                    println!("Copying item value to clipboard: {}", final_text);
                   });
                   manager
-                    .write_text(text_to_copy)
+                    .write_text(final_text)
                     .expect("failed to write to clipboard");
                 }
               }
@@ -905,8 +913,10 @@ async fn main() {
                   Some(val) => val,
                   None => return (),
                 };
+                // Apply global templates
+                let final_text = apply_global_templates(&value, &settings_map);
                 manager
-                  .write_text(value)
+                  .write_text(final_text)
                   .expect("failed to write to clipboard");
               }
 

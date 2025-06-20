@@ -1,7 +1,6 @@
 import { createRef, FC, memo, useEffect, useRef, useState } from 'react'
 import CodeMirror from 'codemirror'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
-import { useTranslation } from 'react-i18next'
 
 import { escapeRegExp } from '~/lib/utils'
 
@@ -45,7 +44,6 @@ export const CodeViewer: FC<CodeViewerProps> = ({
 }) => {
   const [elements, setElements] = useState<JSX.Element[]>([])
   const [isModeLoaded, setModeLoaded] = useState(false)
-  const { t } = useTranslation()
   const mdShowFormat = useSignal<'html' | 'markdown'>('html')
 
   const highlightedRefs = useRef<React.RefObject<HTMLElement>[]>([])

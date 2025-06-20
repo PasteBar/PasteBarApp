@@ -28,6 +28,7 @@ export default function GlobalTemplatesSettings() {
   const { t } = useTranslation()
   const [isCreating, setIsCreating] = useState(false)
   const [newTemplate, setNewTemplate] = useState<NewTemplate>({ name: '', value: '' })
+  const [nameError, setNameError] = useState<string | null>(null)
 
   const {
     globalTemplatesEnabled,
@@ -41,17 +42,29 @@ export default function GlobalTemplatesSettings() {
 
   const handleCreateTemplate = () => {
     if (newTemplate.name.trim() && newTemplate.value.trim()) {
+      // Check for duplicate template name
+      const isDuplicate = globalTemplates?.some(
+        template => template.name.toLowerCase() === newTemplate.name.trim().toLowerCase()
+      )
+
+      if (isDuplicate) {
+        setNameError(t('Template name already exists', { ns: 'templates' }))
+        return
+      }
+
       addGlobalTemplate({
         name: newTemplate.name.trim(),
         value: newTemplate.value.trim(),
       })
       setNewTemplate({ name: '', value: '' })
+      setNameError(null)
       setIsCreating(false)
     }
   }
 
   const handleCancelCreate = () => {
     setNewTemplate({ name: '', value: '' })
+    setNameError(null)
     setIsCreating(false)
   }
 
@@ -87,15 +100,11 @@ export default function GlobalTemplatesSettings() {
                         <Box className="flex-1 space-y-2">
                           <InputField
                             small
-                            classNameInput="border-0 border-b border-gray-200 rounded-none pl-1.5 bg-transparent dark:!text-slate-300"
+                            disabled={true}
+                            classNameInput="border-0 border-b border-gray-200 rounded-none pl-1.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed"
                             label={t('templateNameLabel', { ns: 'templates' })}
-                            defaultValue={template.name}
-                            onBlur={e =>
-                              updateGlobalTemplate({
-                                id: template.id,
-                                name: e.target.value.trim(),
-                              })
-                            }
+                            value={template.name}
+                            title={t('Template name cannot be changed after creation. Delete and recreate to change name.', { ns: 'templates' })}
                           />
                           <InputField
                             small
@@ -196,9 +205,12 @@ export default function GlobalTemplatesSettings() {
                         ns: 'templates',
                       })}
                       value={newTemplate.name}
-                      onChange={e =>
+                      onChange={e => {
                         setNewTemplate(prev => ({ ...prev, name: e.target.value }))
-                      }
+                        // Clear error when user types
+                        if (nameError) setNameError(null)
+                      }}
+                      error={nameError as string}
                       autoFocus
                     />
 

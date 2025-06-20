@@ -14,6 +14,9 @@ use tld;
 use url::Url;
 
 use crate::menu::AssociatedItemTree;
+use crate::models::Setting;
+use std::collections::HashMap;
+use std::sync::Mutex;
 
 use super::collections_service;
 
@@ -205,6 +208,68 @@ pub fn remove_special_bbcode_tags(text: &str) -> String {
 
 pub fn is_valid_json(text: &str) -> bool {
   serde_json::from_str::<Value>(text).is_ok()
+}
+
+pub fn apply_global_templates(
+  text: &str,
+  settings_map: &HashMap<String, Setting>,
+) -> String {
+  // Check if global templates are enabled
+  let is_enabled = settings_map
+    .get("globalTemplatesEnabled")
+    .and_then(|s| s.value_bool)
+    .unwrap_or(false);
+
+  if !is_enabled {
+    return text.to_string();
+  }
+
+  // Get global templates from settings
+  let templates_json = match settings_map
+    .get("globalTemplates")
+    .and_then(|s| s.value_text.as_ref())
+  {
+    Some(json) => json,
+    None => return text.to_string(),
+  };
+
+  // Parse templates JSON
+  let templates: Vec<serde_json::Value> = match serde_json::from_str(templates_json) {
+    Ok(t) => t,
+    Err(_) => return text.to_string(),
+  };
+
+  let mut result = text.to_string();
+
+  // Apply each enabled template
+  for template in templates {
+    let is_template_enabled = template
+      .get("isEnabled")
+      .and_then(|v| v.as_bool())
+      .unwrap_or(false);
+
+    if !is_template_enabled {
+      continue;
+    }
+
+    let name = match template.get("name").and_then(|v| v.as_str()) {
+      Some(n) => n,
+      None => continue,
+    };
+
+    let value = match template.get("value").and_then(|v| v.as_str()) {
+      Some(v) => v,
+      None => continue,
+    };
+
+    // Create regex pattern for {{templateName}} (case-insensitive)
+    let pattern = format!(r"(?i)\{{\{{\s*{}\s*\}}\}}", regex::escape(name));
+    if let Ok(re) = Regex::new(&pattern) {
+      result = re.replace_all(&result, value).to_string();
+    }
+  }
+
+  result
 }
 
 pub fn debug_output<F: FnOnce()>(f: F) {

@@ -12,10 +12,12 @@ import {
   forceSaveClipNameEditingError,
   forceSaveEditClipName,
   isClipNameEditing,
+  settingsStoreAtom,
   showDeleteImageClipConfirmationId,
 } from '~/store'
 import clsx from 'clsx'
 import DOMPurify from 'dompurify'
+import { useAtomValue } from 'jotai'
 import linkifyIt from 'linkify-it'
 import {
   AlertTriangle,
@@ -30,6 +32,7 @@ import {
   FilePenLine,
   FileSymlink,
   FileText,
+  Hash,
   Heading,
   Image,
   Italic,
@@ -198,6 +201,7 @@ export function ClipEditContent({
       fields: [],
     },
   })
+  const { globalTemplates, globalTemplatesEnabled } = useAtomValue(settingsStoreAtom)
   const commandTestOutput = useSignal('')
   const templateTestOutput = useSignal('')
   const templateTestOutputFormat = useSignal<'text' | 'html'>('text')
@@ -796,6 +800,56 @@ export function ClipEditContent({
                     }}
                   />
                 </ToolTip>
+
+                {globalTemplatesEnabled && globalTemplates.length > 0 && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Box>
+                        <ToolTip
+                          isCompact
+                          text={t('Global Templates', { ns: 'templates' })}
+                        >
+                          <Hash
+                            size={17}
+                            className="hover:text-purple-500 dark:hover:text-purple-400 cursor-pointer"
+                          />
+                        </ToolTip>
+                      </Box>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" sideOffset={8}>
+                      <DropdownMenuItem
+                        className="text-center items-center justify-center py-0.5 text-xs"
+                        disabled
+                      >
+                        <Text>{t('Global Templates', { ns: 'templates' })}</Text>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <SimpleBar
+                        className="code-filter"
+                        style={{ height: 'auto', maxHeight: '260px' }}
+                        autoHide={false}
+                      >
+                        {globalTemplates
+                          .filter(template => template.isEnabled)
+                          .map((template, idx) => (
+                            <DropdownMenuItem
+                              key={idx}
+                              className="text-xs py-1 cursor-pointer"
+                              onClick={() => {
+                                // Insert {{templateName}} at cursor position
+                                const templateText = `{{${template.name}}}`
+                                textAreaRef?.current?.handleAddText(templateText)
+                              }}
+                            >
+                              <Text className="text-purple-600 dark:text-purple-400 font-medium">
+                                {template.name}
+                              </Text>
+                            </DropdownMenuItem>
+                          ))}
+                      </SimpleBar>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
 
                 <div tabIndex={-1} className="ml-auto mr-0.5">
                   <ToolTip
@@ -1744,10 +1798,24 @@ export function ClipEditContent({
                       className="ml-2 px-1.5 h-8 w-8 text-gray-400 border-0 group"
                       onClick={async () => {
                         try {
+                          // For global templates, update with current values
+                          const updatedTemplateOptions =
+                            formTemplateLocalOptions.value.templateOptions.map(field => {
+                              if (field.isGlobal && globalTemplatesEnabled) {
+                                const globalTemplate = globalTemplates.find(
+                                  gt => gt.isEnabled && gt.name === field.label
+                                )
+                                return {
+                                  ...field,
+                                  value: globalTemplate?.value || field.value,
+                                }
+                              }
+                              return field
+                            })
+
                           templateTestOutput.value = await invoke('run_template_fill', {
                             templateValue: clipValue.value,
-                            templateOptions:
-                              formTemplateLocalOptions.value.templateOptions,
+                            templateOptions: updatedTemplateOptions,
                             isPreview: true,
                           })
                         } catch (e) {

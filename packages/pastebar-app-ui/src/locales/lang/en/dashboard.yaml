@@ -84,6 +84,7 @@ Delete tab: Delete tab
 Detect Template Fields: Detect Template Fields
 Detect for Template Fields: Detect for Template Fields
 Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template
+Disabled field <b>{{<b>{{name}}</b>}}</b> has been found in the template: Disabled field <b>{{<b>{{name}}</b>}}</b> has been found in the template
 Done Create Clip: Done Create Clip
 Done Edit: Done Edit
 Done Edit Tabs: Done Edit Tabs
@@ -136,6 +137,7 @@ FILTERED_TYPES:
   Remove Quotes: Remove Quotes
 Field: Field
 Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template
+Field <b>{{<b>{{name}}</b>}}</b> has been found in the template: Field <b>{{<b>{{name}}</b>}}</b> has been found in the template
 Field Options: Field Options
 Fields Value: Fields Value
 File, folder or app path does not exist: File, folder or app path does not exist

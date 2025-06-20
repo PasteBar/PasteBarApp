@@ -85,6 +85,8 @@ export function ClipEditTemplate({
   const FIELD_TYPES = ['text', 'textarea', 'select'] as const
   type FieldType = (typeof FIELD_TYPES)[number]
 
+  // No need to update values - they're fetched dynamically
+
   return (
     <Box className="select-none mt-1">
       <Box className="my-2">
@@ -315,6 +317,82 @@ export function ClipEditTemplate({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {globalTemplatesEnabled && globalTemplates.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="mini"
+                  className="cursor-pointer hover:bg-transparent !px-2 !py-0"
+                >
+                  <Text
+                    className="!text-purple-500 dark:!text-purple-400 hover:underline"
+                    size="xs"
+                  >
+                    {t('Global Template', { ns: 'templates' })}
+                    <ChevronDown size={12} className="ml-1" />
+                  </Text>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                sideOffset={12}
+                align="center"
+                className="max-w-[300px]"
+              >
+                <DropdownMenuItem
+                  className="text-center items-center justify-center py-0.5 text-xs"
+                  disabled={true}
+                >
+                  <Text>{t('Global Templates', { ns: 'templates' })}</Text>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <SimpleBar
+                  className="code-filter"
+                  style={{ height: 'auto', maxHeight: '260px' }}
+                  autoHide={false}
+                >
+                  {globalTemplates
+                    .filter(template => template.isEnabled)
+                    .map((template, idx) => (
+                      <DropdownMenuItem
+                        key={idx}
+                        className="text-xs py-1"
+                        onClick={() => {
+                          // Add global template as a local field with isGlobal flag
+                          if (!localOptions.value.templateOptions) {
+                            localOptions.value.templateOptions = []
+                          }
+
+                          const newFields = [...localOptions.value.templateOptions]
+                          newFields.push({
+                            id: Date.now().toString(),
+                            type: 'text',
+                            label: template.name,
+                            value: '', // Don't store value for global templates
+                            isGlobal: true,
+                            isEnable: true,
+                          })
+
+                          localOptions.value = {
+                            ...localOptions.value,
+                            templateOptions: newFields,
+                          }
+
+                          // Trigger template field check
+                          checkForTemplateFieldsCallback()
+                        }}
+                      >
+                        <Flex className="flex items-center justify-between w-full">
+                          <Text className="text-purple-600 dark:text-purple-400 font-medium">
+                            {template.name}
+                          </Text>
+                        </Flex>
+                      </DropdownMenuItem>
+                    ))}
+                </SimpleBar>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -384,7 +462,7 @@ export function ClipEditTemplate({
                   <span
                     className={`whitespace-nowrap pr-1 min-w-[80px] overflow-hidden text-ellipsis block ${
                       isLabelOnTop ? 'text-left' : 'text-right max-w-[160px]'
-                    }`}
+                    } ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`}
                   >
                     {field.label}
                   </span>
@@ -842,24 +920,53 @@ export function ClipEditTemplate({
                       )}
                     </Flex>
                   ) : field.label?.toLocaleLowerCase() !== 'clipboard' ? (
-                    <InputField
-                      small
-                      key={defaultValueResetKey.value}
-                      placeholder={t('Enter default value', { ns: 'dashboard' })}
-                      autoFocus={localOptions.value.templateOptions[i].label !== 'Text'}
-                      classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-slate-300 dark:bg-slate-900"
-                      disabled={field.isEnable === false}
-                      type={field.type === 'number' ? 'number' : 'text'}
-                      className={`${
-                        field.isEnable === false
-                          ? 'bg-gray-100 opacity-50 dark:bg-gray-900'
-                          : ''
-                      } w-full`}
-                      onChange={e => {
-                        field.value = e.target.value.trim()
-                      }}
-                      defaultValue={field.value}
-                    />
+                    field.isGlobal ? (
+                      // For global templates, show the value but make it non-editable
+                      <Flex className="items-center gap-2 w-full">
+                        <InputField
+                          small
+                          key={defaultValueResetKey.value}
+                          placeholder=""
+                          value={
+                            globalTemplates.find(
+                              gt => gt.isEnabled && gt.name === field.label
+                            )?.value || ''
+                          }
+                          classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-purple-300 dark:bg-slate-900 opacity-75"
+                          disabled={true}
+                          type="text"
+                          className={`${
+                            field.isEnable === false
+                              ? 'bg-gray-100 opacity-50 dark:bg-gray-900'
+                              : ''
+                          } w-full`}
+                          title={`Global Template: ${field.label}`}
+                        />
+                        <Badge className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-800 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-700 cursor-default text-xs py-0.5 px-1.5">
+                          <Check size={12} className="text-purple-600 dark:text-purple-400" />
+                          {t('Global', { ns: 'templates' })}
+                        </Badge>
+                      </Flex>
+                    ) : (
+                      <InputField
+                        small
+                        key={defaultValueResetKey.value}
+                        placeholder={t('Enter default value', { ns: 'dashboard' })}
+                        autoFocus={localOptions.value.templateOptions[i].label !== 'Text'}
+                        classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-slate-300 dark:bg-slate-900"
+                        disabled={field.isEnable === false}
+                        type={field.type === 'number' ? 'number' : 'text'}
+                        className={`${
+                          field.isEnable === false
+                            ? 'bg-gray-100 opacity-50 dark:bg-gray-900'
+                            : ''
+                        } w-full`}
+                        onChange={e => {
+                          field.value = e.target.value.trim()
+                        }}
+                        defaultValue={field.value}
+                      />
+                    )
                   ) : (
                     <>
                       <InputField
@@ -1028,26 +1135,27 @@ export function ClipEditTemplate({
                       </div>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {field.label?.toLocaleLowerCase() !== 'clipboard' && (
-                      <DropdownMenuItem
-                        onClick={() => {
-                          if (isEdit) {
-                            editFieldId.value = null
-                          } else {
-                            editFieldId.value = field.id ?? null
-                          }
-                        }}
-                      >
-                        {isEdit ? (
-                          <Text size="xs">{t('Done Edit', { ns: 'common' })}</Text>
-                        ) : (
-                          <Text size="xs">{t('Edit Label', { ns: 'common' })}</Text>
-                        )}
-                        <div className="ml-auto">
-                          <SquarePen size={13} />
-                        </div>
-                      </DropdownMenuItem>
-                    )}
+                    {field.label?.toLocaleLowerCase() !== 'clipboard' &&
+                      !field.isGlobal && (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            if (isEdit) {
+                              editFieldId.value = null
+                            } else {
+                              editFieldId.value = field.id ?? null
+                            }
+                          }}
+                        >
+                          {isEdit ? (
+                            <Text size="xs">{t('Done Edit', { ns: 'common' })}</Text>
+                          ) : (
+                            <Text size="xs">{t('Edit Label', { ns: 'common' })}</Text>
+                          )}
+                          <div className="ml-auto">
+                            <SquarePen size={13} />
+                          </div>
+                        </DropdownMenuItem>
+                      )}
                     {field.isLabelOnTop ? (
                       <DropdownMenuItem
                         onClick={() => {
@@ -1291,7 +1399,9 @@ export function ClipEditTemplate({
                   <Text
                     className={`${
                       field.isEnable
-                        ? '!text-green-600 dark:!text-green-400'
+                        ? field.isGlobal
+                          ? '!text-purple-600 dark:!text-purple-400'
+                          : '!text-green-600 dark:!text-green-400'
                         : '!text-gray-400 dark:!text-gray-500'
                     } !font-normal group`}
                     size="xs"
@@ -1300,11 +1410,13 @@ export function ClipEditTemplate({
                       variant="outline"
                       className={`${
                         field.isEnable
-                          ? 'bg-green-100 dark:bg-green-900 hover:bg-green-100/70 dark:hover:bg-green-900 border-green-200 dark:border-green-800'
+                          ? field.isGlobal
+                            ? 'bg-purple-100 dark:bg-purple-800 hover:bg-purple-200/70 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800'
+                            : 'bg-green-100 dark:bg-green-900 hover:bg-green-100/70 dark:hover:bg-green-900 border-green-200 dark:border-green-800'
                           : 'bg-gray-100 dark:bg-gray-800/70 hover:bg-gray-100/70 dark:hover:bg-gray-700/70 border-gray-200 dark:border-gray-700'
                       } text-normal pr-2.5 group-hover:pr-1.5`}
                     >
-                      <Check size={12} className="mr-0.5" />
+                      <Check size={12} className={`mr-0.5 ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`} />
                       {field.label}
                       <ToolTip
                         text={t('Remove from template', { ns: 'common' })}
@@ -1372,7 +1484,9 @@ export function ClipEditTemplate({
                       variant="outline"
                       className={`${
                         field.isEnable
-                          ? 'bg-white dark:bg-slate-300/90 hover:bg-blue-50 dark:hover:bg-blue-300 border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-800'
+                          ? field.isGlobal
+                            ? 'bg-white dark:bg-slate-300/90 hover:bg-purple-50 dark:hover:bg-purple-300 border-slate-200 dark:border-slate-700 hover:border-purple-200 dark:hover:border-purple-800'
+                            : 'bg-white dark:bg-slate-300/90 hover:bg-blue-50 dark:hover:bg-blue-300 border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-800'
                           : 'bg-gray-50 dark:bg-gray-800/80 hover:bg-gray-50 dark:hover:bg-gray-800 border-gray-100 dark:border-gray-700'
                       } text-normal pr-2.5`}
                     >
