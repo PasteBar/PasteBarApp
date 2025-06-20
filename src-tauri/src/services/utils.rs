@@ -262,11 +262,13 @@ pub fn apply_global_templates(
       None => continue,
     };
 
-    // Create regex pattern for {{templateName}} (case-insensitive)
-    let pattern = format!(r"(?i)\{{\{{\s*{}\s*\}}\}}", regex::escape(name));
-    if let Ok(re) = Regex::new(&pattern) {
-      result = re.replace_all(&result, value).to_string();
-    }
+    // Check if regex is already cached
+    let re = regex_cache.entry(name.to_string()).or_insert_with(|| {
+      let pattern = format!(r"(?i)\{{\{{\s*{}\s*\}}\}}", regex::escape(name));
+      Regex::new(&pattern).unwrap()
+    });
+
+    result = re.replace_all(&result, value).to_string();
   }
 
   result
