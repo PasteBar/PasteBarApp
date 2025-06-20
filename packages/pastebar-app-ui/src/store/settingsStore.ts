@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api'
-import { emit, listen, TauriEvent } from '@tauri-apps/api/event'
+import { emit, listen } from '@tauri-apps/api/event'
 import { relaunch } from '@tauri-apps/api/process'
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater'
 import { semverCompare } from '~/libs/utils'
@@ -812,6 +812,12 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
     const currentTemplates = get().globalTemplates || []
     const updatedTemplates = [...currentTemplates, newTemplate]
     get().syncStateUpdate('globalTemplates', updatedTemplates)
+
+    // Do not persist templates with empty name or value
+    if (newTemplate.name.trim() === '' || newTemplate.value.trim() === '') {
+      return
+    }
+
     return get().updateSetting('globalTemplates', JSON.stringify(updatedTemplates))
   },
   updateGlobalTemplate: async (templateToUpdate: {
@@ -821,10 +827,19 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
     isEnabled?: boolean
   }) => {
     const currentTemplates = get().globalTemplates || []
+
     const updatedTemplates = currentTemplates.map(t =>
-      t.id === templateToUpdate.id ? { ...t, ...templateToUpdate } : t
+      t.id === templateToUpdate.id
+        ? {
+            ...t,
+            ...templateToUpdate,
+            ...(typeof templateToUpdate.name === 'string' && {
+              name: templateToUpdate.name.trim(),
+            }),
+          }
+        : t
     )
-    get().syncStateUpdate('globalTemplates', updatedTemplates)
+
     return get().updateSetting('globalTemplates', JSON.stringify(updatedTemplates))
   },
   deleteGlobalTemplate: async (templateId: string) => {

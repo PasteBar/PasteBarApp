@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api'
 import { confirm } from '@tauri-apps/api/dialog'
+import { CopyComponent } from '~/libs/bbcode'
 import i18n from '~/locales'
 import { LANGUAGES } from '~/locales/languges'
 import {
@@ -52,6 +53,7 @@ import md from '~/store/example.md?raw'
 
 import { NoteIconType } from '../components/Dashboard/components/utils'
 import CustomDatabaseLocationSettings from './CustomDatabaseLocationSettings'
+import GlobalTemplatesSettings from './GlobalTemplatesSettings'
 
 export default function UserPreferences() {
   const { t } = useTranslation()
@@ -104,13 +106,6 @@ export default function UserPreferences() {
     setIsSingleClickToCopyPaste,
     isSingleClickToCopyPasteQuickWindow,
     setIsSingleClickToCopyPasteQuickWindow,
-    globalTemplatesEnabled,
-    setGlobalTemplatesEnabled,
-    globalTemplates,
-    addGlobalTemplate,
-    updateGlobalTemplate,
-    deleteGlobalTemplate,
-    toggleGlobalTemplateEnabledState,
   } = useAtomValue(settingsStoreAtom)
 
   const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
@@ -346,9 +341,9 @@ export default function UserPreferences() {
                   </Card>
                 </Box>
 
-                {/* ------------- Custom Database Location Settings Card ------------- */}
                 <CustomDatabaseLocationSettings />
-                {/* ------------------------------------------------------------------ */}
+
+                <Spacer h={6} />
 
                 <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card>
@@ -1555,8 +1550,8 @@ export default function UserPreferences() {
                     </CardContent>
                   </Card>
                 </Box>
-
-                <Box className="animate-in fade-in max-w-xl mt-4">
+                <GlobalTemplatesSettings />
+                {/* <Box className="animate-in fade-in max-w-xl mt-4">
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                       <CardTitle className="animate-in fade-in text-md font-medium w-full">
@@ -1590,7 +1585,7 @@ export default function UserPreferences() {
                                       onBlur={e =>
                                         updateGlobalTemplate({
                                           id: template.id,
-                                          name: e.target.value,
+                                          name: e.target.value.trim(),
                                         })
                                       }
                                       className="flex-1"
@@ -1648,12 +1643,16 @@ export default function UserPreferences() {
                                       <Trash2 size={20} />
                                     </Button>
                                   </Flex>
-                                  <Box>
+                                  <Box className="mt-2">
                                     {template.name && (
-                                      <Badge
-                                        variant="secondary"
-                                        className="text-sm font-medium ml-0.5 mt-2"
-                                      >{`{{${template.name}}}`}</Badge>
+                                      <Flex className="gap-2 justify-start">
+                                        <CopyComponent
+                                          text={`{{${template.name}}}`}
+                                          copyText={`{{${template.name}}}`}
+                                          id={parseInt(template.id, 10)}
+                                        />{' '}
+                                        <Text>{'<-'} test copy</Text>
+                                      </Flex>
                                     )}
                                   </Box>
                                 </Box>
@@ -1679,7 +1678,7 @@ export default function UserPreferences() {
                       )}
                     </CardContent>
                   </Card>
-                </Box>
+                </Box> */}
                 <Spacer h={6} />
                 <Link to={returnRoute} replace>
                   <Button
