@@ -216,7 +216,7 @@ pub fn apply_global_templates(
 ) -> String {
   // Check if global templates are enabled
   let is_enabled = settings_map
-    .get("globalTemplatesEnabled")
+    .get(GLOBAL_TEMPLATES_ENABLED_KEY)
     .and_then(|s| s.value_bool)
     .unwrap_or(false);
 
