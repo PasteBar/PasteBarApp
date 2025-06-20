@@ -4,8 +4,10 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use serde::Serialize;
 use serde_json::Value;
+use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
+use std::sync::Mutex;
 
 #[cfg(target_os = "windows")]
 use winreg::RegKey;
@@ -15,10 +17,15 @@ use url::Url;
 
 use crate::menu::AssociatedItemTree;
 use crate::models::Setting;
-use std::collections::HashMap;
-use std::sync::Mutex;
 
 use super::collections_service;
+
+// Global regex cache for template patterns
+lazy_static! {
+  static ref REGEX_CACHE: Mutex<HashMap<String, Regex>> = Mutex::new(HashMap::new());
+}
+
+pub const GLOBAL_TEMPLATES_ENABLED_KEY: &str = "globalTemplatesEnabled";
 
 pub fn pretty_print_json<T: Serialize>(data: &Result<T, diesel::result::Error>) -> String {
   data
@@ -210,10 +217,7 @@ pub fn is_valid_json(text: &str) -> bool {
   serde_json::from_str::<Value>(text).is_ok()
 }
 
-pub fn apply_global_templates(
-  text: &str,
-  settings_map: &HashMap<String, Setting>,
-) -> String {
+pub fn apply_global_templates(text: &str, settings_map: &HashMap<String, Setting>) -> String {
   // Check if global templates are enabled
   let is_enabled = settings_map
     .get(GLOBAL_TEMPLATES_ENABLED_KEY)
@@ -263,10 +267,16 @@ pub fn apply_global_templates(
     };
 
     // Check if regex is already cached
-    let re = regex_cache.entry(name.to_string()).or_insert_with(|| {
-      let pattern = format!(r"(?i)\{{\{{\s*{}\s*\}}\}}", regex::escape(name));
-      Regex::new(&pattern).unwrap()
-    });
+    let re = {
+      let mut cache = REGEX_CACHE.lock().unwrap();
+      cache
+        .entry(name.to_string())
+        .or_insert_with(|| {
+          let pattern = format!(r"(?i)\{{\{{\s*{}\s*\}}\}}", regex::escape(name));
+          Regex::new(&pattern).unwrap()
+        })
+        .clone()
+    };
 
     result = re.replace_all(&result, value).to_string();
   }
