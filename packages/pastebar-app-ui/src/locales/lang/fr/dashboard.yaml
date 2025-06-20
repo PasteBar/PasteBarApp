@@ -21,8 +21,7 @@ Add Section: Ajouter une section
 Add Tab: Ajouter un onglet
 Add Template Field: Ajouter un champ de modèle
 Add a Tab: Ajouter un onglet
-Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Ajouter le champ <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> dans le modèle
-Add field <b>{{<b>{{name}}</b>}}</b> into the template: Ajouter le champ <b>{{<b>{{name}}</b>}}</b> dans le modèle
+Add field {{name}} into the template: Ajouter le champ {{name}} dans le modèle
 Add image: Ajouter une image
 Add note: Ajouter une note
 Add to Board: Ajouter au tableau
@@ -83,7 +82,7 @@ Delete field: Supprimer le champ
 Delete tab: Supprimer l'onglet
 Detect Template Fields: Détecter les champs du modèle
 Detect for Template Fields: Détecter les champs du modèle
-Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Le champ désactivé <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> a été trouvé dans le modèle
+Disabled field {{name}} has been found in the template: Le champ désactivé {{name}} a été trouvé dans le modèle
 Done Create Clip: Création du clip terminée
 Done Edit: Édition terminée
 Done Edit Tabs: Édition des onglets terminée
@@ -135,7 +134,7 @@ FILTERED_TYPES:
   RegEx Replace: Remplacement par expression régulière
   Remove Quotes: Supprimer les guillemets
 Field: Champ
-Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Le champ <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> a été trouvé dans le modèle
+Field {{name}} has been found in the template: Le champ {{name}} a été trouvé dans le modèle
 Field Options: Options du champ
 Fields Value: Valeur des champs
 File, folder or app path does not exist: Le chemin du fichier, dossier ou application n'existe pas

@@ -21,8 +21,7 @@ Add Section: Añadir Sección
 Add Tab: Añadir Pestaña
 Add Template Field: Añadir Campo de Plantilla
 Add a Tab: Añadir una Pestaña
-Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Añadir campo <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> a la plantilla
-Add field <b>{{<b>{{name}}</b>}}</b> into the template: Añadir campo <b>{{<b>{{name}}</b>}}</b> a la plantilla
+Add field {{name}} into the template: Añadir campo {{name}} a la plantilla
 Add image: Añadir imagen
 Add note: Añadir nota
 Add to Board: Añadir al Tablero
@@ -83,7 +82,7 @@ Delete field: Eliminar campo
 Delete tab: Eliminar pestaña
 Detect Template Fields: Detectar Campos de Plantilla
 Detect for Template Fields: Detectar Campos de Plantilla
-Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Se ha encontrado el campo deshabilitado <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> en la plantilla
+Disabled field {{name}} has been found in the template: Se ha encontrado el campo deshabilitado {{name}} en la plantilla
 Done Create Clip: Clip Creado
 Done Edit: Edición Completada
 Done Edit Tabs: Edición de Pestañas Completada
@@ -135,7 +134,7 @@ FILTERED_TYPES:
   RegEx Replace: Reemplazo RegEx
   Remove Quotes: Eliminar Comillas
 Field: Campo
-Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Se ha encontrado el campo <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> en la plantilla
+Field {{name}} has been found in the template: Se ha encontrado el campo {{name}} en la plantilla
 Field Options: Opciones de Campo
 Fields Value: Valor de Campos
 File, folder or app path does not exist: La ruta del archivo, carpeta o aplicación no existe

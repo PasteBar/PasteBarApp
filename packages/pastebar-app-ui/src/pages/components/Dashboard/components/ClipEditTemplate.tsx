@@ -943,7 +943,10 @@ export function ClipEditTemplate({
                           title={`Global Template: ${field.label}`}
                         />
                         <Badge className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-800 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-700 cursor-default text-xs py-0.5 px-1.5">
-                          <Check size={12} className="text-purple-600 dark:text-purple-400" />
+                          <Check
+                            size={12}
+                            className="text-purple-600 dark:text-purple-400"
+                          />
                           {t('Global', { ns: 'templates' })}
                         </Badge>
                       </Flex>
@@ -1375,19 +1378,19 @@ export function ClipEditTemplate({
                     field.isEnable ? (
                       field.label === 'Clipboard' ? (
                         <Trans
-                          i18nKey="Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template"
+                          i18nKey="Field {{Clipboard}} has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template"
                           ns="common"
                         />
                       ) : (
                         <Trans
-                          i18nKey="Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template"
+                          i18nKey="Field {{name}} has been found in the template"
                           ns="dashboard"
                           values={{ name: field.label }}
                         />
                       )
                     ) : (
                       <Trans
-                        i18nKey="Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template"
+                        i18nKey="Disabled field {{name}} has been found in the template"
                         ns="dashboard"
                         values={{ name: field.label }}
                       />
@@ -1416,7 +1419,12 @@ export function ClipEditTemplate({
                           : 'bg-gray-100 dark:bg-gray-800/70 hover:bg-gray-100/70 dark:hover:bg-gray-700/70 border-gray-200 dark:border-gray-700'
                       } text-normal pr-2.5 group-hover:pr-1.5`}
                     >
-                      <Check size={12} className={`mr-0.5 ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`} />
+                      <Check
+                        size={12}
+                        className={`mr-0.5 ${
+                          field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''
+                        }`}
+                      />
                       {field.label}
                       <ToolTip
                         text={t('Remove from template', { ns: 'common' })}

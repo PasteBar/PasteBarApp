@@ -1,0 +1,24 @@
+Create New Template: Создать Новый Шаблон
+Create Template: Создать Шаблон
+Enter template content...: Введите содержимое шаблона...
+Enter template name (e.g., "signature", "email"): Введите имя шаблона (например, "подпись", "email")
+Global: Глобальный
+Global Template: Глобальный Шаблон
+Global Templates: Глобальные Шаблоны
+Preview usage: Предварительный просмотр использования
+Template Usage: Использование Шаблона
+Template name already exists: Имя шаблона уже существует. Пожалуйста, выберите другое имя.
+Template name cannot be changed after creation. Delete and recreate to change name.: Имя шаблона нельзя изменить после создания. Удалите и создайте заново, чтобы изменить имя.
+Use Global Template: Использовать Глобальный Шаблон
+addTemplateButton: Добавить Шаблон
+confirmDeleteTemplateMessage: Вы уверены, что хотите удалить глобальный шаблон '{{name}}'?
+confirmDeleteTemplateTitle: Подтвердить Удаление
+deleteTemplateButtonTooltip: Удалить Шаблон
+enableGlobalTemplatesLabel: Включить Глобальные Шаблоны
+globalTemplatesDescription: Управляйте многоразовыми фрагментами текста, которые можно вставить в любой клип, используя {{template_name}}.
+globalTemplatesTitle: Глобальные Шаблоны
+localTemplateConflictWarning: Глобальный шаблон с именем '{{label}}' также существует. Локальный шаблон будет иметь приоритет в форме этого клипа.
+noGlobalTemplatesYet: Глобальные шаблоны пока не определены. Нажмите 'Добавить Шаблон', чтобы создать один.
+templateEnabledLabel: Включено
+templateNameLabel: Имя
+templateValueLabel: Значение

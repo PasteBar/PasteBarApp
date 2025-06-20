@@ -1,0 +1,24 @@
+Create New Template: Crear Nueva Plantilla
+Create Template: Crear Plantilla
+Enter template content...: Introduce el contenido de la plantilla...
+Enter template name (e.g., "signature", "email"): Introduce el nombre de la plantilla (ej., "firma", "email")
+Global: Global
+Global Template: Plantilla Global
+Global Templates: Plantillas Globales
+Preview usage: Vista previa de uso
+Template Usage: Uso de Plantilla
+Template name already exists: El nombre de la plantilla ya existe. Por favor, elige un nombre diferente.
+Template name cannot be changed after creation. Delete and recreate to change name.: El nombre de la plantilla no se puede cambiar después de la creación. Elimina y vuelve a crear para cambiar el nombre.
+Use Global Template: Usar Plantilla Global
+addTemplateButton: Agregar Plantilla
+confirmDeleteTemplateMessage: ¿Estás seguro de que quieres eliminar la plantilla global '{{name}}'?
+confirmDeleteTemplateTitle: Confirmar Eliminación
+deleteTemplateButtonTooltip: Eliminar Plantilla
+enableGlobalTemplatesLabel: Habilitar Plantillas Globales
+globalTemplatesDescription: Gestiona fragmentos de texto reutilizables que se pueden insertar en cualquier clip usando {{template_name}}.
+globalTemplatesTitle: Plantillas Globales
+localTemplateConflictWarning: También existe una plantilla global llamada '{{label}}'. La plantilla local tendrá prioridad dentro del formulario de este clip.
+noGlobalTemplatesYet: No hay plantillas globales definidas aún. Haz clic en 'Agregar Plantilla' para crear una.
+templateEnabledLabel: Habilitado
+templateNameLabel: Nombre
+templateValueLabel: Valor

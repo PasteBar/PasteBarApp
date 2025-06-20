@@ -21,8 +21,7 @@ Add Section: Abschnitt hinzufügen
 Add Tab: Tab hinzufügen
 Add Template Field: Vorlagenfeld hinzufügen
 Add a Tab: Tab hinzufügen
-Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Feld <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> zur Vorlage hinzufügen
-Add field <b>{{<b>{{name}}</b>}}</b> into the template: Feld <b>{{<b>{{name}}</b>}}</b> zur Vorlage hinzufügen
+Add field {{name}} into the template: Feld {{name}} zur Vorlage hinzufügen
 Add image: Bild hinzufügen
 Add note: Notiz hinzufügen
 Add to Board: Zum Board hinzufügen
@@ -83,7 +82,7 @@ Delete field: Feld löschen
 Delete tab: Tab löschen
 Detect Template Fields: Vorlagenfelder erkennen
 Detect for Template Fields: Nach Vorlagenfeldern suchen
-Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Deaktiviertes Feld <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> wurde in der Vorlage gefunden
+Disabled field {{name}} has been found in the template: Deaktiviertes Feld {{name}} wurde in der Vorlage gefunden
 Done Create Clip: Clip-Erstellung abgeschlossen
 Done Edit: Bearbeitung abgeschlossen
 Done Edit Tabs: Tab-Bearbeitung abgeschlossen
@@ -135,7 +134,7 @@ FILTERED_TYPES:
   RegEx Replace: RegEx Ersetzen
   Remove Quotes: Anführungszeichen entfernen
 Field: Feld
-Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Feld <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> wurde in der Vorlage gefunden
+Field {{name}} has been found in the template: Feld {{name}} wurde in der Vorlage gefunden
 Field Options: Feldoptionen
 Fields Value: Feldwert
 File, folder or app path does not exist: Datei-, Ordner- oder App-Pfad existiert nicht

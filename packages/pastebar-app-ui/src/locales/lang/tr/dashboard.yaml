@@ -21,8 +21,7 @@ Add Section: Bölüm Ekle
 Add Tab: Sekme Ekle
 Add Template Field: Şablon Alanı Ekle
 Add a Tab: Bir Sekme Ekle
-Add field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> into the template: Şablona <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> alan ekle
-Add field <b>{{<b>{{name}}</b>}}</b> into the template: Şablona <b>{{<b>{{name}}</b>}}</b> alan ekle
+Add field {{name}} into the template: Şablona {{name}} alan ekle
 Add image: Resim Ekle
 Add note: Not Ekle
 Add to Board: Panoya Ekle
@@ -83,7 +82,7 @@ Delete field: Alanı sil
 Delete tab: Sekmeyi sil
 Detect Template Fields: Şablon Alanlarını Algıla
 Detect for Template Fields: Şablon Alanları için Algılama
-Disabled field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Etkisiz Alanlar <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> şablonda bulundu
+Disabled field {{name}} has been found in the template: Etkisiz Alan {{name}} şablonda bulundu
 Done Create Clip: Klip Oluşturma Tamamlandı
 Done Edit: Düzenleme Tamamlandı
 Done Edit Tabs: Düzenleme Sekmeleri Tamamlandı
@@ -135,7 +134,7 @@ FILTERED_TYPES:
   RegEx Replace: RegEx Değiştir
   Remove Quotes: Remove Alıntılar
 Field: Alan
-Field <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> has been found in the template: Alan <b>&#123;&#123;<b>{{name}}</b>&#125;&#125;</b> şablonda bulundu
+Field {{name}} has been found in the template: Alan {{name}} şablonda bulundu
 Field Options: Alan Seçenekleri
 Fields Value: Alan Değeri
 File, folder or app path does not exist: Dosya, klasör veya uygulama yolu mevcut değil
