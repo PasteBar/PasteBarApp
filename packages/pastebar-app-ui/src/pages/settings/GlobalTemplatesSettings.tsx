@@ -6,8 +6,10 @@ import { useAtomValue } from 'jotai'
 import { Check, Plus, Save, Trash2, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import ToolTip from '~/components/atoms/tooltip'
 import InputField from '~/components/molecules/input'
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -89,7 +91,7 @@ export default function GlobalTemplatesSettings() {
           {globalTemplatesEnabled && (
             <Box className="mt-4">
               {/* Existing Templates */}
-              {globalTemplates && globalTemplates.length > 0 ? (
+              {globalTemplates && globalTemplates.length > 0 && (
                 <Box className="space-y-3 mb-4">
                   {globalTemplates.map(template => (
                     <Box
@@ -98,19 +100,55 @@ export default function GlobalTemplatesSettings() {
                     >
                       <Flex className="items-start gap-3">
                         <Box className="flex-1 space-y-2">
-                          <InputField
+                          <ToolTip
+                            text={t(
+                              'Template name cannot be changed after creation. Delete and recreate to change name.',
+                              { ns: 'templates' }
+                            )}
+                            sideOffset={5}
+                            isCompact
+                            side="bottom"
+                          >
+                            {template.isEnabled ? (
+                              <Badge
+                                variant="outline"
+                                className="!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800 text-normal pr-2.5"
+                              >
+                                <Check
+                                  size={12}
+                                  className="mr-0.5 text-purple-600 dark:text-purple-400"
+                                />
+                                {template.name}
+                              </Badge>
+                            ) : (
+                              <Badge
+                                variant="outline"
+                                className="!text-gray-700 dark:!text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-800 text-normal pr-2.5"
+                              >
+                                <X
+                                  size={12}
+                                  className="mr-0.5 text-gray-600 dark:text-gray-400"
+                                />
+                                {template.name}
+                              </Badge>
+                            )}
+                            {/* <InputField
                             small
                             disabled={true}
-                            classNameInput="border-0 border-b border-gray-200 rounded-none pl-1.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed"
-                            label={t('templateNameLabel', { ns: 'templates' })}
+                            classNameInput="border rounded-sm pl-1.5 nowrap overflow-hidden text-ellipsis dark:!text-purple-300 !text-purple-900 dark:bg-slate-900"
+                            // label={t('templateNameLabel', { ns: 'templates' })}
                             value={template.name}
-                            title={t('Template name cannot be changed after creation. Delete and recreate to change name.', { ns: 'templates' })}
-                          />
+                            title={t(
+                              'Template name cannot be changed after creation. Delete and recreate to change name.',
+                              { ns: 'templates' }
+                            )}
+                          /> */}
+                          </ToolTip>
                           <InputField
                             small
                             label={t('templateValueLabel', { ns: 'templates' })}
                             defaultValue={template.value}
-                            classNameInput="border-0 border-b border-gray-200 rounded-none pl-1.5 bg-transparent dark:!text-slate-300"
+                            classNameInput="text-sm border-0 border-b border-gray-200 rounded-none pl-1.5 bg-transparent dark:!text-slate-300"
                             onBlur={e =>
                               updateGlobalTemplate({
                                 id: template.id,
@@ -159,7 +197,7 @@ export default function GlobalTemplatesSettings() {
                             <Trash2 size={16} />
                           </Button>
                           <Box />
-                          <Flex className="gap-2 items-center">
+                          <Flex className="gap-2 items-center text-sm">
                             <Text className="text-xs text-muted-foreground">
                               {t('Template Usage', { ns: 'templates' })}:
                             </Text>
@@ -174,10 +212,6 @@ export default function GlobalTemplatesSettings() {
                     </Box>
                   ))}
                 </Box>
-              ) : (
-                <Text className="text-sm text-muted-foreground mt-4 mb-4">
-                  {t('noGlobalTemplatesYet', { ns: 'templates' })}
-                </Text>
               )}
 
               {/* Create New Template Section */}
