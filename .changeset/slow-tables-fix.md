@@ -2,4 +2,4 @@
 'pastebar-app-ui': patch
 ---
 
-Added Tray Icon Behavior on Windows
+Added: customizable tray icon behavior on Windows as user settings
