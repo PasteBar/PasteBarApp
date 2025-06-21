@@ -5,13 +5,13 @@ Add Clipboard Value: 添加剪贴板值
 Add Custom: 添加自定义
 Add Custom Field: 添加自定义字段
 Add Delay Time: 添加延迟时间
-Add First Board: 添加首个面板
+Add First Board: 添加第一个面板
 Add Form Field: 添加表单字段
 Add Header: 添加标头
 Add Key Press: 添加按键
 Add Key Press After Paste: 粘贴后添加按键
 Add Link Card: 添加链接卡片
-Add Open URL: 添加打开 URL
+Add Open URL: 添加打开网址
 Add Output Template: 添加输出模板
 Add Regex Match Group Filter: 添加正则表达式分组筛选器
 Add Request Header: 添加请求标头
@@ -65,7 +65,7 @@ Command:
 Command error: 命令错误
 Common Fields: 公共字段
 Confirm Clear All Fields: 确认清除所有字段
-Confirm to remove Auth: 确认移除认证
+Confirm to remove Auth: 确认移除授权
 Confirm to remove filters: 确认移除筛选器
 Confirm to remove headers: 确认移除标头
 Copy Clip: 复制剪辑
@@ -83,10 +83,10 @@ Delete tab: 删除标签
 Detect Template Fields: 检测模板字段
 Detect for Template Fields: 检测模板字段
 Disabled field {{name}} has been found in the template: 在模板中找到禁用字段 {{name}}
-Done Create Clip: 完成创建剪辑
-Done Edit: 完成编辑
-Done Edit Tabs: 完成编辑标签
-Done Organize: 完成整理
+Done Create Clip: 剪辑创建完成
+Done Edit: 编辑完成
+Done Edit Tabs: 标签编辑完成
+Done Organize: 整理完成
 Drag & Drop Path: 拖放路径
 Drop To Add: 拖放以添加
 Drop image file here, or use a separate window for drag and drop.: 将图片文件拖放到此处，或使用单独的窗口进行拖放。
@@ -120,13 +120,13 @@ Enter value or drag from history: 输入值或从历史记录中拖动
 Enter web link or email: 输入网页链接或电子邮件
 Errors:
   No fields found in the template.: 模板中未找到字段。
-  Please fix output template or confirm to save as is.: 请修复输出模板或确认按原样保存。
-  Please fix template fields or confirm to save as is.: 请修复模板字段或确认按原样保存。
-  Please fix the problem or confirm to save as is.: 请修复问题或确认按原样保存。
-  Please verify your link for any errors, or confirm to save as is.: 请检查链接是否有错误，或确认按原样保存。
-  Please verify your path for any errors, or confirm to save as is.: 请检查路径是否有错误，或确认按原样保存。
-  Your command runs with errors, confirm you want to save as is.: 您的命令运行出错，确认是否要按原样保存。
-  Your request runs with errors, confirm you want to save as is.: 您的请求运行出错，确认是否要按原样保存。
+  Please fix output template or confirm to save as is.: 请修复输出模板或确认保持现状。
+  Please fix template fields or confirm to save as is.: 请修复模板字段或确认保持现状。
+  Please fix the problem or confirm to save as is.:  请修复问题或确认保持现状。
+  Please verify your link for any errors, or confirm to save as is.: 请检查链接是否有错误，或或确认保持现状。
+  Please verify your path for any errors, or confirm to save as is.: 请检查路径是否有错误，或确认保持现状。
+  Your command runs with errors, confirm you want to save as is.: 您的命令运行出错，确认是否保持现状。
+  Your request runs with errors, confirm you want to save as is.: 您的请求运行出错，确认是否保持现状。
 FILTERED_TYPES:
   Dot Path: 点路径
   JSON Path: JSON 路径
@@ -137,9 +137,9 @@ Field: 字段
 Field {{name}} has been found in the template: 在模板中找到字段 {{name}}
 Field Options: 字段选项
 Fields Value: 字段值
-File, folder or app path does not exist: 文件、文件夹或应用程序路径不存在
-File, folder or app path is valid: 文件、文件夹或应用程序路径有效
-File, folder or app path might not be valid: 文件、文件夹或应用程序路径可能无效
+File, folder or app path does not exist: 文件、文件夹或应用路径不存在
+File, folder or app path is valid: 文件、文件夹或应用路径有效
+File, folder or app path might not be valid: 文件、文件夹或应用路径可能无效
 Fill Template: 填充模板
 Filter Type: 筛选类型
 Filter's Value: 筛选值
@@ -151,7 +151,7 @@ General Fields: 常规字段
 HTML: HTML
 Headers: 标头
 Hide Label: 隐藏标签
-History capture is off: 历史记录捕获已关闭
+History capture is off: 历史记录已关闭
 Key Press: 按键
 Key Press After: 之后按键
 Key Press After Paste: 粘贴后按键
@@ -163,7 +163,7 @@ Labels: 标签
 Last run: 上次运行
 Last update: 上次更新
 Layout Max Width: 布局最大宽度
-Mask to hide clipboard value in preview: 在预览中隐藏剪贴板值的掩码
+Mask to hide clipboard value in preview: 预览时隐藏剪贴板值的遮罩
 Move Clip: 移动剪辑
 Moved Clips Panel: 已移动剪辑面板
 Name: 名称
@@ -176,12 +176,12 @@ Number of columns: 列数
 Open: 打开
 Open URL Disable / Enable: 打开 URL 禁用/启用
 Output Template: 输出模板
-Panel for moved or copied items from other tabs: 从其他标签移动或复制的项目面板
-Please confirm to save as is.: 请确认按原样保存。
+Panel for moved or copied items from other tabs: 从其他标签移动或复制的条目面板
+Please confirm to save as is.: 请确认保持现状。
 Press: 按下
 RETURN_POSITION_TYPES:
-  First Only: 仅第一个
-  Last Only: 仅最后一个
+  First Only: 仅限首个
+  Last Only: 仅限末个
 RULES_TYPES:
   CSS Selector: CSS 选择器
   RegEx Find: 正则表达式查找
