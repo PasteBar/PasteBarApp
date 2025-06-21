@@ -106,10 +106,23 @@ export default function UserPreferences() {
     setIsSingleClickToCopyPaste,
     isSingleClickToCopyPasteQuickWindow,
     setIsSingleClickToCopyPasteQuickWindow,
+    isDoubleClickTrayToOpenEnabledOnWindows,
+    setIsDoubleClickTrayToOpenEnabledOnWindows,
+    isLeftClickTrayToOpenEnabledOnWindows,
+    setIsLeftClickTrayToOpenEnabledOnWindows,
+    isLeftClickTrayDisabledOnWindows,
+    setIsLeftClickTrayDisabledOnWindows,
   } = useAtomValue(settingsStoreAtom)
 
-  const { setFontSize, fontSize, setIsSwapPanels, isSwapPanels, returnRoute, isMacOSX } =
-    useAtomValue(uiStoreAtom)
+  const {
+    setFontSize,
+    fontSize,
+    setIsSwapPanels,
+    isSwapPanels,
+    returnRoute,
+    isWindows,
+    isMacOSX,
+  } = useAtomValue(uiStoreAtom)
 
   const isSinglePanelView = isHistoryPanelVisibleOnly || isSavedClipsPanelVisibleOnly
 
@@ -340,6 +353,128 @@ export default function UserPreferences() {
                     </CardContent>
                   </Card>
                 </Box>
+
+                {isWindows && (
+                  <Box className="animate-in fade-in max-w-xl mt-4">
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="animate-in fade-in text-md font-medium">
+                          {t('Tray Icon Behavior on Windows', { ns: 'settings2' })}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Text className="text-sm text-muted-foreground mb-4">
+                          {t(
+                            'Configure how the system tray icon responds to mouse clicks',
+                            {
+                              ns: 'settings2',
+                            }
+                          )}
+                        </Text>
+
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <Text className="text-[15px] font-semibold">
+                                {t('Double-click toggles app visibility', {
+                                  ns: 'settings2',
+                                })}
+                              </Text>
+                              <Text className="text-xs text-muted-foreground">
+                                {t(
+                                  'Double-clicking the tray icon shows or hides the main application window',
+                                  { ns: 'settings2' }
+                                )}
+                              </Text>
+                            </div>
+                            <Switch
+                              checked={isDoubleClickTrayToOpenEnabledOnWindows}
+                              onCheckedChange={() => {
+                                if (
+                                  isLeftClickTrayToOpenEnabledOnWindows &&
+                                  !isDoubleClickTrayToOpenEnabledOnWindows
+                                ) {
+                                  setIsLeftClickTrayToOpenEnabledOnWindows(false)
+                                }
+                                setIsDoubleClickTrayToOpenEnabledOnWindows(
+                                  !isDoubleClickTrayToOpenEnabledOnWindows
+                                )
+                              }}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <Text className="text-[15px] font-semibold">
+                                {t('Left-click toggles app visibility', {
+                                  ns: 'settings2',
+                                })}
+                              </Text>
+                              <Text className="text-xs text-muted-foreground">
+                                {t(
+                                  'Left-clicking the tray icon shows or hides the main application window',
+                                  { ns: 'settings2' }
+                                )}
+                              </Text>
+                            </div>
+                            <Switch
+                              checked={isLeftClickTrayToOpenEnabledOnWindows}
+                              onCheckedChange={() => {
+                                if (
+                                  isDoubleClickTrayToOpenEnabledOnWindows &&
+                                  !isLeftClickTrayToOpenEnabledOnWindows
+                                ) {
+                                  setIsDoubleClickTrayToOpenEnabledOnWindows(false)
+                                }
+                                setIsLeftClickTrayToOpenEnabledOnWindows(
+                                  !isLeftClickTrayToOpenEnabledOnWindows
+                                )
+                              }}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <Text className="text-[15px] font-semibold">
+                                {t('Disable left-click context menu', {
+                                  ns: 'settings2',
+                                })}
+                              </Text>
+                              <Text className="text-xs text-muted-foreground">
+                                {t(
+                                  'Prevents the context menu from appearing when left-clicking the tray icon',
+                                  { ns: 'settings2' }
+                                )}
+                              </Text>
+                            </div>
+                            <Switch
+                              checked={isLeftClickTrayDisabledOnWindows}
+                              onCheckedChange={() => {
+                                setIsLeftClickTrayDisabledOnWindows(
+                                  !isLeftClickTrayDisabledOnWindows
+                                )
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        {(isLeftClickTrayToOpenEnabledOnWindows ||
+                          isLeftClickTrayDisabledOnWindows) && (
+                          <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded border-l-4 border-blue-300 dark:border-blue-600">
+                            <Text className="text-xs text-blue-700 dark:text-blue-300">
+                              {t(
+                                'Enabling either left-click option will disable the context menu to ensure proper functionality.',
+                                {
+                                  ns: 'settings2',
+                                }
+                              )}
+                            </Text>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Box>
+                )}
 
                 <CustomDatabaseLocationSettings />
 
@@ -577,7 +712,7 @@ export default function UserPreferences() {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <div>
-                            <Text className="text-sm font-medium">
+                            <Text className="text-[15px] font-semibold">
                               {t('Show History Panel Only', { ns: 'settings2' })}
                             </Text>
                             <Text className="text-xs text-muted-foreground">
@@ -601,7 +736,7 @@ export default function UserPreferences() {
 
                         <div className="flex items-center justify-between">
                           <div>
-                            <Text className="text-sm font-medium">
+                            <Text className="text-[15px] font-semibold">
                               {t('Show Boards and Clips Panel Only', { ns: 'settings2' })}
                             </Text>
                             <Text className="text-xs text-muted-foreground">
@@ -626,7 +761,7 @@ export default function UserPreferences() {
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
-                            <Text className="text-sm font-medium">
+                            <Text className="text-[15px] font-semibold">
                               {t('Show Both Panels', { ns: 'settings2' })}
                             </Text>
                             <Text className="text-xs text-muted-foreground">

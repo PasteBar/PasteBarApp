@@ -48,9 +48,15 @@ Single Click Copy/Paste action: Acción de clic simple Copiar/Pegar
 Single Click Copy/Paste: Clic simple Copiar/Pegar
 Quick Paste Window Options: Opciones de la ventana de pegado rápido
 Configure the behavior of the Quick Paste window when selecting items: Configurar el comportamiento de la ventana de pegado rápido al seleccionar elementos
-Copy items only (no auto-paste): Copiar elementos solamente (sin pegado automático)
-Auto-close window after action: Cerrar ventana automáticamente después de la acción
-When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Cuando esté habilitado, la ventana de pegado rápido se cerrará automáticamente después de copiar o pegar un elemento.
+Configure how the system tray icon responds to mouse clicks: Configurar cómo responde el icono de la bandeja del sistema a los clics del ratón
+Disable left-click context menu: Deshabilitar menú contextual del clic izquierdo
+Double-click toggles app visibility: El doble clic alterna la visibilidad de la aplicación
+Double-clicking the tray icon shows or hides the main application window: Hacer doble clic en el icono de la bandeja muestra u oculta la ventana principal de la aplicación
+Enabling either left-click option will disable the context menu to ensure proper functionality.: Habilitar cualquiera de las opciones de clic izquierdo deshabilitará el menú contextual para asegurar el funcionamiento adecuado.
+Left-click toggles app visibility: El clic izquierdo alterna la visibilidad de la aplicación
+Left-clicking the tray icon shows or hides the main application window: Hacer clic izquierdo en el icono de la bandeja muestra u oculta la ventana principal de la aplicación
+Prevents the context menu from appearing when left-clicking the tray icon: Previene que aparezca el menú contextual al hacer clic izquierdo en el icono de la bandeja
+Tray Icon Behavior on Windows: Comportamiento del icono de la bandeja en Windows
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Esto establece el tipo de icono predeterminado para nuevos clips con notas. Puedes personalizar clips individuales a través del menú contextual.
 ? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
 : Cuando está habilitado, hacer clic en elementos del menú solo copiará el contenido al portapapeles en lugar de pegarlo automáticamente. Esto te da más control sobre cuándo y dónde se pega el contenido.

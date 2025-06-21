@@ -67,3 +67,12 @@ Preserve starred items when clearing history: Conserver les éléments favoris l
 History Item Preview Max Lines: Limite maximale de lignes d'aperçu des éléments de l'historique
 Set the maximum number of lines to display in the preview of a history item: Définir le nombre maximal de lignes à afficher dans l'aperçu d'un élément de l'historique
 Preview Max Lines: Lignes d'aperçu
+Configure how the system tray icon responds to mouse clicks: Configurer comment l'icône de la barre système répond aux clics de souris
+Disable left-click context menu: Désactiver le menu contextuel du clic gauche
+Double-click toggles app visibility: Le double-clic bascule la visibilité de l'application
+Double-clicking the tray icon shows or hides the main application window: Double-cliquer sur l'icône de la barre système affiche ou masque la fenêtre principale de l'application
+Enabling either left-click option will disable the context menu to ensure proper functionality.: L'activation de l'une ou l'autre des options de clic gauche désactivera le menu contextuel pour assurer un bon fonctionnement.
+Left-click toggles app visibility: Le clic gauche bascule la visibilité de l'application
+Left-clicking the tray icon shows or hides the main application window: Cliquer gauche sur l'icône de la barre système affiche ou masque la fenêtre principale de l'application
+Prevents the context menu from appearing when left-clicking the tray icon: Empêche le menu contextuel d'apparaître lors du clic gauche sur l'icône de la barre système
+Tray Icon Behavior on Windows: Comportement de l'icône de la barre système sur Windows
