@@ -1,7 +1,7 @@
 HISTORY_PANEL_TOUR:
   - element: '#side-panel_tour'
     popover:
-      title: 剪贴板历史面板
+      title: 剪贴板历史记录面板
       description: 此面板显示您复制的剪贴板历史，方便以后访问。滚动浏览历史记录，搜索内容，或按类型筛选。您可以调整此面板的大小以获得自定义视图。
       prefferedSide: right
   - element: '#history-find_tour'
