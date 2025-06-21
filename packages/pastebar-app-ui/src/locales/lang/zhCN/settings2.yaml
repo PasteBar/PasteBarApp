@@ -2,12 +2,12 @@ App restart required: 需要重启应用
 Application Starts with Main Window Hidden: 应用启动时隐藏主窗口
 Change: 更改
 Copy only from menu items: 仅从菜单项复制
-Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: 仅在鼠标悬停在导航栏上时显示导航栏项目，减少可见的UI元素
-Global System OS Hotkeys: 全局系统操作系统热键
-Hide Collections Navbar: 隐藏收藏导航栏
-Hide collections menu dropdown on the navigation bar: 隐藏导航栏上的收藏菜单下拉列表
-Hide collections menu on the navbar: 在导航栏上隐藏收藏菜单
-Hide the App Dock Icon: 隐藏应用程序Dock图标
+Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: 仅在鼠标悬停在导航栏上时显示导航栏项，减少可见的UI元素
+Global System OS Hotkeys: 全局系统热键
+Hide Collections Navbar: 隐藏收藏集导航栏
+Hide collections menu dropdown on the navigation bar: 隐藏导航栏上的收藏集菜单下拉列表
+Hide collections menu on the navbar: 在导航栏上隐藏收藏集菜单
+Hide the App Dock Icon: 隐藏应用Dock图标
 Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.: 应用重启时保持主窗口隐藏。您可以使用菜单栏或任务栏菜单，或使用全局热键重新打开它。
 No keys set: 未设置按键
 Press keys: 按下按键
@@ -22,7 +22,7 @@ Press Backspace/Delete to clear the hotkey: 按退格键/删除键清除热键
 Press your key combination...: 按下您的按键组合...
 Recording...: 录制中...
 Show Navbar Items Hover: 导航栏项悬停显示
-Show collections menu on the navbar: 在导航栏上显示收藏菜单
+Show collections menu on the navbar: 在导航栏上显示收藏集菜单
 Show navbar elements on hover only: 仅在悬停时显示导航栏元素
 Show/Hide Main App Window: 显示/隐藏主应用窗口
 Show/Hide Quick Paste Window: 显示/隐藏快速粘贴窗口
@@ -32,15 +32,15 @@ Show Note Icons on Clips: 在剪辑上显示笔记图标
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: 在有笔记的剪辑上显示持久图标，以改善视觉组织并使笔记更容易发现。
 Default Note Icon Type: 默认笔记图标类型
 Boards, saved clips and menu items panel visible: 面板、已保存剪辑和菜单项面板可见
-Both clipboard history and saved clips panels visible: 剪贴板历史和已保存剪辑面板都可见
-Clipboard history panel visible: 剪贴板历史面板可见
+Both clipboard history and saved clips panels visible: 剪贴板历史记录和已保存剪辑面板都可见
+Clipboard history panel visible: 剪贴板历史记录面板可见
 Control which panels are visible in the main window: 控制在主窗口中可见的面板
 Enable simplified, less boxy layout for a cleaner and more streamlined interface design: 启用简化、更少方框式的布局，获得更干净和流线型的界面设计
 'Note: At least one panel must remain visible in main window.': '注意：主窗口中至少要保持一个面板可见。'
 Panel Visibility: 面板可见性
 Show Boards and Clips Panel Only: 仅显示面板和剪辑面板
 Show Both Panels: 显示两个面板
-Show History Panel Only: 仅显示历史面板
+Show History Panel Only: 仅显示历史记录面板
 Show Simplified Layout: 显示简化布局
 Simplified Panel Layout: 简化面板布局
 Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: 启用单击复制/粘贴剪贴板历史记录和保存的剪辑，而不需要双击。
@@ -66,4 +66,4 @@ Preserve pinned items when clearing history: 清除历史记录时保留已固�
 Preserve starred items when clearing history: 清除历史记录时保留已星标项目
 History Item Preview Max Lines: 历史项目预览最大行数
 Set the maximum number of lines to display in the preview of a history item: 设置历史项目预览中显示的最大行数
-Preview Max Lines: 预览行数
+Preview Max Lines: 预览最大行数
