@@ -289,7 +289,6 @@ export function ClipboardHistoryRowComponent({
   const isNowItem = index === 0 && clipboard.updatedAt > Date.now() - MINUTE_IN_MS
   const isMp3 = clipboard?.isLink && clipboard?.value?.endsWith('.mp3')
 
-  // Recalculate preview with custom line limit if provided
   const { valuePreview, valueMorePreviewLines, valueMorePreviewChars } = useMemo(() => {
     if (historyPreviewLineLimit && historyPreviewLineLimit > 0 && clipboard?.value) {
       const result = getValuePreview(
@@ -305,7 +304,6 @@ export function ClipboardHistoryRowComponent({
         valueMorePreviewChars: result.morePreviewChars,
       }
     }
-    // Use default preview from backend
     return {
       valuePreview: clipboard?.valuePreview || '',
       valueMorePreviewLines: clipboard?.valueMorePreviewLines || null,
