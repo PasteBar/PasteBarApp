@@ -68,7 +68,7 @@ interface ClipboardHistoryRowContextMenuProps {
   arrLinks: string[]
   isImage: boolean
   isText: boolean
-  copiedFromApp: string | null
+  copiedFromApp?: string | null
   isMasked: boolean
   isImageData: boolean
   isMp3: boolean | undefined

@@ -243,6 +243,7 @@ export default function ClipboardHistoryPage() {
     isSimplifiedLayout,
     isSavedClipsPanelVisibleOnly,
     isSingleClickToCopyPaste,
+    historyPreviewLineLimit,
   } = useAtomValue(settingsStoreAtom)
 
   const { t } = useTranslation()
@@ -1522,6 +1523,7 @@ export default function ClipboardHistoryPage() {
                                               isSingleClickToCopyPaste={
                                                 isSingleClickToCopyPaste
                                               }
+                                              historyPreviewLineLimit={historyPreviewLineLimit}
                                             />
                                           </Box>
                                         )
@@ -2148,6 +2150,7 @@ export default function ClipboardHistoryPage() {
                                               isSingleClickToCopyPaste={
                                                 isSingleClickToCopyPaste
                                               }
+                                              historyPreviewLineLimit={historyPreviewLineLimit}
                                               index={index}
                                               style={style}
                                             />
@@ -2208,6 +2211,7 @@ export default function ClipboardHistoryPage() {
                                       activeDragId.toString().split('::pinned')[0]
                               })}
                               isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                              historyPreviewLineLimit={historyPreviewLineLimit}
                             />
                           ) : null}
                         </DragOverlay>

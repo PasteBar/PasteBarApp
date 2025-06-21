@@ -13,6 +13,7 @@ import WrapIcon from '~/assets/icons/wrap'
 import { MINUTE_IN_MS } from '~/constants'
 import { isEmailNotUrl } from '~/libs/utils'
 import { formatLocale as format } from '~/locales/date-locales'
+import { getValuePreview } from '~/pages/components/Dashboard/components/utils'
 import {
   hoveringHistoryRowId,
   isKeyAltPressed,
@@ -122,6 +123,7 @@ interface ClipboardHistoryRowProps {
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
   isSingleClickToCopyPaste?: boolean
+  historyPreviewLineLimit?: number
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -180,6 +182,7 @@ export function ClipboardHistoryRowComponent({
   setHistoryFilters = () => {},
   setAppFilters = () => {},
   isSingleClickToCopyPaste = false,
+  historyPreviewLineLimit,
 }: ClipboardHistoryRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
@@ -224,6 +227,7 @@ export function ClipboardHistoryRowComponent({
     // eslint-disable-next-line
   }, [
     contentElementRendered.value,
+    historyPreviewLineLimit,
     rowRef.current?.clientHeight,
     setRowHeight,
     timeAgo,
@@ -284,6 +288,36 @@ export function ClipboardHistoryRowComponent({
 
   const isNowItem = index === 0 && clipboard.updatedAt > Date.now() - MINUTE_IN_MS
   const isMp3 = clipboard?.isLink && clipboard?.value?.endsWith('.mp3')
+
+  const { valuePreview, valueMorePreviewLines, valueMorePreviewChars } = useMemo(() => {
+    if (historyPreviewLineLimit && historyPreviewLineLimit > 0 && clipboard?.value) {
+      const result = getValuePreview(
+        clipboard.value,
+        clipboard.isImageData || false,
+        isExpanded,
+        historyPreviewLineLimit,
+        true
+      )
+      return {
+        valuePreview: result.valuePreview,
+        valueMorePreviewLines: result.morePreviewLines,
+        valueMorePreviewChars: result.morePreviewChars,
+      }
+    }
+    return {
+      valuePreview: clipboard?.valuePreview || '',
+      valueMorePreviewLines: clipboard?.valueMorePreviewLines || null,
+      valueMorePreviewChars: clipboard?.valueMorePreviewChars || null,
+    }
+  }, [
+    historyPreviewLineLimit,
+    clipboard?.value,
+    clipboard?.isImageData,
+    isExpanded,
+    clipboard?.valuePreview,
+    clipboard?.valueMorePreviewLines,
+    clipboard?.valueMorePreviewChars,
+  ])
 
   useEffect(() => {
     if (
@@ -554,7 +588,7 @@ export function ClipboardHistoryRowComponent({
                         {searchTerm ? (
                           highlightWithPreviewMatchedText(clipboard.value, searchTerm)
                         ) : (
-                          <span>{clipboard.valuePreview}</span>
+                          <span>{valuePreview}</span>
                         )}
                       </code>
                     </Box>
@@ -604,7 +638,7 @@ export function ClipboardHistoryRowComponent({
                         className="max-w-full max-h-56 min-h-10 rounded-md shadow-sm border border-slate-100 dark:border-slate-700"
                       />
                     </Box>
-                  ) : clipboard.detectedLanguage && clipboard.valuePreview ? (
+                  ) : clipboard.detectedLanguage && valuePreview ? (
                     <Box
                       ref={ref => {
                         if (ref) {
@@ -615,17 +649,13 @@ export function ClipboardHistoryRowComponent({
                     >
                       <Highlight
                         theme={isDark ? themes.vsDark : themes.github}
-                        code={isExpanded ? stringValue : clipboard.valuePreview}
+                        code={isExpanded ? stringValue : valuePreview}
                         language={clipboard.detectedLanguage}
                       >
                         {({ className, style, tokens, getLineProps, getTokenProps }) => {
                           return (
                             <code className={`${className}`} style={style}>
                               {tokens.map((line, i) => {
-                                const isLastLine =
-                                  i === tokens.length - 1 &&
-                                  clipboard.valueMorePreviewLines &&
-                                  !isExpanded
                                 return (
                                   <div
                                     key={i}
@@ -650,9 +680,6 @@ export function ClipboardHistoryRowComponent({
                                             )}
                                       </span>
                                     ))}
-                                    {isLastLine && (
-                                      <span className="select-none">...</span>
-                                    )}
                                   </div>
                                 )
                               })}
@@ -660,9 +687,6 @@ export function ClipboardHistoryRowComponent({
                           )
                         }}
                       </Highlight>
-                      {clipboard.valueMorePreviewLines && (
-                        <Box className="select-none"> {'\u00A0'} </Box>
-                      )}
                     </Box>
                   ) : (
                     <Box
@@ -695,9 +719,6 @@ export function ClipboardHistoryRowComponent({
                           {searchTerm
                             ? highlightMatchedText(stringValue, searchTerm)
                             : hyperlinkText(stringValue, clipboard.arrLinks)}
-                          {clipboard.valueMorePreviewChars && (
-                            <Box className="select-none"> {'\u00A0'} </Box>
-                          )}
                         </code>
                       ) : (
                         <code className="justify-start cursor-pointer whitespace-pre">
@@ -709,17 +730,11 @@ export function ClipboardHistoryRowComponent({
                             : hyperlinkTextWithPreview({
                                 previewLinkCard: !hasLinkCard && isLinkCardPreviewEnabled,
                                 isPreviewError: hasClipboardHistoryURLErrors,
-                                value: clipboard.valuePreview ?? '',
+                                value: valuePreview ?? '',
                                 links: clipboard.arrLinks,
                                 itemId: null,
                                 historyId: clipboard.historyId,
                               })}
-                          {clipboard.valueMorePreviewChars && (
-                            <>
-                              <span className="select-none">...</span>
-                              <Box className="select-none"> {'\u00A0'} </Box>
-                            </>
-                          )}
                           {isMp3 && (
                             <PlayButton
                               src={stringValue}
@@ -735,68 +750,66 @@ export function ClipboardHistoryRowComponent({
                       )}
                     </Box>
                   )}
-                  {(clipboard.valueMorePreviewLines ||
-                    clipboard.valueMorePreviewChars) && (
-                    <Box
-                      className={`absolute left-1 bottom-1 flex flex-row items-center rounded mb-[2px] pl-0.5 ${bgToolsPanel}`}
-                    >
+                  {(valueMorePreviewLines || valueMorePreviewChars) &&
+                    !isCopiedOrPasted && (
                       <Box
-                        className={`text-xs text-muted-foreground px-1 cursor-pointer`}
-                        onClick={() => {
-                          setExpanded(clipboard.historyId, !isExpanded)
-                        }}
+                        className={`absolute left-1 bottom-1 flex flex-row items-center rounded mb-[2px] pl-0.5 ${bgToolsPanel}`}
                       >
-                        <ToolTip
-                          text={!isExpanded ? t('Show all', { ns: 'common' }) : ''}
-                          isCompact
-                          isDisabled={isExpanded || isDragPreview}
-                          delayDuration={2000}
-                          side="bottom"
-                          sideOffset={10}
-                        >
-                          {!isExpanded ? (
-                            clipboard?.valueMorePreviewChars ? (
-                              <>
-                                +{clipboard.valueMorePreviewChars}{' '}
-                                {t('chars', { ns: 'common' })}
-                              </>
-                            ) : (
-                              <>
-                                +{clipboard.valueMorePreviewLines}{' '}
-                                {t('lines', { ns: 'common' })}
-                              </>
-                            )
-                          ) : (
-                            <>- {t('show less', { ns: 'common' })}</>
-                          )}
-                        </ToolTip>
-                      </Box>
-                      {isExpanded && (
                         <Box
-                          className={`text-xs text-muted-foreground px-1.5 cursor-pointer`}
-                          onClick={() => setWrapText(clipboard.historyId, !isWrapText)}
+                          className={`text-xs text-muted-foreground px-1 cursor-pointer`}
+                          onClick={() => {
+                            setExpanded(clipboard.historyId, !isExpanded)
+                          }}
                         >
                           <ToolTip
-                            text={
-                              !isWrapText
-                                ? t('Lines Wrap', { ns: 'common' })
-                                : t('No Wrap', { ns: 'common' })
-                            }
-                            delayDuration={2000}
+                            text={!isExpanded ? t('Show all', { ns: 'common' }) : ''}
                             isCompact
+                            isDisabled={isExpanded || isDragPreview}
+                            delayDuration={2000}
                             side="bottom"
                             sideOffset={10}
                           >
-                            {!isWrapText ? (
-                              <WrapIcon width={20} height={20} />
+                            {!isExpanded ? (
+                              valueMorePreviewChars ? (
+                                <>
+                                  +{valueMorePreviewChars} {t('chars', { ns: 'common' })}
+                                </>
+                              ) : (
+                                <>
+                                  +{valueMorePreviewLines} {t('lines', { ns: 'common' })}
+                                </>
+                              )
                             ) : (
-                              <NoWrapIcon width={20} height={20} />
+                              <>- {t('show less', { ns: 'common' })}</>
                             )}
                           </ToolTip>
                         </Box>
-                      )}
-                    </Box>
-                  )}
+                        {isExpanded && (
+                          <Box
+                            className={`text-xs text-muted-foreground px-1.5 cursor-pointer`}
+                            onClick={() => setWrapText(clipboard.historyId, !isWrapText)}
+                          >
+                            <ToolTip
+                              text={
+                                !isWrapText
+                                  ? t('Lines Wrap', { ns: 'common' })
+                                  : t('No Wrap', { ns: 'common' })
+                              }
+                              delayDuration={2000}
+                              isCompact
+                              side="bottom"
+                              sideOffset={10}
+                            >
+                              {!isWrapText ? (
+                                <WrapIcon width={20} height={20} />
+                              ) : (
+                                <NoWrapIcon width={20} height={20} />
+                              )}
+                            </ToolTip>
+                          </Box>
+                        )}
+                      </Box>
+                    )}
                   {clipboard.isImage && !clipboard.isLink && (
                     <Box className="absolute left-1 bottom-1 flex flex-row gap-1 rounded items-center pb-0.5 pl-0.5 z-100">
                       <Box

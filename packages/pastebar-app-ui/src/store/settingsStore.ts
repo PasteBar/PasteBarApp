@@ -89,6 +89,7 @@ type Settings = {
   isScreenLockPassCodeRequireOnStart: boolean
   clipTextMinLength: number
   clipTextMaxLength: number
+  historyPreviewLineLimit: number | null
   isImageCaptureDisabled: boolean
   isMenuItemCopyOnlyEnabled: boolean
   isNoteIconsEnabled: boolean
@@ -215,6 +216,7 @@ export interface SettingsStoreState {
   initSettings: (settings: Settings) => void
   setClipTextMinLength: (width: number) => void
   setClipTextMaxLength: (height: number) => void
+  setHistoryPreviewLineLimit: (limit: number | null) => void
   setProtectedCollections: (ids: string[]) => void
   setHasPinProtectedCollections: (hasPinProtectedCollections: boolean) => Promise<void>
   setGlobalTemplatesEnabled: (isEnabled: boolean) => void
@@ -292,6 +294,7 @@ const initialState: SettingsStoreState & Settings = {
   isFirstRunAfterUpdate: false,
   clipTextMinLength: 0,
   clipTextMaxLength: 5000,
+  historyPreviewLineLimit: 5,
   isImageCaptureDisabled: false,
   isMenuItemCopyOnlyEnabled: false,
   isNoteIconsEnabled: true,
@@ -367,6 +370,7 @@ const initialState: SettingsStoreState & Settings = {
   setIsShowNavBarItemsOnHoverOnly: () => {},
   setClipTextMinLength: () => {},
   setClipTextMaxLength: () => {},
+  setHistoryPreviewLineLimit: () => {},
   setIsImageCaptureDisabled: () => {},
   setIsMenuItemCopyOnlyEnabled: () => {},
   setIsNoteIconsEnabled: () => {},
@@ -711,6 +715,13 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setClipTextMaxLength: async (length: number) => {
     return get().updateSetting('clipTextMaxLength', length)
+  },
+  setHistoryPreviewLineLimit: async (limit: number | null) => {
+    if (limit === 0) {
+      limit = null
+    }
+    get().syncStateUpdate('historyPreviewLineLimit', limit)
+    return get().updateSetting('historyPreviewLineLimit', limit)
   },
   setIsImageCaptureDisabled: async (isEnabled: boolean) => {
     return get().updateSetting('isImageCaptureDisabled', isEnabled)

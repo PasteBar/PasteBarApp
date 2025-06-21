@@ -64,3 +64,6 @@ Keep Pinned Items: Angehängte Elemente beibehalten
 Keep Starred Items: Mit Stern markierte Elemente beibehalten
 Preserve pinned items when clearing history: Angehängte Elemente beim Löschen des Verlaufs beibehalten
 Preserve starred items when clearing history: Mit Stern markierte Elemente beim Löschen des Verlaufs beibehalten
+History Item Preview Max Lines: Maximale Vorschauzeilenanzahl für Verlaufselemente
+Set the maximum number of lines to display in the preview of a history item: Maximale Anzahl der Zeilen für die Vorschau eines Verlaufselements festlegen
+Preview Max Lines: Vorschauzeilen

@@ -181,7 +181,7 @@ export const CodeViewer: FC<CodeViewerProps> = ({
   return (
     <Box className="relative">
       <OverlayScrollbarsComponent
-        className={`${isShowMore ? 'code-scroll-x pb-2' : ''}`}
+        className={`${isShowMore ? 'code-scroll-x' : ''}`}
         options={{
           overflow: {
             x: !isShowMore ? 'hidden' : 'scroll',

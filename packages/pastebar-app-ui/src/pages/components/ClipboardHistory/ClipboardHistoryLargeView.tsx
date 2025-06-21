@@ -189,7 +189,7 @@ export function ClipboardHistoryLargeViewComponent({
                   </Box>
                 ) : clipboard.detectedLanguage && clipboard.valuePreview ? (
                   <Box
-                    className="text-ellipsis self-start text-sm w-full p-1.5 animate-in fade-in"
+                    className="text-ellipsis self-start text-sm w-full animate-in fade-in"
                     key={clipboard.historyId}
                   >
                     <Highlight
@@ -215,34 +215,41 @@ export function ClipboardHistoryLargeViewComponent({
                             }}
                           >
                             <code className={`${className}`} style={style}>
-                              {tokens.map((line, i) => {
-                                return (
-                                  <div
-                                    key={i}
-                                    {...getLineProps({ line })}
-                                    className={`${
-                                      isWrapText
-                                        ? 'whitespace-pre-wrap'
-                                        : 'whitespace-pre'
-                                    } overflow-hidden text-ellipsis`}
-                                  >
-                                    {line.map((token, key) => (
-                                      <span
-                                        key={key}
-                                        {...getTokenProps({ token })}
-                                        className="select-text"
-                                      >
-                                        {!searchTerm
-                                          ? token.content
-                                          : highlightMatchedText(
-                                              token.content,
-                                              searchTerm
-                                            )}
-                                      </span>
-                                    ))}
-                                  </div>
-                                )
-                              })}
+                              {tokens
+                                .filter((line, i) => {
+                                  if (i === tokens.length - 1) {
+                                    return line.some(token => token.content.trim() !== '')
+                                  }
+                                  return true
+                                })
+                                .map((line, i) => {
+                                  return (
+                                    <div
+                                      key={i}
+                                      {...getLineProps({ line })}
+                                      className={`${
+                                        isWrapText
+                                          ? 'whitespace-pre-wrap'
+                                          : 'whitespace-pre'
+                                      } overflow-hidden text-ellipsis`}
+                                    >
+                                      {line.map((token, key) => (
+                                        <span
+                                          key={key}
+                                          {...getTokenProps({ token })}
+                                          className="select-text"
+                                        >
+                                          {!searchTerm
+                                            ? token.content
+                                            : highlightMatchedText(
+                                                token.content,
+                                                searchTerm
+                                              )}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )
+                                })}
                             </code>
                           </OverlayScrollbarsComponent>
                         )
@@ -291,9 +298,6 @@ export function ClipboardHistoryLargeViewComponent({
                       {searchTerm
                         ? highlightMatchedText(textValue, searchTerm)
                         : hyperlinkText(textValue, clipboard.arrLinks)}
-                      {clipboard.valueMorePreviewChars && (
-                        <Box className="select-none"> {'\u00A0'} </Box>
-                      )}
                     </code>
                   </Box>
                 )}
