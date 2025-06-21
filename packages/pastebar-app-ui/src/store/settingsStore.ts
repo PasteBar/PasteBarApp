@@ -294,7 +294,7 @@ const initialState: SettingsStoreState & Settings = {
   isFirstRunAfterUpdate: false,
   clipTextMinLength: 0,
   clipTextMaxLength: 5000,
-  historyPreviewLineLimit: 5,
+  historyPreviewLineLimit: null,
   isImageCaptureDisabled: false,
   isMenuItemCopyOnlyEnabled: false,
   isNoteIconsEnabled: true,

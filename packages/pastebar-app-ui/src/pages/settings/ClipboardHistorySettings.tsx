@@ -429,9 +429,8 @@ export default function ClipboardHistorySettings() {
                               <Button
                                 variant="secondary"
                                 size="sm"
-                                disabled={historyPreviewLineLimit === 5}
                                 onClick={() => {
-                                  setHistoryPreviewLineLimit(5)
+                                  setHistoryPreviewLineLimit(0)
                                 }}
                                 className="text-sm bg-slate-200 dark:bg-slate-700 dark:text-slate-200 mt-1"
                               >
