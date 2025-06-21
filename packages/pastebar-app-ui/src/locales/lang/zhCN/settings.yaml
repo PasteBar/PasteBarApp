@@ -1,8 +1,8 @@
 '<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.': 已设置 <strong>{{screenLockPassCodeLength}}</strong> 位数字密码。
 Activation Success: 激活成功
 Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.: 在 1 秒内复制两次文本时添加星标。这允许您快速将复制的文本或链接添加到收藏夹，并在剪贴板历史中轻松找到。
-Add an unlimited number of tabs within each collection for better organization and easy access.: 在每个收藏中添加无限数量的标签，以更好地组织和轻松访问。
-'Add an unlimited number of tabs within each collection for better organization and easy access.                                ': '在每个收藏中添加无限数量的标签，以更好地组织和轻松访问。                                '
+Add an unlimited number of tabs within each collection for better organization and easy access.: 在每个收藏集中添加无限数量的标签，以更好地组织和轻松访问。
+'Add an unlimited number of tabs within each collection for better organization and easy access.                                ': '在每个收藏集中添加无限数量的标签，以更好地组织和轻松访问。                                '
 Advanced settings: 高级设置
 Already Active: 已激活
 Application Auto Start: 应用程序自动启动
@@ -10,29 +10,29 @@ Application Color Theme: 应用程序颜色主题
 Application UI Color Theme: 应用程序 UI 颜色主题
 Application UI Fonts Scale: 应用程序 UI 字体缩放
 Application UI Language: 应用程序 UI 语言
-Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: 以下列出的应用程序复制到剪贴板的操作不会被记录在剪贴板历史中。不区分大小写。
-Auto Disable History Capture when Screen Unlocked: 屏幕解锁时自动禁用历史记录捕获
-Auto Lock Application Screen on User Inactivity: 用户不活动时自动锁定应用程序屏幕
-Auto Lock Screen on User Inactivity: 用户不活动时自动锁定屏幕
-Auto Lock the Screen on User Inactivity: 用户不活动时自动锁定屏幕
-Auto Masking Words List: 自动遮蔽词列表
+Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: 以下列出的应用程序复制到剪贴板的操作将不会被捕获到剪贴板历史记录中。不区分大小写。
+Auto Disable History Capture when Screen Unlocked: 屏幕解锁时自动禁用历史捕获
+Auto Lock Application Screen on User Inactivity: 用户不活跃时自动锁定应用屏幕
+Auto Lock Screen on User Inactivity: 用户不活跃时自动锁定屏幕
+Auto Lock the Screen on User Inactivity: 用户不活跃时自动锁定屏幕
+Auto Masking Words List: 自动屏蔽词列表
 Auto update on capture: 捕获时自动更新
 Auto-Clear Settings: 自动清除设置
-Auto-Generate Link Card Preview: 自动生成链接卡片预览
+Auto-Generate Link Card Preview: 自动生成链接卡预览
 Auto-Preview Link on Hover: 悬停时自动预览链接
 Auto-Star on Double Copy: 双重复制时自动星标
 Auto-Update on Capture: 捕获时自动更新
 Auto-Trim Spaces on Capture: 捕获时自动删除空格
 Auto-delete clipboard history after: 自动删除剪贴板历史时间
-Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.: 在剪贴板历史中自动创建链接卡片预览。这允许快速查看网站详情，无需打开或粘贴链接。
+Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.: 在剪贴板历史中自动创建链接卡预览。这允许快速查看网站详情，无需打开或粘贴链接。
 Back: 返回
 Capture History: 捕获历史
 Capture History Text Length Limits: 捕获历史文本长度限制
-Change the application UI font size scale: 更改应用程序 UI 字体大小比例
-Change the application UI language: 更改应用程序 UI 语言
-Change the application user interface color theme: 更改应用程序用户界面颜色主题
-Change the application user interface font size scale: 更改应用程序用户界面字体大小比例
-Change the application user interface language: 更改应用程序用户界面语言
+Change the application UI font size scale: 更改应用 UI 字体大小比例
+Change the application UI language: 更改应用 UI 语言
+Change the application user interface color theme: 更改应用用户界面颜色主题
+Change the application user interface font size scale: 更改应用用户界面字体大小比例
+Change the application user interface language: 更改应用用户界面语言
 Clip Notes Popup Maximum Dimensions: 剪辑注释弹出窗口最大尺寸
 Clipboard History Settings: 剪贴板历史设置
 'Complete details:': '完整详情：'
@@ -42,7 +42,7 @@ Create an unlimited number of collections to organize your clips and menus.: 创
 Custom: 自定义
 Custom themes: 自定义主题
 Decrease UI Font Size: 减小 UI 字体大小
-Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.: 在锁定的应用程序屏幕上显示剪贴板历史捕获开关。这允许您直接从锁定屏幕控制历史捕获设置。
+Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.: 在锁定的应用屏幕上显示剪贴板历史捕获开关。这允许您直接从锁定屏幕控制历史捕获设置。
 Display disabled collections name on the navigation bar collections menu: 在导航栏收藏菜单中显示已禁用的收藏名称
 Display disabled collections name on the navigation bar under collections menu: 在导航栏收藏菜单下显示已禁用的收藏名称
 Display full name of selected collection on the navigation bar: 在导航栏上显示所选收藏的完整名称
@@ -54,7 +54,7 @@ Emails do not match: 电子邮件不匹配
 Enable Auto Start: 启用自动启动
 Enable Clip Title Hover Show with Delay: 启用剪辑标题悬停延迟显示
 Enable application auto start on system boot: 启用系统启动时应用程序自动启动
-Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: 启用在一定时间不活动后自动锁定应用程序屏幕，以防止未经授权访问您的数据。
+Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: 启用在一定时间不活动后自动锁定应用屏幕，以防止未经授权访问您的数据。
 Enable auto lock the application screen when user not active: 用户不活动时启用自动锁定应用程序屏幕
 Enable auto update on capture: 启用捕获时自动更新
 Enable auto trim spaces on history capture: 启用历史记录捕获时自动修剪空格
@@ -85,7 +85,7 @@ List each word or sentence on a new line.: 在新行上列出每个单词或句�
 Lock Screen Clipboard History Capture Control: 锁屏剪贴板历史捕获控制
 Lock Screen PassCode: 锁屏密码
 Lock Screen Passcode: 锁屏密码
-Manage Collections: 管理收藏
+Manage Collections: 管理收藏集
 Maximum 10 digits: 最多 10 位数字
 Maximum devices: 最大设备数
 Medium: 中等
@@ -96,7 +96,7 @@ Name: 名称
 Open Security Settings: 打开安全设置
 Passcode digits remaining: 剩余密码位数
 Passcode is locked.: 密码已锁定。
-Passcode is not set: 未设置密码
+Passcode is not set: 密码未设置
 Passcode is not valid: 密码无效
 Passcode length: 密码长度
 Passcode mismatch: 密码不匹配
@@ -163,9 +163,9 @@ Tomorrow: 明天
 'Try again after <strong>{{resetPassCodeNextDelay}}</strong> seconds': <strong>{{resetPassCodeNextDelay}}</strong> 秒后再试
 UI Language: UI 语言
 UnPin Window: 取消固定窗口
-Unlimited Collections: 无限收藏
-Unlimited Tabs per Collection: 每个收藏无限标签
-Unlimited paste history: 无限粘贴历史
+Unlimited Collections: 无限收藏集
+Unlimited Tabs per Collection: 每个收藏集无限标签
+Unlimited paste history: 无限粘贴历史记录
 Use Password: 使用密码
 User Preferences: 用户偏好设置
 Web Scraping and Parsing: 网页抓取和解析
@@ -173,22 +173,22 @@ Words or sentences listed below will not be captured in clipboard history if fou
 passcode reset: 密码重置
 password reset: 密码重置
 Apply and Restart: 应用并重启
-Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: 您确定要将"{{path}}"设置为新的数据文件夹吗？应用程序将重新启动。
-Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: 您确定要将数据库{{operation}}到"{{path}}"吗？应用程序将重新启动。
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: 您确定要将"{{path}}"设置为新的数据文件夹吗？应用将重新启动。
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: 您确定要将数据库{{operation}}到"{{path}}"吗？应用将重新启动。
 Change Custom Data Folder...: 更改自定义数据文件夹...
 Change Selected Folder...: 更改选定文件夹...
-Changing the database location requires an application restart to take effect.: 更改数据库位置需要重新启动应用程序才能生效。
-ConfirmRevertToDefaultDbPathMessage: 您确定要恢复到默认数据位置吗？您的应用程序数据将移动到默认路径。
+Changing the database location requires an application restart to take effect.: 更改数据库位置需要重新启动应用才能生效。
+ConfirmRevertToDefaultDbPathMessage: 您确定要恢复到默认数据位置吗？您的应用数据将移动到默认路径。
 Copy data: 复制数据
 Current data folder: 当前数据文件夹
-Custom Application Data Location: 自定义应用程序数据位置
-Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: 自定义数据位置已激活。您可以更改它或恢复到默认位置。更改需要重新启动应用程序。
+Custom Application Data Location: 自定义应用数据位置
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: 自定义数据位置已激活。您可以更改它或恢复到默认位置。更改需要重新启动应用。
 Default: 默认
-Enable custom data location to store application data in a directory of your choice instead of the default location.: 启用自定义数据位置，将应用程序数据存储在您选择的目录中，而不是默认位置。
+Enable custom data location to store application data in a directory of your choice instead of the default location.: 启用自定义数据位置，将应用数据存储在您选择的目录中，而不是默认位置。
 Failed to apply custom database location.: 应用自定义数据库位置失败。
 Failed to create directory. Please check permissions and try again.: 创建目录失败。请检查权限并重试。
 Failed to revert to default database location.: 恢复到默认数据库位置失败。
-Found existing "pastebar-data" folder. The application will use this folder to store data.: 找到现有的"pastebar-data"文件夹。应用程序将使用此文件夹存储数据。
+Found existing "pastebar-data" folder. The application will use this folder to store data.: 找到现有的"pastebar-data"文件夹。应用将使用此文件夹存储数据。
 Invalid directory selected.: 选择的目录无效。
 Operation when applying new path: 应用新路径时的操作
 Please select a directory first.: 请先选择一个目录。
@@ -196,17 +196,17 @@ Please select a new directory different from the current one.: 请选择与当�
 Revert to Default: 恢复到默认
 Select Data Folder: 选择数据文件夹
 Select Data Folder...: 选择数据文件夹...
-Select a custom location to store your application data instead of the default location.: 选择一个自定义位置来存储应用程序数据，而不是默认位置。
+Select a custom location to store your application data instead of the default location.: 选择一个自定义位置来存储应用数据，而不是默认位置。
 Selected data folder: 选定的数据文件夹
 Selected new data folder for change: 选定的新数据文件夹用于更改
-Setting a custom database location requires an application restart to take effect.: 设置自定义数据库位置需要重新启动应用程序才能生效。
+Setting a custom database location requires an application restart to take effect.: 设置自定义数据库位置需要重新启动应用才能生效。
 The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: 选定的文件夹不为空且不包含PasteBar数据文件。您想创建一个"pastebar-data"子文件夹来存储数据吗？
-This folder already contains PasteBar data. The application will use this existing data after restart.: 此文件夹已包含PasteBar数据。应用程序将在重启后使用这些现有数据。
+This folder already contains PasteBar data. The application will use this existing data after restart.: 此文件夹已包含PasteBar数据。应用将在重启后使用这些现有数据。
 Use new location: 使用新位置
 An error occurred during directory processing.: 目录处理期间发生错误。
 An error occurred during directory selection or setup.: 目录选择或设置期间发生错误。
-Disable Image Capture: 禁用图像捕获
-Disable capturing and storing images from clipboard: 禁用从剪贴板捕获和存储图像
+Disable Image Capture: 禁用图片捕获
+Disable capturing and storing images from clipboard: 禁用从剪贴板捕获和存储图片
 Custom Database Location: 自定义数据库位置
 Selected new data folder: 选定的新数据文件夹用于更改
 none: 无
