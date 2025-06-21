@@ -8,7 +8,7 @@ Global Templates: 全局模板
 Preview usage: 预览用法
 Template Usage: 模板用法
 Template name already exists: 模板名称已存在。请选择不同的名称。
-Template name cannot be changed after creation. Delete and recreate to change name.: 创建后无法更改模板名称。删除并重新创建以更改名称。
+Template name cannot be changed after creation. Delete and recreate to change name.: 模板名称创建后无法更改。若要更改名称，请删除并重新创建。
 Use Global Template: 使用全局模板
 addTemplateButton: 添加模板
 confirmDeleteTemplateMessage: 您确定要删除全局模板 '{{name}}' 吗？
