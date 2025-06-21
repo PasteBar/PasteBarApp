@@ -325,8 +325,17 @@ unsafe extern "system" fn tray_subclass_proc(
           bounds,
         });
 
-        if let Some(menu) = subclass_input.hmenu {
-          show_tray_menu(hwnd, menu, cursor.x, cursor.y);
+        // Check environment variable to see if we should show context menu on left click
+        let enable_left_click_menu = std::env::var("PASTEBAR_ENABLE_LEFT_CLICK_MENU")
+          .unwrap_or_else(|_| "false".to_string())
+          .parse::<bool>()
+          .unwrap_or(false);
+
+        // Only show context menu on left click if not disabled
+        if !enable_left_click_menu {
+          if let Some(menu) = subclass_input.hmenu {
+            show_tray_menu(hwnd, menu, cursor.x, cursor.y);
+          }
         }
       }
 

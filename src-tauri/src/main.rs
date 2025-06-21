@@ -50,8 +50,8 @@ use crate::models::Setting;
 use crate::services::history_service;
 use crate::services::settings_service::get_all_settings;
 use crate::services::translations::translations::Translations;
-use crate::services::utils::{apply_global_templates, ensure_url_or_email_prefix};
 use crate::services::utils::remove_special_bbcode_tags;
+use crate::services::utils::{apply_global_templates, ensure_url_or_email_prefix};
 use commands::backup_restore_commands;
 use commands::clipboard_commands;
 use commands::collections_commands;
@@ -174,6 +174,18 @@ fn update_setting(setting: Setting, app_handle: tauri::AppHandle) -> Result<Stri
     Ok(result) => Ok(result),
     Err(err) => Err(err.to_string()),
   }
+}
+
+#[cfg(target_os = "windows")]
+#[tauri::command]
+fn update_left_click_tray_env(is_toggle_enabled: bool, is_disabled: bool) -> Result<(), String> {
+  let should_disable_context_menu = is_disabled || is_toggle_enabled;
+
+  std::env::set_var(
+    "PASTEBAR_ENABLE_LEFT_CLICK_MENU",
+    should_disable_context_menu.to_string(),
+  );
+  Ok(())
 }
 
 #[tauri::command]
@@ -956,11 +968,57 @@ async fn main() {
         }
       },
       #[cfg(target_os = "windows")]
+      SystemTrayEvent::LeftClick { .. } => {
+        let app_settings = app.state::<Mutex<HashMap<String, Setting>>>();
+        let settings_map = app_settings.lock().unwrap();
+        let enable_left_click = settings_map
+          .get("isLeftClickTrayToOpenEnabledOnWindows")
+          .and_then(|setting| setting.value_bool)
+          .unwrap_or(false);
+
+        if enable_left_click {
+          let window = app.get_window("main").unwrap();
+          if window.is_visible().unwrap() {
+            window.hide().unwrap();
+            window
+              .emit_all("window-events", "main-window-hide")
+              .unwrap();
+          } else {
+            window.show().unwrap();
+            window.unminimize().unwrap();
+            window.set_focus().unwrap();
+            window
+              .emit_all("window-events", "main-window-show")
+              .unwrap();
+          }
+        }
+      }
+      #[cfg(target_os = "windows")]
       SystemTrayEvent::DoubleClick { .. } => {
-        let window = app.get_window("main").unwrap();
-        window.show().unwrap();
-        window.set_focus().unwrap();
-      }      
+        let app_settings = app.state::<Mutex<HashMap<String, Setting>>>();
+        let settings_map = app_settings.lock().unwrap();
+        let is_enabled = settings_map
+          .get("isDoubleClickTrayToOpenEnabledOnWindows")
+          .and_then(|setting| setting.value_bool)
+          .unwrap_or(true);
+
+        if is_enabled {
+          let window = app.get_window("main").unwrap();
+          if window.is_visible().unwrap() {
+            window.hide().unwrap();
+            window
+              .emit_all("window-events", "main-window-hide")
+              .unwrap();
+          } else {
+            window.show().unwrap();
+            window.unminimize().unwrap();
+            window.set_focus().unwrap();
+            window
+              .emit_all("window-events", "main-window-show")
+              .unwrap();
+          }
+        }
+      }
       _ => {}
     })
     .on_window_event(|event| {
@@ -1101,6 +1159,30 @@ async fn main() {
           app_settings,
         ) {
           Ok(tray_menu) => {
+            #[cfg(target_os = "windows")]
+            {
+              let app_settings_for_tray = app_handle.state::<Mutex<HashMap<String, Setting>>>();
+              let settings_map = app_settings_for_tray.lock().unwrap();
+
+              // Check both settings to determine the environment variable value
+              let is_disabled = settings_map
+                .get("isLeftClickTrayDisabledOnWindows")
+                .and_then(|setting| setting.value_bool)
+                .unwrap_or(false);
+
+              let is_toggle_enabled = settings_map
+                .get("isLeftClickTrayToOpenEnabledOnWindows")
+                .and_then(|setting| setting.value_bool)
+                .unwrap_or(false);
+
+              let should_disable_context_menu = is_disabled || is_toggle_enabled;
+
+              std::env::set_var(
+                "PASTEBAR_ENABLE_LEFT_CLICK_MENU",
+                should_disable_context_menu.to_string(),
+              );
+            }
+
             let menu = SystemTray::new().with_id(tray_id).with_menu(tray_menu);
             menu.build(app)?;
           }
@@ -1194,6 +1276,7 @@ async fn main() {
       app_ready,
       get_app_settings,
       update_setting,
+      update_left_click_tray_env,
       backup_restore_commands::create_backup,
       backup_restore_commands::list_backups,
       backup_restore_commands::restore_backup,

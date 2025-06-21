@@ -9,6 +9,7 @@ mod runner;
 use crossbeam_channel::{self as channel, Receiver, Sender};
 use parking_lot::Mutex;
 use raw_window_handle::{RawDisplayHandle, WindowsDisplayHandle};
+use std::env;
 use std::{
   cell::Cell,
   collections::VecDeque,

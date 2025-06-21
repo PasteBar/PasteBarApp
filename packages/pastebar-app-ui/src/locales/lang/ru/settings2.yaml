@@ -48,9 +48,15 @@ Single Click Copy/Paste: Копирование/вставка одним кли
 Quick Paste Window: Окно быстрой вставки
 Quick Paste Window Options: Параметры окна быстрой вставки
 Configure the behavior of the Quick Paste window when selecting items: Настроить поведение окна быстрой вставки при выборе элементов
-Copy items only (no auto-paste): Только копировать элементы (без автовставки)
-Auto-close window after action: Автоматически закрывать окно после действия
-When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Когда включено, окно быстрой вставки будет автоматически закрываться после копирования или вставки элемента.
+Configure how the system tray icon responds to mouse clicks: Настроить, как иконка системного трея реагирует на клики мыши
+Disable left-click context menu: Отключить контекстное меню левого клика
+Double-click toggles app visibility: Двойной клик переключает видимость приложения
+Double-clicking the tray icon shows or hides the main application window: Двойной клик по иконке трея показывает или скрывает главное окно приложения
+Enabling either left-click option will disable the context menu to ensure proper functionality.: Включение любой из опций левого клика отключит контекстное меню для обеспечения правильной функциональности.
+Left-click toggles app visibility: Левый клик переключает видимость приложения
+Left-clicking the tray icon shows or hides the main application window: Левый клик по иконке трея показывает или скрывает главное окно приложения
+Prevents the context menu from appearing when left-clicking the tray icon: Предотвращает появление контекстного меню при левом клике по иконке трея
+Tray Icon Behavior on Windows: Поведение иконки трея в Windows
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: Это устанавливает тип иконки по умолчанию для новых клипов с заметками. Вы можете настроить отдельные клипы через контекстное меню.
 ? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
 : Когда включено, нажатие на элементы меню будет только копировать содержимое в буфер обмена вместо автоматической вставки. Это дает вам больше контроля над тем, когда и где вставляется содержимое.

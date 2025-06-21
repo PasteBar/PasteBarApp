@@ -67,3 +67,12 @@ Preserve starred items when clearing history: Geçmişi temizlerken favorilenmi�
 History Item Preview Max Lines: Geçmiş öğesi önizleme maksimum satır sayısı
 Set the maximum number of lines to display in the preview of a history item: Bir geçmiş öğesinin önizlemesinde gösterilecek maksimum satır sayısını ayarla
 Preview Max Lines: Önizleme Satırları
+Configure how the system tray icon responds to mouse clicks: Sistem tepsisi simgesinin fare tıklamalarına nasıl yanıt verdiğini yapılandır
+Disable left-click context menu: Sol tık bağlam menüsünü devre dışı bırak
+Double-click toggles app visibility: Çift tık uygulama görünürlüğünü değiştirir
+Double-clicking the tray icon shows or hides the main application window: Tepsi simgesine çift tıklamak ana uygulama penceresini gösterir veya gizler
+Enabling either left-click option will disable the context menu to ensure proper functionality.: Sol tık seçeneklerinden birini etkinleştirmek, düzgün işlevselliği sağlamak için bağlam menüsünü devre dışı bırakır.
+Left-click toggles app visibility: Sol tık uygulama görünürlüğünü değiştirir
+Left-clicking the tray icon shows or hides the main application window: Tepsi simgesine sol tıklamak ana uygulama penceresini gösterir veya gizler
+Prevents the context menu from appearing when left-clicking the tray icon: Tepsi simgesine sol tıklarken bağlam menüsünün görünmesini engeller
+Tray Icon Behavior on Windows: Windows'ta Tepsi Simgesi Davranışı

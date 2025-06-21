@@ -228,6 +228,12 @@ function App() {
             settings.isKeepPinnedOnClearEnabled?.valueBool ?? false,
           isKeepStarredOnClearEnabled:
             settings.isKeepStarredOnClearEnabled?.valueBool ?? false,
+          isDoubleClickTrayToOpenEnabledOnWindows:
+            settings.isDoubleClickTrayToOpenEnabledOnWindows?.valueBool ?? false,
+          isLeftClickTrayDisabledOnWindows:
+            settings.isLeftClickTrayDisabledOnWindows?.valueBool ?? false,
+          isLeftClickTrayToOpenEnabledOnWindows:
+            settings.isLeftClickTrayToOpenEnabledOnWindows?.valueBool ?? false,
           globalTemplatesEnabled: settings.globalTemplatesEnabled?.valueBool ?? true, // Default to true
           globalTemplates: settings.globalTemplates?.valueText
             ? settings.globalTemplates.valueText // Will be parsed by initSettings in store

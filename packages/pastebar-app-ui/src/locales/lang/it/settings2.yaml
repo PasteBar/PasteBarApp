@@ -1,8 +1,13 @@
 App restart required: Riavvio necessario
 Application Starts with Main Window Hidden: L'applicazione si avvia con la finestra principale nascosta
 Change: Modifica
+Configure how the system tray icon responds to mouse clicks: Configura come l'icona della barra di sistema risponde ai clic del mouse
 Copy only from menu items: Copia solo dagli elementi del menu
+Disable left-click context menu: Disabilita menu contestuale clic sinistro
 Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Mostra gli elementi della barra di navigazione solo al passaggio del mouse per minimizzare gli elementi visibili dell'interfaccia
+Double-click toggles app visibility: Il doppio clic commuta la visibilità dell'app
+Double-clicking the tray icon shows or hides the main application window: Fare doppio clic sull'icona della barra di sistema mostra o nasconde la finestra principale dell'applicazione
+Enabling either left-click option will disable the context menu to ensure proper functionality.: L'abilitazione di una delle opzioni di clic sinistro disabiliterà il menu contestuale per garantire il corretto funzionamento.
 Global System OS Hotkeys: Tasti di scelta rapida globali del sistema
 Hide Collections Navbar: Nascondi barra delle collezioni
 Hide collections menu dropdown on the navigation bar: Nascondi il menu a discesa delle collezioni nella barra di navigazione

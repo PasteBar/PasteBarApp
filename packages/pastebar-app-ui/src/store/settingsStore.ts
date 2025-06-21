@@ -108,6 +108,9 @@ type Settings = {
   protectedCollections: string[]
   globalTemplatesEnabled: boolean
   globalTemplates: Array<{ id: string; name: string; value: string; isEnabled: boolean }>
+  isDoubleClickTrayToOpenEnabledOnWindows: boolean
+  isLeftClickTrayToOpenEnabledOnWindows: boolean
+  isLeftClickTrayDisabledOnWindows: boolean
 }
 
 type Constants = {
@@ -161,6 +164,8 @@ export interface SettingsStoreState {
   setIsAutoPreviewLinkCardsEnabled: (isEnabled: boolean) => void
   setIsAutoGenerateLinkCardsEnabled: (isEnabled: boolean) => void
   setIsAutoFavoriteOnDoubleCopyEnabled: (isEnabled: boolean) => void
+  setIsLeftClickTrayToOpenEnabledOnWindows: (isEnabled: boolean) => void
+  setIsLeftClickTrayDisabledOnWindows: (isEnabled: boolean) => void
   setIsSearchNameOrLabelOnly: (isEnabled: boolean) => void
   initConstants: (CONST: Constants) => void
   setIsShowCollectionNameOnNavBar: (isEnabled: boolean) => void
@@ -229,6 +234,7 @@ export interface SettingsStoreState {
   }) => void
   deleteGlobalTemplate: (templateId: string) => void
   toggleGlobalTemplateEnabledState: (templateId: string) => void
+  setIsDoubleClickTrayToOpenEnabledOnWindows: (isEnabled: boolean) => void
 }
 
 const initialState: SettingsStoreState & Settings = {
@@ -313,6 +319,12 @@ const initialState: SettingsStoreState & Settings = {
   hasPinProtectedCollections: false,
   globalTemplatesEnabled: true,
   globalTemplates: [],
+  isDoubleClickTrayToOpenEnabledOnWindows: false,
+  isLeftClickTrayToOpenEnabledOnWindows: false,
+  isLeftClickTrayDisabledOnWindows: false,
+  setIsDoubleClickTrayToOpenEnabledOnWindows: () => {},
+  setIsLeftClickTrayToOpenEnabledOnWindows: () => {},
+  setIsLeftClickTrayDisabledOnWindows: () => {},
   setHasPinProtectedCollections: async () => {},
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
@@ -866,6 +878,47 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
     )
     get().syncStateUpdate('globalTemplates', updatedTemplates)
     return get().updateSetting('globalTemplates', JSON.stringify(updatedTemplates))
+  },
+  setIsDoubleClickTrayToOpenEnabledOnWindows: async (isEnabled: boolean) => {
+    return get().updateSetting('isDoubleClickTrayToOpenEnabledOnWindows', isEnabled)
+  },
+  setIsLeftClickTrayToOpenEnabledOnWindows: async (isEnabled: boolean) => {
+    const result = await get().updateSetting(
+      'isLeftClickTrayToOpenEnabledOnWindows',
+      isEnabled
+    )
+
+    // Update the environment variable with current values to avoid race conditions
+    const { isLeftClickTrayDisabledOnWindows } = get()
+    try {
+      await invoke('update_left_click_tray_env', {
+        isToggleEnabled: isEnabled,
+        isDisabled: isLeftClickTrayDisabledOnWindows,
+      })
+    } catch (error) {
+      console.error('Failed to update left click tray environment variable:', error)
+    }
+
+    return result
+  },
+  setIsLeftClickTrayDisabledOnWindows: async (isDisabled: boolean) => {
+    const result = await get().updateSetting(
+      'isLeftClickTrayDisabledOnWindows',
+      isDisabled
+    )
+
+    // Update the environment variable with current values to avoid race conditions
+    const { isLeftClickTrayToOpenEnabledOnWindows } = get()
+    try {
+      await invoke('update_left_click_tray_env', {
+        isToggleEnabled: isLeftClickTrayToOpenEnabledOnWindows,
+        isDisabled: isDisabled,
+      })
+    } catch (error) {
+      console.error('Failed to update left click tray environment variable:', error)
+    }
+
+    return result
   },
   setProtectedCollections: async (ids: string[]) => {
     return get().updateSetting('protectedCollections', ids.join(','))

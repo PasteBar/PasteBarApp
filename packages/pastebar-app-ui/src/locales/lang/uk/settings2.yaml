@@ -67,3 +67,12 @@ Preserve starred items when clearing history: Зберігати обрані е
 History Item Preview Max Lines: Рядки перегляду історії
 Set the maximum number of lines to display in the preview of a history item: Встановити максимальну кількість рядків для відображення в попередньому перегляді елемента історії
 Preview Max Lines: Рядки перегляду
+Configure how the system tray icon responds to mouse clicks: Налаштувати, як іконка системного трея реагує на кліки миші
+Disable left-click context menu: Вимкнути контекстне меню лівого кліка
+Double-click toggles app visibility: Подвійний клік перемикає видимість додатку
+Double-clicking the tray icon shows or hides the main application window: Подвійний клік по іконці трея показує або приховує головне вікно додатку
+Enabling either left-click option will disable the context menu to ensure proper functionality.: Увімкнення будь-якої з опцій лівого кліка вимкне контекстне меню для забезпечення правильної функціональності.
+Left-click toggles app visibility: Лівий клік перемикає видимість додатку
+Left-clicking the tray icon shows or hides the main application window: Лівий клік по іконці трея показує або приховує головне вікно додатку
+Prevents the context menu from appearing when left-clicking the tray icon: Запобігає появі контекстного меню при лівому кліку по іконці трея
+Tray Icon Behavior on Windows: Поведінка іконки трея в Windows

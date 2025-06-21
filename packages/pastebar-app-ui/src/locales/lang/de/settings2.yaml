@@ -48,16 +48,16 @@ Enable single-click to copy/paste clipboard history items and saved clips instea
 Single Click Copy/Paste action: Einfachklick Kopieren/Einfügen-Aktion
 Single Click Copy/Paste: Einfachklick Kopieren/Einfügen
 Quick Paste Window Options: Schnelleinfügen-Fenster-Optionen
-Configure the behavior of the Quick Paste window when selecting items: Verhalten des Schnelleinfügen-Fensters beim Auswählen von Elementen konfigurieren
-Copy items only (no auto-paste): Nur Elemente kopieren (kein automatisches Einfügen)
-Auto-close window after action: Fenster nach Aktion automatisch schließen
-When enabled, the Quick Paste window will automatically close after copying or pasting an item.: Wenn aktiviert, wird das Schnelleinfügen-Fenster nach dem Kopieren oder Einfügen eines Elements automatisch geschlossen.
-? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
-: Wenn aktiviert, wird beim Klicken auf Menüelemente der Inhalt nur in die Zwischenablage kopiert, anstatt automatisch eingefügt zu werden. Dies gibt Ihnen mehr Kontrolle darüber, wann und wo Inhalte eingefügt werden.
-? When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
-: Wenn aktiviert, werden beim Klicken oder Drücken der Eingabetaste auf Elemente im Schnelleinfügen-Fenster diese nur in die Zwischenablage kopiert, ohne sie automatisch einzufügen.
-? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
-: Wenn aktiviert, werden Elemente im Schnelleinfügen-Fenster mit einem einfachen Klick kopiert/eingefügt. Wenn globaler Einfachklick ebenfalls aktiviert ist, funktionieren beide Einstellungen zusammen.
+Configure how the system tray icon responds to mouse clicks: Konfigurieren Sie, wie das Systemtray-Symbol auf Mausklicks reagiert
+Configure the behavior of the Quick Paste window when selecting items: Konfigurieren Sie das Verhalten des Schnelleinfügen-Fensters beim Auswählen von Elementen
+Disable left-click context menu: Linksklick-Kontextmenü deaktivieren
+Double-click toggles app visibility: Doppelklick schaltet App-Sichtbarkeit um
+Double-clicking the tray icon shows or hides the main application window: Doppelklick auf das Tray-Symbol zeigt oder verbirgt das Hauptanwendungsfenster
+Enabling either left-click option will disable the context menu to ensure proper functionality.: Das Aktivieren einer der beiden Linksklick-Optionen deaktiviert das Kontextmenü, um ordnungsgemäße Funktionalität sicherzustellen.
+Left-click toggles app visibility: Linksklick schaltet App-Sichtbarkeit um
+Left-clicking the tray icon shows or hides the main application window: Linksklick auf das Tray-Symbol zeigt oder verbirgt das Hauptanwendungsfenster
+Prevents the context menu from appearing when left-clicking the tray icon: Verhindert, dass das Kontextmenü beim Linksklick auf das Tray-Symbol erscheint
+Tray Icon Behavior on Windows: Tray-Symbol-Verhalten unter Windows
 Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Konfigurieren Sie, welche Elemente beim Löschen des Zwischenablageverlaufs beibehalten werden sollen (sowohl manuell als auch automatisch).
 Keep Items on Clear: Elemente beim Löschen beibehalten
 Keep Pinned Items: Angehängte Elemente beibehalten
