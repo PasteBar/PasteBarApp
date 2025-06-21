@@ -217,7 +217,6 @@ export function ClipboardHistoryLargeViewComponent({
                             <code className={`${className}`} style={style}>
                               {tokens
                                 .filter((line, i) => {
-                                  // Remove last line if it's empty (only contains whitespace or newlines)
                                   if (i === tokens.length - 1) {
                                     return line.some(token => token.content.trim() !== '')
                                   }
