@@ -211,13 +211,13 @@ NAVBAR_TOUR:
 SETTINGS_TOUR:
   - element: '#app-settings-history_tour'
     popover:
-      title: 剪贴板历史设置
+      title: 剪贴板历史记录设置
       description: 调整剪贴板历史设置以自定义 PasteBar 如何捕获和管理您复制的内容。启用或禁用自动更新、自动星标、链接预览、停用词列表、编程语言自动检测等功能，以获得个性化体验。
       alignment: start
       prefferedSide: right
   - element: '#app-settings-collections_tour'
     popover:
-      title: 管理收藏设置
+      title: 管理收藏集设置
       description: 使用管理收藏来组织和自定义您的收藏。添加新收藏、编辑现有收藏，并在它们之间切换以适应您的工作流程。通过将相关的剪辑、面板和标签分组来高效管理您的内容。
       alignment: start
       prefferedSide: right
