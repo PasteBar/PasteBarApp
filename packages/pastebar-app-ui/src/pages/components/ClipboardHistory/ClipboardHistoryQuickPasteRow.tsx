@@ -289,8 +289,6 @@ export function ClipboardHistoryQuickPasteRowComponent({
     clipboard?.valueMorePreviewChars,
   ])
 
-  console.log('valuePreview', valuePreview)
-
   useEffect(() => {
     if (
       !hasLinkCard &&
