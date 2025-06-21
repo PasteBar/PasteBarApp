@@ -65,7 +65,7 @@ Copy and Paste: 复制和粘贴
 Copy to Clipboard: 复制到剪贴板
 Create: 创建
 Created: 已创建
-Delay Next: 延迟下一个
+Delay Next: 延迟下一个操作
 Delete: 删除
 Deselect All: 取消全选
 Deselect pinned: 取消固定
@@ -138,7 +138,7 @@ Move Down: 向下移动
 Move Up: 向上移动
 Multi Select: 多选
 'Name: {{name}}': '名称：{{name}}'
-Next Delay: 下一个延迟
+Next Delay: 下一个操作的延迟
 Next Track: 下一曲目
 No: 否
 No Key Press: 无按键
@@ -156,7 +156,7 @@ Open contact form in browser: 在浏览器中打开联系表单
 Open payment in browser: 在浏览器中打开支付
 Options: 选项
 Password: 密码
-Paste Delay: 粘贴延迟
+Paste Delay: 粘贴间隔时间
 Paste Menu: 粘贴菜单
 'Paste in {{pastingCountDown}}...': 将在 {{pastingCountDown}} 后粘贴...
 PasteBar: PasteBar
@@ -222,7 +222,7 @@ Select option: 选择选项
 Select pinned: 选择固定项
 Separate History Window: 分离历史窗口
 Sequence Copy: 序列复制
-Sequence Copy Paste: 序列复制粘贴
+Sequence Copy Paste: 顺序复制粘贴
 Sequence Delay Next: 序列延迟下一个
 Sequence Next Delay: 序列下一个延迟
 Sequence Paste: 序列粘贴
@@ -236,7 +236,7 @@ Star: 星标
 Star Selected: 星标所选
 Stay here: 留在这里
 Stay in touch: 保持联系
-Success!: 成功！
+Success!: 操作成功！
 Swap Panels Layout: 交换面板布局
 System Settings -> Privacy & Security -> Accessibility: 系统设置 -> 隐私与安全 -> 辅助功能
 Thank you for reporting the error.: 感谢您报告错误。
