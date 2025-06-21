@@ -318,7 +318,7 @@ unsafe extern "system" fn tray_subclass_proc(
 
     match lparam.0 as u32 {
       win32wm::WM_LBUTTONUP => {
-        println!("left click");
+        // println!("left click");
         (subclass_input.sender)(Event::TrayEvent {
           id: subclass_input.id,
           event: TrayEvent::LeftClick,
@@ -341,7 +341,7 @@ unsafe extern "system" fn tray_subclass_proc(
       }
 
       win32wm::WM_RBUTTONUP => {
-        println!("right click");
+        // println!("right click");
         (subclass_input.sender)(Event::TrayEvent {
           id: subclass_input.id,
           event: TrayEvent::RightClick,
