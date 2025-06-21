@@ -64,3 +64,6 @@ Keep Pinned Items: Conserver les éléments épinglés
 Keep Starred Items: Conserver les éléments favoris
 Preserve pinned items when clearing history: Conserver les éléments épinglés lors de l'effacement de l'historique
 Preserve starred items when clearing history: Conserver les éléments favoris lors de l'effacement de l'historique
+History Item Preview Max Lines: Limite maximale de lignes d'aperçu des éléments de l'historique
+Set the maximum number of lines to display in the preview of a history item: Définir le nombre maximal de lignes à afficher dans l'aperçu d'un élément de l'historique
+Preview Max Lines: Lignes d'aperçu

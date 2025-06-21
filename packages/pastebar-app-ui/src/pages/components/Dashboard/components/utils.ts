@@ -212,7 +212,9 @@ export function getValueMorePreviewLines(value: string) {
 export function getValuePreview(
   value: string,
   isImageData: boolean = false,
-  isLargeView: boolean = false
+  isLargeView: boolean = false,
+  historyPreviewLineLimit?: number | null,
+  isHistoryItem?: boolean | undefined
 ): {
   valuePreview: string
   morePreviewLines: number | null
@@ -248,7 +250,10 @@ export function getValuePreview(
   }
 
   // For non-image data, proceed with line-based truncation
-  const MAX_PREVIEW_LINES = 5
+  const MAX_PREVIEW_LINES =
+    historyPreviewLineLimit && isHistoryItem && historyPreviewLineLimit > 0
+      ? historyPreviewLineLimit
+      : 5
   const normalizedValue = value.replace(/\r\n/g, '\n')
   const allLines = normalizedValue.split('\n')
 
@@ -303,18 +308,6 @@ export function getValuePreview(
   // Apply bbCode.closeTags if truncation happened or if tags might be open
   if (calculatedMorePreviewLines > 0 || openCopyTagCount > 0) {
     finalPreviewText = bbCode.closeTags(finalPreviewText)
-  }
-
-  if (calculatedMorePreviewLines > 0) {
-    // Add ellipsis if lines were actually truncated.
-    // Avoid adding if bbCode.closeTags might have added its own form of ellipsis or if preview ends with one.
-    if (!finalPreviewText.trim().endsWith('...')) {
-      // Check if the last line of previewText is just "..." from a previous logic
-      const linesInPreview = finalPreviewText.split('\n')
-      if (linesInPreview[linesInPreview.length - 1] !== '...') {
-        finalPreviewText += '\n...'
-      }
-    }
   }
 
   return {

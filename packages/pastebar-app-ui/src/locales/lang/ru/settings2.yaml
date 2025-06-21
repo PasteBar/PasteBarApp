@@ -64,3 +64,6 @@ Keep Pinned Items: Сохранять закрепленные элементы
 Keep Starred Items: Сохранять избранные элементы
 Preserve pinned items when clearing history: Сохранять закрепленные элементы при очистке истории
 Preserve starred items when clearing history: Сохранять избранные элементы при очистке истории
+History Item Preview Max Lines: Количество строк предварительного просмотра элементов истории
+Set the maximum number of lines to display in the preview of a history item: Установить максимальное количество строк для отображения в предварительном просмотре элемента истории
+Preview Max Lines: Максимум строк просмотра

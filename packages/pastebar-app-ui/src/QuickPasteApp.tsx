@@ -49,6 +49,7 @@ function QuickPasteApp() {
         settingsStore.initSettings({
           appDataDir: '',
           isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool,
+          historyPreviewLineLimit: settings.historyPreviewLineLimit?.valueInt ?? null,
           appLastUpdateVersion: settings.appLastUpdateVersion?.valueText,
           appLastUpdateDate: settings.appLastUpdateDate?.valueText,
           isHideMacOSDockIcon: settings.isHideMacOSDockIcon?.valueBool,

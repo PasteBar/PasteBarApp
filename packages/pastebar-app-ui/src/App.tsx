@@ -129,6 +129,7 @@ function App() {
           isCustomDbPathValid: null,
           customDbPathError: null,
           dbRelocationInProgress: false,
+          historyPreviewLineLimit: settings.historyPreviewLineLimit?.valueInt ?? null,
           appLastUpdateVersion: settings.appLastUpdateVersion?.valueText,
           appLastUpdateDate: settings.appLastUpdateDate?.valueText,
           isHideMacOSDockIcon: settings.isHideMacOSDockIcon?.valueBool,

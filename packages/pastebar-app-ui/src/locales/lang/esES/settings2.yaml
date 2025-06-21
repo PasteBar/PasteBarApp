@@ -64,3 +64,6 @@ Keep Pinned Items: Conservar elementos fijados
 Keep Starred Items: Conservar elementos destacados
 Preserve pinned items when clearing history: Conservar elementos fijados al borrar el historial
 Preserve starred items when clearing history: Conservar elementos destacados al borrar el historial
+History Item Preview Max Lines: Límite máximo de líneas de vista previa de elementos del historial
+Set the maximum number of lines to display in the preview of a history item: Establecer el número máximo de líneas para mostrar en la vista previa de un elemento del historial
+Preview Max Lines: Líneas de vista previa

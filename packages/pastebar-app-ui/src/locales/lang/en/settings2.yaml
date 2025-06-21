@@ -1,38 +1,53 @@
 App restart required: Restart required
 Application Starts with Main Window Hidden: Application Starts with Main Window Hidden
+Auto-close window after action: Auto-close window after action
 Boards, saved clips and menu items panel visible: Boards, saved clips and menu items panel visible
 Both clipboard history and saved clips panels visible: Both clipboard history and saved clips panels visible
 Change: Change
+Click Set/Change button to start recording: Click Set/Change button to start recording
 Clipboard history panel visible: Clipboard history panel visible
+Configure the behavior of the Quick Paste window when selecting items: Configure the behavior of the Quick Paste window when selecting items
+Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).
 Control which panels are visible in the main window: Control which panels are visible in the main window
+Copy items only (no auto-paste): Copy items only (no auto-paste)
 Copy only from menu items: Copy only from menu items
 Default Note Icon Type: Default Note Icon Type
 Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements: Display navbar items only when the mouse hovers over the navigation bar to minimize visible UI elements
 Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.: Display persistent icons on clips that have notes to improve visual organization and make notes easier to discover.
 Enable simplified, less boxy layout for a cleaner and more streamlined interface design: Enable simplified, less boxy layout for a cleaner and more streamlined interface design
+Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.
 Global System OS Hotkeys: Global System OS Hotkeys
 Hide Collections Navbar: Hide Collections Navbar
 Hide collections menu dropdown on the navigation bar: Hide collections menu dropdown on the navigation bar
 Hide collections menu on the navbar: Hide collections menu on the navbar
 Hide the App Dock Icon: Hide the App Dock Icon
+History Item Preview Max Lines: History Item Preview Max Lines
+'How to set hotkeys:': 'How to set hotkeys:'
+Keep Items on Clear: Keep Items on Clear
+Keep Pinned Items: Keep Pinned Items
+Keep Starred Items: Keep Starred Items
 ? Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
 : Keep the main application window hidden when the app restarts. You can reopen it using the menu bar or taskbar menu, or using global hotkeys.
 No keys set: No keys set
 'Note: At least one panel must remain visible in main window.': 'Note: At least one panel must remain visible in main window.'
 Panel Visibility: Panel Visibility
 PasteBar Quick Paste: PasteBar Quick Paste
+Preserve pinned items when clearing history: Preserve pinned items when clearing history
+Preserve starred items when clearing history: Preserve starred items when clearing history
+Press Backspace/Delete to clear the hotkey: Press Backspace/Delete to clear the hotkey
+Press Enter to confirm or Escape to cancel: Press Enter to confirm or Escape to cancel
 Press keys: Press keys
+Press your desired key combination (e.g., Ctrl+Shift+V): Press your desired key combination (e.g., Ctrl+Shift+V)
+Press your key combination...: Press your key combination...
+Preview Max Lines: Preview Max Lines
+Quick Paste Window: Quick Paste Window
+Quick Paste Window Options: Quick Paste Window Options
+Recording...: Recording...
 ? Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
 : Remove PasteBar app icon from the macOS Dock while keeping the app running in the background. The app remains accessible via the menu bar icon. Requires an app restart to take effect.
 Set: Set
 Set system OS hotkeys to show/hide the main app window and quick paste window. Supports up to 3-key combinations.: Set system OS hotkeys to show/hide the main app window and quick paste window. Supports up to 3-key combinations.
-'How to set hotkeys:': 'How to set hotkeys:'
-Click Set/Change button to start recording: Click Set/Change button to start recording
-Press your desired key combination (e.g., Ctrl+Shift+V): Press your desired key combination (e.g., Ctrl+Shift+V)
-Press Enter to confirm or Escape to cancel: Press Enter to confirm or Escape to cancel
-Press Backspace/Delete to clear the hotkey: Press Backspace/Delete to clear the hotkey
-Press your key combination...: Press your key combination...
-Recording...: Recording...
+Set the maximum number of lines to display in the preview of a history item: Set the maximum number of lines to display in the preview of a history item
 Show Boards and Clips Panel Only: Show Boards and Clips Panel Only
 Show Both Panels: Show Both Panels
 Show History Panel Only: Show History Panel Only
@@ -44,15 +59,8 @@ Show navbar elements on hover only: Show navbar elements on hover only
 Show/Hide Main App Window: Show/Hide Main App Window
 Show/Hide Quick Paste Window: Show/Hide Quick Paste Window
 Simplified Panel Layout: Simplified Panel Layout
-When enabled, the Quick Paste window will automatically close after copying or pasting an item.: When enabled, the Quick Paste window will automatically close after copying or pasting an item.
-Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.
-Single Click Copy/Paste action: Single Click Copy/Paste action
 Single Click Copy/Paste: Single Click Copy/Paste
-Quick Paste Window: Quick Paste Window
-Quick Paste Window Options: Quick Paste Window Options
-Configure the behavior of the Quick Paste window when selecting items: Configure the behavior of the Quick Paste window when selecting items
-Copy items only (no auto-paste): Copy items only (no auto-paste)
-Auto-close window after action: Auto-close window after action
+Single Click Copy/Paste action: Single Click Copy/Paste action
 This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.: This sets the default icon type for new clips with notes. You can customize individual clips via the context menu.
 ? When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
 : When enabled, clicking menu items will only copy content to clipboard instead of auto-pasting. This gives you more control over when and where content is pasted.
@@ -60,9 +68,4 @@ This sets the default icon type for new clips with notes. You can customize indi
 : When enabled, clicking or pressing Enter on items in Quick Paste window will only copy them to clipboard without automatically pasting.
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
-Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).: Configure which items to preserve when clearing clipboard history (both manual and auto-clear operations).
-Keep Items on Clear: Keep Items on Clear
-Keep Pinned Items: Keep Pinned Items
-Keep Starred Items: Keep Starred Items
-Preserve pinned items when clearing history: Preserve pinned items when clearing history
-Preserve starred items when clearing history: Preserve starred items when clearing history
+When enabled, the Quick Paste window will automatically close after copying or pasting an item.: When enabled, the Quick Paste window will automatically close after copying or pasting an item.
