@@ -122,7 +122,7 @@ Errors:
   No fields found in the template.: 模板中未找到字段。
   Please fix output template or confirm to save as is.: 请修复输出模板或确认保持现状。
   Please fix template fields or confirm to save as is.: 请修复模板字段或确认保持现状。
-  Please fix the problem or confirm to save as is.:  请修复问题或确认保持现状。
+  Please fix the problem or confirm to save as is.: 请修复问题或确认保持现状。
   Please verify your link for any errors, or confirm to save as is.: 请检查链接是否有错误，或或确认保持现状。
   Please verify your path for any errors, or confirm to save as is.: 请检查路径是否有错误，或确认保持现状。
   Your command runs with errors, confirm you want to save as is.: 您的命令运行出错，确认是否保持现状。

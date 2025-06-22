@@ -2,6 +2,7 @@ pub(crate) mod backup_restore_commands;
 pub(crate) mod clipboard_commands;
 pub(crate) mod collections_commands;
 pub(crate) mod download_update;
+pub(crate) mod format_converter_commands;
 pub(crate) mod history_commands;
 pub(crate) mod items_commands;
 pub(crate) mod link_metadata_commands;

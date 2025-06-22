@@ -15,7 +15,7 @@ confirmDeleteTemplateMessage: "'{{name}}' global şablonunu silmek istediğinizd
 confirmDeleteTemplateTitle: Silmeyi Onayla
 deleteTemplateButtonTooltip: Şablonu Sil
 enableGlobalTemplatesLabel: Global Şablonları Etkinleştir
-globalTemplatesDescription: "{{template_name}} kullanarak herhangi bir klibe eklenebilen yeniden kullanılabilir metin parçacıklarını yönetin."
+globalTemplatesDescription: '{{template_name}} kullanarak herhangi bir klibe eklenebilen yeniden kullanılabilir metin parçacıklarını yönetin.'
 globalTemplatesTitle: Global Şablonlar
 localTemplateConflictWarning: "'{{label}}' adlı bir global şablon da mevcut. Yerel şablon bu klibin formu içinde öncelik alacaktır."
 noGlobalTemplatesYet: Henüz global şablon tanımlanmamış. Bir tane oluşturmak için 'Şablon Ekle'ye tıklayın.

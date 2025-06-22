@@ -13,6 +13,7 @@ import { atomWithStore } from 'jotai-zustand'
 import { createStore } from 'zustand/vanilla'
 
 import DOMPurify from '../components/libs/dompurify'
+import { DEFAULT_SPECIAL_PASTE_OPERATIONS, DEFAULT_SPECIAL_PASTE_CATEGORIES } from './constants'
 import {
   availableVersionBody,
   availableVersionDate,
@@ -111,6 +112,9 @@ type Settings = {
   isDoubleClickTrayToOpenEnabledOnWindows: boolean
   isLeftClickTrayToOpenEnabledOnWindows: boolean
   isLeftClickTrayDisabledOnWindows: boolean
+  isSpecialCopyPasteHistoryEnabled: boolean
+  enabledSpecialPasteOperations: string[]
+  specialPasteCategoriesOrder: string[]
 }
 
 type Constants = {
@@ -235,6 +239,9 @@ export interface SettingsStoreState {
   deleteGlobalTemplate: (templateId: string) => void
   toggleGlobalTemplateEnabledState: (templateId: string) => void
   setIsDoubleClickTrayToOpenEnabledOnWindows: (isEnabled: boolean) => void
+  setIsSpecialCopyPasteHistoryEnabled: (isEnabled: boolean) => void
+  setEnabledSpecialPasteOperations: (operations: string[]) => void
+  setSpecialPasteCategoriesOrder: (categories: string[]) => void
 }
 
 const initialState: SettingsStoreState & Settings = {
@@ -322,9 +329,15 @@ const initialState: SettingsStoreState & Settings = {
   isDoubleClickTrayToOpenEnabledOnWindows: false,
   isLeftClickTrayToOpenEnabledOnWindows: false,
   isLeftClickTrayDisabledOnWindows: false,
+  isSpecialCopyPasteHistoryEnabled: true,
+  enabledSpecialPasteOperations: [...DEFAULT_SPECIAL_PASTE_OPERATIONS],
+  specialPasteCategoriesOrder: [...DEFAULT_SPECIAL_PASTE_CATEGORIES],
   setIsDoubleClickTrayToOpenEnabledOnWindows: () => {},
   setIsLeftClickTrayToOpenEnabledOnWindows: () => {},
   setIsLeftClickTrayDisabledOnWindows: () => {},
+  setIsSpecialCopyPasteHistoryEnabled: () => {},
+  setEnabledSpecialPasteOperations: () => {},
+  setSpecialPasteCategoriesOrder: () => {},
   setHasPinProtectedCollections: async () => {},
   CONST: {
     APP_DETECT_LANGUAGES_SUPPORTED: [],
@@ -523,6 +536,19 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
           return set(() => ({ globalTemplates: [] })) // Fallback to empty array on parse error
         }
       }
+
+      if (name === 'enabledSpecialPasteOperations' && typeof value === 'string') {
+        return set(() => ({
+          enabledSpecialPasteOperations: value.split(',').filter(Boolean),
+        }))
+      }
+
+      if (name === 'specialPasteCategoriesOrder' && typeof value === 'string') {
+        return set(() => ({
+          specialPasteCategoriesOrder: value.split(',').filter(Boolean),
+        }))
+      }
+
 
       return set(() => ({ [name]: value }))
     } catch (e) {
@@ -881,6 +907,15 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsDoubleClickTrayToOpenEnabledOnWindows: async (isEnabled: boolean) => {
     return get().updateSetting('isDoubleClickTrayToOpenEnabledOnWindows', isEnabled)
+  },
+  setIsSpecialCopyPasteHistoryEnabled: async (isEnabled: boolean) => {
+    return get().updateSetting('isSpecialCopyPasteHistoryEnabled', isEnabled)
+  },
+  setEnabledSpecialPasteOperations: async (operations: string[]) => {
+    return get().updateSetting('enabledSpecialPasteOperations', operations.join(','))
+  },
+  setSpecialPasteCategoriesOrder: async (categories: string[]) => {
+    return get().updateSetting('specialPasteCategoriesOrder', categories.join(','))
   },
   setIsLeftClickTrayToOpenEnabledOnWindows: async (isEnabled: boolean) => {
     const result = await get().updateSetting(

@@ -61,6 +61,77 @@ export const SCREEN_AUTO_LOCK_TIMES_IN_MINUTES = [5, 10, 15, 20, 30, 45, 60]
 export const RESET_TIME_DELAY_SECONDS = 60
 export const APP_NAME = 'PasteBar'
 
+// Default special copy/paste settings
+export const DEFAULT_SPECIAL_PASTE_OPERATIONS = [
+  // Text Case
+  'upperCase',
+  'lowerCase',
+  'titleCase',
+  'sentenceCase',
+  'invertCase',
+  // Code Formatting
+  'camelCase',
+  'snakeCase',
+  'kebabCase',
+  'pascalCase',
+  'jsonStringify',
+  // Whitespace & Lines
+  'trimWhiteSpace',
+  'removeLineFeeds',
+  'addOneLineFeed',
+  'addTwoLineFeeds',
+  'removeExtraSpaces',
+  'sortLinesAlphabetically',
+  'removeDuplicateLines',
+  'addLineNumbers',
+  // Encode/Decode
+  'base64Encode',
+  'base64Decode',
+  'urlEncode',
+  'urlDecode',
+  'htmlEncode',
+  'htmlDecode',  
+  // Text Tools
+  'reverseText',
+  'addCurrentDateTime',
+  'countCharacters',
+  'countWords',
+  'countLines',
+  'countSentences',
+  // Format Converter - HTML
+  'htmlToMarkdown',
+  'htmlToReact',
+  'htmlToReactComponent',
+  'htmlToText',
+  // Format Converter - Markdown
+  'markdownToHtml',
+  'markdownToText',
+  // Format Converter - JSON
+  'jsonToCsv',
+  'jsonToYaml',
+  'jsonToXml',
+  'jsonToToml',
+  'jsonToTable',
+  // Format Converter - CSV
+  'csvToJson',
+  'csvToTable',
+  // Format Converter - YAML
+  'yamlToJson',
+  // Format Converter - XML
+  'xmlToJson',
+  // Format Converter - TOML
+  'tomlToJson',
+] as const
+
+export const DEFAULT_SPECIAL_PASTE_CATEGORIES = [
+  'textCase',
+  'codeFormatting',
+  'whitespaceLines',
+  'encodingSecurity',
+  'textTools',
+  'formatConverter',
+] as const
+
 window['PasteBar'] = {
   APP_UI_VERSION: APP_UI_VERSION,
   APP_VERSION: APP_VERSION,

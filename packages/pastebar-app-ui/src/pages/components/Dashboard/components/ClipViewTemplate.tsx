@@ -123,7 +123,12 @@ const renderWithBadges = (
                       : 'dark:!text-gray-300 text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200/80 dark:border-gray-700/80'
                   } text-normal pr-2.5`}
                 >
-                  <Check size={12} className={`mr-0.5 ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`} />
+                  <Check
+                    size={12}
+                    className={`mr-0.5 ${
+                      field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''
+                    }`}
+                  />
                   {field.label}
                 </Badge>
               }
@@ -163,7 +168,12 @@ const renderWithBadges = (
                     : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200/80 dark:border-gray-700/80'
                 } text-normal pr-2.5`}
               >
-                <Check size={12} className={`mr-0.5 ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`} />
+                <Check
+                  size={12}
+                  className={`mr-0.5 ${
+                    field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''
+                  }`}
+                />
                 {field.label}
               </Badge>
             </ToolTip>
@@ -196,7 +206,10 @@ const renderWithBadges = (
                   variant="outline"
                   className="!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800 text-normal pr-2.5"
                 >
-                  <Check size={12} className="mr-0.5 text-purple-600 dark:text-purple-400" />
+                  <Check
+                    size={12}
+                    className="mr-0.5 text-purple-600 dark:text-purple-400"
+                  />
                   {field.label} (Global)
                 </Badge>
               }
@@ -223,7 +236,10 @@ const renderWithBadges = (
                 variant="outline"
                 className="!text-purple-700 dark:!text-purple-300 bg-purple-100 dark:bg-purple-800 hover:bg-purple-200 dark:hover:bg-purple-700 border-purple-200 dark:border-purple-800 text-normal pr-2.5"
               >
-                <Check size={12} className="mr-0.5 text-purple-600 dark:text-purple-400" />
+                <Check
+                  size={12}
+                  className="mr-0.5 text-purple-600 dark:text-purple-400"
+                />
                 {field.label}
               </Badge>
             </ToolTip>
@@ -407,17 +423,18 @@ export function ClipViewTemplate({
         .filter(f => f.label !== undefined)
         .map(({ label, isEnable, value, isValueMasked, isGlobal }) => {
           // For global templates, get the current value from globalTemplates
-          const actualValue = isGlobal && globalTemplatesEnabled
-            ? globalTemplates.find(gt => gt.isEnabled && gt.name === label)?.value || ''
-            : value;
-          
+          const actualValue =
+            isGlobal && globalTemplatesEnabled
+              ? globalTemplates.find(gt => gt.isEnabled && gt.name === label)?.value || ''
+              : value
+
           return {
             label,
             isValueMasked,
             value: actualValue,
             isEnable,
             isGlobal,
-          };
+          }
         }),
       clipboardValueSignal.value,
       templateShowFormat.value === 'values',
@@ -587,9 +604,7 @@ export function ClipViewTemplate({
                   <span
                     className={`whitespace-nowrap pr-1 min-w-[80px] overflow-hidden text-ellipsis block ${
                       isLabelOnTop ? 'text-left' : 'text-right max-w-[160px]'
-                    } ${
-                      field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''
-                    }`}
+                    } ${field.isGlobal ? 'text-purple-600 dark:text-purple-400' : ''}`}
                   >
                     {field.label}
                   </span>
@@ -781,7 +796,10 @@ export function ClipViewTemplate({
                             title={`Global Template: ${field.label}`}
                           />
                           <Badge className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-800 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-700 cursor-default text-xs py-0.5 px-1.5">
-                            <Check size={12} className="text-purple-600 dark:text-purple-400" />
+                            <Check
+                              size={12}
+                              className="text-purple-600 dark:text-purple-400"
+                            />
                             {t('Global', { ns: 'templates' })}
                           </Badge>
                         </Flex>

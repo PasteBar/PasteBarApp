@@ -118,6 +118,11 @@ import {
   useCopyPasteHistoryItem,
   usePasteHistoryItem,
 } from '~/hooks/use-copypaste-history-item'
+import {
+  specialCopiedItem,
+  specialPastedItem,
+  specialPastedItemCountDown,
+} from '~/hooks/use-special-copypaste-history-item'
 import { useDebounce } from '~/hooks/use-debounce'
 import useDeleteConfirmationTimer from '~/hooks/use-delete-confirmation-items'
 import { useSignal } from '~/hooks/use-signal'
@@ -339,6 +344,9 @@ export default function ClipboardHistoryPage() {
 
   const pastedItemValue = useMemo(() => pastedItem, [pastedItem])
   const copiedItemValue = useMemo(() => copiedItem, [copiedItem])
+  const specialCopiedItemValue = useMemo(() => specialCopiedItem.value, [specialCopiedItem.value])
+  const specialPastedItemValue = useMemo(() => specialPastedItem.value, [specialPastedItem.value])
+  const specialPastingCountDown = useMemo(() => specialPastedItemCountDown.value, [specialPastedItemCountDown.value])
 
   const clipboardHistory = hasSearchOrFilter ? foundClipboardHistory : allClipboardHistory
 
@@ -1480,10 +1488,12 @@ export default function ClipboardHistoryPage() {
                                               pastingCountDown={
                                                 historyId === pastedItemValue
                                                   ? pastingCountDown
+                                                  : historyId === specialPastedItemValue
+                                                  ? specialPastingCountDown
                                                   : undefined
                                               }
-                                              isPasted={historyId === pastedItemValue}
-                                              isCopied={historyId === copiedItemValue}
+                                              isPasted={historyId === pastedItemValue || historyId === specialPastedItemValue}
+                                              isCopied={historyId === copiedItemValue || historyId === specialCopiedItemValue}
                                               isSaved={historyId === savingItem}
                                               setSavingItem={setSavingItem}
                                               isDeleting={hasIsDeleting(historyId)}
@@ -2090,9 +2100,11 @@ export default function ClipboardHistoryPage() {
                                               pastingCountDown={
                                                 historyId === pastedItemValue
                                                   ? pastingCountDown
+                                                  : historyId === specialPastedItemValue
+                                                  ? specialPastingCountDown
                                                   : undefined
                                               }
-                                              isPasted={historyId === pastedItemValue}
+                                              isPasted={historyId === pastedItemValue || historyId === specialPastedItemValue}
                                               isKeyboardSelected={
                                                 (currentNavigationContext.value ===
                                                   'history' ||
@@ -2100,7 +2112,7 @@ export default function ClipboardHistoryPage() {
                                                     null) &&
                                                 historyId === keyboardSelectedItemId.value
                                               }
-                                              isCopied={historyId === copiedItemValue}
+                                              isCopied={historyId === copiedItemValue || historyId === specialCopiedItemValue}
                                               isSaved={historyId === savingItem}
                                               setSavingItem={setSavingItem}
                                               key={historyId}
@@ -2443,10 +2455,12 @@ export default function ClipboardHistoryPage() {
                                   pastingCountDown={
                                     inLargeViewItem.historyId === pastedItemValue
                                       ? pastingCountDown
+                                      : inLargeViewItem.historyId === specialPastedItemValue
+                                      ? specialPastingCountDown
                                       : null
                                   }
-                                  isPasted={inLargeViewItem.historyId === pastedItemValue}
-                                  isCopied={inLargeViewItem.historyId === copiedItemValue}
+                                  isPasted={inLargeViewItem.historyId === pastedItemValue || inLargeViewItem.historyId === specialPastedItemValue}
+                                  isCopied={inLargeViewItem.historyId === copiedItemValue || inLargeViewItem.historyId === specialCopiedItemValue}
                                   isSaved={inLargeViewItem.historyId === savingItem}
                                   isMp3={
                                     inLargeViewItem.isLink &&

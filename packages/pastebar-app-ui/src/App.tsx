@@ -34,6 +34,8 @@ import {
   settingsStoreAtom,
   themeStoreAtom,
   uiStoreAtom,
+  DEFAULT_SPECIAL_PASTE_OPERATIONS,
+  DEFAULT_SPECIAL_PASTE_CATEGORIES,
 } from './store'
 
 const appIdleEvents = ['mousemove', 'keydown', 'scroll', 'keypress', 'mousedown']
@@ -238,6 +240,14 @@ function App() {
           globalTemplates: settings.globalTemplates?.valueText
             ? settings.globalTemplates.valueText // Will be parsed by initSettings in store
             : [], // Default to empty array
+          isSpecialCopyPasteHistoryEnabled:
+            settings.isSpecialCopyPasteHistoryEnabled?.valueBool ?? true,
+          enabledSpecialPasteOperations: settings.enabledSpecialPasteOperations?.valueText
+            ? settings.enabledSpecialPasteOperations.valueText.split(',').filter(Boolean)
+            : [...DEFAULT_SPECIAL_PASTE_OPERATIONS],
+          specialPasteCategoriesOrder: settings.specialPasteCategoriesOrder?.valueText
+            ? settings.specialPasteCategoriesOrder.valueText.split(',').filter(Boolean)
+            : [...DEFAULT_SPECIAL_PASTE_CATEGORIES],
           isAppReady: true,
         })
         settingsStore.initConstants({
