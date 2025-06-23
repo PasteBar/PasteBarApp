@@ -1,0 +1,73 @@
+Add Current Date/Time: Ajouter Date/Heure Actuelle
+Add Line Numbers: Ajouter Numéros de Ligne
+Add One Line Feed: Ajouter un Saut de Ligne
+Add Two Line Feeds: Ajouter deux Sauts de Ligne
+Base64 Decode: Décoder Base64
+Base64 Encode: Encoder Base64
+CSV: CSV
+CSV to JSON: CSV vers JSON
+CSV to Markdown Table: CSV vers Tableau Markdown
+Capitalize Case: Mettre en Capitale
+Code Formatting: Formatage de Code
+Count Characters: Compter les Caractères
+Count Lines: Compter les Lignes
+Count Sentences: Compter les Phrases
+Count Words: Compter les Mots
+Data Conversion: Conversion de Données
+Drag and drop category to prioritize its order in the special copy/paste menu.: Glissez-déposez la catégorie pour prioriser son ordre dans le menu spécial copier/coller.
+Enable All: Activer Tout
+Enable special text transformation options for clipboard history items: Activer les options de transformation de texte spéciales pour les éléments de l'historique du presse-papiers
+Enabled Operations: Opérations Activées
+Encode/Decode: Encoder/Décoder
+Format Converter: Convertisseur de Format
+HTML: HTML
+HTML Decode: Décoder HTML
+HTML Encode: Encoder HTML
+HTML to Markdown: HTML vers Markdown
+HTML to Plain Text: HTML vers Texte Brut
+HTML to React Component: HTML vers Composant React
+HTML to React JSX: HTML vers React JSX
+HTML to Text: HTML vers Texte
+JSON: JSON
+JSON Stringify: JSON Stringify
+JSON to CSV: JSON vers CSV
+JSON to Markdown Table: JSON vers Tableau Markdown
+JSON to TOML: JSON vers TOML
+JSON to XML: JSON vers XML
+JSON to YAML: JSON vers YAML
+Markdown: Markdown
+Markdown to HTML: Markdown vers HTML
+Markdown to Text: Markdown vers Texte
+Operations: Opérations
+PascalCase: PascalCase
+Prioritize Category Order: Prioriser l'Ordre des Catégories
+Remove Duplicate Lines: Supprimer Lignes Doubles
+Remove Extra Spaces: Supprimer Espaces Superflus
+Remove Line Feeds: Supprimer Sauts de Ligne
+Reverse Text: Inverser le Texte
+Select Operations: Sélectionner Opérations
+Sentence case: Cas de la phrase
+Sort Lines Alphabetically: Trier Lignes par Ordre Alphabétique
+Special Copy: Copie Spéciale
+Special Copy/Paste Operations: Opérations Spéciales Copier/Coller
+Special Paste: Collage Spécial
+Special Settings: Paramètres Spéciaux
+TOML: TOML
+TOML to JSON: TOML vers JSON
+Text Case: Casse du Texte
+Text Tools: Outils Texte
+Title Case: Cas du Titre
+Trim White Space: Supprimer Espaces Blancs
+UPPER CASE: MAJUSCULES
+URL Decode: Décoder URL
+URL Encode: Encoder URL
+Whitespace & Lines: Espaces & Lignes
+XML: XML
+XML to JSON: XML vers JSON
+YAML: YAML
+YAML to JSON: YAML vers JSON
+camelCase: camelCase
+iNVERT cASE: iNVERSER cASSE
+kebab-case: kebab-case
+lower case: minuscules
+snake_case: snake_case

@@ -156,6 +156,7 @@
     "@types/codemirror": "^5.60.15",
     "@types/dompurify": "^3.0.5",
     "@types/events": "^3.0.3",
+    "@types/html-to-text": "^9.0.4",
     "@types/js-yaml": "^4.0.9",
     "@types/linkify-it": "^3.0.5",
     "@types/lodash-es": "^4.17.12",

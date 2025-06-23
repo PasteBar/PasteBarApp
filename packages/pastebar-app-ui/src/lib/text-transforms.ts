@@ -171,6 +171,60 @@ const toJsonStringify = (text: string): string => {
   }
 }
 
+// Helper function to strip HTML tags and return plain text with normalized whitespace
+const stripHtmlTags = (html: string): string => {
+  // First, add line breaks before block-level elements to preserve structure
+  const blockElements = [
+    'p',
+    'div',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'pre',
+    'address',
+    'article',
+    'aside',
+    'footer',
+    'header',
+    'nav',
+    'section',
+    'table',
+    'tr',
+    'br',
+  ]
+
+  // Create regex pattern for block elements
+  const blockRegex = new RegExp(`<(${blockElements.join('|')})[^>]*>`, 'gi')
+
+  // Add newlines before block elements to preserve structure
+  let processedHtml = html.replace(blockRegex, '\n<$1>')
+
+  // Create a temporary div element
+  const div = document.createElement('div')
+  div.innerHTML = processedHtml
+  // Get text content, which automatically strips all HTML tags
+  const text = div.textContent || div.innerText || ''
+
+  // Normalize whitespace while preserving structure
+  return text
+    .replace(/\r\n/g, '\n') // Normalize Windows line endings to Unix
+    .replace(/\r/g, '\n') // Normalize old Mac line endings to Unix
+    .replace(/\n{3,}/g, '\n\n') // Replace 3+ newlines with double newline
+    .replace(/\t+/g, '\t') // Replace multiple tabs with single tab
+    .replace(/[ \t]+/g, ' ') // Replace multiple spaces/tabs with single space
+    .replace(/\n[ \t]+/g, '\n') // Remove spaces/tabs at the beginning of lines
+    .replace(/[ \t]+\n/g, '\n') // Remove spaces/tabs at the end of lines
+    .replace(/\n{2,}/g, '\n') // Replace multiple newlines with single newline
+    .trim() // Remove leading and trailing whitespace
+}
+
 // Format Converter subcategories - organized by source format
 const formatConverterSubcategories = [
   {
@@ -197,6 +251,26 @@ const formatConverterSubcategories = [
         label: 'HTML to Text',
         transform: (text: string) => convertFormat(text, 'html_to_text'),
       },
+      {
+        id: 'htmlToPlainText',
+        label: 'HTML to Plain Text',
+        transform: async (text: string) => {
+          // dynamic import for html-to-text
+          const { convert } = await import('html-to-text')
+          return convert(text, {
+            wordwrap: 130,
+            preserveNewlines: false,
+            // selectors: [{ selector: 'a', format:  }],
+          })
+            .replace(/\n{3,}/g, '\n\n') // Replace 3+ newlines with double newline
+            .trim() // Remove leading and trailing whitespace
+        },
+      },
+      // {
+      //   id: 'htmlToPlainText',
+      //   label: 'HTML to Plain Text',
+      //   transform: (text: string) => stripHtmlTags(text),
+      // },
     ],
   },
   {

@@ -1,0 +1,73 @@
+Add Current Date/Time: Добавить текущие дату/время
+Add Line Numbers: Добавить номера строк
+Add One Line Feed: Добавить один перевод строки
+Add Two Line Feeds: Добавить два перевода строки
+Base64 Decode: Декодировать Base64
+Base64 Encode: Кодировать Base64
+CSV: CSV
+CSV to JSON: CSV в JSON
+CSV to Markdown Table: CSV в таблицу Markdown
+Capitalize Case: С большой буквы
+Code Formatting: Форматирование кода
+Count Characters: Подсчет символов
+Count Lines: Подсчет строк
+Count Sentences: Подсчет предложений
+Count Words: Подсчет слов
+Data Conversion: Преобразование данных
+Drag and drop category to prioritize its order in the special copy/paste menu.: Перетащите категорию, чтобы задать ей приоритет в специальном меню копирования/вставки.
+Enable All: Включить все
+Enable special text transformation options for clipboard history items: Включить специальные параметры преобразования текста для элементов истории буфера обмена
+Enabled Operations: Включенные операции
+Encode/Decode: Кодировать/Декодировать
+Format Converter: Конвертер форматов
+HTML: HTML
+HTML Decode: Декодировать HTML
+HTML Encode: Кодировать HTML
+HTML to Markdown: HTML в Markdown
+HTML to Plain Text: HTML в обычный текст
+HTML to React Component: HTML в компонент React
+HTML to React JSX: HTML в React JSX
+HTML to Text: HTML в текст
+JSON: JSON
+JSON Stringify: JSON в строку
+JSON to CSV: JSON в CSV
+JSON to Markdown Table: JSON в таблицу Markdown
+JSON to TOML: JSON в TOML
+JSON to XML: JSON в XML
+JSON to YAML: JSON в YAML
+Markdown: Markdown
+Markdown to HTML: Markdown в HTML
+Markdown to Text: Markdown в текст
+Operations: Операции
+PascalCase: PascalCase
+Prioritize Category Order: Приоритет порядка категорий
+Remove Duplicate Lines: Удалить дублирующиеся строки
+Remove Extra Spaces: Удалить лишние пробелы
+Remove Line Feeds: Удалить переводы строк
+Reverse Text: Обратный текст
+Select Operations: Выбрать операции
+Sentence case: Регистр предложений
+Sort Lines Alphabetically: Сортировать строки по алфавиту
+Special Copy: Специальное копирование
+Special Copy/Paste Operations: Специальные операции копирования/вставки
+Special Paste: Специальная вставка
+Special Settings: Специальные настройки
+TOML: TOML
+TOML to JSON: TOML в JSON
+Text Case: Регистр текста
+Text Tools: Инструменты для текста
+Title Case: Регистр заголовков
+Trim White Space: Обрезать пробелы
+UPPER CASE: ВЕРХНИЙ РЕГИСТР
+URL Decode: Декодировать URL
+URL Encode: Кодировать URL
+Whitespace & Lines: Пробелы и строки
+XML: XML
+XML to JSON: XML в JSON
+YAML: YAML
+YAML to JSON: YAML в JSON
+camelCase: camelCase
+iNVERT cASE: иНВЕРТИРОВАТЬ рЕГИСТР
+kebab-case: kebab-case
+lower case: нижний регистр
+snake_case: snake_case

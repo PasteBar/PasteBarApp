@@ -14,8 +14,7 @@ Count Lines: Count Lines
 Count Sentences: Count Sentences
 Count Words: Count Words
 Data Conversion: Data Conversion
-? Drag and drop to prioritize categories in the special copy/paste menu. The higher a category is in the list, the higher its menu priority.
-: Drag and drop to prioritize categories in the special copy/paste menu. The higher a category is in the list, the higher its menu priority.
+Drag and drop category to prioritize its order in the special copy/paste menu.: Drag and drop category to prioritize its order in the special copy/paste menu.
 Enable All: Enable All
 Enable special text transformation options for clipboard history items: Enable special text transformation options for clipboard history items
 Enabled Operations: Enabled Operations
@@ -25,6 +24,7 @@ HTML: HTML
 HTML Decode: HTML Decode
 HTML Encode: HTML Encode
 HTML to Markdown: HTML to Markdown
+HTML to Plain Text: HTML to Plain Text
 HTML to React Component: HTML to React Component
 HTML to React JSX: HTML to React JSX
 HTML to Text: HTML to Text
@@ -41,6 +41,7 @@ Markdown to Text: Markdown to Text
 Operations: Operations
 PascalCase: PascalCase
 Prioritize Category Order: Prioritize Category Order
+PrioritizeCategoryOrderNote: PrioritizeCategoryOrderNote
 Remove Duplicate Lines: Remove Duplicate Lines
 Remove Extra Spaces: Remove Extra Spaces
 Remove Line Feeds: Remove Line Feeds

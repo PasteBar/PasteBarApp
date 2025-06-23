@@ -917,7 +917,7 @@ export default function ClipboardHistorySettings() {
                       </Card>
                     </Box>
 
-                    <Box className="max-w-xl animate-in fade-in mt-4">
+                    <Box className="mt-4 max-w-xl animate-in fade-in">
                       <Card
                         className={`${
                           !isExclusionAppListEnabled &&
@@ -1444,16 +1444,21 @@ export default function ClipboardHistorySettings() {
                       />
                     </CardHeader>
                     <CardContent>
-                      <Text className="text-sm text-muted-foreground mb-4">
+                      <Text className="text-sm text-muted-foreground mb-2">
                         {t(
                           'Enable special text transformation options for clipboard history items',
                           { ns: 'specailCopyPaste' }
                         )}
                       </Text>
 
-                      {/* Category Controls - only show when enabled */}
                       {isSpecialCopyPasteHistoryEnabled && (
                         <>
+                          <Text className="text-sm text-muted-foreground mb-4">
+                            {t(
+                              'Drag and drop category to prioritize its order in the special copy/paste menu.',
+                              { ns: 'specailCopyPaste' }
+                            )}
+                          </Text>
                           <DndContext
                             collisionDetection={closestCenter}
                             onDragEnd={event => {
