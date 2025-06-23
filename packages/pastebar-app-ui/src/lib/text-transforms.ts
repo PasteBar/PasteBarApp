@@ -234,11 +234,6 @@ const formatConverterSubcategories = [
             .trim() // Remove leading and trailing whitespace
         },
       },
-      // {
-      //   id: 'htmlToPlainText',
-      //   label: 'HTML to Plain Text',
-      //   transform: (text: string) => stripHtmlTags(text),
-      // },
     ],
   },
   {
