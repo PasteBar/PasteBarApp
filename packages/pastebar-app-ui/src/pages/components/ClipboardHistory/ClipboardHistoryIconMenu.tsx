@@ -63,7 +63,6 @@ export const ClipboardHistoryIconMenu = ({
   onDelete,
   setIsDeleting,
   isDark,
-  setSelectHistoryItem,
   setSelectedHistoryItems,
   showSelectHistoryItems,
 }: ClipboardHistoryIconMenuProps) => {
@@ -83,12 +82,6 @@ export const ClipboardHistoryIconMenu = ({
 
   useHotkeys(['alt+s'], () => {
     setShowSelectHistoryItems(!showSelectHistoryItems)
-  })
-
-  useHotkeys(['control+s'], () => {
-    if (hoveringHistoryRowId.value) {
-      setSelectHistoryItem(hoveringHistoryRowId.value)
-    }
   })
 
   useHotkeys(['alt+h', 'meta+h'], () => {

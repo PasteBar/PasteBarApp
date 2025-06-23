@@ -387,22 +387,22 @@ export function ClipboardHistoryRowComponent({
 
   const pinnedTopOffsetFirst = !isPinnedTopFirst ? 'top-[-10px]' : 'top-[5px]'
   const bgToolsPanel = `${
-    isKeyboardSelected
-      ? 'bg-blue-50 dark:bg-blue-950/80'
-      : !isPinnedTop && isOverPinned && !isNowItem
-        ? 'bg-orange-50 dark:!bg-transparent'
-        : isDeleting || isDeleteConfirmationFromContext.value
-          ? 'bg-red-50 dark:bg-red-950/80'
-          : contextMenuOpen.value
-            ? `bg-slate-100 dark:bg-slate-900 ${
-                isNowItem ? 'bg-teal-50/80 dark:bg-sky-900/80' : ''
-              }`
-            : isCopiedOrPasted
-              ? 'dark:bg-green-950/80'
-              : isSaved
-                ? 'dark:bg-sky-950/80'
-                : isSelected
-                  ? 'bg-yellow-50 dark:bg-amber-950/80'
+    !isPinnedTop && isOverPinned && !isNowItem
+      ? 'bg-orange-50 dark:!bg-transparent'
+      : isDeleting || isDeleteConfirmationFromContext.value
+        ? 'bg-red-50 dark:bg-red-950/80'
+        : isSelected
+          ? 'bg-yellow-50 dark:bg-amber-950/80'
+          : isKeyboardSelected
+            ? 'bg-blue-50 dark:bg-blue-950/80'
+            : contextMenuOpen.value
+              ? `bg-slate-100 dark:bg-slate-900 ${
+                  isNowItem ? 'bg-teal-50/80 dark:bg-sky-900/80' : ''
+                }`
+              : isCopiedOrPasted
+                ? 'dark:bg-green-950/80'
+                : isSaved
+                  ? 'dark:bg-sky-950/80'
                   : isNowItem
                     ? 'bg-teal-50/90 dark:bg-sky-950'
                     : 'bg-white dark:bg-slate-950/80'
@@ -501,6 +501,10 @@ export function ClipboardHistoryRowComponent({
           >
             <Box
               className={`rounded-md justify-start duration-300 history-box relative px-3 py-1 hover:shadow-sm my-0.5 shadow-none border-2 flex flex-col ${
+                isKeyboardSelected 
+                  ? 'ring-2 scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 !shadow-sm ring-offset-white dark:ring-offset-gray-800' 
+                  : ''
+              } ${
                 index === 0 &&
                 clipboard.updatedAt > Date.now() - MINUTE_IN_MS &&
                 !isCopiedOrPasted &&
@@ -508,23 +512,23 @@ export function ClipboardHistoryRowComponent({
                 !isKeyboardSelected &&
                 !isSelected
                   ? 'bg-teal-50 hover:border-slate-300 dark:bg-sky-900/40 dark:hover:border-slate-700 hover:bg-teal-50/90 hover:dark:bg-sky-950'
-                  : isKeyboardSelected
-                    ? `bg-blue-50 ring-2 scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 !shadow-sm border-blue-300 dark:bg-blue-950/80 dark:hover:border-blue-800 hover:bg-blue-50/80 ring-offset-white dark:ring-offset-gray-800 ${
-                        isPinnedTop ? ' dark:!bg-amber-950' : ''
-                      }`
-                    : (isDeleting || isDeleteConfirmationFromContext.value) &&
+                  : (isDeleting || isDeleteConfirmationFromContext.value) &&
                         !isDragPreview
                       ? 'border-red-400 bg-red-50 dark:bg-red-950/80 dark:border-red-900/80 dark:hover:border-red-800'
+                    : isSelected
+                      ? `bg-amber-50 border-amber-300 dark:bg-amber-950/80 dark:border-amber-900/80 hover:border-amber-300/80 dark:hover:border-amber-800 hover:bg-amber-50/80 ${
+                          isPinnedTop ? '!border dark:!bg-amber-950' : ''
+                        }`
+                      : isKeyboardSelected
+                        ? `bg-blue-50 border-blue-300 dark:bg-blue-950/80 dark:hover:border-blue-800 hover:bg-blue-50/80 ${
+                            isPinnedTop ? ' dark:!bg-amber-950' : ''
+                          }`
                       : contextMenuOpen.value
                         ? 'bg-slate-100 dark:bg-slate-950/80 border-slate-300 dark:border-slate-600'
                         : isSaved && !isDragPreview
                           ? 'bg-sky-50 border-sky-600 dark:bg-sky-950/80 dark:border-sky-900/80 dark:hover:border-sky-800'
                           : isCopiedOrPasted && !isDragPreview
                             ? `bg-green-50 border-green-600 dark:bg-green-950/80 dark:border-green-800`
-                            : isSelected
-                              ? `bg-amber-50 border-amber-300 dark:bg-amber-950/80 dark:border-amber-900/80 hover:border-amber-300/80 dark:hover:border-amber-800 hover:bg-amber-50/80 ${
-                                  isPinnedTop ? '!border dark:!bg-amber-950' : ''
-                                }`
                               : `hover:bg-white dark:hover:bg-slate-950/80 ${
                                   isLargeView
                                     ? 'border-slate-500 bg-white dark:bg-slate-950 hover:dark:border-slate-500'

@@ -37,6 +37,9 @@ export const resetTimeModalInterval = signal<NodeJS.Timeout | null>(null)
 
 // Clipboard History Signals
 export const showHistoryDeleteConfirmationId = signal<UniqueIdentifier | null>(null)
+export const showHistoryMultiDeleteConfirmationIds = signal<UniqueIdentifier[] | null>(
+  null
+)
 export const hoveringHistoryRowId = signal<UniqueIdentifier | null>(null)
 export const showLargeViewHistoryId = signal<UniqueIdentifier | null>(null)
 export const showKeyboardNavContextMenuHistoryId = signal<UniqueIdentifier | null>(null)
@@ -147,7 +150,7 @@ export function resetMenuCreateOrEdit() {
 export function resetKeyboardNavigation() {
   currentNavigationContext.value = null
   keyboardSelectedItemId.value = null
-  hoveringHistoryRowId.value = null
+  // hoveringHistoryRowId.value = null
   keyboardSelectedBoardId.value = null
   keyboardSelectedClipId.value = null
   currentBoardIndex.value = 0

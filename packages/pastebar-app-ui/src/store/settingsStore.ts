@@ -13,7 +13,10 @@ import { atomWithStore } from 'jotai-zustand'
 import { createStore } from 'zustand/vanilla'
 
 import DOMPurify from '../components/libs/dompurify'
-import { DEFAULT_SPECIAL_PASTE_OPERATIONS, DEFAULT_SPECIAL_PASTE_CATEGORIES } from './constants'
+import {
+  DEFAULT_SPECIAL_PASTE_CATEGORIES,
+  DEFAULT_SPECIAL_PASTE_OPERATIONS,
+} from './constants'
 import {
   availableVersionBody,
   availableVersionDate,
@@ -548,7 +551,6 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
           specialPasteCategoriesOrder: value.split(',').filter(Boolean),
         }))
       }
-
 
       return set(() => ({ [name]: value }))
     } catch (e) {

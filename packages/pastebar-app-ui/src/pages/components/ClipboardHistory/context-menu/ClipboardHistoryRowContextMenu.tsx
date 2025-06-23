@@ -235,7 +235,7 @@ export default function ClipboardHistoryRowContextMenu({
           if (e.key === 'Delete' || e.key === 'Backspace') {
             e.preventDefault()
             e.stopPropagation()
-            
+
             if (isSelected && selectedHistoryItems && selectedHistoryItems.length > 1) {
               // Multi-select delete
               if (pendingDeleteId === 'multi') {
@@ -836,7 +836,9 @@ export default function ClipboardHistoryRowContextMenu({
         <ContextMenuSeparator />
         {isSelected && selectedHistoryItems && selectedHistoryItems.length > 1 ? (
           <ContextMenuItem
-            className={pendingDeleteId === 'multi' ? 'bg-red-500/20 dark:bg-red-600/20' : ''}
+            className={
+              pendingDeleteId === 'multi' ? 'bg-red-500/20 dark:bg-red-600/20' : ''
+            }
             onSelect={async e => {
               e.preventDefault()
 
@@ -882,7 +884,9 @@ export default function ClipboardHistoryRowContextMenu({
           </ContextMenuItem>
         ) : (
           <ContextMenuItem
-            className={pendingDeleteId === historyId ? 'bg-red-500/20 dark:bg-red-600/20' : ''}
+            className={
+              pendingDeleteId === historyId ? 'bg-red-500/20 dark:bg-red-600/20' : ''
+            }
             onSelect={async e => {
               e.preventDefault()
 
