@@ -121,6 +121,7 @@ interface ClipboardHistoryRowProps {
   clipboard?: ClipboardHistoryItem
   isDark: boolean
   setRowHeight?: (index: number, height: number) => void
+  setKeyboardHistorySelectedItemId?: (id: UniqueIdentifier | null) => void
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
   isSingleClickToCopyPaste?: boolean
@@ -182,6 +183,7 @@ export function ClipboardHistoryRowComponent({
   setRowHeight = () => {},
   setHistoryFilters = () => {},
   setAppFilters = () => {},
+  setKeyboardHistorySelectedItemId = () => {},
   isSingleClickToCopyPaste = false,
   historyPreviewLineLimit,
 }: ClipboardHistoryRowProps) {
@@ -239,10 +241,12 @@ export function ClipboardHistoryRowComponent({
 
   useEffect(() => {
     if (isKeyboardSelected && rowKeyboardRef.current && !isScrolling) {
-      rowKeyboardRef.current.scrollIntoView({
-        block: 'center',
-      })
-      // rowKeyboardRef.current.focus()
+      if (!isScrolling) {
+        rowKeyboardRef.current.scrollIntoView({
+          block: 'nearest',
+        })
+        rowKeyboardRef.current.focus({ preventScroll: true })
+      }
     }
   }, [isKeyboardSelected, isScrolling])
 
@@ -430,7 +434,7 @@ export function ClipboardHistoryRowComponent({
       }
       {...(isSelected || isHovering ? listeners : {})}
     >
-      <Box ref={rowRef} tabIndex={0} role="option" aria-selected={isKeyboardSelected}>
+      <Box ref={rowRef} tabIndex={-1} role="option" aria-selected={isKeyboardSelected}>
         {showTimeAgo && (
           <Box
             className={`flex justify-center text-gray-400 text-xs ${
@@ -495,14 +499,14 @@ export function ClipboardHistoryRowComponent({
           <Box
             className="relative select-none history-item focus:outline-none"
             ref={rowKeyboardRef}
-            tabIndex={0}
+            tabIndex={-1}
             role="option"
             aria-selected={isKeyboardSelected}
           >
             <Box
               className={`rounded-md justify-start duration-300 history-box relative px-3 py-1 hover:shadow-sm my-0.5 shadow-none border-2 flex flex-col ${
-                isKeyboardSelected 
-                  ? 'ring-2 scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 !shadow-sm ring-offset-white dark:ring-offset-gray-800' 
+                isKeyboardSelected
+                  ? 'ring-2 scale-[.98] ring-blue-400 dark:!ring-blue-600 ring-offset-1 !shadow-sm ring-offset-white dark:ring-offset-gray-800'
                   : ''
               } ${
                 index === 0 &&
@@ -513,22 +517,22 @@ export function ClipboardHistoryRowComponent({
                 !isSelected
                   ? 'bg-teal-50 hover:border-slate-300 dark:bg-sky-900/40 dark:hover:border-slate-700 hover:bg-teal-50/90 hover:dark:bg-sky-950'
                   : (isDeleting || isDeleteConfirmationFromContext.value) &&
-                        !isDragPreview
-                      ? 'border-red-400 bg-red-50 dark:bg-red-950/80 dark:border-red-900/80 dark:hover:border-red-800'
+                      !isDragPreview
+                    ? 'border-red-400 bg-red-50 dark:bg-red-950/80 dark:border-red-900/80 dark:hover:border-red-800'
                     : isSelected
                       ? `bg-amber-50 border-amber-300 dark:bg-amber-950/80 dark:border-amber-900/80 hover:border-amber-300/80 dark:hover:border-amber-800 hover:bg-amber-50/80 ${
                           isPinnedTop ? '!border dark:!bg-amber-950' : ''
                         }`
                       : isKeyboardSelected
-                        ? `bg-blue-50 border-blue-300 dark:bg-blue-950/80 dark:hover:border-blue-800 hover:bg-blue-50/80 ${
+                        ? `bg-blue-50 !border-0 border-blue-300 dark:bg-blue-950/80 dark:hover:border-blue-800 hover:bg-blue-50/80 ${
                             isPinnedTop ? ' dark:!bg-amber-950' : ''
                           }`
-                      : contextMenuOpen.value
-                        ? 'bg-slate-100 dark:bg-slate-950/80 border-slate-300 dark:border-slate-600'
-                        : isSaved && !isDragPreview
-                          ? 'bg-sky-50 border-sky-600 dark:bg-sky-950/80 dark:border-sky-900/80 dark:hover:border-sky-800'
-                          : isCopiedOrPasted && !isDragPreview
-                            ? `bg-green-50 border-green-600 dark:bg-green-950/80 dark:border-green-800`
+                        : contextMenuOpen.value
+                          ? 'bg-slate-100 dark:bg-slate-950/80 border-slate-300 dark:border-slate-600'
+                          : isSaved && !isDragPreview
+                            ? 'bg-sky-50 border-sky-600 dark:bg-sky-950/80 dark:border-sky-900/80 dark:hover:border-sky-800'
+                            : isCopiedOrPasted && !isDragPreview
+                              ? `bg-green-50 border-green-600 dark:bg-green-950/80 dark:border-green-800`
                               : `hover:bg-white dark:hover:bg-slate-950/80 ${
                                   isLargeView
                                     ? 'border-slate-500 bg-white dark:bg-slate-950 hover:dark:border-slate-500'
@@ -549,16 +553,20 @@ export function ClipboardHistoryRowComponent({
                     !getSelectedText().text &&
                     isWindows &&
                     e.ctrlKey) ||
-                  (e.metaKey && !isWindows)
+                  (e.metaKey &&
+                    !isWindows &&
+                    isSingleClickToCopyPaste &&
+                    !getSelectedText().text)
                 ) {
                   e.preventDefault()
                   e.stopPropagation()
                   onCopyPaste(clipboard.historyId)
-                } else if ((isWindows && e.ctrlKey) || (e.metaKey && !isWindows)) {
+                } else if (e.altKey) {
                   setSelectHistoryItem(clipboard.historyId)
                 } else if (e.ctrlKey || e.metaKey) {
                   e.preventDefault()
                   e.stopPropagation()
+                  setKeyboardHistorySelectedItemId(clipboard.historyId)
                 } else if (e.shiftKey) {
                   e.preventDefault()
                   e.stopPropagation()

@@ -35,7 +35,6 @@ import {
   showClipsMoveOnBoardId,
   showDetailsClipId,
   showHistoryDeleteConfirmationId,
-  showHistoryMultiDeleteConfirmationIds,
   showKeyboardNavContextMenuClipId,
   showKeyboardNavContextMenuHistoryId,
   showLargeViewClipId,
@@ -221,8 +220,6 @@ export default function ClipboardHistoryPage() {
   const [selectedHistoryItems, setSelectedHistoryItems] = useState<UniqueIdentifier[]>([])
   const [showSelectHistoryItems, setShowSelectHistoryItems] = useState(false)
   const [isDragPinnedHistory, setIsDragPinnedHistory] = useState(false)
-  // Use global signal for keyboardSelectedItemId, aliased to avoid conflict if needed locally
-  // const keyboardSelectedItemId = useSignal<UniqueIdentifier | null>(null); // Removed local signal
   const {
     isScrolling,
     setIsScrolling,
@@ -278,37 +275,40 @@ export default function ClipboardHistoryPage() {
     },
   })
 
-  const { showConfirmation: showConfirmationKeyboardDelete, keyboardItemIdDelete, resetTimer: resetKeyboardDeleteTimer } =
-    useKeyboardDeleteConfirmation({
-      keyboardSelectedItemId: keyboardSelectedItemId,
-      selectedHistoryItems,
-      onConfirmedDelete: async () => {
-        if (keyboardSelectedItemId.value) {
-          // Calculate next selection before deletion
-          const currentIndex = clipboardHistory.findIndex(
-            item => item.historyId === keyboardSelectedItemId.value
-          )
-          let nextSelectedId: UniqueIdentifier | null = null
-          if (currentIndex !== -1) {
-            if (currentIndex < clipboardHistory.length - 1) {
-              // Select next item
-              nextSelectedId = clipboardHistory[currentIndex + 1].historyId
-            } else if (currentIndex > 0) {
-              // Select previous item
-              nextSelectedId = clipboardHistory[currentIndex - 1].historyId
-            }
-            // If only one item, nextSelectedId remains null
+  const {
+    showConfirmation: showConfirmationKeyboardDelete,
+    keyboardItemIdDelete,
+    resetTimer: resetKeyboardDeleteTimer,
+  } = useKeyboardDeleteConfirmation({
+    keyboardSelectedItemId: keyboardSelectedItemId,
+    selectedHistoryItems,
+    onConfirmedDelete: async () => {
+      if (keyboardSelectedItemId.value) {
+        // Calculate next selection before deletion
+        const currentIndex = clipboardHistory.findIndex(
+          item => item.historyId === keyboardSelectedItemId.value
+        )
+        let nextSelectedId: UniqueIdentifier | null = null
+        if (currentIndex !== -1) {
+          if (currentIndex < clipboardHistory.length - 1) {
+            // Select next item
+            nextSelectedId = clipboardHistory[currentIndex + 1].historyId
+          } else if (currentIndex > 0) {
+            // Select previous item
+            nextSelectedId = clipboardHistory[currentIndex - 1].historyId
           }
-
-          await deleteClipboardHistoryByIds({
-            historyIds: [keyboardSelectedItemId.value],
-          })
-
-          // Update selection to the calculated next item
-          keyboardSelectedItemId.value = nextSelectedId
+          // If only one item, nextSelectedId remains null
         }
-      },
-    })
+
+        await deleteClipboardHistoryByIds({
+          historyIds: [keyboardSelectedItemId.value],
+        })
+
+        // Update selection to the calculated next item
+        keyboardSelectedItemId.value = nextSelectedId
+      }
+    },
+  })
 
   const isPinnedPanelHoverOpen = useMemo(() => {
     return isPinnedPanelKeepOpen.value || isPinnedPanelHovering.value
@@ -508,6 +508,8 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -698,7 +700,10 @@ export default function ClipboardHistoryPage() {
 
   useHotkeys(
     ['space'],
-    () => {
+    e => {
+      e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
       if (
         currentNavigationContext.value === 'history' ||
         currentNavigationContext.value === null
@@ -706,7 +711,7 @@ export default function ClipboardHistoryPage() {
         if (keyboardSelectedItemId.value) {
           // Reset keyboard delete confirmation when selecting
           resetKeyboardDeleteTimer()
-          
+
           setSelectHistoryItem(keyboardSelectedItemId.value)
           const currentItemIndex = clipboardHistory.findIndex(
             item => item.historyId === keyboardSelectedItemId.value
@@ -723,6 +728,8 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -741,7 +748,7 @@ export default function ClipboardHistoryPage() {
 
       // Reset delete confirmation on escape
       showHistoryDeleteConfirmationId.value = null
-      
+
       // Reset keyboard delete confirmation on escape
       resetKeyboardDeleteTimer()
 
@@ -769,6 +776,8 @@ export default function ClipboardHistoryPage() {
     ['arrowdown'],
     e => {
       e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
 
       // Clear any delete timeout when navigating away
       if (deleteTimeoutRef.current) {
@@ -778,7 +787,7 @@ export default function ClipboardHistoryPage() {
 
       // Reset delete confirmation when navigating to a different item
       showHistoryDeleteConfirmationId.value = null
-      
+
       // Reset keyboard delete confirmation when navigating
       resetKeyboardDeleteTimer()
 
@@ -798,6 +807,8 @@ export default function ClipboardHistoryPage() {
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
         !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -805,6 +816,8 @@ export default function ClipboardHistoryPage() {
     ['arrowup'],
     e => {
       e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
 
       // Clear any delete timeout when navigating away
       if (deleteTimeoutRef.current) {
@@ -814,7 +827,7 @@ export default function ClipboardHistoryPage() {
 
       // Reset delete confirmation when navigating to a different item
       showHistoryDeleteConfirmationId.value = null
-      
+
       // Reset keyboard delete confirmation when navigating
       resetKeyboardDeleteTimer()
 
@@ -840,6 +853,8 @@ export default function ClipboardHistoryPage() {
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
         !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -873,6 +888,8 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -906,6 +923,8 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -913,6 +932,8 @@ export default function ClipboardHistoryPage() {
     ['home'],
     e => {
       e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
       if (
         currentNavigationContext.value === 'history' ||
         currentNavigationContext.value === null
@@ -958,6 +979,8 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -965,6 +988,8 @@ export default function ClipboardHistoryPage() {
     ['pageup'],
     e => {
       e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
       if (
         currentNavigationContext.value === 'history' ||
         currentNavigationContext.value === null
@@ -1005,6 +1030,8 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -1012,6 +1039,8 @@ export default function ClipboardHistoryPage() {
     ['pagedown'],
     e => {
       e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
       if (
         currentNavigationContext.value === 'history' ||
         currentNavigationContext.value === null
@@ -1052,6 +1081,8 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
 
@@ -1076,8 +1107,39 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
+      enableOnFormTags: false,
+      preventDefault: true,
     }
   )
+
+  function setKeyboardHistorySelectedItemId(itemId: UniqueIdentifier | null) {
+    if (itemId) {
+      if (deleteTimeoutRef.current) {
+        clearTimeout(deleteTimeoutRef.current)
+        deleteTimeoutRef.current = null
+      }
+
+      // Reset delete confirmation when navigating to a different item
+      showHistoryDeleteConfirmationId.value = null
+
+      // Reset keyboard delete confirmation when navigating
+      resetKeyboardDeleteTimer()
+
+      const currentItemIndex = clipboardHistory.findIndex(
+        item => item.historyId === itemId
+      )
+
+      if (currentItemIndex === -1) {
+        keyboardSelectedItemId.value = null
+        return
+      }
+
+      currentNavigationContext.value = 'history'
+      keyboardSelectedItemId.value = itemId
+    } else {
+      keyboardSelectedItemId.value = null
+    }
+  }
 
   // Store timeout reference to clear it if needed
   const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -1347,15 +1409,19 @@ export default function ClipboardHistoryPage() {
   const hasIsDeleting = (historyId: UniqueIdentifier) => {
     return (
       // Keyboard delete confirmation - only for the specific keyboard selected item
-      (showConfirmationKeyboardDelete && 
-       historyId === keyboardItemIdDelete && 
-       historyId === keyboardSelectedItemId.value) ||
+      (showConfirmationKeyboardDelete &&
+        historyId === keyboardItemIdDelete &&
+        historyId === keyboardSelectedItemId.value) ||
       // Mouse delete confirmation - only when keyboard delete is NOT active
-      (showConfirmation && !showConfirmationKeyboardDelete && selectedHistoryItems.includes(historyId)) ||
+      (showConfirmation &&
+        !showConfirmationKeyboardDelete &&
+        selectedHistoryItems.includes(historyId)) ||
       // Single item delete confirmation
       historyId === showHistoryDeleteConfirmationId.value ||
       // Hovering delete confirmation - only when keyboard delete is NOT active
-      (showConfirmation && !showConfirmationKeyboardDelete && historyId === hoveringHistoryIdDelete) ||
+      (showConfirmation &&
+        !showConfirmationKeyboardDelete &&
+        historyId === hoveringHistoryIdDelete) ||
       // Drag over trash
       historyId === dragOverTrashId ||
       (Boolean(dragOverTrashId) &&
@@ -2513,6 +2579,9 @@ export default function ClipboardHistoryPage() {
                                                 historyPreviewLineLimit
                                               }
                                               index={index}
+                                              setKeyboardHistorySelectedItemId={
+                                                setKeyboardHistorySelectedItemId
+                                              }
                                               style={style}
                                             />
                                           )
