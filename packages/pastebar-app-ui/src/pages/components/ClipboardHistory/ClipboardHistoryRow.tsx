@@ -19,6 +19,7 @@ import {
   isKeyAltPressed,
   isKeyCtrlPressed,
   showHistoryDeleteConfirmationId,
+  showKeyboardNavContextMenuHistoryId,
 } from '~/store'
 import {
   ArrowDownToLine,
@@ -255,6 +256,30 @@ export function ClipboardHistoryRowComponent({
     })
   }, [isExpanded, isWrapText])
 
+  useEffect(() => {
+    if (showKeyboardNavContextMenuHistoryId.value === clipboard?.historyId) {
+      if (contextMenuTriggerRef?.current) {
+        const targetElement = contextMenuTriggerRef.current
+        const rect = targetElement.getBoundingClientRect()
+
+        const contextMenuEvent = new MouseEvent('contextmenu', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          clientX: rect.x + 50,
+          clientY: rect.y + 20,
+          button: 2, // Right mouse button
+        })
+
+        targetElement.dispatchEvent(contextMenuEvent)
+      }
+    }
+  }, [
+    showKeyboardNavContextMenuHistoryId.value,
+    clipboard?.historyId,
+    contextMenuTriggerRef?.current,
+  ])
+
   if (!clipboard) {
     return null
   }
@@ -417,10 +442,17 @@ export function ClipboardHistoryRowComponent({
         )}
 
         <ContextMenuTrigger
-          ref={isHovering || isSelected ? contextMenuTriggerRef : null}
+          ref={contextMenuTriggerRef}
           onOpenChange={isOpen => {
             contextMenuOpen.value = isOpen
             showHistoryDeleteConfirmationId.value = null
+            // Reset he keyboard nav signal when menu opens
+            if (
+              !isOpen &&
+              showKeyboardNavContextMenuHistoryId.value === clipboard.historyId
+            ) {
+              showKeyboardNavContextMenuHistoryId.value = null
+            }
           }}
           historyId={clipboard.historyId}
           copiedFromApp={clipboard.copiedFromApp}

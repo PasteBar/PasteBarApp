@@ -48,7 +48,7 @@ interface ContextMenuTriggerProps {
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
   onDeleteConfirmationChange?: (
-    historyId: UniqueIdentifier | null,
+    historyId: UniqueIdentifier | string | null,
     isMultiSelect?: boolean
   ) => void
 }

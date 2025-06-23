@@ -25,6 +25,7 @@ import {
   settingsStoreAtom,
   showClipFindKeyPressed,
   showClipsMoveOnBoardId,
+  showKeyboardNavContextMenuClipId,
   showLargeViewClipId,
   showLinkedClipId,
 } from '~/store'
@@ -562,6 +563,30 @@ export function ClipCard({
     }
   }, [isKeyboardSelected])
 
+  useEffect(() => {
+    if (showKeyboardNavContextMenuClipId.value === clip.id) {
+      if (contextMenuTriggerRef?.current) {
+        const targetElement = contextMenuTriggerRef.current
+        const rect = targetElement.getBoundingClientRect()
+
+        contextMenuClipId.value = clip.id
+
+        const contextMenuEvent = new MouseEvent('contextmenu', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          clientX: rect.x + 50,
+          clientY: rect.y + 20,
+          button: 2, // Right mouse button
+        })
+
+        targetElement.dispatchEvent(contextMenuEvent)
+
+        // Focus the first menu item after the context menu opens
+      }
+    }
+  }, [showKeyboardNavContextMenuClipId.value, clip.id, contextMenuTriggerRef?.current])
+
   const isEditing = isClipNameEditing || isClipEdit
 
   const copyDisabled =
@@ -602,10 +627,18 @@ export function ClipCard({
     <ContextMenu
       onOpenChange={isOpen => {
         contextMenuOpen.value = isOpen
+        if (!isOpen && showKeyboardNavContextMenuClipId.value === clip.id) {
+          showKeyboardNavContextMenuClipId.value = null
+        }
       }}
     >
       <ContextMenuTrigger
-        disabled={(!isHover && !isSelected) || Boolean(globalSearchTerm)}
+        disabled={
+          (!isHover &&
+            !isSelected &&
+            showKeyboardNavContextMenuClipId.value !== clip.id) ||
+          Boolean(globalSearchTerm)
+        }
         ref={contextMenuTriggerRef}
       >
         <Box className="relative">

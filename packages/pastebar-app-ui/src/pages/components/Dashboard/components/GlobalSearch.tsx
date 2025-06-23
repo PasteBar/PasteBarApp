@@ -394,18 +394,18 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
           )
         }
       } else if (e.key === 'Tab' && !e.shiftKey) {
-        e.preventDefault()
-        e.stopPropagation()
         if (availableTabs.length > 1) {
+          e.preventDefault()
+          e.stopPropagation()
           const currentTabIndex = availableTabs.indexOf(filter)
           const nextTabIndex = (currentTabIndex + 1) % availableTabs.length
           setFilter(availableTabs[nextTabIndex])
           setSelectedIndex(-1)
         }
       } else if (e.key === 'Tab' && e.shiftKey) {
-        e.preventDefault()
-        e.stopPropagation()
         if (availableTabs.length > 1) {
+          e.preventDefault()
+          e.stopPropagation()
           const currentTabIndex = availableTabs.indexOf(filter)
           const prevTabIndex =
             (currentTabIndex - 1 + availableTabs.length) % availableTabs.length
@@ -422,6 +422,18 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
         e.preventDefault()
         e.stopPropagation()
         setShowSearchModal(false)
+      } else if (e.key === 'PageUp') {
+        e.preventDefault()
+        e.stopPropagation()
+      } else if (e.key === 'PageDown') {
+        e.preventDefault()
+        e.stopPropagation()
+      } else if (e.key === 'Home') {
+        e.preventDefault()
+        e.stopPropagation()
+      } else if (e.altKey && e.key === 'ArrowDown') {
+        e.preventDefault()
+        e.stopPropagation()
       }
     },
     [filter, selectedIndex, handleCopySelectedItem, flattenedItems]
