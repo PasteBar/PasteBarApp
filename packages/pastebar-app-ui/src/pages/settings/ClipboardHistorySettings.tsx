@@ -165,7 +165,7 @@ function SortableCategoryItem({
               <Grip size={18} />
             </Button>
             <Text className="text-[14px] font-semibold">
-              {t(category.label, { ns: 'specailCopyPaste' })}
+              {t(category.label, { ns: 'specialCopyPaste' })}
             </Text>
           </Flex>
           <Flex className="items-center gap-2">
@@ -213,14 +213,14 @@ function SortableCategoryItem({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="w-full justify-between">
-                  {t('Select Operations', { ns: 'specailCopyPaste' })}
+                  {t('Select Operations', { ns: 'specialCopyPaste' })}
                   <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
                 <DropdownMenuLabel>
-                  {t(category.label, { ns: 'specailCopyPaste' })}{' '}
-                  {t('Operations', { ns: 'specailCopyPaste' })}
+                  {t(category.label, { ns: 'specialCopyPaste' })}{' '}
+                  {t('Operations', { ns: 'specialCopyPaste' })}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <SimpleBar
@@ -237,7 +237,7 @@ function SortableCategoryItem({
                       category.subcategories.map(subcategory => (
                         <div key={subcategory.id}>
                           <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
-                            {t(subcategory.label, { ns: 'specailCopyPaste' })}
+                            {t(subcategory.label, { ns: 'specialCopyPaste' })}
                           </DropdownMenuLabel>
                           {subcategory.transforms.map(transform => (
                             <DropdownMenuCheckboxItem
@@ -264,7 +264,7 @@ function SortableCategoryItem({
                               }}
                               className="pl-6"
                             >
-                              {t(transform.label, { ns: 'specailCopyPaste' })}
+                              {t(transform.label, { ns: 'specialCopyPaste' })}
                             </DropdownMenuCheckboxItem>
                           ))}
                           {category.subcategories &&
@@ -297,7 +297,7 @@ function SortableCategoryItem({
                             }
                           }}
                         >
-                          {t(transform.label, { ns: 'specailCopyPaste' })}
+                          {t(transform.label, { ns: 'specialCopyPaste' })}
                         </DropdownMenuCheckboxItem>
                       ))}
                 </SimpleBar>
@@ -1431,7 +1431,7 @@ export default function ClipboardHistorySettings() {
                   >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                       <CardTitle className="animate-in fade-in text-md font-medium w-full">
-                        {t('Special Copy/Paste Operations', { ns: 'specailCopyPaste' })}
+                        {t('Special Copy/Paste Operations', { ns: 'specialCopyPaste' })}
                       </CardTitle>
                       <Switch
                         checked={isSpecialCopyPasteHistoryEnabled}
@@ -1447,7 +1447,7 @@ export default function ClipboardHistorySettings() {
                       <Text className="text-sm text-muted-foreground mb-2">
                         {t(
                           'Enable special text transformation options for clipboard history items',
-                          { ns: 'specailCopyPaste' }
+                          { ns: 'specialCopyPaste' }
                         )}
                       </Text>
 
@@ -1456,7 +1456,7 @@ export default function ClipboardHistorySettings() {
                           <Text className="text-sm text-muted-foreground mb-4">
                             {t(
                               'Drag and drop category to prioritize its order in the special copy/paste menu.',
-                              { ns: 'specailCopyPaste' }
+                              { ns: 'specialCopyPaste' }
                             )}
                           </Text>
                           <DndContext
@@ -1517,7 +1517,7 @@ export default function ClipboardHistorySettings() {
                           {/* Summary */}
                           <Box className="mt-4 pt-4">
                             <Text className="text-sm font-medium mb-2">
-                              {t('Enabled Operations', { ns: 'specailCopyPaste' })} (
+                              {t('Enabled Operations', { ns: 'specialCopyPaste' })} (
                               {enabledSpecialPasteOperations.length}):
                             </Text>
                             {enabledSpecialPasteOperations.length > 0 ? (
@@ -1532,14 +1532,14 @@ export default function ClipboardHistorySettings() {
                                       variant="graySecondary"
                                       className="font-normal text-xs"
                                     >
-                                      {t(transform.label, { ns: 'specailCopyPaste' })}
+                                      {t(transform.label, { ns: 'specialCopyPaste' })}
                                     </Badge>
                                   ) : null
                                 })}
                               </Flex>
                             ) : (
                               <Text className="text-sm text-muted-foreground">
-                                {t('None', { ns: 'specailCopyPaste' })}
+                                {t('None', { ns: 'specialCopyPaste' })}
                               </Text>
                             )}
                           </Box>
@@ -1560,7 +1560,7 @@ export default function ClipboardHistorySettings() {
                                 ])
                               }}
                             >
-                              {t('Enable All', { ns: 'specailCopyPaste' })}
+                              {t('Enable All', { ns: 'specialCopyPaste' })}
                             </Button>
                           </Box>
                         </>

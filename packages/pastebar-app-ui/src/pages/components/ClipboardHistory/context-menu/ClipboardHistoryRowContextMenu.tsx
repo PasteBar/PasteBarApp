@@ -377,8 +377,8 @@ export default function ClipboardHistoryRowContextMenu({
             <ContextMenuSub>
               <ContextMenuSubTrigger>
                 {isKeyAltPressed.value
-                  ? t('Special Paste', { ns: 'specailCopyPaste' })
-                  : t('Special Copy', { ns: 'specailCopyPaste' })}
+                  ? t('Special Paste', { ns: 'specialCopyPaste' })
+                  : t('Special Copy', { ns: 'specialCopyPaste' })}
               </ContextMenuSubTrigger>
               <ContextMenuSubContent className="w-48">
                 {categoriesWithTransforms.map(category => {
@@ -395,7 +395,7 @@ export default function ClipboardHistoryRowContextMenu({
                       <ContextMenuSub key={category.id}>
                         <ContextMenuSubTrigger>
                           {t(category.label, {
-                            ns: 'specailCopyPaste',
+                            ns: 'specialCopyPaste',
                           })}
                         </ContextMenuSubTrigger>
                         <ContextMenuSubContent className="w-48">
@@ -409,7 +409,7 @@ export default function ClipboardHistoryRowContextMenu({
                               <ContextMenuSub key={subcategory.id}>
                                 <ContextMenuSubTrigger>
                                   {t(subcategory.label, {
-                                    ns: 'specailCopyPaste',
+                                    ns: 'specialCopyPaste',
                                   })}
                                 </ContextMenuSubTrigger>
                                 <ContextMenuSubContent className="w-44">
@@ -444,7 +444,7 @@ export default function ClipboardHistoryRowContextMenu({
                                       }}
                                     >
                                       {t(transform.label, {
-                                        ns: 'specailCopyPaste',
+                                        ns: 'specialCopyPaste',
                                       })}
                                       {specialActionInProgress === transform.id && (
                                         <div className="ml-auto">
@@ -473,7 +473,7 @@ export default function ClipboardHistoryRowContextMenu({
                       <ContextMenuSub key={category.id}>
                         <ContextMenuSubTrigger>
                           {t(category.label, {
-                            ns: 'specailCopyPaste',
+                            ns: 'specialCopyPaste',
                           })}
                         </ContextMenuSubTrigger>
                         <ContextMenuSubContent className="w-44">
@@ -497,7 +497,7 @@ export default function ClipboardHistoryRowContextMenu({
                               }}
                             >
                               {t(transform.label, {
-                                ns: 'specailCopyPaste',
+                                ns: 'specialCopyPaste',
                               })}
                               {specialActionInProgress === transform.id && (
                                 <div className="ml-auto">
