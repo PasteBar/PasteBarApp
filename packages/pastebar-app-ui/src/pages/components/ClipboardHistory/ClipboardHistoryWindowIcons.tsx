@@ -70,12 +70,6 @@ export const ClipboardHistoryWindowIcons = ({
     setShowSelectHistoryItems(!showSelectHistoryItems)
   })
 
-  useHotkeys(['control+s'], () => {
-    if (hoveringHistoryRowId.value) {
-      setSelectHistoryItem(hoveringHistoryRowId.value)
-    }
-  })
-
   useHotkeys(['alt+h', 'meta+h'], () => {
     setIsHistoryEnabled(!isHistoryEnabled)
   })

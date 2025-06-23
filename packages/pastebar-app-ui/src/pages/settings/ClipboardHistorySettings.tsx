@@ -7,13 +7,19 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { settingsStoreAtom, uiStoreAtom } from '~/store'
+import {
+  DEFAULT_SPECIAL_PASTE_CATEGORIES,
+  DEFAULT_SPECIAL_PASTE_OPERATIONS,
+  settingsStoreAtom,
+  uiStoreAtom,
+} from '~/store'
 import { useAtomValue } from 'jotai'
-import { Grip } from 'lucide-react'
+import { ChevronDown, Grip } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import AutoSize from 'react-virtualized-auto-sizer'
 
+import { TEXT_TRANSFORMS, TRANSFORM_CATEGORIES } from '~/lib/text-transforms'
 import {
   arraysEqual,
   isStringArrayEmpty,
@@ -25,6 +31,7 @@ import Spacer from '~/components/atoms/spacer'
 import SimpleBar from '~/components/libs/simplebar-react'
 import InputField from '~/components/molecules/input'
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -32,6 +39,12 @@ import {
   CardHeader,
   CardTitle,
   CheckBoxFilter,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   Flex,
   Select,
   SelectContent,
@@ -75,6 +88,224 @@ function SortableItem({ id, language }: SortableItemProps) {
           <Grip size={20} />
         </Button>
       </Flex>
+    </div>
+  )
+}
+
+interface SortableCategoryItemProps {
+  categoryId: string
+  localCategoriesOrder: string[]
+  setLocalCategoriesOrder: (categories: string[]) => void
+}
+function SortableCategoryItem({
+  categoryId,
+  localCategoriesOrder,
+  setLocalCategoriesOrder,
+}: SortableCategoryItemProps) {
+  const { t } = useTranslation()
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: categoryId })
+
+  const {
+    enabledSpecialPasteOperations,
+    setEnabledSpecialPasteOperations,
+    setSpecialPasteCategoriesOrder,
+  } = useAtomValue(settingsStoreAtom)
+
+  const category = TRANSFORM_CATEGORIES.find(c => c.id === categoryId)
+  if (!category) return null
+
+  const isCategoryEnabled = localCategoriesOrder.includes(category.id)
+
+  // Get all transforms in category (including from subcategories)
+  const allTransformsInCategory = category.subcategories
+    ? category.subcategories.flatMap(subcategory => subcategory.transforms)
+    : category.transforms || []
+
+  const enabledTransformsInCategory = allTransformsInCategory.filter(transform =>
+    enabledSpecialPasteOperations.includes(transform.id)
+  )
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      key={category.id}
+      {...attributes}
+      className={
+        isDragging
+          ? 'z-100 opacity-70 bg-slate-50 dark:bg-slate-900'
+          : 'z-auto opacity-100'
+      }
+    >
+      <Box
+        className={`border rounded-lg p-4 ${
+          !isCategoryEnabled ? 'opacity-60 bg-gray-50 dark:bg-gray-900/50' : ''
+        }`}
+      >
+        {/* Category Header */}
+        <Flex className="items-center justify-between">
+          <Flex className="items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`opacity-40 hover:opacity-90 p-1 ${
+                isCategoryEnabled
+                  ? 'cursor-grab active:cursor-grabbing'
+                  : 'cursor-not-allowed'
+              }`}
+              {...(isCategoryEnabled ? listeners : {})}
+              disabled={!isCategoryEnabled}
+            >
+              <Grip size={18} />
+            </Button>
+            <Text className="text-[14px] font-semibold">
+              {t(category.label, { ns: 'specialCopyPaste' })}
+            </Text>
+          </Flex>
+          <Flex className="items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              {enabledTransformsInCategory.length}/{allTransformsInCategory.length}
+            </Badge>
+            <Switch
+              className="scale-[.95]"
+              checked={isCategoryEnabled}
+              onCheckedChange={checked => {
+                if (checked) {
+                  const newLocalOrder = localCategoriesOrder.includes(category.id)
+                    ? localCategoriesOrder
+                    : [...localCategoriesOrder, category.id]
+                  setLocalCategoriesOrder(newLocalOrder)
+                  setSpecialPasteCategoriesOrder(newLocalOrder)
+
+                  // Enable all transforms in the category (including from subcategories)
+                  const allTransformIds = allTransformsInCategory.map(t => t.id)
+                  const newOps = [
+                    ...new Set([...enabledSpecialPasteOperations, ...allTransformIds]),
+                  ]
+                  setEnabledSpecialPasteOperations(newOps)
+                } else {
+                  const newLocalOrder = localCategoriesOrder.filter(
+                    id => id !== category.id
+                  )
+                  setLocalCategoriesOrder(newLocalOrder)
+                  setSpecialPasteCategoriesOrder(newLocalOrder)
+
+                  const transformIds = allTransformsInCategory.map(t => t.id)
+                  const newOps = enabledSpecialPasteOperations.filter(
+                    op => !transformIds.includes(op)
+                  )
+                  setEnabledSpecialPasteOperations(newOps)
+                }
+              }}
+            />
+          </Flex>
+        </Flex>
+
+        {/* Individual Transform Controls */}
+        {isCategoryEnabled && (
+          <Box className="mt-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full justify-between">
+                  {t('Select Operations', { ns: 'specialCopyPaste' })}
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width]">
+                <DropdownMenuLabel>
+                  {t(category.label, { ns: 'specialCopyPaste' })}{' '}
+                  {t('Operations', { ns: 'specialCopyPaste' })}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <SimpleBar
+                  className="code-filter"
+                  style={{
+                    height: 'auto',
+                    maxHeight: '400px',
+                    overflowX: 'hidden',
+                  }}
+                  autoHide={false}
+                >
+                  {category.subcategories
+                    ? // Handle categories with subcategories (like Format Converter)
+                      category.subcategories.map(subcategory => (
+                        <div key={subcategory.id}>
+                          <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
+                            {t(subcategory.label, { ns: 'specialCopyPaste' })}
+                          </DropdownMenuLabel>
+                          {subcategory.transforms.map(transform => (
+                            <DropdownMenuCheckboxItem
+                              key={transform.id}
+                              checked={enabledSpecialPasteOperations.includes(
+                                transform.id
+                              )}
+                              onSelect={e => {
+                                e.preventDefault()
+                              }}
+                              onCheckedChange={checked => {
+                                if (checked) {
+                                  setEnabledSpecialPasteOperations([
+                                    ...enabledSpecialPasteOperations,
+                                    transform.id,
+                                  ])
+                                } else {
+                                  setEnabledSpecialPasteOperations(
+                                    enabledSpecialPasteOperations.filter(
+                                      op => op !== transform.id
+                                    )
+                                  )
+                                }
+                              }}
+                              className="pl-6"
+                            >
+                              {t(transform.label, { ns: 'specialCopyPaste' })}
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                          {category.subcategories &&
+                            subcategory !==
+                              category.subcategories[
+                                category.subcategories.length - 1
+                              ] && <DropdownMenuSeparator />}
+                        </div>
+                      ))
+                    : // Handle categories with direct transforms
+                      (category.transforms || []).map(transform => (
+                        <DropdownMenuCheckboxItem
+                          key={transform.id}
+                          checked={enabledSpecialPasteOperations.includes(transform.id)}
+                          onSelect={e => {
+                            e.preventDefault()
+                          }}
+                          onCheckedChange={checked => {
+                            if (checked) {
+                              setEnabledSpecialPasteOperations([
+                                ...enabledSpecialPasteOperations,
+                                transform.id,
+                              ])
+                            } else {
+                              setEnabledSpecialPasteOperations(
+                                enabledSpecialPasteOperations.filter(
+                                  op => op !== transform.id
+                                )
+                              )
+                            }
+                          }}
+                        >
+                          {t(transform.label, { ns: 'specialCopyPaste' })}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                </SimpleBar>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </Box>
+        )}
+      </Box>
     </div>
   )
 }
@@ -131,12 +362,31 @@ export default function ClipboardHistorySettings() {
     setIsKeepPinnedOnClearEnabled,
     isKeepStarredOnClearEnabled,
     setIsKeepStarredOnClearEnabled,
+    isSpecialCopyPasteHistoryEnabled,
+    setIsSpecialCopyPasteHistoryEnabled,
+    enabledSpecialPasteOperations,
+    setEnabledSpecialPasteOperations,
+    specialPasteCategoriesOrder,
+    setSpecialPasteCategoriesOrder,
     isAppReady,
     CONST: { APP_DETECT_LANGUAGES_SUPPORTED: languageList },
   } = useAtomValue(settingsStoreAtom)
 
   const { returnRoute } = useAtomValue(uiStoreAtom)
   const { t } = useTranslation()
+
+  useEffect(() => {
+    const id = window.location.hash.substring(1)
+
+    if (id == null) {
+      return
+    }
+
+    setTimeout(() => {
+      const releventDiv = document.getElementById(id)
+      releventDiv?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 400)
+  }, [])
 
   const [exclusionListValue, setExclusionListValue] = useState('')
   const [exclusionAppListValue, setExclusionAppListValue] = useState('')
@@ -149,6 +399,7 @@ export default function ClipboardHistorySettings() {
   const debouncedAutoMaskListValue = useDebounce(autoMaskListValue, 300)
 
   const [prioritizedLanguages, setPrioritizedLanguages] = useState<string[]>([])
+  const [localCategoriesOrder, setLocalCategoriesOrder] = useState<string[]>([])
 
   useEffect(() => {
     if (
@@ -160,6 +411,45 @@ export default function ClipboardHistorySettings() {
       setPrioritizedLanguages(historyDetectLanguagesPrioritizedList)
     }
   }, [historyDetectLanguagesEnabledList, historyDetectLanguagesPrioritizedList])
+
+  // Initialize local categories order from store
+  useEffect(() => {
+    if (
+      Array.isArray(specialPasteCategoriesOrder) &&
+      specialPasteCategoriesOrder.length > 0
+    ) {
+      setLocalCategoriesOrder(specialPasteCategoriesOrder)
+    } else {
+      setLocalCategoriesOrder([...DEFAULT_SPECIAL_PASTE_CATEGORIES])
+    }
+  }, [specialPasteCategoriesOrder])
+
+  // Show all categories, ordered by user preference with enabled ones first
+  const orderedCategories = (() => {
+    const enabled =
+      localCategoriesOrder.length > 0
+        ? localCategoriesOrder
+        : [...DEFAULT_SPECIAL_PASTE_CATEGORIES]
+
+    // Get all categories that exist but aren't in the enabled list
+    const allCategoryIds = [...DEFAULT_SPECIAL_PASTE_CATEGORIES]
+    const disabled = allCategoryIds.filter(id => !enabled.includes(id))
+
+    // Return enabled categories first, then disabled ones
+    return [...enabled, ...disabled]
+  })()
+
+  console.log(
+    'Component render - specialPasteCategoriesOrder:',
+    specialPasteCategoriesOrder,
+    typeof specialPasteCategoriesOrder,
+    Array.isArray(specialPasteCategoriesOrder)
+  )
+  console.log(
+    'Component render - orderedCategories:',
+    orderedCategories,
+    Array.isArray(orderedCategories)
+  )
 
   useEffect(() => {
     if (isAppReady) {
@@ -627,7 +917,7 @@ export default function ClipboardHistorySettings() {
                       </Card>
                     </Box>
 
-                    <Box className="max-w-xl animate-in fade-in mt-4">
+                    <Box className="mt-4 max-w-xl animate-in fade-in">
                       <Card
                         className={`${
                           !isExclusionAppListEnabled &&
@@ -1125,6 +1415,156 @@ export default function ClipboardHistorySettings() {
                           />
                         </Flex>
                       </Flex>
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box
+                  className="mt-4 max-w-xl animate-in fade-in"
+                  id="specialCopyPasteHistory"
+                >
+                  <Card
+                    className={`${
+                      !isSpecialCopyPasteHistoryEnabled &&
+                      'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Special Copy/Paste Operations', { ns: 'specialCopyPaste' })}
+                      </CardTitle>
+                      <Switch
+                        checked={isSpecialCopyPasteHistoryEnabled}
+                        className="ml-auto"
+                        onCheckedChange={() => {
+                          setIsSpecialCopyPasteHistoryEnabled(
+                            !isSpecialCopyPasteHistoryEnabled
+                          )
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground mb-2">
+                        {t(
+                          'Enable special text transformation options for clipboard history items',
+                          { ns: 'specialCopyPaste' }
+                        )}
+                      </Text>
+
+                      {isSpecialCopyPasteHistoryEnabled && (
+                        <>
+                          <Text className="text-sm text-muted-foreground mb-4">
+                            {t(
+                              'Drag and drop category to prioritize its order in the special copy/paste menu.',
+                              { ns: 'specialCopyPaste' }
+                            )}
+                          </Text>
+                          <DndContext
+                            collisionDetection={closestCenter}
+                            onDragEnd={event => {
+                              const { active, over } = event
+                              if (over?.id && active.id !== over?.id) {
+                                setLocalCategoriesOrder(items => {
+                                  const activeId = active.id.toString()
+                                  const overId = over.id.toString()
+
+                                  // Check if both active and over items are in the enabled list
+                                  if (
+                                    items.includes(activeId) &&
+                                    items.includes(overId)
+                                  ) {
+                                    const oldIndex = items.indexOf(activeId)
+                                    const newIndex = items.indexOf(overId)
+                                    const newArray = arrayMove(items, oldIndex, newIndex)
+
+                                    // Update the store if array changed
+                                    if (!arraysEqual(items, newArray)) {
+                                      setSpecialPasteCategoriesOrder(newArray)
+                                    }
+                                    return newArray
+                                  }
+                                  return items
+                                })
+                              }
+                            }}
+                          >
+                            <SortableContext
+                              items={localCategoriesOrder}
+                              strategy={verticalListSortingStrategy}
+                            >
+                              <Box className="space-y-4">
+                                {orderedCategories
+                                  .map(categoryId =>
+                                    TRANSFORM_CATEGORIES.find(c => c.id === categoryId)
+                                  )
+                                  .filter(category => category)
+                                  .map(category => {
+                                    if (!category) return null
+
+                                    return (
+                                      <SortableCategoryItem
+                                        key={category.id}
+                                        categoryId={category.id}
+                                        localCategoriesOrder={localCategoriesOrder}
+                                        setLocalCategoriesOrder={setLocalCategoriesOrder}
+                                      />
+                                    )
+                                  })}
+                              </Box>
+                            </SortableContext>
+                          </DndContext>
+
+                          {/* Summary */}
+                          <Box className="mt-4 pt-4">
+                            <Text className="text-sm font-medium mb-2">
+                              {t('Enabled Operations', { ns: 'specialCopyPaste' })} (
+                              {enabledSpecialPasteOperations.length}):
+                            </Text>
+                            {enabledSpecialPasteOperations.length > 0 ? (
+                              <Flex className="flex-wrap gap-1 justify-start">
+                                {enabledSpecialPasteOperations.map(opId => {
+                                  const transform = TEXT_TRANSFORMS.find(
+                                    t => t.id === opId
+                                  )
+                                  return transform ? (
+                                    <Badge
+                                      key={opId}
+                                      variant="graySecondary"
+                                      className="font-normal text-xs"
+                                    >
+                                      {t(transform.label, { ns: 'specialCopyPaste' })}
+                                    </Badge>
+                                  ) : null
+                                })}
+                              </Flex>
+                            ) : (
+                              <Text className="text-sm text-muted-foreground">
+                                {t('None', { ns: 'specialCopyPaste' })}
+                              </Text>
+                            )}
+                          </Box>
+                          {/* Reset Button */}
+                          <Box className="mt-6">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                // Enable all categories and operations using constants
+                                const defaultCategories = [
+                                  ...DEFAULT_SPECIAL_PASTE_CATEGORIES,
+                                ]
+                                setLocalCategoriesOrder(defaultCategories)
+                                setSpecialPasteCategoriesOrder(defaultCategories)
+                                setEnabledSpecialPasteOperations([
+                                  ...DEFAULT_SPECIAL_PASTE_OPERATIONS,
+                                ])
+                              }}
+                            >
+                              {t('Enable All', { ns: 'specialCopyPaste' })}
+                            </Button>
+                          </Box>
+                        </>
+                      )}
                     </CardContent>
                   </Card>
                 </Box>

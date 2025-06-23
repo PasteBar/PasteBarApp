@@ -56,6 +56,7 @@ use commands::backup_restore_commands;
 use commands::clipboard_commands;
 use commands::collections_commands;
 use commands::download_update;
+use commands::format_converter_commands;
 use commands::history_commands;
 use commands::items_commands;
 use commands::link_metadata_commands;
@@ -185,6 +186,12 @@ fn update_left_click_tray_env(is_toggle_enabled: bool, is_disabled: bool) -> Res
     "PASTEBAR_ENABLE_LEFT_CLICK_MENU",
     should_disable_context_menu.to_string(),
   );
+  Ok(())
+}
+
+#[cfg(target_os = "macos")]
+#[tauri::command]
+fn update_left_click_tray_env(is_toggle_enabled: bool, is_disabled: bool) -> Result<(), String> {
   Ok(())
 }
 
@@ -1380,6 +1387,7 @@ async fn main() {
       user_settings_command::cmd_get_setting,
       user_settings_command::cmd_set_setting,
       user_settings_command::cmd_remove_setting,
+      format_converter_commands::format_convert,
       open_osx_accessibility_preferences,
       check_osx_accessibility_preferences,
       open_path_or_app,

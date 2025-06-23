@@ -90,7 +90,11 @@ export function MenuCardViewBody({
   const { t } = useTranslation()
   const isWrapText = useSignal(false)
 
-  const { valuePreview, morePreviewLines, morePreviewChars } = getValuePreview(value, false, false)
+  const { valuePreview, morePreviewLines, morePreviewChars } = getValuePreview(
+    value,
+    false,
+    false
+  )
   const textValue: string = value || ''
   const isBrokenImage = useSignal(false)
   const pathTypeCheck = useSignal<string | null | undefined>('')

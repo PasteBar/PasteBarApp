@@ -37,8 +37,12 @@ export const resetTimeModalInterval = signal<NodeJS.Timeout | null>(null)
 
 // Clipboard History Signals
 export const showHistoryDeleteConfirmationId = signal<UniqueIdentifier | null>(null)
+export const showHistoryMultiDeleteConfirmationIds = signal<UniqueIdentifier[] | null>(
+  null
+)
 export const hoveringHistoryRowId = signal<UniqueIdentifier | null>(null)
 export const showLargeViewHistoryId = signal<UniqueIdentifier | null>(null)
+export const showKeyboardNavContextMenuHistoryId = signal<UniqueIdentifier | null>(null)
 export const isHistoryCopyPasting = signal(false)
 
 // Tabs Dashboard Signals
@@ -55,6 +59,7 @@ export const forceSaveClipNameEditingError = signal(false)
 export const hoveringClipIdBoardId = signal<string | null>(null)
 export const showDeleteClipConfirmationId = signal<UniqueIdentifier | null>(null)
 export const contextMenuClipId = signal<UniqueIdentifier | null>(null)
+export const showKeyboardNavContextMenuClipId = signal<UniqueIdentifier | null>(null)
 export const showDeleteImageClipConfirmationId = signal<UniqueIdentifier | null>(null)
 export const isDeletingSelectedClips = signal(false)
 export const addSelectedTextToClipBoard = signal<string | null>(null)
@@ -145,7 +150,7 @@ export function resetMenuCreateOrEdit() {
 export function resetKeyboardNavigation() {
   currentNavigationContext.value = null
   keyboardSelectedItemId.value = null
-  hoveringHistoryRowId.value = null
+  // hoveringHistoryRowId.value = null
   keyboardSelectedBoardId.value = null
   keyboardSelectedClipId.value = null
   currentBoardIndex.value = 0
@@ -243,7 +248,10 @@ effect(() => {
     newMenuItemId.value ||
     addSelectedTextToMenu.value ||
     // Text selection states
-    addSelectedTextToClipBoard.value
+    addSelectedTextToClipBoard.value ||
+    // Context menu states
+    showKeyboardNavContextMenuHistoryId.value ||
+    showKeyboardNavContextMenuClipId.value
   ) {
     // console.log('Disabling keyboard navigation due to edit or delete actions')
     // Disable keyboard navigation when editing

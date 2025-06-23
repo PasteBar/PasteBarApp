@@ -1,0 +1,73 @@
+Add Current Date/Time: 添加当前日期/时间
+Add Line Numbers: 添加行号
+Add One Line Feed: 添加一个换行符
+Add Two Line Feeds: 添加两个换行符
+Base64 Decode: Base64 解码
+Base64 Encode: Base64 编码
+CSV: CSV
+CSV to JSON: CSV 转 JSON
+CSV to Markdown Table: CSV 转 Markdown 表格
+Capitalize Case: 首字母大写
+Code Formatting: 代码格式化
+Count Characters: 计算字符数
+Count Lines: 计算行数
+Count Sentences: 计算句子数
+Count Words: 计算单词数
+Data Conversion: 数据转换
+Drag and drop category to prioritize its order in the special copy/paste menu.: 拖放类别以在特殊复制/粘贴菜单中优先排列其顺序。
+Enable All: 全部启用
+Enable special text transformation options for clipboard history items: 为剪贴板历史记录项启用特殊文本转换选项
+Enabled Operations: 已启用的操作
+Encode/Decode: 编码/解码
+Format Converter: 格式转换器
+HTML: HTML
+HTML Decode: HTML 解码
+HTML Encode: HTML 编码
+HTML to Markdown: HTML 转 Markdown
+HTML to Plain Text: HTML 转纯文本
+HTML to React Component: HTML 转 React 组件
+HTML to React JSX: HTML 转 React JSX
+HTML to Text: HTML 转文本
+JSON: JSON
+JSON Stringify: JSON 字符串化
+JSON to CSV: JSON 转 CSV
+JSON to Markdown Table: JSON 转 Markdown 表格
+JSON to TOML: JSON 转 TOML
+JSON to XML: JSON 转 XML
+JSON to YAML: JSON 转 YAML
+Markdown: Markdown
+Markdown to HTML: Markdown 转 HTML
+Markdown to Text: Markdown 转文本
+Operations: 操作
+PascalCase: PascalCase
+Prioritize Category Order: 确定类别顺序优先级
+Remove Duplicate Lines: 删除重复行
+Remove Extra Spaces: 删除多余空格
+Remove Line Feeds: 删除换行符
+Reverse Text: 反转文本
+Select Operations: 选择操作
+Sentence case: 句子大小写
+Sort Lines Alphabetically: 按字母顺序对行排序
+Special Copy: 特殊复制
+Special Copy/Paste Operations: 特殊复制/粘贴操作
+Special Paste: 特殊粘贴
+Special Settings: 特殊设置
+TOML: TOML
+TOML to JSON: TOML 转 JSON
+Text Case: 文本大小写
+Text Tools: 文本工具
+Title Case: 标题大小写
+Trim White Space: 修剪空白
+UPPER CASE: 大写
+URL Decode: URL 解码
+URL Encode: URL 编码
+Whitespace & Lines: 空白和行
+XML: XML
+XML to JSON: XML 转 JSON
+YAML: YAML
+YAML to JSON: YAML 转 JSON
+camelCase: camelCase
+iNVERT cASE: 反转大小写
+kebab-case: kebab-case
+lower case: 小写
+snake_case: snake_case

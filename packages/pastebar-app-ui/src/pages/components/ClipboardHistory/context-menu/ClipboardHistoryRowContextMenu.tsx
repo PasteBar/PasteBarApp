@@ -1,15 +1,16 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api'
 import { message } from '@tauri-apps/api/dialog'
 import { emit } from '@tauri-apps/api/event'
 import {
-  clipboardHistoryStoreAtom,
   createClipHistoryItemIds,
   createMenuItemFromHistoryId,
+  DEFAULT_SPECIAL_PASTE_CATEGORIES,
   hasDashboardItemCreate,
   isCreatingMenuItem,
+  isKeyAltPressed,
   settingsStoreAtom,
 } from '~/store'
 import { useAtomValue } from 'jotai'
@@ -27,6 +28,7 @@ import {
   PanelTop,
   Pin,
   PinOff,
+  Settings,
   Shrink,
   SquareAsterisk,
   Star,
@@ -35,6 +37,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { TRANSFORM_CATEGORIES, type TransformCategory } from '~/lib/text-transforms'
 import { ensureUrlPrefix } from '~/lib/utils'
 
 import {
@@ -58,6 +61,7 @@ import {
   useUpdateClipboardHistoryById,
 } from '~/hooks/queries/use-history-items'
 import { useSignal } from '~/hooks/use-signal'
+import { useSpecialCopyPasteHistoryItem } from '~/hooks/use-special-copypaste-history-item'
 
 import { LinkMetadata } from '~/types/history'
 import { CreateDashboardItemType } from '~/types/menu'
@@ -92,6 +96,10 @@ interface ClipboardHistoryRowContextMenuProps {
   onCopyPaste: (id: UniqueIdentifier, delay?: number) => void
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
+  onDeleteConfirmationChange?: (
+    historyId: UniqueIdentifier | null,
+    isMultiSelect?: boolean
+  ) => void
 }
 
 export default function ClipboardHistoryRowContextMenu({
@@ -121,8 +129,10 @@ export default function ClipboardHistoryRowContextMenu({
   setSelectHistoryItem,
   selectedHistoryItems,
   onCopyPaste,
+  onDeleteConfirmationChange = () => {},
 }: ClipboardHistoryRowContextMenuProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const {
     copyPasteDelay,
@@ -130,14 +140,67 @@ export default function ClipboardHistoryRowContextMenu({
     historyDetectLanguagesEnabledList,
     setIsExclusionAppListEnabled,
     addToHistoryExclusionAppList,
+    enabledSpecialPasteOperations,
+    specialPasteCategoriesOrder,
+    isSpecialCopyPasteHistoryEnabled,
   } = useAtomValue(settingsStoreAtom)
 
-  const showDeleteMenuItemsConfirmation = useSignal(false)
+  const [specialActionInProgress, setSpecialActionInProgress] = useState<string | null>(
+    null
+  )
+  const deleteTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Moved hook declarations before useHotkeys to resolve TS errors
   const { updateClipboardHistoryById } = useUpdateClipboardHistoryById()
   const { deleteClipboardHistoryByIds } = useDeleteClipboardHistoryByIds()
   const { pinnedClipboardHistoryByIds } = usePinnedClipboardHistoryByIds()
 
-  const navigate = useNavigate()
+  // Track pending delete ID for two-step deletion
+  const [pendingDeleteId, setPendingDeleteId] = useState<UniqueIdentifier | null>(null)
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (deleteTimerRef.current) {
+        clearTimeout(deleteTimerRef.current)
+        deleteTimerRef.current = null
+      }
+    }
+  }, [])
+
+  const { specialCopy, specialPaste } = useSpecialCopyPasteHistoryItem()
+
+  // Ensure we always have an array of categories
+  const categoriesOrder = specialPasteCategoriesOrder || [
+    ...DEFAULT_SPECIAL_PASTE_CATEGORIES,
+  ]
+
+  // Filter categories to only include those with enabled transforms
+  const categoriesWithTransforms = categoriesOrder
+    .map(categoryId => TRANSFORM_CATEGORIES.find(c => c.id === categoryId))
+    .filter((category): category is TransformCategory => {
+      if (!category || !categoriesOrder.includes(category.id)) return false
+
+      // Check if category has any enabled transforms
+      if (category.subcategories) {
+        // For categories with subcategories, check if any subcategory has enabled transforms
+        const hasEnabledSubcategories = category.subcategories.some(subcategory =>
+          subcategory.transforms.some(transform =>
+            enabledSpecialPasteOperations.includes(transform.id)
+          )
+        )
+        return hasEnabledSubcategories
+      } else {
+        // For categories with transforms, check if any transform is enabled
+        const enabledTransforms =
+          category.transforms?.filter(transform =>
+            enabledSpecialPasteOperations.includes(transform.id)
+          ) || []
+        return enabledTransforms.length > 0
+      }
+    })
+
+  const hasEnabledCategories = categoriesWithTransforms.length > 0
 
   const errorMessage = (err: string) => {
     message(
@@ -155,7 +218,67 @@ export default function ClipboardHistoryRowContextMenu({
 
   return (
     <ContextMenuPortal>
-      <ContextMenuContent className="max-w-[210px]">
+      <ContextMenuContent
+        className="max-w-[210px]"
+        onInteractOutside={e => {
+          // Prevent closing on interaction outside during deletion confirmation
+          if (pendingDeleteId) {
+            e.preventDefault()
+          }
+        }}
+        onEscapeKeyDown={e => {
+          // Allow escape to close even during confirmation
+          setPendingDeleteId(null)
+        }}
+        onKeyDown={e => {
+          // Handle Delete/Backspace keys
+          if (e.key === 'Delete' || e.key === 'Backspace') {
+            e.preventDefault()
+            e.stopPropagation()
+
+            if (isSelected && selectedHistoryItems && selectedHistoryItems.length > 1) {
+              // Multi-select delete
+              if (pendingDeleteId === 'multi') {
+                // Confirm multi-delete
+                deleteClipboardHistoryByIds({ historyIds: selectedHistoryItems })
+                setTimeout(() => {
+                  setSelectedHistoryItems([])
+                }, 400)
+                setPendingDeleteId(null)
+                if (deleteTimerRef.current) {
+                  clearTimeout(deleteTimerRef.current)
+                }
+              } else {
+                // Start multi-delete confirmation
+                setPendingDeleteId('multi')
+                onDeleteConfirmationChange?.(null, true)
+                deleteTimerRef.current = setTimeout(() => {
+                  setPendingDeleteId(null)
+                  onDeleteConfirmationChange?.(null, false)
+                }, 3000)
+              }
+            } else {
+              // Single delete
+              if (pendingDeleteId === historyId) {
+                // Confirm single delete
+                deleteClipboardHistoryByIds({ historyIds: [historyId] })
+                setPendingDeleteId(null)
+                if (deleteTimerRef.current) {
+                  clearTimeout(deleteTimerRef.current)
+                }
+              } else {
+                // Start single delete confirmation
+                setPendingDeleteId(historyId)
+                onDeleteConfirmationChange?.(historyId, false)
+                deleteTimerRef.current = setTimeout(() => {
+                  setPendingDeleteId(null)
+                  onDeleteConfirmationChange?.(null, false)
+                }, 3000)
+              }
+            }
+          }
+        }}
+      >
         <ContextMenuItem
           onClick={() => {
             setSelectHistoryItem(historyId)
@@ -247,6 +370,167 @@ export default function ClipboardHistoryRowContextMenu({
             </ContextMenuCheckboxItem>
           </ContextMenuSubContent>
         </ContextMenuSub>
+
+        {/* Special Copy/Paste submenu - only show for text items when enabled */}
+        {isSpecialCopyPasteHistoryEnabled && !isImage && value && (
+          <>
+            <ContextMenuSub>
+              <ContextMenuSubTrigger>
+                {isKeyAltPressed.value
+                  ? t('Special Paste', { ns: 'specialCopyPaste' })
+                  : t('Special Copy', { ns: 'specialCopyPaste' })}
+              </ContextMenuSubTrigger>
+              <ContextMenuSubContent className="w-48">
+                {categoriesWithTransforms.map(category => {
+                  // Handle categories with subcategories (like Format Converter)
+                  if (category.subcategories) {
+                    const enabledSubcategories = category.subcategories.filter(
+                      subcategory =>
+                        subcategory.transforms.some(transform =>
+                          enabledSpecialPasteOperations.includes(transform.id)
+                        )
+                    )
+
+                    return (
+                      <ContextMenuSub key={category.id}>
+                        <ContextMenuSubTrigger>
+                          {t(category.label, {
+                            ns: 'specialCopyPaste',
+                          })}
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-48">
+                          {enabledSubcategories.map(subcategory => {
+                            const enabledTransforms = subcategory.transforms.filter(
+                              transform =>
+                                enabledSpecialPasteOperations.includes(transform.id)
+                            )
+
+                            return (
+                              <ContextMenuSub key={subcategory.id}>
+                                <ContextMenuSubTrigger>
+                                  {t(subcategory.label, {
+                                    ns: 'specialCopyPaste',
+                                  })}
+                                </ContextMenuSubTrigger>
+                                <ContextMenuSubContent className="w-44">
+                                  {enabledTransforms.map(transform => (
+                                    <ContextMenuItem
+                                      key={transform.id}
+                                      disabled={specialActionInProgress === transform.id}
+                                      onClick={async () => {
+                                        setSpecialActionInProgress(transform.id)
+                                        try {
+                                          if (isKeyAltPressed.value) {
+                                            await specialPaste(
+                                              historyId,
+                                              value,
+                                              transform.id
+                                            )
+                                          } else {
+                                            await specialCopy(
+                                              historyId,
+                                              value,
+                                              transform.id
+                                            )
+                                          }
+                                          setSpecialActionInProgress(null)
+                                        } catch (error) {
+                                          console.error(
+                                            'Special copy/paste failed:',
+                                            error
+                                          )
+                                          setSpecialActionInProgress(null)
+                                        }
+                                      }}
+                                    >
+                                      {t(transform.label, {
+                                        ns: 'specialCopyPaste',
+                                      })}
+                                      {specialActionInProgress === transform.id && (
+                                        <div className="ml-auto">
+                                          <Text className="text-xs text-muted-foreground">
+                                            ...
+                                          </Text>
+                                        </div>
+                                      )}
+                                    </ContextMenuItem>
+                                  ))}
+                                </ContextMenuSubContent>
+                              </ContextMenuSub>
+                            )
+                          })}
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                    )
+                  } else {
+                    // Handle categories with direct transforms
+                    const enabledTransforms =
+                      category.transforms?.filter(transform =>
+                        enabledSpecialPasteOperations.includes(transform.id)
+                      ) || []
+
+                    return (
+                      <ContextMenuSub key={category.id}>
+                        <ContextMenuSubTrigger>
+                          {t(category.label, {
+                            ns: 'specialCopyPaste',
+                          })}
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-44">
+                          {enabledTransforms.map(transform => (
+                            <ContextMenuItem
+                              key={transform.id}
+                              disabled={specialActionInProgress === transform.id}
+                              onClick={async () => {
+                                setSpecialActionInProgress(transform.id)
+                                try {
+                                  if (isKeyAltPressed.value) {
+                                    await specialPaste(historyId, value, transform.id)
+                                  } else {
+                                    await specialCopy(historyId, value, transform.id)
+                                  }
+                                  setSpecialActionInProgress(null)
+                                } catch (error) {
+                                  console.error('Special copy/paste failed:', error)
+                                  setSpecialActionInProgress(null)
+                                }
+                              }}
+                            >
+                              {t(transform.label, {
+                                ns: 'specialCopyPaste',
+                              })}
+                              {specialActionInProgress === transform.id && (
+                                <div className="ml-auto">
+                                  <Text className="text-xs text-muted-foreground">
+                                    ...
+                                  </Text>
+                                </div>
+                              )}
+                            </ContextMenuItem>
+                          ))}
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                    )
+                  }
+                })}
+                {hasEnabledCategories && <ContextMenuSeparator />}
+                <ContextMenuItem
+                  onClick={() => {
+                    navigate('/app-settings/history#specialCopyPasteHistory', {
+                      replace: true,
+                    })
+                  }}
+                >
+                  {t('Special Settings', { ns: 'specailCopyPaste' })}
+                  <div className="ml-auto">
+                    <Settings size={15} />
+                  </div>
+                </ContextMenuItem>
+              </ContextMenuSubContent>
+            </ContextMenuSub>
+          </>
+        )}
+
         <ContextMenuSeparator />
         <ContextMenuItem
           onClick={() => {
@@ -552,25 +836,34 @@ export default function ClipboardHistoryRowContextMenu({
         <ContextMenuSeparator />
         {isSelected && selectedHistoryItems && selectedHistoryItems.length > 1 ? (
           <ContextMenuItem
-            onClick={async e => {
-              if (showDeleteMenuItemsConfirmation.value) {
+            className={
+              pendingDeleteId === 'multi' ? 'bg-red-500/20 dark:bg-red-600/20' : ''
+            }
+            onSelect={async e => {
+              e.preventDefault()
+
+              if (pendingDeleteId === 'multi') {
                 await deleteClipboardHistoryByIds({ historyIds: selectedHistoryItems })
                 setTimeout(() => {
                   setSelectedHistoryItems([])
                 }, 400)
-                showDeleteMenuItemsConfirmation.value = false
+                setPendingDeleteId(null)
+                if (deleteTimerRef.current) {
+                  clearTimeout(deleteTimerRef.current)
+                }
               } else {
-                e.preventDefault()
-                showDeleteMenuItemsConfirmation.value = true
-                setTimeout(() => {
-                  showDeleteMenuItemsConfirmation.value = false
+                setPendingDeleteId('multi')
+                onDeleteConfirmationChange?.(null, true)
+                deleteTimerRef.current = setTimeout(() => {
+                  setPendingDeleteId(null)
+                  onDeleteConfirmationChange?.(null, false)
                 }, 3000)
               }
             }}
           >
             <Flex>
               <Text className="!text-red-500 dark:!text-red-600">
-                {!showDeleteMenuItemsConfirmation.value
+                {pendingDeleteId !== 'multi'
                   ? t('Delete', { ns: 'common' })
                   : t('Click to Confirm', { ns: 'common' })}
                 <Badge
@@ -581,7 +874,7 @@ export default function ClipboardHistoryRowContextMenu({
                 </Badge>
               </Text>
             </Flex>
-            {!showDeleteMenuItemsConfirmation.value && (
+            {pendingDeleteId !== 'multi' && (
               <div className="ml-auto">
                 <Badge variant="default" className="ml-1 py-0 font-semibold">
                   DEL
@@ -591,29 +884,36 @@ export default function ClipboardHistoryRowContextMenu({
           </ContextMenuItem>
         ) : (
           <ContextMenuItem
-            onClick={async e => {
-              if (showDeleteMenuItemsConfirmation.value) {
+            className={
+              pendingDeleteId === historyId ? 'bg-red-500/20 dark:bg-red-600/20' : ''
+            }
+            onSelect={async e => {
+              e.preventDefault()
+
+              if (pendingDeleteId === historyId) {
                 await deleteClipboardHistoryByIds({ historyIds: [historyId] })
-                setTimeout(() => {
-                  showDeleteMenuItemsConfirmation.value = false
-                }, 400)
+                setPendingDeleteId(null)
+                if (deleteTimerRef.current) {
+                  clearTimeout(deleteTimerRef.current)
+                }
               } else {
-                e.preventDefault()
-                showDeleteMenuItemsConfirmation.value = true
-                setTimeout(() => {
-                  showDeleteMenuItemsConfirmation.value = false
+                setPendingDeleteId(historyId)
+                onDeleteConfirmationChange?.(historyId, false)
+                deleteTimerRef.current = setTimeout(() => {
+                  setPendingDeleteId(null)
+                  onDeleteConfirmationChange?.(null, false)
                 }, 3000)
               }
             }}
           >
             <Flex>
               <Text className="!text-red-500 dark:!text-red-600">
-                {!showDeleteMenuItemsConfirmation.value
+                {pendingDeleteId !== historyId
                   ? t('Delete', { ns: 'common' })
                   : t('Click to Confirm', { ns: 'common' })}
               </Text>
             </Flex>
-            {!showDeleteMenuItemsConfirmation.value && (
+            {pendingDeleteId !== historyId && (
               <div className="ml-auto">
                 <Badge variant="default" className="ml-1 py-0 font-semibold">
                   DEL

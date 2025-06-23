@@ -1,0 +1,73 @@
+Add Current Date/Time: Geçerli Tarih/Saati Ekle
+Add Line Numbers: Satır Numaraları Ekle
+Add One Line Feed: Bir Satır Başı Ekle
+Add Two Line Feeds: İki Satır Başı Ekle
+Base64 Decode: Base64 Kodunu Çöz
+Base64 Encode: Base64 Kodla
+CSV: CSV
+CSV to JSON: CSV'yi JSON'a Dönüştür
+CSV to Markdown Table: CSV'yi Markdown Tablosuna Dönüştür
+Capitalize Case: Baş Harfleri Büyüt
+Code Formatting: Kod Formatlama
+Count Characters: Karakter Sayısı
+Count Lines: Satır Sayısı
+Count Sentences: Cümle Sayısı
+Count Words: Kelime Sayısı
+Data Conversion: Veri Dönüştürme
+Drag and drop category to prioritize its order in the special copy/paste menu.: Özel kopyala/yapıştır menüsünde kategorinin sırasını önceliklendirmek için sürükleyip bırakın.
+Enable All: Tümünü Etkinleştir
+Enable special text transformation options for clipboard history items: Pano geçmişi öğeleri için özel metin dönüştürme seçeneklerini etkinleştirin
+Enabled Operations: Etkin İşlemler
+Encode/Decode: Kodla/Kodu Çöz
+Format Converter: Format Dönüştürücü
+HTML: HTML
+HTML Decode: HTML Kodunu Çöz
+HTML Encode: HTML Kodla
+HTML to Markdown: HTML'yi Markdown'a Dönüştür
+HTML to Plain Text: HTML'yi Düz Metne Dönüştür
+HTML to React Component: HTML'yi React Bileşenine Dönüştür
+HTML to React JSX: HTML'yi React JSX'e Dönüştür
+HTML to Text: HTML'yi Metne Dönüştür
+JSON: JSON
+JSON Stringify: JSON Stringify
+JSON to CSV: JSON'u CSV'ye Dönüştür
+JSON to Markdown Table: JSON'u Markdown Tablosuna Dönüştür
+JSON to TOML: JSON'u TOML'a Dönüştür
+JSON to XML: JSON'u XML'e Dönüştür
+JSON to YAML: JSON'u YAML'a Dönüştür
+Markdown: Markdown
+Markdown to HTML: Markdown'u HTML'ye Dönüştür
+Markdown to Text: Markdown'u Metne Dönüştür
+Operations: İşlemler
+PascalCase: PascalCase
+Prioritize Category Order: Kategori Sırasını Önceliklendir
+Remove Duplicate Lines: Yinelenen Satırları Kaldır
+Remove Extra Spaces: Fazla Boşlukları Kaldır
+Remove Line Feeds: Satır Başlarını Kaldır
+Reverse Text: Metni Ters Çevir
+Select Operations: İşlemleri Seç
+Sentence case: Cümle düzeni
+Sort Lines Alphabetically: Satırları Alfabetik Olarak Sırala
+Special Copy: Özel Kopyala
+Special Copy/Paste Operations: Özel Kopyala/Yapıştır İşlemleri
+Special Paste: Özel Yapıştır
+Special Settings: Özel Ayarlar
+TOML: TOML
+TOML to JSON: TOML'u JSON'a Dönüştür
+Text Case: Metin Kılıfı
+Text Tools: Metin Araçları
+Title Case: Başlık Düzeni
+Trim White Space: Beyaz Boşlukları Kırp
+UPPER CASE: BÜYÜK HARF
+URL Decode: URL Kodunu Çöz
+URL Encode: URL Kodla
+Whitespace & Lines: Boşluk & Satırlar
+XML: XML
+XML to JSON: XML'i JSON'a Dönüştür
+YAML: YAML
+YAML to JSON: YAML'ı JSON'a Dönüştür
+camelCase: camelCase
+iNVERT cASE: dURUMU tERSINE cEVIR
+kebab-case: kebab-case
+lower case: küçük harf
+snake_case: snake_case

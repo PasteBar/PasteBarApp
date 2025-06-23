@@ -1,0 +1,73 @@
+Add Current Date/Time: Aktuelles Datum/Uhrzeit hinzufügen
+Add Line Numbers: Zeilennummern hinzufügen
+Add One Line Feed: Einen Zeilenvorschub hinzufügen
+Add Two Line Feeds: Zwei Zeilenvorschübe hinzufügen
+Base64 Decode: Base64 dekodieren
+Base64 Encode: Base64 kodieren
+CSV: CSV
+CSV to JSON: CSV zu JSON
+CSV to Markdown Table: CSV zu Markdown-Tabelle
+Capitalize Case: Erster Buchstabe groß
+Code Formatting: Code-Formatierung
+Count Characters: Zeichen zählen
+Count Lines: Zeilen zählen
+Count Sentences: Sätze zählen
+Count Words: Wörter zählen
+Data Conversion: Datenkonvertierung
+Drag and drop category to prioritize its order in the special copy/paste menu.: Ziehe eine Kategorie per Drag & Drop, um ihre Reihenfolge im speziellen Kopieren/Einfügen-Menü zu priorisieren.
+Enable All: Alle aktivieren
+Enable special text transformation options for clipboard history items: Spezielle Textumwandlungsoptionen für Zwischenablage-Verlaufselemente aktivieren
+Enabled Operations: Aktivierte Operationen
+Encode/Decode: Kodieren/Dekodieren
+Format Converter: Formatkonverter
+HTML: HTML
+HTML Decode: HTML dekodieren
+HTML Encode: HTML kodieren
+HTML to Markdown: HTML zu Markdown
+HTML to Plain Text: HTML zu reinem Text
+HTML to React Component: HTML zu React-Komponente
+HTML to React JSX: HTML zu React JSX
+HTML to Text: HTML zu Text
+JSON: JSON
+JSON Stringify: JSON Stringify
+JSON to CSV: JSON zu CSV
+JSON to Markdown Table: JSON zu Markdown-Tabelle
+JSON to TOML: JSON zu TOML
+JSON to XML: JSON zu XML
+JSON to YAML: JSON zu YAML
+Markdown: Markdown
+Markdown to HTML: Markdown zu HTML
+Markdown to Text: Markdown zu Text
+Operations: Operationen
+PascalCase: PascalCase
+Prioritize Category Order: Kategorie-Reihenfolge priorisieren
+Remove Duplicate Lines: Doppelte Zeilen entfernen
+Remove Extra Spaces: Zusätzliche Leerzeichen entfernen
+Remove Line Feeds: Zeilenvorschübe entfernen
+Reverse Text: Text umkehren
+Select Operations: Operationen auswählen
+Sentence case: Satzbau
+Sort Lines Alphabetically: Zeilen alphabetisch sortieren
+Special Copy: Spezielles Kopieren
+Special Copy/Paste Operations: Spezielle Kopier-/Einfüge-Operationen
+Special Paste: Spezielles Einfügen
+Special Settings: Spezielle Einstellungen
+TOML: TOML
+TOML to JSON: TOML zu JSON
+Text Case: Groß-/Kleinschreibung
+Text Tools: Textwerkzeuge
+Title Case: Titel-Fall
+Trim White Space: Leerzeichen entfernen
+UPPER CASE: GROSSBUCHSTABEN
+URL Decode: URL dekodieren
+URL Encode: URL kodieren
+Whitespace & Lines: Leerraum & Zeilen
+XML: XML
+XML to JSON: XML zu JSON
+YAML: YAML
+YAML to JSON: YAML zu JSON
+camelCase: camelCase
+iNVERT cASE: gROSS/kLEIN uMKEHREN
+kebab-case: kebab-case
+lower case: kleinbuchstaben
+snake_case: snake_case

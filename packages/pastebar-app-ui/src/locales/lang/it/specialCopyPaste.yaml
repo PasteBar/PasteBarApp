@@ -1,0 +1,73 @@
+Add Current Date/Time: Aggiungi Data/Ora Attuale
+Add Line Numbers: Aggiungi Numeri di Riga
+Add One Line Feed: Aggiungi un a Capo
+Add Two Line Feeds: Aggiungi due a Capo
+Base64 Decode: Decodifica Base64
+Base64 Encode: Codifica Base64
+CSV: CSV
+CSV to JSON: CSV in JSON
+CSV to Markdown Table: CSV in Tabella Markdown
+Capitalize Case: Maiuscolo Iniziale
+Code Formatting: Formattazione Codice
+Count Characters: Conta Caratteri
+Count Lines: Conta Righe
+Count Sentences: Conta Frasi
+Count Words: Conta Parole
+Data Conversion: Conversione Dati
+Drag and drop category to prioritize its order in the special copy/paste menu.: Trascina e rilascia la categoria per dare priorità al suo ordine nel menu speciale di copia/incolla.
+Enable All: Abilita Tutto
+Enable special text transformation options for clipboard history items: Abilita opzioni speciali di trasformazione del testo per gli elementi della cronologia degli appunti
+Enabled Operations: Operazioni Abilitate
+Encode/Decode: Codifica/Decodifica
+Format Converter: Convertitore di Formato
+HTML: HTML
+HTML Decode: Decodifica HTML
+HTML Encode: Codifica HTML
+HTML to Markdown: HTML in Markdown
+HTML to Plain Text: HTML in Testo Semplice
+HTML to React Component: HTML in Componente React
+HTML to React JSX: HTML in React JSX
+HTML to Text: HTML in Testo
+JSON: JSON
+JSON Stringify: JSON Stringify
+JSON to CSV: JSON in CSV
+JSON to Markdown Table: JSON in Tabella Markdown
+JSON to TOML: JSON in TOML
+JSON to XML: JSON in XML
+JSON to YAML: JSON in YAML
+Markdown: Markdown
+Markdown to HTML: Markdown in HTML
+Markdown to Text: Markdown in Testo
+Operations: Operazioni
+PascalCase: PascalCase
+Prioritize Category Order: Priorità Ordine Categorie
+Remove Duplicate Lines: Rimuovi Righe Duplicate
+Remove Extra Spaces: Rimuovi Spazi Extra
+Remove Line Feeds: Rimuovi a Capo
+Reverse Text: Inverti Testo
+Select Operations: Seleziona Operazioni
+Sentence case: Maiuscolo a inizio frase
+Sort Lines Alphabetically: Ordina Righe Alfabeticamente
+Special Copy: Copia Speciale
+Special Copy/Paste Operations: Operazioni Speciali di Copia/Incolla
+Special Paste: Incolla Speciale
+Special Settings: Impostazioni Speciali
+TOML: TOML
+TOML to JSON: TOML in JSON
+Text Case: Maiuscole/Minuscole
+Text Tools: Strumenti Testo
+Title Case: Maiuscolo a Inizio Parola
+Trim White Space: Taglia Spazi Bianchi
+UPPER CASE: MAIUSCOLO
+URL Decode: Decodifica URL
+URL Encode: Codifica URL
+Whitespace & Lines: Spazi & Righe
+XML: XML
+XML to JSON: XML in JSON
+YAML: YAML
+YAML to JSON: YAML in JSON
+camelCase: camelCase
+iNVERT cASE: iNVERTI cASO
+kebab-case: kebab-case
+lower case: minuscolo
+snake_case: snake_case

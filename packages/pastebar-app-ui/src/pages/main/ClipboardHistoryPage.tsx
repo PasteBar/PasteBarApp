@@ -35,6 +35,9 @@ import {
   showClipsMoveOnBoardId,
   showDetailsClipId,
   showHistoryDeleteConfirmationId,
+  showHistoryMultiDeleteConfirmationIds,
+  showKeyboardNavContextMenuClipId,
+  showKeyboardNavContextMenuHistoryId,
   showLargeViewClipId,
   showLargeViewHistoryId,
   showOrganizeLayout,
@@ -120,7 +123,13 @@ import {
 } from '~/hooks/use-copypaste-history-item'
 import { useDebounce } from '~/hooks/use-debounce'
 import useDeleteConfirmationTimer from '~/hooks/use-delete-confirmation-items'
+import useKeyboardDeleteConfirmation from '~/hooks/use-keyboard-delete-confirmation'
 import { useSignal } from '~/hooks/use-signal'
+import {
+  specialCopiedItem,
+  specialPastedItem,
+  specialPastedItemCountDown,
+} from '~/hooks/use-special-copypaste-history-item'
 
 import {
   ClipboardHistoryIconMenu,
@@ -269,6 +278,38 @@ export default function ClipboardHistoryPage() {
     },
   })
 
+  const { showConfirmation: showConfirmationKeyboardDelete, keyboardItemIdDelete, resetTimer: resetKeyboardDeleteTimer } =
+    useKeyboardDeleteConfirmation({
+      keyboardSelectedItemId: keyboardSelectedItemId,
+      selectedHistoryItems,
+      onConfirmedDelete: async () => {
+        if (keyboardSelectedItemId.value) {
+          // Calculate next selection before deletion
+          const currentIndex = clipboardHistory.findIndex(
+            item => item.historyId === keyboardSelectedItemId.value
+          )
+          let nextSelectedId: UniqueIdentifier | null = null
+          if (currentIndex !== -1) {
+            if (currentIndex < clipboardHistory.length - 1) {
+              // Select next item
+              nextSelectedId = clipboardHistory[currentIndex + 1].historyId
+            } else if (currentIndex > 0) {
+              // Select previous item
+              nextSelectedId = clipboardHistory[currentIndex - 1].historyId
+            }
+            // If only one item, nextSelectedId remains null
+          }
+
+          await deleteClipboardHistoryByIds({
+            historyIds: [keyboardSelectedItemId.value],
+          })
+
+          // Update selection to the calculated next item
+          keyboardSelectedItemId.value = nextSelectedId
+        }
+      },
+    })
+
   const isPinnedPanelHoverOpen = useMemo(() => {
     return isPinnedPanelKeepOpen.value || isPinnedPanelHovering.value
   }, [isPinnedPanelHovering.value, isPinnedPanelKeepOpen.value])
@@ -339,6 +380,18 @@ export default function ClipboardHistoryPage() {
 
   const pastedItemValue = useMemo(() => pastedItem, [pastedItem])
   const copiedItemValue = useMemo(() => copiedItem, [copiedItem])
+  const specialCopiedItemValue = useMemo(
+    () => specialCopiedItem.value,
+    [specialCopiedItem.value]
+  )
+  const specialPastedItemValue = useMemo(
+    () => specialPastedItem.value,
+    [specialPastedItem.value]
+  )
+  const specialPastingCountDown = useMemo(
+    () => specialPastedItemCountDown.value,
+    [specialPastedItemCountDown.value]
+  )
 
   const clipboardHistory = hasSearchOrFilter ? foundClipboardHistory : allClipboardHistory
 
@@ -436,13 +489,16 @@ export default function ClipboardHistoryPage() {
           currentNavigationContext.value === null) &&
         keyboardSelectedItemId.value
       ) {
+        // Reset keyboard delete confirmation when copying
+        resetKeyboardDeleteTimer()
         setCopiedItem(keyboardSelectedItemId.value)
       } else if (
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
         clipboardHistory.length > 0
       ) {
-        setCopiedItem(clipboardHistory[0]?.historyId)
+        // TODO: Fix this
+        // setCopiedItem(clipboardHistory[0]?.historyId)
       }
       currentNavigationContext.value = null
       keyboardSelectedItemId.value = null
@@ -464,6 +520,9 @@ export default function ClipboardHistoryPage() {
     ['arrowdown'],
     e => {
       e.preventDefault()
+
+      // Reset delete confirmation when navigating
+      showHistoryDeleteConfirmationId.value = null
 
       if (keyboardSelectedBoardId.value) {
         const clipsOnBoard = clipItems
@@ -627,9 +686,45 @@ export default function ClipboardHistoryPage() {
       }
     }
 
+  useHotkeys(['control+s'], e => {
+    if (hoveringHistoryRowId.value) {
+      setSelectHistoryItem(hoveringHistoryRowId.value)
+    }
+  })
+
   useHotkeys(['tab'], handleTabNavigation('forward'), {
     enabled: !shouldKeyboardNavigationBeDisabled.value,
   })
+
+  useHotkeys(
+    ['space'],
+    () => {
+      if (
+        currentNavigationContext.value === 'history' ||
+        currentNavigationContext.value === null
+      ) {
+        if (keyboardSelectedItemId.value) {
+          // Reset keyboard delete confirmation when selecting
+          resetKeyboardDeleteTimer()
+          
+          setSelectHistoryItem(keyboardSelectedItemId.value)
+          const currentItemIndex = clipboardHistory.findIndex(
+            item => item.historyId === keyboardSelectedItemId.value
+          )
+          const nextItem = clipboardHistory[currentItemIndex + 1]
+          if (nextItem) {
+            keyboardSelectedItemId.value = nextItem.historyId
+            if (showLargeViewHistoryId.value) {
+              showLargeViewHistoryId.value = nextItem.historyId
+            }
+          }
+        }
+      }
+    },
+    {
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
+    }
+  )
 
   useHotkeys(['shift+tab'], handleTabNavigation('backward'), {
     enabled: !shouldKeyboardNavigationBeDisabled.value,
@@ -638,7 +733,27 @@ export default function ClipboardHistoryPage() {
   useHotkeys(
     'esc',
     () => {
+      // Clear any delete timeout when escaping
+      if (deleteTimeoutRef.current) {
+        clearTimeout(deleteTimeoutRef.current)
+        deleteTimeoutRef.current = null
+      }
+
+      // Reset delete confirmation on escape
+      showHistoryDeleteConfirmationId.value = null
+      
+      // Reset keyboard delete confirmation on escape
+      resetKeyboardDeleteTimer()
+
       // Escape closes large view first, then performs normal escape behavior
+      if (showKeyboardNavContextMenuHistoryId.value) {
+        showKeyboardNavContextMenuHistoryId.value = null
+      }
+
+      if (showKeyboardNavContextMenuClipId.value) {
+        showKeyboardNavContextMenuClipId.value = null
+      }
+
       if (showLargeViewHistoryId.value) {
         showLargeViewHistoryId.value = null
       } else {
@@ -654,6 +769,19 @@ export default function ClipboardHistoryPage() {
     ['arrowdown'],
     e => {
       e.preventDefault()
+
+      // Clear any delete timeout when navigating away
+      if (deleteTimeoutRef.current) {
+        clearTimeout(deleteTimeoutRef.current)
+        deleteTimeoutRef.current = null
+      }
+
+      // Reset delete confirmation when navigating to a different item
+      showHistoryDeleteConfirmationId.value = null
+      
+      // Reset keyboard delete confirmation when navigating
+      resetKeyboardDeleteTimer()
+
       const currentItemIndex = clipboardHistory.findIndex(
         item => item.historyId === keyboardSelectedItemId.value
       )
@@ -677,6 +805,19 @@ export default function ClipboardHistoryPage() {
     ['arrowup'],
     e => {
       e.preventDefault()
+
+      // Clear any delete timeout when navigating away
+      if (deleteTimeoutRef.current) {
+        clearTimeout(deleteTimeoutRef.current)
+        deleteTimeoutRef.current = null
+      }
+
+      // Reset delete confirmation when navigating to a different item
+      showHistoryDeleteConfirmationId.value = null
+      
+      // Reset keyboard delete confirmation when navigating
+      resetKeyboardDeleteTimer()
+
       if (
         currentNavigationContext.value === 'history' ||
         currentNavigationContext.value === null
@@ -768,6 +909,179 @@ export default function ClipboardHistoryPage() {
     }
   )
 
+  useHotkeys(
+    ['home'],
+    e => {
+      e.preventDefault()
+      if (
+        currentNavigationContext.value === 'history' ||
+        currentNavigationContext.value === null
+      ) {
+        // Navigate to first history item
+        if (clipboardHistory.length > 0) {
+          keyboardSelectedItemId.value = clipboardHistory[0].historyId
+          scrollToTopHistoryList()
+          if (showLargeViewHistoryId.value) {
+            showLargeViewHistoryId.value = clipboardHistory[0].historyId
+          }
+        }
+      } else if (currentNavigationContext.value === 'board') {
+        // Navigate to first clip in first board with clips
+        const boardsWithClips = clipItems
+          .filter(item => item.isBoard && item.tabId === currentTab)
+          .filter(board =>
+            clipItems.some(
+              clip =>
+                clip.isClip && clip.parentId === board.itemId && clip.tabId === currentTab
+            )
+          )
+          .sort((a, b) => a.orderNumber - b.orderNumber)
+
+        if (boardsWithClips.length > 0) {
+          const firstBoard = boardsWithClips[0]
+          const firstBoardClips = clipItems
+            .filter(
+              item =>
+                item.isClip &&
+                item.parentId === firstBoard.itemId &&
+                item.tabId === currentTab
+            )
+            .sort((a, b) => a.orderNumber - b.orderNumber)
+
+          if (firstBoardClips.length > 0) {
+            keyboardSelectedBoardId.value = firstBoard.itemId
+            keyboardSelectedClipId.value = firstBoardClips[0].itemId
+            currentBoardIndex.value = 0
+          }
+        }
+      }
+    },
+    {
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
+    }
+  )
+
+  useHotkeys(
+    ['pageup'],
+    e => {
+      e.preventDefault()
+      if (
+        currentNavigationContext.value === 'history' ||
+        currentNavigationContext.value === null
+      ) {
+        // Move up by 5 items in history
+        const currentIndex = clipboardHistory.findIndex(
+          item => item.historyId === keyboardSelectedItemId.value
+        )
+        const newIndex = Math.max(0, currentIndex - 5)
+        if (clipboardHistory[newIndex]) {
+          keyboardSelectedItemId.value = clipboardHistory[newIndex].historyId
+          if (showLargeViewHistoryId.value) {
+            showLargeViewHistoryId.value = clipboardHistory[newIndex].historyId
+          }
+        }
+      } else if (
+        currentNavigationContext.value === 'board' &&
+        keyboardSelectedBoardId.value
+      ) {
+        // Move up by 5 clips in current board
+        const clipsOnBoard = clipItems
+          .filter(
+            item =>
+              item.isClip &&
+              item.parentId === keyboardSelectedBoardId.value &&
+              item.tabId === currentTab
+          )
+          .sort((a, b) => a.orderNumber - b.orderNumber)
+
+        const currentIndex = clipsOnBoard.findIndex(
+          clip => clip.itemId === keyboardSelectedClipId.value
+        )
+        const newIndex = Math.max(0, currentIndex - 5)
+        if (clipsOnBoard[newIndex]) {
+          keyboardSelectedClipId.value = clipsOnBoard[newIndex].itemId
+        }
+      }
+    },
+    {
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
+    }
+  )
+
+  useHotkeys(
+    ['pagedown'],
+    e => {
+      e.preventDefault()
+      if (
+        currentNavigationContext.value === 'history' ||
+        currentNavigationContext.value === null
+      ) {
+        // Move down by 5 items in history
+        const currentIndex = clipboardHistory.findIndex(
+          item => item.historyId === keyboardSelectedItemId.value
+        )
+        const newIndex = Math.min(clipboardHistory.length - 1, currentIndex + 5)
+        if (clipboardHistory[newIndex]) {
+          keyboardSelectedItemId.value = clipboardHistory[newIndex].historyId
+          if (showLargeViewHistoryId.value) {
+            showLargeViewHistoryId.value = clipboardHistory[newIndex].historyId
+          }
+        }
+      } else if (
+        currentNavigationContext.value === 'board' &&
+        keyboardSelectedBoardId.value
+      ) {
+        // Move down by 5 clips in current board
+        const clipsOnBoard = clipItems
+          .filter(
+            item =>
+              item.isClip &&
+              item.parentId === keyboardSelectedBoardId.value &&
+              item.tabId === currentTab
+          )
+          .sort((a, b) => a.orderNumber - b.orderNumber)
+
+        const currentIndex = clipsOnBoard.findIndex(
+          clip => clip.itemId === keyboardSelectedClipId.value
+        )
+        const newIndex = Math.min(clipsOnBoard.length - 1, currentIndex + 5)
+        if (clipsOnBoard[newIndex]) {
+          keyboardSelectedClipId.value = clipsOnBoard[newIndex].itemId
+        }
+      }
+    },
+    {
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
+    }
+  )
+
+  useHotkeys(
+    ['alt+arrowdown'],
+    e => {
+      e.preventDefault()
+      if (
+        currentNavigationContext.value === 'history' ||
+        currentNavigationContext.value === null
+      ) {
+        // Open context menu for selected history item
+        if (keyboardSelectedItemId.value) {
+          showKeyboardNavContextMenuHistoryId.value = keyboardSelectedItemId.value
+        }
+      } else if (currentNavigationContext.value === 'board') {
+        // Open context menu for selected clip item
+        if (keyboardSelectedClipId.value) {
+          showKeyboardNavContextMenuClipId.value = keyboardSelectedClipId.value
+        }
+      }
+    },
+    {
+      enabled: !shouldKeyboardNavigationBeDisabled.value,
+    }
+  )
+
+  // Store timeout reference to clear it if needed
+  const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Control' || e.key === 'Meta') {
@@ -777,6 +1091,11 @@ export default function ClipboardHistoryPage() {
     window.addEventListener('keydown', handleKeyDown)
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
+      // Clean up delete timeout on unmount
+      if (deleteTimeoutRef.current) {
+        clearTimeout(deleteTimeoutRef.current)
+        deleteTimeoutRef.current = null
+      }
     }
   }, [
     clipboardHistory,
@@ -796,6 +1115,18 @@ export default function ClipboardHistoryPage() {
       keyboardSelectedItemId.value = clipboardHistory[0]?.historyId
     }
   }, [currentNavigationContext.value, keyboardSelectedItemId.value, clipboardHistory])
+
+  useEffect(() => {
+    if (keyboardSelectedItemId.value && listRef.current) {
+      const selectedIndex = clipboardHistory.findIndex(
+        item => item.historyId === keyboardSelectedItemId.value
+      )
+      if (selectedIndex !== -1) {
+        // @ts-expect-error - scrollToItem is not in the types
+        listRef.current.scrollToItem?.(selectedIndex, 'smart')
+      }
+    }
+  }, [keyboardSelectedItemId.value, clipboardHistory])
 
   useEffect(() => {
     const listenToClipboardUnlisten = listen(
@@ -1015,13 +1346,22 @@ export default function ClipboardHistoryPage() {
 
   const hasIsDeleting = (historyId: UniqueIdentifier) => {
     return (
-      (showConfirmation && selectedHistoryItems.includes(historyId)) ||
+      // Keyboard delete confirmation - only for the specific keyboard selected item
+      (showConfirmationKeyboardDelete && 
+       historyId === keyboardItemIdDelete && 
+       historyId === keyboardSelectedItemId.value) ||
+      // Mouse delete confirmation - only when keyboard delete is NOT active
+      (showConfirmation && !showConfirmationKeyboardDelete && selectedHistoryItems.includes(historyId)) ||
+      // Single item delete confirmation
       historyId === showHistoryDeleteConfirmationId.value ||
-      (showConfirmation && historyId === hoveringHistoryIdDelete) ||
+      // Hovering delete confirmation - only when keyboard delete is NOT active
+      (showConfirmation && !showConfirmationKeyboardDelete && historyId === hoveringHistoryIdDelete) ||
+      // Drag over trash
       historyId === dragOverTrashId ||
       (Boolean(dragOverTrashId) &&
         Boolean(activeDragId) &&
         selectedHistoryItems.includes(historyId)) ||
+      // Menu deleting
       (isMenuDeleting && selectedHistoryItems.includes(historyId))
     )
   }
@@ -1480,10 +1820,18 @@ export default function ClipboardHistoryPage() {
                                               pastingCountDown={
                                                 historyId === pastedItemValue
                                                   ? pastingCountDown
-                                                  : undefined
+                                                  : historyId === specialPastedItemValue
+                                                    ? specialPastingCountDown
+                                                    : undefined
                                               }
-                                              isPasted={historyId === pastedItemValue}
-                                              isCopied={historyId === copiedItemValue}
+                                              isPasted={
+                                                historyId === pastedItemValue ||
+                                                historyId === specialPastedItemValue
+                                              }
+                                              isCopied={
+                                                historyId === copiedItemValue ||
+                                                historyId === specialCopiedItemValue
+                                              }
                                               isSaved={historyId === savingItem}
                                               setSavingItem={setSavingItem}
                                               isDeleting={hasIsDeleting(historyId)}
@@ -1523,7 +1871,9 @@ export default function ClipboardHistoryPage() {
                                               isSingleClickToCopyPaste={
                                                 isSingleClickToCopyPaste
                                               }
-                                              historyPreviewLineLimit={historyPreviewLineLimit}
+                                              historyPreviewLineLimit={
+                                                historyPreviewLineLimit
+                                              }
                                             />
                                           </Box>
                                         )
@@ -1887,6 +2237,7 @@ export default function ClipboardHistoryPage() {
                                         className="pointer-events-auto rounded-full bg-slate-300 dark:bg-slate-600 hover:bg-slate-200 hover:dark:bg-slate-700"
                                         onClick={() => {
                                           scrollToTopHistoryList(true)
+                                          resetKeyboardNavigation()
                                         }}
                                       >
                                         <Text className="text-mute text-xs text-center px-3">
@@ -2090,9 +2441,14 @@ export default function ClipboardHistoryPage() {
                                               pastingCountDown={
                                                 historyId === pastedItemValue
                                                   ? pastingCountDown
-                                                  : undefined
+                                                  : historyId === specialPastedItemValue
+                                                    ? specialPastingCountDown
+                                                    : undefined
                                               }
-                                              isPasted={historyId === pastedItemValue}
+                                              isPasted={
+                                                historyId === pastedItemValue ||
+                                                historyId === specialPastedItemValue
+                                              }
                                               isKeyboardSelected={
                                                 (currentNavigationContext.value ===
                                                   'history' ||
@@ -2100,7 +2456,10 @@ export default function ClipboardHistoryPage() {
                                                     null) &&
                                                 historyId === keyboardSelectedItemId.value
                                               }
-                                              isCopied={historyId === copiedItemValue}
+                                              isCopied={
+                                                historyId === copiedItemValue ||
+                                                historyId === specialCopiedItemValue
+                                              }
                                               isSaved={historyId === savingItem}
                                               setSavingItem={setSavingItem}
                                               key={historyId}
@@ -2150,7 +2509,9 @@ export default function ClipboardHistoryPage() {
                                               isSingleClickToCopyPaste={
                                                 isSingleClickToCopyPaste
                                               }
-                                              historyPreviewLineLimit={historyPreviewLineLimit}
+                                              historyPreviewLineLimit={
+                                                historyPreviewLineLimit
+                                              }
                                               index={index}
                                               style={style}
                                             />
@@ -2443,10 +2804,19 @@ export default function ClipboardHistoryPage() {
                                   pastingCountDown={
                                     inLargeViewItem.historyId === pastedItemValue
                                       ? pastingCountDown
-                                      : null
+                                      : inLargeViewItem.historyId ===
+                                          specialPastedItemValue
+                                        ? specialPastingCountDown
+                                        : null
                                   }
-                                  isPasted={inLargeViewItem.historyId === pastedItemValue}
-                                  isCopied={inLargeViewItem.historyId === copiedItemValue}
+                                  isPasted={
+                                    inLargeViewItem.historyId === pastedItemValue ||
+                                    inLargeViewItem.historyId === specialPastedItemValue
+                                  }
+                                  isCopied={
+                                    inLargeViewItem.historyId === copiedItemValue ||
+                                    inLargeViewItem.historyId === specialCopiedItemValue
+                                  }
                                   isSaved={inLargeViewItem.historyId === savingItem}
                                   isMp3={
                                     inLargeViewItem.isLink &&
