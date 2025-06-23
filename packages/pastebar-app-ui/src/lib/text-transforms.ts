@@ -3,6 +3,8 @@
  * Organized by categories with enable/disable controls
  */
 
+import DOMPurify from 'dompurify'
+
 export interface TextTransform {
   id: string
   label: string
@@ -123,15 +125,35 @@ const toUrlDecode = (text: string): string => {
     return text
   }
 }
-const toHtmlEncode = (text: string): string => {
-  const div = document.createElement('div')
-  div.textContent = text
-  return div.innerHTML
+
+function toHtmlEncode(str: string): string {
+  // Ensure the input is a string
+  if (typeof str !== 'string') {
+    console.warn('Input to encodeHtmlSpecialChars was not a string:', str)
+    return '' // Or throw an error, depending on desired behavior
+  }
+
+  return str.replace(/[&<>"']/g, function (char) {
+    switch (char) {
+      case '&':
+        return '&amp;' // Ampersand
+      case '<':
+        return '&lt;' // Less than
+      case '>':
+        return '&gt;' // Greater than
+      case '"':
+        return '&quot;' // Double quote
+      case "'":
+        return '&#039;' // Single quote (apostrophe)
+      default:
+        return char // Should not happen with the given regex, but good practice
+    }
+  })
 }
+
 const toHtmlDecode = (text: string): string => {
-  const div = document.createElement('div')
-  div.innerHTML = text
-  return div.textContent || ''
+  const sanitized = DOMPurify.sanitize(text, { RETURN_DOM: true })
+  return sanitized.textContent || ''
 }
 
 // Transform functions for Text Tools

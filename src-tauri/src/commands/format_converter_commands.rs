@@ -347,11 +347,11 @@ pub async fn format_convert(text: String, conversion_type: String) -> Result<Str
   }
 
   // Log the conversion attempt for debugging
-  eprintln!(
-    "Converting {} with type: {}",
-    text.chars().take(50).collect::<String>(),
-    conversion_type
-  );
+  // eprintln!(
+  //   "Converting {} with type: {}",
+  //   text.chars().take(50).collect::<String>(),
+  //   conversion_type
+  // );
 
   match conversion_type.as_str() {
     "csv_to_json" => csv_to_json(&text).map_err(|e| format!("CSV to JSON conversion failed: {}", e)),
