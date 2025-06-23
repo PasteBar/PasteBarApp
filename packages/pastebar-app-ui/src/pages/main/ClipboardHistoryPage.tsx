@@ -1119,6 +1119,11 @@ export default function ClipboardHistoryPage() {
         deleteTimeoutRef.current = null
       }
 
+      if (itemId === keyboardSelectedItemId.value) {
+        resetKeyboardNavigation()
+        return
+      }
+
       // Reset delete confirmation when navigating to a different item
       showHistoryDeleteConfirmationId.value = null
 
