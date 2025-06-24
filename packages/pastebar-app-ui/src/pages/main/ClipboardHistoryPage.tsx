@@ -28,11 +28,14 @@ import {
   keyboardSelectedBoardId,
   keyboardSelectedClipId,
   keyboardSelectedItemId,
+  keyboardIndexSelectedPinnedClip,
+  pinnedClipsPanelAutoOpenedByKeyboard,
   resetKeyboardNavigation,
   settingsStoreAtom,
   shouldKeyboardNavigationBeDisabled,
   showClipsMoveOnBoardId,
   showDetailsClipId,
+  showDetailsPinnedClipId,
   showHistoryDeleteConfirmationId,
   showKeyboardNavContextMenuClipId,
   showKeyboardNavContextMenuHistoryId,
@@ -276,8 +279,8 @@ export default function ClipboardHistoryPage() {
 
   // Add pinned item navigation state using navigation context approach
   const keyboardIndexSelectedPinnedItem = useSignal<number>(-1)
-
-  // Track if pinned panel was auto-opened by keyboard navigation
+  
+  // Track if pinned history panel was auto-opened by keyboard navigation
   const pinnedPanelAutoOpenedByKeyboard = useSignal<boolean>(false)
 
   const {
@@ -292,6 +295,7 @@ export default function ClipboardHistoryPage() {
     getDefaultPanelWidth,
     setPanelSize,
     setReturnRoute,
+    setIsShowPinned,
   } = useAtomValue(uiStoreAtom)
   const {
     isHistoryEnabled,
@@ -314,7 +318,7 @@ export default function ClipboardHistoryPage() {
 
   const { t } = useTranslation()
 
-  const { clipItems, currentTab } = useAtomValue(collectionsStoreAtom)
+  const { clipItems, pinnedClips, currentTab } = useAtomValue(collectionsStoreAtom)
 
   const { themeDark } = useAtomValue(themeStoreAtom)
   const { ref: pinnedPanelRef, height: pinnedPanelHeight } = useResizeObserver()
@@ -568,6 +572,23 @@ export default function ClipboardHistoryPage() {
           setCopiedItem(keyboardSelectedPinnedItemId)
         }
       } else if (
+        currentNavigationContext.value === 'pinnedClips' &&
+        keyboardIndexSelectedPinnedClip.value >= 0
+      ) {
+        // Handle pinned clips selection
+        const selectedClip = pinnedClips[keyboardIndexSelectedPinnedClip.value]
+        if (selectedClip) {
+          try {
+            if (e.altKey || e.metaKey) {
+              await handlePasteClipItem(selectedClip.id)
+            } else {
+              await handleCopyClipItem(selectedClip.id)
+            }
+          } catch (error) {
+            console.error('Failed to copy pinned clip item from hotkey', error)
+          }
+        }
+      } else if (
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
         keyboardSelectedItemId.value
@@ -594,7 +615,9 @@ export default function ClipboardHistoryPage() {
       keyboardSelectedBoardId.value = null
       keyboardSelectedClipId.value = null
       keyboardIndexSelectedPinnedItem.value = -1
+      keyboardIndexSelectedPinnedClip.value = -1
       pinnedPanelAutoOpenedByKeyboard.value = false
+      pinnedClipsPanelAutoOpenedByKeyboard.value = false
       currentBoardIndex.value = 0
     },
     {
@@ -609,78 +632,7 @@ export default function ClipboardHistoryPage() {
     [currentNavigationContext.value, currentTab]
   )
 
-  useHotkeys(
-    ['arrowdown'],
-    e => {
-      e.preventDefault()
 
-      // Reset delete confirmation when navigating
-      showHistoryDeleteConfirmationId.value = null
-
-      if (keyboardSelectedBoardId.value) {
-        const clipsOnBoard = clipItems
-          .filter(
-            item =>
-              item.isClip &&
-              item.parentId === keyboardSelectedBoardId.value &&
-              item.tabId === currentTab
-          )
-          .sort((a, b) => a.orderNumber - b.orderNumber)
-
-        if (clipsOnBoard.length === 0) return
-
-        let currentIndex = clipsOnBoard.findIndex(
-          clip => clip.itemId === keyboardSelectedClipId.value
-        )
-        if (currentIndex === -1 && clipsOnBoard.length > 0) {
-          keyboardSelectedClipId.value = clipsOnBoard[0].itemId
-        } else {
-          currentIndex = (currentIndex + 1) % clipsOnBoard.length
-          keyboardSelectedClipId.value = clipsOnBoard[currentIndex].itemId
-        }
-      }
-    },
-    {
-      enabled:
-        currentNavigationContextValue === 'board' &&
-        !shouldKeyboardNavigationBeDisabled.value,
-    }
-  )
-
-  useHotkeys(
-    ['arrowup'],
-    e => {
-      e.preventDefault()
-
-      if (keyboardSelectedBoardId.value) {
-        const clipsOnBoard = clipItems
-          .filter(
-            item =>
-              item.isClip &&
-              item.parentId === keyboardSelectedBoardId.value &&
-              item.tabId === currentTab
-          )
-          .sort((a, b) => a.orderNumber - b.orderNumber)
-
-        if (clipsOnBoard.length === 0) return
-
-        let currentIndex = clipsOnBoard.findIndex(
-          clip => clip.itemId === keyboardSelectedClipId.value
-        )
-        if (currentIndex === -1 && clipsOnBoard.length > 0) {
-          keyboardSelectedClipId.value = clipsOnBoard[clipsOnBoard.length - 1].itemId
-        } else {
-          currentIndex = (currentIndex - 1 + clipsOnBoard.length) % clipsOnBoard.length
-          keyboardSelectedClipId.value = clipsOnBoard[currentIndex].itemId
-        }
-      }
-    },
-    {
-      enabled:
-        currentNavigationContextValue === 'board' &&
-        !shouldKeyboardNavigationBeDisabled.value,
-    }
-  )
 
   // Helper function to reset to history context
   const resetToHistory = () => {
@@ -792,6 +744,7 @@ export default function ClipboardHistoryPage() {
         currentNavigationContextValue === null
 
       const isInPinned = currentNavigationContextValue === 'pinned'
+      const isInPinnedClips = currentNavigationContextValue === 'pinnedClips'
 
       if (isInPinned) {
         // If we're in pinned items, tab should leave pinned and go to boards
@@ -807,6 +760,31 @@ export default function ClipboardHistoryPage() {
 
         // Navigate to boards
         navigateFromHistory(direction)
+      } else if (isInPinnedClips) {
+        // If we're in pinned clips, tab should go to boards
+        // Auto-close pinned panel if it was auto-opened by keyboard navigation
+        if (pinnedClipsPanelAutoOpenedByKeyboard.value) {
+          setIsShowPinned(false)
+          pinnedClipsPanelAutoOpenedByKeyboard.value = false
+        }
+
+        // Clear pinned clips selection and navigate to boards
+        keyboardIndexSelectedPinnedClip.value = -1
+        currentNavigationContext.value = 'board'
+        
+        // Navigate to first board
+        const navigationOrder = buildNavigationOrder(clipItems, currentTab)
+        const firstNonEmptyBoard = findNextNonEmptyBoard(
+          navigationOrder,
+          0,
+          'forward',
+          clipItems,
+          currentTab
+        )
+        
+        if (firstNonEmptyBoard) {
+          navigateToItem(firstNonEmptyBoard, clipItems, currentTab)
+        }
       } else if (isInHistory) {
         navigateFromHistory(direction)
       } else if (currentNavigationContextValue === 'board') {
@@ -889,16 +867,46 @@ export default function ClipboardHistoryPage() {
 
       if (showLargeViewHistoryId.value) {
         showLargeViewHistoryId.value = null
+      } else if (showDetailsPinnedClipId.value && currentNavigationContext.value === 'pinnedClips') {
+        // Close details view for pinned clips
+        showDetailsPinnedClipId.value = null
+      } else if (currentNavigationContext.value === 'pinnedClips') {
+        // Exit pinned clips context
+        currentNavigationContext.value = null
+        keyboardIndexSelectedPinnedClip.value = -1
+
+        // Auto-close pinned panel if it was auto-opened
+        if (pinnedClipsPanelAutoOpenedByKeyboard.value) {
+          setIsShowPinned(false)
+          pinnedClipsPanelAutoOpenedByKeyboard.value = false
+        }
+      } else if (currentNavigationContext.value === 'pinned') {
+        // Exit pinned history context
+        currentNavigationContext.value = null
+        keyboardIndexSelectedPinnedItem.value = -1
+
+        // Auto-close pinned history panel if it was auto-opened
+        if (pinnedPanelAutoOpenedByKeyboard.value) {
+          setIsShowHistoryPinned(false)
+          pinnedPanelAutoOpenedByKeyboard.value = false
+        }
       } else {
+        // Auto-close pinned history panel if it was auto-opened by keyboard navigation
+        if (pinnedPanelAutoOpenedByKeyboard.value) {
+          setIsShowHistoryPinned(false)
+          pinnedPanelAutoOpenedByKeyboard.value = false
+        }
+        
+        // Auto-close pinned clips panel if it was auto-opened by keyboard navigation
+        if (pinnedClipsPanelAutoOpenedByKeyboard.value) {
+          setIsShowPinned(false)
+          pinnedClipsPanelAutoOpenedByKeyboard.value = false
+        }
+
         // Reset all navigation state including pinned items
         resetKeyboardNavigation()
         keyboardIndexSelectedPinnedItem.value = -1
         pinnedPanelAutoOpenedByKeyboard.value = false
-
-        // Auto-close pinned panel if it was auto-opened by keyboard navigation
-        if (pinnedPanelAutoOpenedByKeyboard.value) {
-          setIsShowHistoryPinned(false)
-        }
       }
     },
     {
@@ -947,6 +955,68 @@ export default function ClipboardHistoryPage() {
         return
       }
 
+      // Check if we're in pinnedClips navigation context
+      if (currentNavigationContext.value === 'pinnedClips') {
+        const nextSelectedPinnedClip =
+          pinnedClips[keyboardIndexSelectedPinnedClip.value + 1]
+
+        if (nextSelectedPinnedClip) {
+          keyboardIndexSelectedPinnedClip.value += 1
+        } else {
+          // Move to first board element when reaching end of pinned clips
+          currentNavigationContext.value = 'board'
+          keyboardIndexSelectedPinnedClip.value = -1
+          
+          // Navigate to first board
+          const navigationOrder = buildNavigationOrder(clipItems, currentTab)
+          const firstNonEmptyBoard = findNextNonEmptyBoard(
+            navigationOrder,
+            0,
+            'forward',
+            clipItems,
+            currentTab
+          )
+          
+          if (firstNonEmptyBoard) {
+            navigateToItem(firstNonEmptyBoard, clipItems, currentTab)
+          }
+
+          // Auto-close pinned panel if it was auto-opened by keyboard navigation
+          if (pinnedClipsPanelAutoOpenedByKeyboard.value) {
+            setIsShowPinned(false)
+            pinnedClipsPanelAutoOpenedByKeyboard.value = false
+          }
+        }
+        return
+      }
+
+      // Handle board navigation
+      if (currentNavigationContext.value === 'board') {
+        if (keyboardSelectedBoardId.value) {
+          const clipsOnBoard = clipItems
+            .filter(
+              item =>
+                item.isClip &&
+                item.parentId === keyboardSelectedBoardId.value &&
+                item.tabId === currentTab
+            )
+            .sort((a, b) => a.orderNumber - b.orderNumber)
+
+          if (clipsOnBoard.length === 0) return
+
+          let currentIndex = clipsOnBoard.findIndex(
+            clip => clip.itemId === keyboardSelectedClipId.value
+          )
+          if (currentIndex === -1 && clipsOnBoard.length > 0) {
+            keyboardSelectedClipId.value = clipsOnBoard[0].itemId
+          } else {
+            currentIndex = (currentIndex + 1) % clipsOnBoard.length
+            keyboardSelectedClipId.value = clipsOnBoard[currentIndex].itemId
+          }
+        }
+        return
+      }
+
       // Handle history navigation
       if (
         currentNavigationContext.value === 'history' ||
@@ -968,6 +1038,8 @@ export default function ClipboardHistoryPage() {
       enabled:
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === 'pinned' ||
+          currentNavigationContext.value === 'pinnedClips' ||
+          currentNavigationContext.value === 'board' ||
           currentNavigationContext.value === null) &&
         !shouldKeyboardNavigationBeDisabled.value,
       enableOnFormTags: false,
@@ -1004,6 +1076,75 @@ export default function ClipboardHistoryPage() {
         } else {
           // At first pinned item, wrap to last pinned item
           keyboardIndexSelectedPinnedItem.value = pinnedClipboardHistory.length - 1
+        }
+        return
+      }
+
+      // Check if we're in pinnedClips navigation context
+      if (currentNavigationContext.value === 'pinnedClips') {
+        const prevSelectedPinnedClip =
+          pinnedClips[keyboardIndexSelectedPinnedClip.value - 1]
+
+        if (prevSelectedPinnedClip) {
+          keyboardIndexSelectedPinnedClip.value -= 1
+        } else {
+          // At first pinned clip, wrap to last pinned clip
+          keyboardIndexSelectedPinnedClip.value = pinnedClips.length - 1
+        }
+        return
+      }
+
+      // Handle board navigation
+      if (currentNavigationContext.value === 'board') {
+        if (keyboardSelectedBoardId.value) {
+          const clipsOnBoard = clipItems
+            .filter(
+              item =>
+                item.isClip &&
+                item.parentId === keyboardSelectedBoardId.value &&
+                item.tabId === currentTab
+            )
+            .sort((a, b) => a.orderNumber - b.orderNumber)
+
+          if (clipsOnBoard.length === 0) return
+
+          let currentIndex = clipsOnBoard.findIndex(
+            clip => clip.itemId === keyboardSelectedClipId.value
+          )
+          
+          // Check if we're at the first clip of the first board
+          const navigationOrder = buildNavigationOrder(clipItems, currentTab)
+          // Skip history item at index 0, get first actual board
+          const firstBoard = navigationOrder.find(item => item.type === 'board')
+          
+          if (firstBoard && 
+              keyboardSelectedBoardId.value === firstBoard.id && 
+              currentIndex === 0 &&
+              pinnedClips.length > 0) {
+            // We're at the first clip of the first board, navigate to pinned clips
+            currentNavigationContext.value = 'pinnedClips'
+            keyboardSelectedClipId.value = null
+            keyboardSelectedBoardId.value = null
+            keyboardIndexSelectedPinnedClip.value = pinnedClips.length - 1
+            
+            // Auto-open pinned panel if needed
+            if (!pinnedClipsPanelAutoOpenedByKeyboard.value) {
+              pinnedClipsPanelAutoOpenedByKeyboard.value = true
+            }
+            
+            // Make sure the pinned panel is visible
+            setIsShowPinned(true)
+            
+            return
+          }
+
+          // Normal board navigation
+          if (currentIndex === -1 && clipsOnBoard.length > 0) {
+            keyboardSelectedClipId.value = clipsOnBoard[clipsOnBoard.length - 1].itemId
+          } else {
+            currentIndex = (currentIndex - 1 + clipsOnBoard.length) % clipsOnBoard.length
+            keyboardSelectedClipId.value = clipsOnBoard[currentIndex].itemId
+          }
         }
         return
       }
@@ -1047,6 +1188,8 @@ export default function ClipboardHistoryPage() {
       enabled:
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === 'pinned' ||
+          currentNavigationContext.value === 'pinnedClips' ||
+          currentNavigationContext.value === 'board' ||
           currentNavigationContext.value === null) &&
         !shouldKeyboardNavigationBeDisabled.value,
       enableOnFormTags: false,
@@ -1058,7 +1201,7 @@ export default function ClipboardHistoryPage() {
     ['arrowright'],
     e => {
       e.preventDefault()
-      if (keyboardSelectedItemId.value || keyboardSelectedClipId.value) {
+      if (keyboardSelectedItemId.value || keyboardSelectedClipId.value || currentNavigationContext.value === 'pinnedClips') {
         if (isSwapPanels) {
           // In swap mode, right arrow closes large view
           if (
@@ -1068,6 +1211,9 @@ export default function ClipboardHistoryPage() {
             showLargeViewHistoryId.value = null
           } else if (currentNavigationContext.value === 'board') {
             showDetailsClipId.value = null
+          } else if (currentNavigationContext.value === 'pinnedClips') {
+            // For pinned clips, close details view
+            showDetailsPinnedClipId.value = null
           }
         } else {
           // In regular mode, right arrow opens large view
@@ -1078,6 +1224,12 @@ export default function ClipboardHistoryPage() {
             showLargeViewHistoryId.value = keyboardSelectedItemId.value
           } else if (currentNavigationContext.value === 'board') {
             showDetailsClipId.value = keyboardSelectedClipId.value
+          } else if (currentNavigationContext.value === 'pinnedClips') {
+            // For pinned clips, open details view
+                const selectedClip = pinnedClips[keyboardIndexSelectedPinnedClip.value]
+            if (selectedClip) {
+              showDetailsPinnedClipId.value = selectedClip.id
+            }
           }
         }
       }
@@ -1095,7 +1247,7 @@ export default function ClipboardHistoryPage() {
       e.preventDefault()
       if (isSwapPanels) {
         // In swap mode, left arrow opens large view
-        if (keyboardSelectedItemId.value || keyboardSelectedClipId.value) {
+        if (keyboardSelectedItemId.value || keyboardSelectedClipId.value || currentNavigationContext.value === 'pinnedClips') {
           if (
             currentNavigationContext.value === 'history' ||
             currentNavigationContext.value === null
@@ -1103,6 +1255,12 @@ export default function ClipboardHistoryPage() {
             showLargeViewHistoryId.value = keyboardSelectedItemId.value
           } else if (currentNavigationContext.value === 'board') {
             showDetailsClipId.value = keyboardSelectedClipId.value
+          } else if (currentNavigationContext.value === 'pinnedClips') {
+            // For pinned clips, open details view
+                const selectedClip = pinnedClips[keyboardIndexSelectedPinnedClip.value]
+            if (selectedClip) {
+              showDetailsPinnedClipId.value = selectedClip.id
+            }
           }
         }
       } else {
@@ -1114,6 +1272,9 @@ export default function ClipboardHistoryPage() {
           showLargeViewHistoryId.value = null
         } else if (currentNavigationContext.value === 'board') {
           showDetailsClipId.value = null
+        } else if (currentNavigationContext.value === 'pinnedClips') {
+          // For pinned clips, close details view
+          showDetailsPinnedClipId.value = null
         }
       }
     },
