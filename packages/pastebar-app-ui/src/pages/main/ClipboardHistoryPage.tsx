@@ -4,7 +4,6 @@ import {
   DndContext,
   DragOverlay,
   DropAnimation,
-  KeyboardSensor,
   MeasuringStrategy,
   PointerSensor,
   rectIntersection,
@@ -1153,6 +1152,10 @@ export default function ClipboardHistoryPage() {
   // useEffect(() => {
   //   const handleKeyDown = (e: KeyboardEvent) => {
   //     if (e.key === 'Control' || e.key === 'Meta') {
+  //       e.preventDefault()
+  //       e.stopImmediatePropagation()
+  //       e.stopPropagation()
+
   //       // resetKeyboardNavigation()
   //     }
   //   }
@@ -1296,7 +1299,7 @@ export default function ClipboardHistoryPage() {
     activationConstraint: { tolerance: 10, delay: 300 },
   })
 
-  // Always call useSensors with both sensors to maintain hook order
+  // Always call useSensors with the same structure to maintain hook order
   const sensors = useSensors(pointerSensor)
 
   const dropAnimationConfig: DropAnimation = {

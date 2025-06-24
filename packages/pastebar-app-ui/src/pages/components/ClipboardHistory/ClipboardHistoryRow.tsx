@@ -548,6 +548,7 @@ export function ClipboardHistoryRowComponent({
                                 }`
               }`}
               onClickCapture={e => {
+                console.log('Row clicked', e)
                 if (
                   (isSingleClickToCopyPaste &&
                     !getSelectedText().text &&
@@ -561,12 +562,17 @@ export function ClipboardHistoryRowComponent({
                   e.preventDefault()
                   e.stopPropagation()
                   onCopyPaste(clipboard.historyId)
+                } else if (e.ctrlKey) {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setKeyboardHistorySelectedItemId(clipboard.historyId)
                 } else if (e.altKey) {
+                  e.preventDefault()
+                  e.stopPropagation()
                   setSelectHistoryItem(clipboard.historyId)
                 } else if (e.ctrlKey || e.metaKey) {
                   e.preventDefault()
                   e.stopPropagation()
-                  setKeyboardHistorySelectedItemId(clipboard.historyId)
                 } else if (e.shiftKey) {
                   e.preventDefault()
                   e.stopPropagation()

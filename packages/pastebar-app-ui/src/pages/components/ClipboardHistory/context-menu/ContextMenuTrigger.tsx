@@ -97,7 +97,17 @@ const ContextMenuTrigger = forwardRef<HTMLElement, ContextMenuTriggerProps>(
 
     return (
       <ContextMenu onOpenChange={handleOpenChange}>
-        <ContextMenuTriggerPrimitive ref={ref} asChild>
+        <ContextMenuTriggerPrimitive
+          ref={ref}
+          asChild
+          onContextMenu={e => {
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault()
+              e.stopPropagation()
+              return false
+            }
+          }}
+        >
           {children}
         </ContextMenuTriggerPrimitive>
 
