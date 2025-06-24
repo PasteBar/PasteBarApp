@@ -1,5 +1,47 @@
 # pastebar-app
 
+## 0.7.0
+
+### Minor Changes
+
+- d491faf: Added keyboard shortcuts to improve navigation efficiency within the application
+- e5e8123: Added custom data location to store application data in a folder of your choice instead of the default location.
+
+### Patch Changes
+
+- c099e41: Added long press on clip to activate clips organize
+- a8e3fc8: Added Trim Spaces option for the Clip
+  Added Auto Trim Spaces option for the History Capture
+- a7ec7eb: Added: Quick history window user options
+- e5e8123: Added option to disable capturing and storing images from clipboard
+- 14610ff: Implement clipboard history filtering based on text length limits
+- bb7dc8f: Added support setting hotkeys with up to 3-key combinations
+- 061001f: Fix: update history items in quick paste window after delete operation in main window
+- bed49e2: Added user setting for single-click keyboard focus in history
+- 1191b9b: refactor: update terminology for history window split to open
+- 4ad66e1: Updates: React 19 and React Compiler
+- 558d25f: Auto-activate search in quick paste window when typing any letter or number
+- a7df032: Added single-click copy/paste option in user preferences
+- 87148d2: Added persistent note icons for clips with descriptions
+- 72c595c: Added detect and select language modal on first app run
+- f12c0e2: Fix: refresh native menu on history items delete
+- c10ec63: Added: history item preview max lines user setting
+- cdf7752: Added protected collection with PIN access
+- e831a28: Added Special copy/paste for history items context menu and settings
+- 07d0bb6: Added Backup and Restore database and images
+- 16428c5: Added global templates in user preferences for saved clips
+- bf53da7: Press Delete key to delete single or multiple items with confirmation on second press
+- 83c3de1: Added: customizable tray icon behavior on Windows as user settings
+- 0af0554: Added user preference to copy only menu items to clipboard without auto-pasting
+- 385d661: Fix: enhance value preview logic to fix text overflow
+- a00cb44: Updated French language translation from Jean-Michel Robert
+- df2d4cb: Added deleting menu folders with children by moving submenus up one level
+- 4ad66e1: User preferences UI color bug for languages
+- 64bdb03: Added settings to preserve pinned and starred items when clearing clipboard history
+- 0c7ed93: Added option "Show Always on Top" for main window
+- ecee8d2: Support for notes matching in global search
+- a00cb44: Added Turkish language translation by AlijonMurodov
+
 ## 0.6.2
 
 ### Patch Changes
