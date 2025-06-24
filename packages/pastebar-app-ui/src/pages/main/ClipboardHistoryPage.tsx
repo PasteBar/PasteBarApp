@@ -4,7 +4,6 @@ import {
   DndContext,
   DragOverlay,
   DropAnimation,
-  KeyboardSensor,
   MeasuringStrategy,
   PointerSensor,
   rectIntersection,
@@ -220,6 +219,13 @@ export default function ClipboardHistoryPage() {
   const [selectedHistoryItems, setSelectedHistoryItems] = useState<UniqueIdentifier[]>([])
   const [showSelectHistoryItems, setShowSelectHistoryItems] = useState(false)
   const [isDragPinnedHistory, setIsDragPinnedHistory] = useState(false)
+
+  // Add pinned item navigation state using navigation context approach
+  const keyboardIndexSelectedPinnedItem = useSignal<number>(-1)
+
+  // Track if pinned panel was auto-opened by keyboard navigation
+  const pinnedPanelAutoOpenedByKeyboard = useSignal<boolean>(false)
+
   const {
     isScrolling,
     setIsScrolling,
@@ -378,6 +384,17 @@ export default function ClipboardHistoryPage() {
     [selectedHistoryItems, pinnedClipboardHistory]
   )
 
+  // Add computed value for selected pinned item ID (similar to QuickPastePage)
+  const keyboardSelectedPinnedItemId = useMemo(() => {
+    if (keyboardIndexSelectedPinnedItem.value >= 0) {
+      return pinnedClipboardHistory.length > 0 &&
+        pinnedClipboardHistory[keyboardIndexSelectedPinnedItem.value]
+        ? pinnedClipboardHistory[keyboardIndexSelectedPinnedItem.value].historyId
+        : null
+    }
+    return null
+  }, [keyboardIndexSelectedPinnedItem.value, pinnedClipboardHistory])
+
   const pastedItemValue = useMemo(() => pastedItem, [pastedItem])
   const copiedItemValue = useMemo(() => copiedItem, [copiedItem])
   const specialCopiedItemValue = useMemo(
@@ -475,20 +492,15 @@ export default function ClipboardHistoryPage() {
       e.preventDefault()
       if (currentNavigationContext.value === 'board' && keyboardSelectedClipId.value) {
         try {
-          currentNavigationContext.value = null
-          keyboardSelectedItemId.value = null
-          keyboardSelectedBoardId.value = null
           await handleCopyClipItem(keyboardSelectedClipId.value)
           keyboardSelectedClipId.value = null
         } catch (error) {
           console.error('Failed to copy clip item from hotkey', error)
         }
-
-        currentNavigationContext.value = null
-        keyboardSelectedItemId.value = null
-        keyboardSelectedBoardId.value = null
-        keyboardSelectedClipId.value = null
-        currentBoardIndex.value = 0
+      } else if (currentNavigationContext.value === 'pinned' && keyboardSelectedPinnedItemId) {
+        // Handle pinned item selection
+        resetKeyboardDeleteTimer()
+        setCopiedItem(keyboardSelectedPinnedItemId)
       } else if (
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
@@ -505,10 +517,14 @@ export default function ClipboardHistoryPage() {
         // TODO: Fix this
         // setCopiedItem(clipboardHistory[0]?.historyId)
       }
+      
+      // Reset all navigation state
       currentNavigationContext.value = null
       keyboardSelectedItemId.value = null
       keyboardSelectedBoardId.value = null
       keyboardSelectedClipId.value = null
+      keyboardIndexSelectedPinnedItem.value = -1
+      pinnedPanelAutoOpenedByKeyboard.value = false
       currentBoardIndex.value = 0
     },
     {
@@ -602,6 +618,15 @@ export default function ClipboardHistoryPage() {
     keyboardSelectedBoardId.value = null
     keyboardSelectedClipId.value = null
     currentBoardIndex.value = 0
+    // Clear pinned selection to ensure mutual exclusivity
+    keyboardIndexSelectedPinnedItem.value = -1
+    // Clear history selection to ensure clean state
+    keyboardSelectedItemId.value = null
+    // Auto-close pinned panel if it was auto-opened by keyboard navigation
+    if (pinnedPanelAutoOpenedByKeyboard.value) {
+      setIsShowHistoryPinned(false)
+      pinnedPanelAutoOpenedByKeyboard.value = false
+    }
   }
 
   // Helper function to check if a board has navigable clips
@@ -630,6 +655,13 @@ export default function ClipboardHistoryPage() {
     if (nonEmptyBoard) {
       currentNavigationContext.value = 'board'
       keyboardSelectedItemId.value = null
+      // Clear pinned selection when navigating to boards
+      keyboardIndexSelectedPinnedItem.value = -1
+      // Auto-close pinned panel if it was auto-opened by keyboard navigation
+      if (pinnedPanelAutoOpenedByKeyboard.value) {
+        setIsShowHistoryPinned(false)
+        pinnedPanelAutoOpenedByKeyboard.value = false
+      }
       navigateToItem(nonEmptyBoard, clipItems, currentTab)
     } else {
       // No non-empty boards found, ensure we're in history context
@@ -639,6 +671,9 @@ export default function ClipboardHistoryPage() {
       keyboardSelectedBoardId.value = null
       keyboardSelectedClipId.value = null
       currentBoardIndex.value = 0
+      // Clear all selections to ensure clean state
+      keyboardSelectedItemId.value = null
+      keyboardIndexSelectedPinnedItem.value = -1
     }
   }
 
@@ -685,8 +720,24 @@ export default function ClipboardHistoryPage() {
       const isInHistory =
         currentNavigationContextValue === 'history' ||
         currentNavigationContextValue === null
+      
+      const isInPinned = currentNavigationContextValue === 'pinned'
 
-      if (isInHistory) {
+      if (isInPinned) {
+        // If we're in pinned items, tab should leave pinned and go to boards
+        // Auto-close pinned panel if it was auto-opened by keyboard navigation
+        if (pinnedPanelAutoOpenedByKeyboard.value) {
+          setIsShowHistoryPinned(false)
+          pinnedPanelAutoOpenedByKeyboard.value = false
+        }
+        
+        // Clear pinned selection and context
+        keyboardIndexSelectedPinnedItem.value = -1
+        currentNavigationContext.value = 'history'
+        
+        // Navigate to boards
+        navigateFromHistory(direction)
+      } else if (isInHistory) {
         navigateFromHistory(direction)
       } else if (currentNavigationContextValue === 'board') {
         navigateFromBoard(direction)
@@ -723,6 +774,8 @@ export default function ClipboardHistoryPage() {
             : -1
           const nextItem = clipboardHistory[currentItemIndex + 1]
           if (nextItem) {
+            // Clear pinned selection when navigating in history items
+            keyboardIndexSelectedPinnedItem.value = -1
             keyboardSelectedItemId.value = nextItem.historyId
             if (showLargeViewHistoryId.value) {
               showLargeViewHistoryId.value = nextItem.historyId
@@ -767,7 +820,15 @@ export default function ClipboardHistoryPage() {
       if (showLargeViewHistoryId.value) {
         showLargeViewHistoryId.value = null
       } else {
+        // Reset all navigation state including pinned items
         resetKeyboardNavigation()
+        keyboardIndexSelectedPinnedItem.value = -1
+        pinnedPanelAutoOpenedByKeyboard.value = false
+        
+        // Auto-close pinned panel if it was auto-opened by keyboard navigation
+        if (pinnedPanelAutoOpenedByKeyboard.value) {
+          setIsShowHistoryPinned(false)
+        }
       }
     },
     {
@@ -794,20 +855,49 @@ export default function ClipboardHistoryPage() {
       // Reset keyboard delete confirmation when navigating
       resetKeyboardDeleteTimer()
 
-      const currentItemIndex = keyboardSelectedItemId.value
-        ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
-        : -1
-      const nextItem = clipboardHistory[currentItemIndex + 1]
-      if (nextItem) {
-        keyboardSelectedItemId.value = nextItem.historyId
-        if (showLargeViewHistoryId.value) {
-          showLargeViewHistoryId.value = nextItem.historyId
+      // Check if we're in pinned navigation context
+      if (currentNavigationContext.value === 'pinned') {
+        const nextSelectedPinnedItem =
+          pinnedClipboardHistory[keyboardIndexSelectedPinnedItem.value + 1]?.historyId
+
+        if (nextSelectedPinnedItem) {
+          keyboardIndexSelectedPinnedItem.value += 1
+        } else {
+          // Move to first history item when reaching end of pinned items
+          currentNavigationContext.value = 'history'
+          keyboardIndexSelectedPinnedItem.value = -1
+          keyboardSelectedItemId.value = clipboardHistory[0]?.historyId || null
+
+          // Auto-close pinned panel if it was auto-opened by keyboard navigation
+          if (pinnedPanelAutoOpenedByKeyboard.value) {
+            setIsShowHistoryPinned(false)
+            pinnedPanelAutoOpenedByKeyboard.value = false
+          }
+        }
+        return
+      }
+
+      // Handle history navigation
+      if (
+        currentNavigationContext.value === 'history' ||
+        currentNavigationContext.value === null
+      ) {
+        const currentItemIndex = keyboardSelectedItemId.value
+          ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
+          : -1
+        const nextItem = clipboardHistory[currentItemIndex + 1]
+        if (nextItem) {
+          keyboardSelectedItemId.value = nextItem.historyId
+          if (showLargeViewHistoryId.value) {
+            showLargeViewHistoryId.value = nextItem.historyId
+          }
         }
       }
     },
     {
       enabled:
         (currentNavigationContext.value === 'history' ||
+          currentNavigationContext.value === 'pinned' ||
           currentNavigationContext.value === null) &&
         !shouldKeyboardNavigationBeDisabled.value,
       enableOnFormTags: false,
@@ -834,6 +924,21 @@ export default function ClipboardHistoryPage() {
       // Reset keyboard delete confirmation when navigating
       resetKeyboardDeleteTimer()
 
+      // Check if we're in pinned navigation context
+      if (currentNavigationContext.value === 'pinned') {
+        const prevSelectedPinnedItem =
+          pinnedClipboardHistory[keyboardIndexSelectedPinnedItem.value - 1]?.historyId
+
+        if (prevSelectedPinnedItem) {
+          keyboardIndexSelectedPinnedItem.value -= 1
+        } else {
+          // At first pinned item, wrap to last pinned item
+          keyboardIndexSelectedPinnedItem.value = pinnedClipboardHistory.length - 1
+        }
+        return
+      }
+
+      // Handle history navigation
       if (
         currentNavigationContext.value === 'history' ||
         currentNavigationContext.value === null
@@ -848,12 +953,30 @@ export default function ClipboardHistoryPage() {
           if (showLargeViewHistoryId.value) {
             showLargeViewHistoryId.value = prevItem.historyId
           }
+        } else {
+          // At the first history item, navigate to pinned items if they exist
+          if (pinnedClipboardHistory.length > 0 && !hasSearchOrFilter) {
+            // Track if we're auto-opening the panel
+            const wasAlreadyOpen = isShowHistoryPinned
+            if (!wasAlreadyOpen) {
+              setIsShowHistoryPinned(true)
+              pinnedPanelAutoOpenedByKeyboard.value = true
+            } else {
+              pinnedPanelAutoOpenedByKeyboard.value = false
+            }
+            
+            // Switch to pinned context
+            currentNavigationContext.value = 'pinned'
+            keyboardSelectedItemId.value = null
+            keyboardIndexSelectedPinnedItem.value = pinnedClipboardHistory.length - 1
+          }
         }
       }
     },
     {
       enabled:
         (currentNavigationContext.value === 'history' ||
+          currentNavigationContext.value === 'pinned' ||
           currentNavigationContext.value === null) &&
         !shouldKeyboardNavigationBeDisabled.value,
       enableOnFormTags: false,
@@ -1142,37 +1265,46 @@ export default function ClipboardHistoryPage() {
 
       currentNavigationContext.value = 'history'
       keyboardSelectedItemId.value = itemId
+      // Reset pinned selection when selecting history item
+      keyboardIndexSelectedPinnedItem.value = -1
+      pinnedPanelAutoOpenedByKeyboard.value = false
     } else {
       keyboardSelectedItemId.value = null
+      keyboardIndexSelectedPinnedItem.value = -1
+      pinnedPanelAutoOpenedByKeyboard.value = false
     }
   }
 
   // Store timeout reference to clear it if needed
   const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Control' || e.key === 'Meta') {
-        resetKeyboardNavigation()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-      // Clean up delete timeout on unmount
-      if (deleteTimeoutRef.current) {
-        clearTimeout(deleteTimeoutRef.current)
-        deleteTimeoutRef.current = null
-      }
-    }
-  }, [
-    clipboardHistory,
-    currentNavigationContext,
-    keyboardSelectedItemId,
-    keyboardSelectedBoardId,
-    keyboardSelectedClipId,
-    currentBoardIndex,
-  ])
+  // useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent) => {
+  //     if (e.key === 'Control' || e.key === 'Meta') {
+  //       e.preventDefault()
+  //       e.stopImmediatePropagation()
+  //       e.stopPropagation()
+
+  //       // resetKeyboardNavigation()
+  //     }
+  //   }
+  //   window.addEventListener('keydown', handleKeyDown)
+  //   return () => {
+  //     window.removeEventListener('keydown', handleKeyDown)
+  //     // Clean up delete timeout on unmount
+  //     if (deleteTimeoutRef.current) {
+  //       clearTimeout(deleteTimeoutRef.current)
+  //       deleteTimeoutRef.current = null
+  //     }
+  //   }
+  // }, [
+  //   clipboardHistory,
+  //   currentNavigationContext,
+  //   keyboardSelectedItemId,
+  //   keyboardSelectedBoardId,
+  //   keyboardSelectedClipId,
+  //   currentBoardIndex,
+  // ])
 
   useEffect(() => {
     if (
@@ -1258,6 +1390,9 @@ export default function ClipboardHistoryPage() {
       codeFilters.length > 0
     ) {
       refetchFindClipboardHistory()
+      // Reset pinned navigation when search/filter is active
+      keyboardIndexSelectedPinnedItem.value = -1
+      pinnedPanelAutoOpenedByKeyboard.value = false
     }
   }, [debouncedSearchTerm, historyFilters, codeFilters, appFilters])
 
@@ -1296,7 +1431,7 @@ export default function ClipboardHistoryPage() {
     activationConstraint: { tolerance: 10, delay: 300 },
   })
 
-  // Always call useSensors with both sensors to maintain hook order
+  // Always call useSensors with the same structure to maintain hook order
   const sensors = useSensors(pointerSensor)
 
   const dropAnimationConfig: DropAnimation = {
@@ -1864,6 +1999,9 @@ export default function ClipboardHistoryPage() {
                                               isDisabledPinnedMoveDown={
                                                 index ===
                                                 pinnedClipboardHistory.length - 1
+                                              }
+                                              isKeyboardSelected={
+                                                historyId === keyboardSelectedPinnedItemId
                                               }
                                               onMovePinnedUpDown={move => {
                                                 movePinnedClipboardHistoryUpDown(move)
