@@ -158,11 +158,13 @@ const loadPrismComponents = async () => {
   // @ts-expect-error - global Prism
   window.Prism = Prism
 
+  // Load markup-templating first as it's a dependency for PHP
+  // @ts-expect-error
+  await import('prismjs/components/prism-markup-templating')
+
   await Promise.all([
     // @ts-expect-error
     import('prismjs/components/prism-json'),
-    // @ts-expect-error
-    import('prismjs/components/prism-markup-templating'),
     // @ts-expect-error
     import('prismjs/components/prism-java'),
     // @ts-expect-error
