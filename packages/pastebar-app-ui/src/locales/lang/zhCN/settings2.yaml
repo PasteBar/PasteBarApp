@@ -46,6 +46,8 @@ Simplified Panel Layout: 简化面板布局
 Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: 启用单击复制/粘贴剪贴板历史记录和保存的剪辑，而不需要双击。
 Single Click Copy/Paste action: 单击复制/粘贴操作
 Single Click Copy/Paste: 单击复制/粘贴
+Set keyboard focus with a single click. Disables single-click copy/paste if set.: 单击设置键盘焦点。如果设置，则禁用单击复制/粘贴。
+Single-Click Keyboard Focus: 单击键盘焦点
 Quick Paste Window Options: 快速粘贴窗口选项
 Configure the behavior of the Quick Paste window when selecting items: 配置选择项目时快速粘贴窗口的行为
 Configure how the system tray icon responds to mouse clicks: 配置系统托盘图标如何响应鼠标点击

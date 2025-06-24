@@ -49,6 +49,8 @@ function QuickPasteApp() {
         settingsStore.initSettings({
           appDataDir: '',
           isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool,
+          isSingleClickKeyboardFocus:
+            settings.isSingleClickKeyboardFocus?.valueBool ?? false,
           historyPreviewLineLimit: settings.historyPreviewLineLimit?.valueInt ?? null,
           appLastUpdateVersion: settings.appLastUpdateVersion?.valueText,
           appLastUpdateDate: settings.appLastUpdateDate?.valueText,

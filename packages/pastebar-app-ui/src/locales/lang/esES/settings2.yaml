@@ -46,6 +46,8 @@ Simplified Panel Layout: Diseño de panel simplificado
 Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Habilitar clic simple para copiar/pegar elementos del historial del portapapeles y clips guardados en lugar de requerir doble clic.
 Single Click Copy/Paste action: Acción de clic simple Copiar/Pegar
 Single Click Copy/Paste: Clic simple Copiar/Pegar
+Set keyboard focus with a single click. Disables single-click copy/paste if set.: Establecer foco del teclado con un clic simple. Desactiva copiar/pegar de un clic si está activado.
+Single-Click Keyboard Focus: Foco de teclado de un clic
 Quick Paste Window Options: Opciones de la ventana de pegado rápido
 Configure the behavior of the Quick Paste window when selecting items: Configurar el comportamiento de la ventana de pegado rápido al seleccionar elementos
 Configure how the system tray icon responds to mouse clicks: Configurar cómo responde el icono de la bandeja del sistema a los clics del ratón

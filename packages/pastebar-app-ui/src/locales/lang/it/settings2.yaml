@@ -51,6 +51,8 @@ Simplified Panel Layout: Layout pannello semplificato
 Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Abilita clic singolo per copiare/incollare elementi della cronologia appunti e clip salvati invece di richiedere doppio clic.
 Single Click Copy/Paste action: Azione clic singolo Copia/Incolla
 Single Click Copy/Paste: Clic singolo Copia/Incolla
+Set keyboard focus with a single click. Disables single-click copy/paste if set.: Imposta il focus della tastiera con un singolo clic. Disabilita copia/incolla con un clic se impostato.
+Single-Click Keyboard Focus: Focus tastiera a clic singolo
 Quick Paste Window Options: Opzioni finestra incolla rapido
 Configure the behavior of the Quick Paste window when selecting items: Configura il comportamento della finestra incolla rapido quando si selezionano elementi
 Copy items only (no auto-paste): Copia solo elementi (nessun incolla automatico)
