@@ -207,7 +207,7 @@ export interface SettingsStoreState {
   setIsQuickPasteCopyOnly: (isEnabled: boolean) => void
   setIsQuickPasteAutoClose: (isEnabled: boolean) => void
   setIsSingleClickToCopyPaste: (isEnabled: boolean) => void
-  setIsSingleClickKeyboardFocus: (isEnabled: boolean) => void // New setter
+  setIsSingleClickKeyboardFocus: (isEnabled: boolean) => void
   setIsSingleClickToCopyPasteQuickWindow: (isEnabled: boolean) => void
   setIsKeepPinnedOnClearEnabled: (isEnabled: boolean) => void
   setIsKeepStarredOnClearEnabled: (isEnabled: boolean) => void
@@ -322,7 +322,7 @@ const initialState: SettingsStoreState & Settings = {
   isSimplifiedLayout: true,
   isMainWindowOnTop: false,
   isSingleClickToCopyPaste: false,
-  isSingleClickKeyboardFocus: false, // New setting default
+  isSingleClickKeyboardFocus: false,
   isSingleClickToCopyPasteQuickWindow: false,
   isQuickPasteCopyOnly: false,
   isQuickPasteAutoClose: true,
