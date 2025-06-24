@@ -591,25 +591,15 @@ export function ClipboardHistoryRowComponent({
                   !getSelectedText().text
                 ) {
                   const target = e.target as Node
-                  const isCopyIconClick =
-                    copyIconButtonRef.current?.contains(target) ||
-                    copyIconButtonRef.current === target
-                  const isContextMenuIconClick =
-                    contextMenuButtonRef.current?.contains(target) ||
-                    contextMenuButtonRef.current === target
-                  const isExpandCollapseClick =
-                    expandCollapseButtonRef.current?.contains(target) ||
-                    expandCollapseButtonRef.current === target
-                  const isWrapTextClick =
-                    wrapTextButtonRef.current?.contains(target) ||
-                    wrapTextButtonRef.current === target
+                  const isInteractiveClick = isInteractiveElementClick(
+                    target,
+                    copyIconButtonRef.current,
+                    contextMenuButtonRef.current,
+                    expandCollapseButtonRef.current,
+                    wrapTextButtonRef.current
+                  )
 
-                  if (
-                    !isCopyIconClick &&
-                    !isContextMenuIconClick &&
-                    !isExpandCollapseClick &&
-                    !isWrapTextClick
-                  ) {
+                  if (!isInteractiveClick) {
                     setKeyboardHistorySelectedItemId(clipboard.historyId)
                   }
                   // If it IS a click on one of the specific interactive elements, we do nothing here,
