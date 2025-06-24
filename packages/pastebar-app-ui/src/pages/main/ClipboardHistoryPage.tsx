@@ -285,9 +285,9 @@ export default function ClipboardHistoryPage() {
     onConfirmedDelete: async () => {
       if (keyboardSelectedItemId.value) {
         // Calculate next selection before deletion
-        const currentIndex = clipboardHistory.findIndex(
-          item => item.historyId === keyboardSelectedItemId.value
-        )
+        const currentIndex = keyboardSelectedItemId.value
+          ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
+          : -1
         let nextSelectedId: UniqueIdentifier | null = null
         if (currentIndex !== -1) {
           if (currentIndex < clipboardHistory.length - 1) {
@@ -394,6 +394,11 @@ export default function ClipboardHistoryPage() {
   )
 
   const clipboardHistory = hasSearchOrFilter ? foundClipboardHistory : allClipboardHistory
+
+  const historyIndexMap = useMemo(
+    () => new Map(clipboardHistory.map((item, index) => [item.historyId, index])),
+    [clipboardHistory]
+  )
 
   const { refetchFindClipboardHistory } = useFindClipboardHistory({
     query: debouncedSearchTerm,
@@ -713,9 +718,9 @@ export default function ClipboardHistoryPage() {
           resetKeyboardDeleteTimer()
 
           setSelectHistoryItem(keyboardSelectedItemId.value)
-          const currentItemIndex = clipboardHistory.findIndex(
-            item => item.historyId === keyboardSelectedItemId.value
-          )
+          const currentItemIndex = keyboardSelectedItemId.value
+            ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
+            : -1
           const nextItem = clipboardHistory[currentItemIndex + 1]
           if (nextItem) {
             keyboardSelectedItemId.value = nextItem.historyId
@@ -728,8 +733,6 @@ export default function ClipboardHistoryPage() {
     },
     {
       enabled: !shouldKeyboardNavigationBeDisabled.value,
-      enableOnFormTags: false,
-      preventDefault: true,
     }
   )
 
@@ -791,9 +794,9 @@ export default function ClipboardHistoryPage() {
       // Reset keyboard delete confirmation when navigating
       resetKeyboardDeleteTimer()
 
-      const currentItemIndex = clipboardHistory.findIndex(
-        item => item.historyId === keyboardSelectedItemId.value
-      )
+      const currentItemIndex = keyboardSelectedItemId.value
+        ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
+        : -1
       const nextItem = clipboardHistory[currentItemIndex + 1]
       if (nextItem) {
         keyboardSelectedItemId.value = nextItem.historyId
@@ -835,9 +838,9 @@ export default function ClipboardHistoryPage() {
         currentNavigationContext.value === 'history' ||
         currentNavigationContext.value === null
       ) {
-        const currentItemIndex = clipboardHistory.findIndex(
-          item => item.historyId === keyboardSelectedItemId.value
-        )
+        const currentItemIndex = keyboardSelectedItemId.value
+          ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
+          : -1
         const prevItem = clipboardHistory[currentItemIndex - 1]
         if (prevItem) {
           keyboardSelectedItemId.value = prevItem.historyId
@@ -995,9 +998,9 @@ export default function ClipboardHistoryPage() {
         currentNavigationContext.value === null
       ) {
         // Move up by 5 items in history
-        const currentIndex = clipboardHistory.findIndex(
-          item => item.historyId === keyboardSelectedItemId.value
-        )
+        const currentIndex = keyboardSelectedItemId.value
+          ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
+          : -1
         const newIndex = Math.max(0, currentIndex - 5)
         if (clipboardHistory[newIndex]) {
           keyboardSelectedItemId.value = clipboardHistory[newIndex].historyId
@@ -1046,9 +1049,9 @@ export default function ClipboardHistoryPage() {
         currentNavigationContext.value === null
       ) {
         // Move down by 5 items in history
-        const currentIndex = clipboardHistory.findIndex(
-          item => item.historyId === keyboardSelectedItemId.value
-        )
+        const currentIndex = keyboardSelectedItemId.value
+          ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
+          : -1
         const newIndex = Math.min(clipboardHistory.length - 1, currentIndex + 5)
         if (clipboardHistory[newIndex]) {
           keyboardSelectedItemId.value = clipboardHistory[newIndex].historyId
@@ -1130,9 +1133,7 @@ export default function ClipboardHistoryPage() {
       // Reset keyboard delete confirmation when navigating
       resetKeyboardDeleteTimer()
 
-      const currentItemIndex = clipboardHistory.findIndex(
-        item => item.historyId === itemId
-      )
+      const currentItemIndex = historyIndexMap.get(itemId) ?? -1
 
       if (currentItemIndex === -1) {
         keyboardSelectedItemId.value = null
@@ -1185,9 +1186,9 @@ export default function ClipboardHistoryPage() {
 
   useEffect(() => {
     if (keyboardSelectedItemId.value && listRef.current) {
-      const selectedIndex = clipboardHistory.findIndex(
-        item => item.historyId === keyboardSelectedItemId.value
-      )
+      const selectedIndex = keyboardSelectedItemId.value
+        ? historyIndexMap.get(keyboardSelectedItemId.value) ?? -1
+        : -1
       if (selectedIndex !== -1) {
         // @ts-expect-error - scrollToItem is not in the types
         listRef.current.scrollToItem?.(selectedIndex, 'smart')
@@ -1290,12 +1291,13 @@ export default function ClipboardHistoryPage() {
     rowHeights.current = { ...rowHeights.current, [index]: size }
   }
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { tolerance: 10, delay: 300 } }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: coordinateGetter,
-    })
-  )
+  // Create sensors at the top level
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: { tolerance: 10, delay: 300 },
+  })
+
+  // Always call useSensors with both sensors to maintain hook order
+  const sensors = useSensors(pointerSensor)
 
   const dropAnimationConfig: DropAnimation = {
     keyframes({ transform }) {
