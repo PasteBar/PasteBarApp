@@ -154,7 +154,7 @@ interface BoardProps {
   isDragPreview?: boolean
   keyboardSelectedClipId?: { value: UniqueIdentifier | null }
   currentSelectedBoardId?: { value: UniqueIdentifier | null }
-  keyboardNavigationMode?: { value: 'history' | 'board' | 'search' | null }
+  keyboardNavigationMode?: { value: 'history' | 'board' | 'pinned' | null }
 }
 
 export function BoardComponent({

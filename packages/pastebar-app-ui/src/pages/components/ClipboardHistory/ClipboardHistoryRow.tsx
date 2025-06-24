@@ -571,7 +571,6 @@ export function ClipboardHistoryRowComponent({
                   setSelectHistoryItem(clipboard.historyId)
                 } else if (e.ctrlKey || e.metaKey) {
                   e.preventDefault()
-                  e.stopPropagation()
                 } else if (e.shiftKey) {
                   e.preventDefault()
                   e.stopPropagation()
