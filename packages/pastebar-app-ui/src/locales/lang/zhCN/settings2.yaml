@@ -49,14 +49,14 @@ Single Click Copy/Paste: 单击复制/粘贴
 Quick Paste Window Options: 快速粘贴窗口选项
 Configure the behavior of the Quick Paste window when selecting items: 配置选择项目时快速粘贴窗口的行为
 Configure how the system tray icon responds to mouse clicks: 配置系统托盘图标如何响应鼠标点击
-Disable left-click context menu: 禁用左键上下文菜单
+Disable left-click context menu: 禁用左键点击时的上下文菜单
 Double-click toggles app visibility: 双击切换应用可见性
 Double-clicking the tray icon shows or hides the main application window: 双击托盘图标显示或隐藏主应用窗口
 Enabling either left-click option will disable the context menu to ensure proper functionality.: 启用任一左键选项将禁用上下文菜单以确保功能正常。
 Left-click toggles app visibility: 左键点击切换应用可见性
 Left-clicking the tray icon shows or hides the main application window: 左键点击托盘图标显示或隐藏主应用窗口
-Prevents the context menu from appearing when left-clicking the tray icon: 防止左键点击托盘图标时出现上下文菜单
-Tray Icon Behavior on Windows: Windows 托盘图标行为
+Prevents the context menu from appearing when left-clicking the tray icon: 防止左键点击时弹出上下文菜单
+Tray Icon Behavior on Windows: Windows 系统托盘图标行为
 Clipboard History: 剪贴板历史记录
 Saved Clips: 已保存的剪辑
 Clear Clipboard History: 清除剪贴板历史记录
