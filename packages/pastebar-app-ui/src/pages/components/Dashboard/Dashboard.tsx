@@ -61,7 +61,6 @@ import {
   Plus,
   X,
 } from 'lucide-react'
-import { useHotkeys } from 'react-hotkeys-hook'
 import { useTranslation } from 'react-i18next'
 
 import { bgColor } from '~/lib/utils'
@@ -107,8 +106,6 @@ import {
 } from '~/hooks/queries/use-items'
 import { useUpdateTabs } from '~/hooks/queries/use-tabs'
 import { useCopyClipItem, usePasteClipItem } from '~/hooks/use-copypaste-clip-item'
-import { useLocalStorage } from '~/hooks/use-localstorage'
-// import { useNavigation } from '~/hooks/use-navigation'
 import { useSignal } from '~/hooks/use-signal'
 
 import { Item } from '~/types/menu'

@@ -114,7 +114,7 @@ import {
   useUnpinAllClipboardHistory,
 } from '~/hooks/queries/use-history-items'
 import { useUpdateItemValueByHistoryId } from '~/hooks/queries/use-items'
-import { useCopyClipItem } from '~/hooks/use-copypaste-clip-item' // Added for clip copying
+import { useCopyClipItem, usePasteClipItem } from '~/hooks/use-copypaste-clip-item' // Added for clip copying
 import {
   useCopyPasteHistoryItem,
   usePasteHistoryItem,
@@ -191,6 +191,7 @@ const loadPrismComponents = async () => {
 export default function ClipboardHistoryPage() {
   const [copiedItem, setCopiedItem, runSequenceCopy] = useCopyPasteHistoryItem({})
   const [, handleCopyClipItem] = useCopyClipItem({}) // Destructure to get handleCopyClipItem
+  const [, , handlePasteClipItem] = usePasteClipItem({})
   const [pastedItem, pastingCountDown, setPastedItem, runSequencePaste] =
     usePasteHistoryItem({})
 
@@ -488,12 +489,17 @@ export default function ClipboardHistoryPage() {
   )
 
   useHotkeys(
-    ['enter'],
+    ['enter', isWindows ? 'alt+enter' : 'meta+enter'],
     async e => {
       e.preventDefault()
+      console.log(e)
       if (currentNavigationContext.value === 'board' && keyboardSelectedClipId.value) {
         try {
-          await handleCopyClipItem(keyboardSelectedClipId.value)
+          if (e.altKey || e.metaKey) {
+            await handlePasteClipItem(keyboardSelectedClipId.value)
+          } else {
+            await handleCopyClipItem(keyboardSelectedClipId.value)
+          }
           keyboardSelectedClipId.value = null
         } catch (error) {
           console.error('Failed to copy clip item from hotkey', error)
@@ -504,7 +510,11 @@ export default function ClipboardHistoryPage() {
       ) {
         // Handle pinned item selection
         resetKeyboardDeleteTimer()
-        setCopiedItem(keyboardSelectedPinnedItemId)
+        if (e.altKey || e.metaKey) {
+          setPastedItem(keyboardSelectedPinnedItemId)
+        } else {
+          setCopiedItem(keyboardSelectedPinnedItemId)
+        }
       } else if (
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
@@ -512,7 +522,11 @@ export default function ClipboardHistoryPage() {
       ) {
         // Reset keyboard delete confirmation when copying
         resetKeyboardDeleteTimer()
-        setCopiedItem(keyboardSelectedItemId.value)
+        if (e.altKey || e.metaKey) {
+          setPastedItem(keyboardSelectedItemId.value)
+        } else {
+          setCopiedItem(keyboardSelectedItemId.value)
+        }
       } else if (
         (currentNavigationContext.value === 'history' ||
           currentNavigationContext.value === null) &&
