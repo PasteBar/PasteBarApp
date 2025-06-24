@@ -72,7 +72,7 @@ const useKeyboardDeleteConfirmation = ({
 
   useHotkeys(
     ['delete', 'backspace'],
-    async (e) => {
+    async e => {
       e.preventDefault()
 
       // Only handle keyboard delete when there's a keyboard selected item and no multi-selection

@@ -62,6 +62,7 @@ The frontend is a workspace package that builds separately:
 cd packages/pastebar-app-ui
 npm run dev    # Development server on port 4422
 npm run build  # Build to dist-ui/
+npm run build:ts  # TypeScript check and build
 ```
 
 ### Rust/Tauri Development (src-tauri/)
@@ -71,6 +72,21 @@ cd src-tauri
 cargo run --no-default-features  # Development mode
 cargo build --release           # Production build
 ```
+
+### Code Quality Commands
+
+```bash
+# TypeScript type checking (no ESLint configured)
+cd packages/pastebar-app-ui && npx tsc --noEmit
+
+# Rust linting
+cd src-tauri && cargo clippy
+
+# Format all code
+npm run format  # Uses Prettier for JS/TS files
+```
+
+**Note**: The project currently has no test infrastructure. There are no unit tests, integration tests, or test commands configured.
 
 ## Architecture Overview
 
@@ -127,6 +143,26 @@ cargo build --release           # Production build
 - Main window (primary interface)
 - History window (clipboard history view)
 - QuickPaste window (contextual paste menu)
+
+### Tauri Command Patterns
+
+Commands follow consistent patterns in `src-tauri/src/commands/`:
+
+```rust
+#[tauri::command]
+pub fn command_name(
+    app_handle: tauri::AppHandle,
+    state: tauri::State<SomeState>,
+    params: Type
+) -> Result<ReturnType, String> {
+    // Implementation
+}
+```
+
+Common state types:
+- `tauri::State<Mutex<HashMap<String, Setting>>>` - App settings
+- `tauri::State<menu::DbItems>` - Database items
+- `tauri::State<menu::DbRecentHistoryItems>` - Recent history
 
 ### Database Schema
 
@@ -207,3 +243,15 @@ src-tauri/src/
 - Use Diesel migrations for schema changes
 - Place migration files in `migrations/` directory
 - Run migrations with `npm run diesel:migration:run`
+
+### TypeScript Configuration
+
+- Strict mode enabled in `tsconfig.json`
+- Path alias configured: `~/` maps to `packages/pastebar-app-ui/src/`
+- Target: ESNext with React JSX transform
+
+### Build Configuration
+
+- Frontend build output: `packages/pastebar-app-ui/dist-ui/`
+- Dev server runs on port 4422
+- Tauri configs: `tauri.conf.json` (dev) and `tauri.release.conf.json` (production)

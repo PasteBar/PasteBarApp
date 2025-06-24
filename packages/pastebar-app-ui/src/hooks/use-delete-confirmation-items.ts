@@ -68,6 +68,7 @@ const useDeleteConfirmationTimer = ({
     },
     {
       enableOnFormTags: false,
+      enabled: selectedHistoryItems.length > 0,
     }
   )
 
