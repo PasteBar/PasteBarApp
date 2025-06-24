@@ -45,6 +45,8 @@ Simplified Panel Layout: Упрощённый дизайн панелей
 Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Включить копирование/вставку элементов истории буфера обмена и сохранённых клипов одним кликом вместо двойного клика.
 Single Click Copy/Paste action: Действие копирования/вставки одним кликом
 Single Click Copy/Paste: Копирование/вставка одним кликом
+Set keyboard focus with a single click. Disables single-click copy/paste if set.: Установить фокус клавиатуры одним кликом. Отключает копирование/вставку одним кликом, если установлено.
+Single-Click Keyboard Focus: Фокус клавиатуры одним кликом
 Quick Paste Window: Окно быстрой вставки
 Quick Paste Window Options: Параметры окна быстрой вставки
 Configure the behavior of the Quick Paste window when selecting items: Настроить поведение окна быстрой вставки при выборе элементов

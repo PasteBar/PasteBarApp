@@ -110,7 +110,9 @@ export const creatingMenuItemCurrentMenuId = signal(false)
 export const isNavBarHovering = signal(false)
 
 // Keyboard Navigation Signals for Board/History Context
-export const currentNavigationContext = signal<'history' | 'board' | 'pinned' | 'pinnedClips' | null>(null)
+export const currentNavigationContext = signal<
+  'history' | 'board' | 'pinned' | 'clips' | 'pinnedClips' | null
+>(null)
 export const currentBoardIndex = signal<number>(0)
 export const keyboardSelectedItemId = signal<UniqueIdentifier | null>(null)
 export const keyboardSelectedClipId = signal<UniqueIdentifier | null>(null)

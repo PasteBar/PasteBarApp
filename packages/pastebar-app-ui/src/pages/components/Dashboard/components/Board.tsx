@@ -155,7 +155,7 @@ interface BoardProps {
   keyboardSelectedClipId?: { value: UniqueIdentifier | null }
   currentSelectedBoardId?: { value: UniqueIdentifier | null }
   keyboardNavigationMode?: {
-    value: 'history' | 'board' | 'pinned' | 'pinnedClips' | null
+    value: 'history' | 'board' | 'pinned' | 'clips' | 'pinnedClips' | null
   }
 }
 

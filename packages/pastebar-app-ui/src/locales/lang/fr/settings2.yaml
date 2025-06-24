@@ -46,6 +46,8 @@ Simplified Panel Layout: Mise en page de panneau simplifiée
 Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Activer le clic simple pour copier/coller les éléments de l'historique du presse-papiers et les clips sauvegardés au lieu d'exiger un double-clic.
 Single Click Copy/Paste action: Action clic simple Copier/Coller
 Single Click Copy/Paste: Clic simple Copier/Coller
+Set keyboard focus with a single click. Disables single-click copy/paste if set.: Définir le focus clavier avec un clic simple. Désactive le copier/coller en un clic si activé.
+Single-Click Keyboard Focus: Focus clavier en un clic
 Quick Paste Window Options: Options de la fenêtre de collage rapide
 Configure the behavior of the Quick Paste window when selecting items: Configurer le comportement de la fenêtre de collage rapide lors de la sélection d'éléments
 Copy items only (no auto-paste): Copier uniquement les éléments (pas de collage automatique)

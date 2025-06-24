@@ -124,6 +124,7 @@ export default function ClipboardHistoryQuickPastePage() {
     isQuickPasteCopyOnly,
     isQuickPasteAutoClose,
     isSingleClickToCopyPaste,
+    isSingleClickKeyboardFocus,
     isSingleClickToCopyPasteQuickWindow,
     historyPreviewLineLimit,
   } = useAtomValue(settingsStoreAtom)
@@ -1054,6 +1055,7 @@ export default function ClipboardHistoryQuickPastePage() {
                                 isSingleClickToCopyPaste ||
                                 isSingleClickToCopyPasteQuickWindow
                               }
+                              isSingleClickKeyboardFocus={isSingleClickKeyboardFocus}
                               historyPreviewLineLimit={historyPreviewLineLimit}
                               index={index}
                               style={style}
