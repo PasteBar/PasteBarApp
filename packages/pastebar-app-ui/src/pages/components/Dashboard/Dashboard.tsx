@@ -34,12 +34,14 @@ import {
   currentNavigationContext,
   isFullyExpandViewBoard,
   isKeyAltPressed,
+  keyboardIndexSelectedPinnedClip,
   keyboardSelectedBoardId,
   keyboardSelectedClipId,
   playerStoreAtom,
   settingsStoreAtom,
   showClipsMoveOnBoardId,
   showDetailsClipId,
+  showDetailsPinnedClipId,
   showEditClipId,
   showExpandViewBoardId,
   showLinkedClipId,
@@ -61,6 +63,7 @@ import {
   Plus,
   X,
 } from 'lucide-react'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { useTranslation } from 'react-i18next'
 
 import { bgColor } from '~/lib/utils'
@@ -150,8 +153,10 @@ function DashboardComponent({
   const { isShowPinned, setIsShowPinned, isSplitPanelView } = useAtomValue(uiStoreAtom)
   const [showDetailsItem, setShowDetailsItem] = useState<UniqueIdentifier | null>(null)
   const [dragOverPinnedId, setDragOverPinnedId] = useState<UniqueIdentifier | null>(null)
-  const [showDetailsItemPinned, setShowDetailsItemPinned] =
-    useState<UniqueIdentifier | null>(null)
+  const showDetailsItemPinned = showDetailsPinnedClipId.value
+  const setShowDetailsItemPinned = (id: UniqueIdentifier | null) => {
+    showDetailsPinnedClipId.value = id
+  }
 
   const { isPlaying, isSongWithIdAndTypePlaying } = useAtomValue(playerStoreAtom)
 
@@ -307,6 +312,14 @@ function DashboardComponent({
     activeDragClip,
     clipItems,
   ])
+
+  // Computed value for selected pinned clip ID
+  const keyboardSelectedPinnedClipId = useMemo(() => {
+    if (keyboardIndexSelectedPinnedClip.value >= 0 && pinnedClips.length > 0) {
+      return pinnedClips[keyboardIndexSelectedPinnedClip.value]?.id || null
+    }
+    return null
+  }, [keyboardIndexSelectedPinnedClip.value, pinnedClips])
 
   const setSelectedItemId = useCallback(
     (id: UniqueIdentifier) => {
@@ -607,6 +620,9 @@ function DashboardComponent({
                               }
                               isPinnedBoard={true}
                               isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                              isKeyboardSelected={
+                                keyboardSelectedPinnedClipId === clip.id
+                              }
                             />
                           ))}
                         </Flex>

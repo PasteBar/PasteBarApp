@@ -3,7 +3,8 @@ import dayjs from 'dayjs'
 export const MINIMAL_ITEM_NAME_LENGTH = 1
 export const MAX_ITEM_NAME_LENGTH = 150
 export const MAX_MENU_LABEL_LENGTH = 60
-export const CLIPBOARD_HISTORY_SCROLL_PAGE_SIZE = 300
+export const CLIPBOARD_HISTORY_SCROLL_PAGE_SIZE = 50
+export const CLIPBOARD_HISTORY_LOAD_MORE_SIZE = 25
 export const CONTENT_TYPE_LANGUAGE = {
   'text/html': 'html',
   'application/json': 'json',

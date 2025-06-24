@@ -2,6 +2,10 @@ import { createRef, FC, memo, useEffect, useRef, useState } from 'react'
 import CodeMirror from 'codemirror'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 
+// Import CodeMirror mode metadata and runmode for syntax highlighting
+import 'codemirror/mode/meta'
+import 'codemirror/addon/runmode/runmode.js'
+
 import { escapeRegExp } from '~/lib/utils'
 
 import { useSignal } from '~/hooks/use-signal'
@@ -72,9 +76,22 @@ export const CodeViewer: FC<CodeViewerProps> = ({
       const mode = CodeMirror.findModeByName(language)
       try {
         if (mode && mode.mode) {
+          // Load dependencies for specific modes
           if (mode.mode === 'dart') {
             // @ts-expect-error
             await import('codemirror/mode/clike/clike')
+          } else if (mode.mode === 'php') {
+            // PHP depends on XML, clike, javascript, and htmlmixed modes
+            // @ts-expect-error
+            await import('codemirror/mode/xml/xml')
+            // @ts-expect-error
+            await import('codemirror/mode/javascript/javascript')
+            // @ts-expect-error
+            await import('codemirror/mode/css/css')
+            // @ts-expect-error
+            await import('codemirror/mode/clike/clike')
+            // @ts-expect-error
+            await import('codemirror/mode/htmlmixed/htmlmixed')
           }
           await import(`codemirror/mode/${mode.mode}/${mode.mode}`)
         }

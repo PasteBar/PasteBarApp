@@ -6,6 +6,9 @@ import 'codemirror/mode/meta'
 import './codemirror-colors.css'
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/xml/xml'
+import 'codemirror/mode/css/css'
+import 'codemirror/mode/clike/clike'
+import 'codemirror/mode/htmlmixed/htmlmixed'
 import 'codemirror/addon/selection/active-line'
 import 'codemirror/addon/mode/simple.js'
 import 'codemirror/addon/runmode/runmode.js'
@@ -89,9 +92,21 @@ const ReactCodeMirror = forwardRef<CodeMirror.Editor, ReactCodeMirrorProps>(
       if (typeof opt === 'object' && window) {
         const mode = CodeMirror.findModeByName((opt.mode as string) || '')
         if (lazyLoadMode && mode && mode.mode) {
+          // Load dependencies for specific modes
           if (mode.mode === 'dart') {
             // @ts-expect-error
             await import('codemirror/mode/clike/clike')
+          } else if (mode.mode === 'php') {
+            // PHP depends on XML, clike, javascript, css, and htmlmixed modes
+            // XML is already imported at the top, but we need the others
+            // @ts-expect-error
+            await import('codemirror/mode/javascript/javascript')
+            // @ts-expect-error
+            await import('codemirror/mode/css/css')
+            // @ts-expect-error
+            await import('codemirror/mode/clike/clike')
+            // @ts-expect-error
+            await import('codemirror/mode/htmlmixed/htmlmixed')
           }
           await import(`codemirror/mode/${mode.mode}/${mode.mode}`)
         }

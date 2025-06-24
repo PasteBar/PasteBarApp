@@ -118,6 +118,11 @@ export const keyboardSelectedItemId = signal<UniqueIdentifier | null>(null)
 export const keyboardSelectedClipId = signal<UniqueIdentifier | null>(null)
 export const keyboardSelectedBoardId = signal<UniqueIdentifier | null>(null)
 
+// Keyboard Navigation Signals for Pinned Clips
+export const keyboardIndexSelectedPinnedClip = signal<number>(-1)
+export const pinnedClipsPanelAutoOpenedByKeyboard = signal<boolean>(false)
+export const showDetailsPinnedClipId = signal<UniqueIdentifier | null>(null)
+
 export function closeEdit() {
   showDeleteClipConfirmationId.value = null
   editBoardItemId.value = null
@@ -156,6 +161,9 @@ export function resetKeyboardNavigation() {
   keyboardSelectedBoardId.value = null
   keyboardSelectedClipId.value = null
   currentBoardIndex.value = 0
+  keyboardIndexSelectedPinnedClip.value = -1
+  pinnedClipsPanelAutoOpenedByKeyboard.value = false
+  showDetailsPinnedClipId.value = null
 }
 
 export const showInvalidTrackWarningAddSong: Signal<{
