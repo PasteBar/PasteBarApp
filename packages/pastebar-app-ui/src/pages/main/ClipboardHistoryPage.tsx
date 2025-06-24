@@ -1150,29 +1150,29 @@ export default function ClipboardHistoryPage() {
   // Store timeout reference to clear it if needed
   const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Control' || e.key === 'Meta') {
-        resetKeyboardNavigation()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-      // Clean up delete timeout on unmount
-      if (deleteTimeoutRef.current) {
-        clearTimeout(deleteTimeoutRef.current)
-        deleteTimeoutRef.current = null
-      }
-    }
-  }, [
-    clipboardHistory,
-    currentNavigationContext,
-    keyboardSelectedItemId,
-    keyboardSelectedBoardId,
-    keyboardSelectedClipId,
-    currentBoardIndex,
-  ])
+  // useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent) => {
+  //     if (e.key === 'Control' || e.key === 'Meta') {
+  //       // resetKeyboardNavigation()
+  //     }
+  //   }
+  //   window.addEventListener('keydown', handleKeyDown)
+  //   return () => {
+  //     window.removeEventListener('keydown', handleKeyDown)
+  //     // Clean up delete timeout on unmount
+  //     if (deleteTimeoutRef.current) {
+  //       clearTimeout(deleteTimeoutRef.current)
+  //       deleteTimeoutRef.current = null
+  //     }
+  //   }
+  // }, [
+  //   clipboardHistory,
+  //   currentNavigationContext,
+  //   keyboardSelectedItemId,
+  //   keyboardSelectedBoardId,
+  //   keyboardSelectedClipId,
+  //   currentBoardIndex,
+  // ])
 
   useEffect(() => {
     if (
