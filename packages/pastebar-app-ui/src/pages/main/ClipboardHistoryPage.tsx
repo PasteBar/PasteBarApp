@@ -65,6 +65,13 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import useResizeObserver from 'use-resize-observer'
 
 import {
+  BatchProcessor,
+  calculateDynamicOverscan,
+  // PerformanceMonitor,
+  RowHeightCache,
+  // ScrollVelocityTracker,
+} from '~/lib/performance-utils'
+import {
   buildNavigationOrder,
   findCurrentNavigationIndex,
   findNextNonEmptyBoard,
@@ -189,6 +196,50 @@ const loadPrismComponents = async () => {
 }
 
 export default function ClipboardHistoryPage() {
+  // Performance optimization instances
+  const rowHeightCache = useRef(new RowHeightCache(60))
+
+  // Batch processors for state updates
+  const expandedBatchProcessor = useRef(
+    new BatchProcessor<{ id: UniqueIdentifier; isExpanded: boolean }>(
+      items => {
+        setExpandedItems(prev => {
+          const newSet = new Set(prev)
+          items.forEach(({ id, isExpanded }) => {
+            if (isExpanded) {
+              newSet.add(id)
+            } else {
+              newSet.delete(id)
+            }
+          })
+          return Array.from(newSet)
+        })
+      },
+      10,
+      16
+    )
+  )
+
+  const wrappedTextBatchProcessor = useRef(
+    new BatchProcessor<{ id: UniqueIdentifier; isWrapped: boolean }>(
+      items => {
+        setWrappedTextItems(prev => {
+          const newSet = new Set(prev)
+          items.forEach(({ id, isWrapped }) => {
+            if (isWrapped) {
+              newSet.add(id)
+            } else {
+              newSet.delete(id)
+            }
+          })
+          return Array.from(newSet)
+        })
+      },
+      10,
+      16
+    )
+  )
+
   const [copiedItem, setCopiedItem, runSequenceCopy] = useCopyPasteHistoryItem({})
   const [, handleCopyClipItem] = useCopyClipItem({}) // Destructure to get handleCopyClipItem
   const [, , handlePasteClipItem] = usePasteClipItem({})
@@ -1375,6 +1426,13 @@ export default function ClipboardHistoryPage() {
 
     loadComponents()
     setPrismLoaded(true)
+
+    // Cleanup on unmount
+    return () => {
+      rowHeightCache.current.clear()
+      expandedBatchProcessor.current.clear()
+      wrappedTextBatchProcessor.current.clear()
+    }
   }, [])
 
   useEffect(() => {
@@ -1434,13 +1492,13 @@ export default function ClipboardHistoryPage() {
   }
 
   function getRowHeight(index: number): number {
-    return rowHeights.current[index] || 60
+    return rowHeightCache.current.get(index)
   }
 
   function setRowHeight(index: number, size: number) {
+    rowHeightCache.current.set(index, size)
     // @ts-expect-error - resetAfterIndex is not in the types
-    listRef.current?.resetAfterIndex && listRef.current?.resetAfterIndex(0)
-    rowHeights.current = { ...rowHeights.current, [index]: size }
+    listRef.current?.resetAfterIndex?.(index)
   }
 
   // Create sensors at the top level
@@ -1523,31 +1581,13 @@ export default function ClipboardHistoryPage() {
     [setBrokenImageItems]
   )
 
-  const setExpanded = useCallback(
-    (id: UniqueIdentifier, isExpanded: boolean) => {
-      setExpandedItems(prev => {
-        if (isExpanded) {
-          return [...prev, id]
-        } else {
-          return prev.filter(item => item !== id)
-        }
-      })
-    },
-    [setExpandedItems]
-  )
+  const setExpanded = useCallback((id: UniqueIdentifier, isExpanded: boolean) => {
+    expandedBatchProcessor.current.add({ id, isExpanded })
+  }, [])
 
-  const setWrapText = useCallback(
-    (id: UniqueIdentifier, isWrapped: boolean) => {
-      setWrappedTextItems(prev => {
-        if (isWrapped) {
-          return [...prev, id]
-        } else {
-          return prev.filter(item => item !== id)
-        }
-      })
-    },
-    [setWrappedTextItems]
-  )
+  const setWrapText = useCallback((id: UniqueIdentifier, isWrapped: boolean) => {
+    wrappedTextBatchProcessor.current.add({ id, isWrapped })
+  }, [])
 
   const inLargeViewItem = useMemo(() => {
     if (showLargeViewHistoryId.value) {
