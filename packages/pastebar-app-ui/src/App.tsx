@@ -25,6 +25,8 @@ import { appReady } from './lib/commands'
 import {
   APP_TOURS,
   clipboardHistoryStoreAtom,
+  DEFAULT_SPECIAL_PASTE_CATEGORIES,
+  DEFAULT_SPECIAL_PASTE_OPERATIONS,
   isAppLocked,
   listenToAudioPlayerEvents,
   listenToSettingsStoreEvents,
@@ -34,8 +36,6 @@ import {
   settingsStoreAtom,
   themeStoreAtom,
   uiStoreAtom,
-  DEFAULT_SPECIAL_PASTE_OPERATIONS,
-  DEFAULT_SPECIAL_PASTE_CATEGORIES,
 } from './store'
 
 const appIdleEvents = ['mousemove', 'keydown', 'scroll', 'keypress', 'mousedown']
@@ -219,6 +219,8 @@ function App() {
           isQuickPasteCopyOnly: settings.isQuickPasteCopyOnly?.valueBool ?? false,
           isQuickPasteAutoClose: settings.isQuickPasteAutoClose?.valueBool ?? true,
           isSingleClickToCopyPaste: settings.isSingleClickToCopyPaste?.valueBool ?? false,
+          isSingleClickKeyboardFocus:
+            settings.isSingleClickKeyboardFocus?.valueBool ?? false,
           hasPinProtectedCollections:
             settings.hasPinProtectedCollections?.valueBool ?? false,
           protectedCollections: settings.protectedCollections?.valueText

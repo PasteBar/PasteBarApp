@@ -125,6 +125,7 @@ interface ClipboardHistoryRowProps {
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
   isSingleClickToCopyPaste?: boolean
+  isSingleClickKeyboardFocus?: boolean
   historyPreviewLineLimit?: number | null
 }
 
@@ -185,12 +186,16 @@ export function ClipboardHistoryRowComponent({
   setAppFilters = () => {},
   setKeyboardHistorySelectedItemId = () => {},
   isSingleClickToCopyPaste = false,
+  isSingleClickKeyboardFocus = false,
   historyPreviewLineLimit,
 }: ClipboardHistoryRowProps) {
   const { t } = useTranslation()
   const rowRef = useRef<HTMLDivElement>(null)
   const rowKeyboardRef = useRef<HTMLDivElement>(null)
   const contextMenuButtonRef = useRef<HTMLDivElement>(null)
+  const copyIconButtonRef = useRef<HTMLDivElement>(null)
+  const expandCollapseButtonRef = useRef<HTMLDivElement>(null) // Added ref for expand/collapse
+  const wrapTextButtonRef = useRef<HTMLDivElement>(null) // Added ref for wrap text
   const contextMenuTriggerRef = useRef<HTMLDivElement>(null)
   const isCopiedOrPasted = isCopied || isPasted || isSaved
 
@@ -577,18 +582,68 @@ export function ClipboardHistoryRowComponent({
                   e.stopPropagation()
                   window.getSelection()?.removeAllRanges()
                   setLargeViewItemId(isLargeView ? null : clipboard.historyId)
+                } else if (
+                  isSingleClickKeyboardFocus &&
+                  !e.ctrlKey &&
+                  !e.metaKey &&
+                  !e.shiftKey &&
+                  !e.altKey &&
+                  !getSelectedText().text
+                ) {
+                  const target = e.target as Node
+                  const isCopyIconClick =
+                    copyIconButtonRef.current?.contains(target) ||
+                    copyIconButtonRef.current === target
+                  const isContextMenuIconClick =
+                    contextMenuButtonRef.current?.contains(target) ||
+                    contextMenuButtonRef.current === target
+                  const isExpandCollapseClick =
+                    expandCollapseButtonRef.current?.contains(target) ||
+                    expandCollapseButtonRef.current === target
+                  const isWrapTextClick =
+                    wrapTextButtonRef.current?.contains(target) ||
+                    wrapTextButtonRef.current === target
+
+                  if (
+                    !isCopyIconClick &&
+                    !isContextMenuIconClick &&
+                    !isExpandCollapseClick &&
+                    !isWrapTextClick
+                  ) {
+                    setKeyboardHistorySelectedItemId(clipboard.historyId)
+                  }
+                  // If it IS a click on one of the specific interactive elements, we do nothing here,
+                  // allowing the event to proceed to their respective onClick handlers.
                 } else if (largeViewItemId && !isLargeView) {
                   window.getSelection()?.removeAllRanges()
                   setLargeViewItemId(clipboard.historyId)
-                } else if (isSingleClickToCopyPaste && !getSelectedText().text) {
+                } else if (
+                  isSingleClickToCopyPaste &&
+                  !isSingleClickKeyboardFocus &&
+                  !getSelectedText().text
+                ) {
                   // Check if click is on context menu button or its children
-                  const isContextMenuClick =
-                    contextMenuButtonRef.current &&
-                    (contextMenuButtonRef.current.contains(e.target as Node) ||
-                      contextMenuButtonRef.current === e.target)
+                  const target = e.target as Node
+                  const isCopyIconClick =
+                    copyIconButtonRef.current?.contains(target) ||
+                    copyIconButtonRef.current === target
+                  const isContextMenuIconClick =
+                    contextMenuButtonRef.current?.contains(target) ||
+                    contextMenuButtonRef.current === target
+                  const isExpandCollapseClick =
+                    expandCollapseButtonRef.current?.contains(target) ||
+                    expandCollapseButtonRef.current === target
+                  const isWrapTextClick =
+                    wrapTextButtonRef.current?.contains(target) ||
+                    wrapTextButtonRef.current === target
 
-                  if (isContextMenuClick) {
-                    return // Don't copy/paste if clicking on context menu
+                  if (
+                    isCopyIconClick ||
+                    isContextMenuIconClick ||
+                    isExpandCollapseClick ||
+                    isWrapTextClick
+                  ) {
+                    return
                   }
 
                   if (e.altKey || (e.metaKey && isWindows) || (e.ctrlKey && !isWindows)) {
@@ -831,36 +886,31 @@ export function ClipboardHistoryRowComponent({
                       className={`absolute left-1 bottom-1 flex flex-row items-center rounded mb-[2px] pl-0.5 ${bgToolsPanel}`}
                     >
                       <Box
+                        ref={expandCollapseButtonRef}
                         className={`text-xs text-muted-foreground px-1 cursor-pointer`}
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation()
+                          e.preventDefault()
                           setExpanded(clipboard.historyId, !isExpanded)
                         }}
                       >
-                        <ToolTip
-                          text={!isExpanded ? t('Show all', { ns: 'common' }) : ''}
-                          isCompact
-                          isDisabled={isExpanded || isDragPreview}
-                          delayDuration={2000}
-                          side="bottom"
-                          sideOffset={10}
-                        >
-                          {!isExpanded ? (
-                            valueMorePreviewChars ? (
-                              <>
-                                +{valueMorePreviewChars} {t('chars', { ns: 'common' })}
-                              </>
-                            ) : (
-                              <>
-                                +{valueMorePreviewLines} {t('lines', { ns: 'common' })}
-                              </>
-                            )
+                        {!isExpanded ? (
+                          valueMorePreviewChars ? (
+                            <>
+                              +{valueMorePreviewChars} {t('chars', { ns: 'common' })}
+                            </>
                           ) : (
-                            <>- {t('show less', { ns: 'common' })}</>
-                          )}
-                        </ToolTip>
+                            <>
+                              +{valueMorePreviewLines} {t('lines', { ns: 'common' })}
+                            </>
+                          )
+                        ) : (
+                          <>- {t('show less', { ns: 'common' })}</>
+                        )}
                       </Box>
                       {isExpanded && (
                         <Box
+                          ref={wrapTextButtonRef} // Applied ref
                           className={`text-xs text-muted-foreground px-1.5 cursor-pointer`}
                           onClick={() => setWrapText(clipboard.historyId, !isWrapText)}
                         >
@@ -1008,7 +1058,10 @@ export function ClipboardHistoryRowComponent({
                         side="bottom"
                         sideOffset={10}
                       >
-                        <Box className="text-xs cursor-pointer text-slate-500 hover:text-green-700 px-1 border-0 flex items-center justify-center">
+                        <Box
+                          ref={copyIconButtonRef} // Applied ref to copy icon's interactive Box
+                          className="text-xs cursor-pointer text-slate-500 hover:text-green-700 px-1 border-0 flex items-center justify-center"
+                        >
                           {isKeyAltPressed.value ? (
                             <ClipboardPaste
                               size={14}

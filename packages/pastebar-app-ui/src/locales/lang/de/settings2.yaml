@@ -47,6 +47,8 @@ Simplified Panel Layout: Vereinfachtes Panel-Layout
 Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Einfachklick zum Kopieren/Einfügen von Zwischenablage-Verlauf und gespeicherten Clips aktivieren, anstatt Doppelklick zu erfordern.
 Single Click Copy/Paste action: Einfachklick Kopieren/Einfügen-Aktion
 Single Click Copy/Paste: Einfachklick Kopieren/Einfügen
+Set keyboard focus with a single click. Disables single-click copy/paste if set.: Tastatur-Fokus mit einem Klick setzen. Deaktiviert Einfachklick Kopieren/Einfügen, wenn aktiviert.
+Single-Click Keyboard Focus: Einfachklick Tastatur-Fokus
 Quick Paste Window Options: Schnelleinfügen-Fenster-Optionen
 Configure how the system tray icon responds to mouse clicks: Konfigurieren Sie, wie das Systemtray-Symbol auf Mausklicks reagiert
 Configure the behavior of the Quick Paste window when selecting items: Konfigurieren Sie das Verhalten des Schnelleinfügen-Fensters beim Auswählen von Elementen

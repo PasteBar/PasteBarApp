@@ -255,6 +255,7 @@ export default function ClipboardHistoryPage() {
     isSimplifiedLayout,
     isSavedClipsPanelVisibleOnly,
     isSingleClickToCopyPaste,
+    isSingleClickKeyboardFocus,
     historyPreviewLineLimit,
   } = useAtomValue(settingsStoreAtom)
 
@@ -497,7 +498,10 @@ export default function ClipboardHistoryPage() {
         } catch (error) {
           console.error('Failed to copy clip item from hotkey', error)
         }
-      } else if (currentNavigationContext.value === 'pinned' && keyboardSelectedPinnedItemId) {
+      } else if (
+        currentNavigationContext.value === 'pinned' &&
+        keyboardSelectedPinnedItemId
+      ) {
         // Handle pinned item selection
         resetKeyboardDeleteTimer()
         setCopiedItem(keyboardSelectedPinnedItemId)
@@ -517,7 +521,7 @@ export default function ClipboardHistoryPage() {
         // TODO: Fix this
         // setCopiedItem(clipboardHistory[0]?.historyId)
       }
-      
+
       // Reset all navigation state
       currentNavigationContext.value = null
       keyboardSelectedItemId.value = null
@@ -720,7 +724,7 @@ export default function ClipboardHistoryPage() {
       const isInHistory =
         currentNavigationContextValue === 'history' ||
         currentNavigationContextValue === null
-      
+
       const isInPinned = currentNavigationContextValue === 'pinned'
 
       if (isInPinned) {
@@ -730,11 +734,11 @@ export default function ClipboardHistoryPage() {
           setIsShowHistoryPinned(false)
           pinnedPanelAutoOpenedByKeyboard.value = false
         }
-        
+
         // Clear pinned selection and context
         keyboardIndexSelectedPinnedItem.value = -1
         currentNavigationContext.value = 'history'
-        
+
         // Navigate to boards
         navigateFromHistory(direction)
       } else if (isInHistory) {
@@ -824,7 +828,7 @@ export default function ClipboardHistoryPage() {
         resetKeyboardNavigation()
         keyboardIndexSelectedPinnedItem.value = -1
         pinnedPanelAutoOpenedByKeyboard.value = false
-        
+
         // Auto-close pinned panel if it was auto-opened by keyboard navigation
         if (pinnedPanelAutoOpenedByKeyboard.value) {
           setIsShowHistoryPinned(false)
@@ -964,7 +968,7 @@ export default function ClipboardHistoryPage() {
             } else {
               pinnedPanelAutoOpenedByKeyboard.value = false
             }
-            
+
             // Switch to pinned context
             currentNavigationContext.value = 'pinned'
             keyboardSelectedItemId.value = null
@@ -1238,6 +1242,51 @@ export default function ClipboardHistoryPage() {
     }
   )
 
+  // Function to handle mouse selection of a pinned history item
+  const handlePinnedItemMouseSelect = useCallback(
+    (itemId: UniqueIdentifier | null) => {
+      if (deleteTimeoutRef.current) {
+        clearTimeout(deleteTimeoutRef.current)
+        deleteTimeoutRef.current = null
+      }
+      // Always reset general keyboard delete confirmation timer
+      resetKeyboardDeleteTimer()
+      // Always reset hover/multi-select delete confirmation
+      showHistoryDeleteConfirmationId.value = null
+
+      if (itemId) {
+        const pinnedItemIndex = pinnedClipboardHistory.findIndex(
+          item => item.historyId === itemId
+        )
+
+        if (pinnedItemIndex !== -1) {
+          currentNavigationContext.value = 'pinned'
+          keyboardIndexSelectedPinnedItem.value = pinnedItemIndex
+
+          // Clear other context selections to ensure pinned context is exclusive
+          keyboardSelectedItemId.value = null
+          keyboardSelectedBoardId.value = null
+          keyboardSelectedClipId.value = null
+
+          pinnedPanelAutoOpenedByKeyboard.value = false // Mouse interaction
+        } else {
+          // Item ID provided but not found in pinned list (edge case)
+          keyboardIndexSelectedPinnedItem.value = -1
+          if (currentNavigationContext.value === 'pinned') {
+            currentNavigationContext.value = 'history' // Fallback context
+          }
+        }
+      } else {
+        // itemId is null
+        keyboardIndexSelectedPinnedItem.value = -1
+        if (currentNavigationContext.value === 'pinned') {
+          currentNavigationContext.value = 'history' // Fallback context
+        }
+      }
+    },
+    [pinnedClipboardHistory, resetKeyboardDeleteTimer]
+  )
+
   function setKeyboardHistorySelectedItemId(itemId: UniqueIdentifier | null) {
     if (itemId) {
       if (deleteTimeoutRef.current) {
@@ -1249,6 +1298,9 @@ export default function ClipboardHistoryPage() {
         resetKeyboardNavigation()
         return
       }
+
+      keyboardSelectedClipId.value = null
+      keyboardSelectedBoardId.value = null
 
       // Reset delete confirmation when navigating to a different item
       showHistoryDeleteConfirmationId.value = null
@@ -1270,7 +1322,7 @@ export default function ClipboardHistoryPage() {
       pinnedPanelAutoOpenedByKeyboard.value = false
     } else {
       keyboardSelectedItemId.value = null
-      keyboardIndexSelectedPinnedItem.value = -1
+      keyboardIndexSelectedPinnedItem.value = -1 // Ensure pinned is also cleared if history is cleared
       pinnedPanelAutoOpenedByKeyboard.value = false
     }
   }
@@ -2082,6 +2134,12 @@ export default function ClipboardHistoryPage() {
                                               isSingleClickToCopyPaste={
                                                 isSingleClickToCopyPaste
                                               }
+                                              setKeyboardHistorySelectedItemId={
+                                                handlePinnedItemMouseSelect // Use dedicated handler for pinned items
+                                              }
+                                              isSingleClickKeyboardFocus={
+                                                isSingleClickKeyboardFocus
+                                              }
                                               historyPreviewLineLimit={
                                                 historyPreviewLineLimit
                                               }
@@ -2720,6 +2778,9 @@ export default function ClipboardHistoryPage() {
                                               isSingleClickToCopyPaste={
                                                 isSingleClickToCopyPaste
                                               }
+                                              isSingleClickKeyboardFocus={
+                                                isSingleClickKeyboardFocus
+                                              }
                                               historyPreviewLineLimit={
                                                 historyPreviewLineLimit
                                               }
@@ -2786,6 +2847,7 @@ export default function ClipboardHistoryPage() {
                                       activeDragId.toString().split('::pinned')[0]
                               })}
                               isSingleClickToCopyPaste={isSingleClickToCopyPaste}
+                              isSingleClickKeyboardFocus={isSingleClickKeyboardFocus}
                               historyPreviewLineLimit={historyPreviewLineLimit}
                             />
                           ) : null}

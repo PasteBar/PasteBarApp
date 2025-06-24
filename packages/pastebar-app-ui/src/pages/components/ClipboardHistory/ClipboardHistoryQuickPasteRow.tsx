@@ -104,6 +104,7 @@ interface ClipboardHistoryQuickPasteRowProps {
   setHistoryFilters?: Dispatch<SetStateAction<string[]>>
   setAppFilters?: Dispatch<SetStateAction<string[]>>
   isSingleClickToCopyPaste?: boolean
+  isSingleClickKeyboardFocus?: boolean
   historyPreviewLineLimit?: number | null
 }
 
@@ -155,6 +156,7 @@ export function ClipboardHistoryQuickPasteRowComponent({
   isDragPreview = false,
   setRowHeight = () => {},
   isSingleClickToCopyPaste = false,
+  isSingleClickKeyboardFocus = false,
   historyPreviewLineLimit,
 }: ClipboardHistoryQuickPasteRowProps) {
   const { t } = useTranslation()
@@ -428,10 +430,25 @@ export function ClipboardHistoryQuickPasteRowComponent({
                 e.stopPropagation()
                 window.getSelection()?.removeAllRanges()
                 setLargeViewItemId(isLargeView ? null : clipboard.historyId)
+              } else if (
+                isSingleClickKeyboardFocus &&
+                !e.ctrlKey &&
+                !e.metaKey &&
+                !e.shiftKey &&
+                !e.altKey &&
+                !getSelectedText().text
+              ) {
+                e.preventDefault()
+                e.stopPropagation()
+                setKeyboardSelected(clipboard.historyId)
               } else if (largeViewItemId && !isLargeView) {
                 window.getSelection()?.removeAllRanges()
                 setLargeViewItemId(clipboard.historyId)
-              } else if (isSingleClickToCopyPaste && !getSelectedText().text) {
+              } else if (
+                isSingleClickToCopyPaste &&
+                !isSingleClickKeyboardFocus &&
+                !getSelectedText().text
+              ) {
                 // Single-click in quick paste mode triggers copy+paste
                 onCopyPaste(clipboard.historyId)
               } else {

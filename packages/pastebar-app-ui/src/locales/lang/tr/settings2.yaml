@@ -46,6 +46,8 @@ Simplified Panel Layout: Sadeleştirilmiş panel düzeni
 Enable single-click to copy/paste clipboard history items and saved clips instead of requiring double-click.: Çift tıklama gerektirmek yerine pano geçmişi öğelerini ve kaydedilmiş klipleri kopyalamak/yapıştırmak için tek tıklama özelliğini etkinleştir.
 Single Click Copy/Paste action: Tek tıklama Kopyala/Yapıştır eylemi
 Single Click Copy/Paste: Tek tıklama Kopyala/Yapıştır
+Set keyboard focus with a single click. Disables single-click copy/paste if set.: Tek tıklama ile klavye odağını ayarla. Ayarlanırsa tek tıklama kopyala/yapıştırı devre dışı bırakır.
+Single-Click Keyboard Focus: Tek Tıklama Klavye Odağı
 Quick Paste Window Options: Hızlı Yapıştır Penceresi Seçenekleri
 Configure the behavior of the Quick Paste window when selecting items: Öğeler seçilirken Hızlı Yapıştır penceresinin davranışını yapılandır
 Copy items only (no auto-paste): Yalnızca öğeleri kopyala (otomatik yapıştır yok)

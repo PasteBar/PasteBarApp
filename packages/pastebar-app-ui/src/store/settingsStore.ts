@@ -103,6 +103,7 @@ type Settings = {
   isSimplifiedLayout: boolean
   isMainWindowOnTop: boolean
   isSingleClickToCopyPaste: boolean
+  isSingleClickKeyboardFocus: boolean
   isSingleClickToCopyPasteQuickWindow: boolean
   isQuickPasteCopyOnly: boolean
   isQuickPasteAutoClose: boolean
@@ -206,6 +207,7 @@ export interface SettingsStoreState {
   setIsQuickPasteCopyOnly: (isEnabled: boolean) => void
   setIsQuickPasteAutoClose: (isEnabled: boolean) => void
   setIsSingleClickToCopyPaste: (isEnabled: boolean) => void
+  setIsSingleClickKeyboardFocus: (isEnabled: boolean) => void // New setter
   setIsSingleClickToCopyPasteQuickWindow: (isEnabled: boolean) => void
   setIsKeepPinnedOnClearEnabled: (isEnabled: boolean) => void
   setIsKeepStarredOnClearEnabled: (isEnabled: boolean) => void
@@ -320,6 +322,7 @@ const initialState: SettingsStoreState & Settings = {
   isSimplifiedLayout: true,
   isMainWindowOnTop: false,
   isSingleClickToCopyPaste: false,
+  isSingleClickKeyboardFocus: false, // New setting default
   isSingleClickToCopyPasteQuickWindow: false,
   isQuickPasteCopyOnly: false,
   isQuickPasteAutoClose: true,
@@ -409,6 +412,7 @@ const initialState: SettingsStoreState & Settings = {
   setIsSimplifiedLayout: () => {},
   setIsMainWindowOnTop: () => {},
   setIsSingleClickToCopyPaste: () => {},
+  setIsSingleClickKeyboardFocus: () => {}, // New setter placeholder
   setIsSingleClickToCopyPasteQuickWindow: () => {},
   setIsQuickPasteCopyOnly: () => {},
   setIsQuickPasteAutoClose: () => {},
@@ -827,7 +831,22 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsSingleClickToCopyPaste: async (isEnabled: boolean) => {
     get().syncStateUpdate('isSingleClickToCopyPaste', isEnabled)
+    if (isEnabled && get().isSingleClickKeyboardFocus) {
+      // Mutual exclusivity check
+      await get().updateSetting('isSingleClickKeyboardFocus', false)
+      get().syncStateUpdate('isSingleClickKeyboardFocus', false)
+    }
     return get().updateSetting('isSingleClickToCopyPaste', isEnabled)
+  },
+  setIsSingleClickKeyboardFocus: async (isEnabled: boolean) => {
+    // New setter implementation
+    get().syncStateUpdate('isSingleClickKeyboardFocus', isEnabled)
+    if (isEnabled && get().isSingleClickToCopyPaste) {
+      // Mutual exclusivity check
+      await get().updateSetting('isSingleClickToCopyPaste', false)
+      get().syncStateUpdate('isSingleClickToCopyPaste', false)
+    }
+    return get().updateSetting('isSingleClickKeyboardFocus', isEnabled)
   },
   setIsSingleClickToCopyPasteQuickWindow: async (isEnabled: boolean) => {
     get().syncStateUpdate('isSingleClickToCopyPasteQuickWindow', isEnabled)
