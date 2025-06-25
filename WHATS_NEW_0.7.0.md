@@ -1,4 +1,4 @@
-# PasteBar Changelog for 0.7.x release
+# PasteBar What's New in 0.7.0
 
 ## Major Features and Core Enhancements
 
