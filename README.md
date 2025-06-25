@@ -1,8 +1,8 @@
 # 📋 PasteBar - Limitless, Free Clipboard Manager for Mac and Windows
 
-![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)
-![License](https://img.shields.io/badge/license-Open%20Source-green.svg)
-![Platform](https://img.shields.io/badge/platform-macOS%20|%20Windows-lightgrey.svg)
+[![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)](https://github.com/PasteBar/PasteBarApp/releases)
+[![License](https://img.shields.io/badge/license-Open%20Source-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-macOS%20|%20Windows-lightgrey.svg)](https://www.pastebar.app)
 
 <a href="https://www.pastebar.app"><img width="1144" alt="Screenshot 2024-07-25 at 14 11 09" src="https://github.com/user-attachments/assets/ce861bdb-d7df-4944-885e-12d37177e56d"></a>
 
@@ -128,7 +128,34 @@ Open Source, Creative Commons Attribution-NonCommercial (CC BY-NC) License with 
 
 ---
 
+## 👍 UI Videos 
+
+<details open>
+<summary>Copy/Paste and Create Clip</summary>
+
+https://github.com/user-attachments/assets/33a1cd09-0865-42d0-acc8-14376d8e675b
+
+</details>
+
+<details>
+<summary>Create Board Clip with Image</summary>
+
+https://github.com/user-attachments/assets/a95bebec-d7a8-499a-9a43-69e2fba7a04a
+
+</details>
+
+<details>
+<summary>Panel and board resize</summary>
+
+https://github.com/user-attachments/assets/d336498d-f430-43b8-9e87-a4fedeee1fae
+
+</details>
+
 <div align="center">
+
+For more videos and information visit https://www.pastebar.app
+
+<br/>
 
 **⭐ Star this repository if you find PasteBar useful!**
 
