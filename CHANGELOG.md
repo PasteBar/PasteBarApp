@@ -40,7 +40,8 @@
 - Added option "Show Always on Top" for main window
 - Added support for notes matching in global search
 - Added Turkish language translation by AlijonMurodov
-
+- Updated Chinese translation by katelya77
+  
 ## 0.6.2
 
 ### Patch Changes
