@@ -70,8 +70,10 @@ See all features, improvements, and bug fixes in detail.
 ### 🌍 **Cross-Platform & Integration**
 - Available for macOS and Windows (Apple Silicon M1, Intel, AMD, and ARM)
 - Web scraping and API data extraction capabilities
-- Multi-language support (**English**, **Chinese**, **Ukrainian**, **Spanish**, **Italian**, **French**, **Russian**, **Turkish**, **German**) Help to improve translations quality: https://github.com/PasteBar/pastebar-localization
 - Backup and restore functionality
+- Multi-language support (**English**, **Chinese**, **Ukrainian**, **Spanish**, **Italian**, **French**, **Russian**, **Turkish**, **German**)
+
+Help to improve translations quality: https://github.com/PasteBar/pastebar-localization
 
 ---
 
