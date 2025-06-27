@@ -136,15 +136,14 @@
     },
     "security": {
       "csp": {
-        "default-src": "'self' customprotocol: asset: https: data:",
-        "connect-src": "'self' ipc: https: wss: tauri: asset:",
-        "font-src": "'self' asset: https: data:",
-        "img-src": "'self' asset: https: http: blob: data:",
-        "media-src": "'self' asset: https: http: blob: data:",
-        "object-src": "'none'",
-        "script-src": "'self' 'wasm-unsafe-eval' asset:",
-        "style-src": "'self' 'unsafe-inline' asset: https:",
-        "frame-src": "'self' https:"
+        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app pastebar.ru *.pastebar.ru",
+        "connect-src": "ipc: https://ipc.localhost asset: https://*.pastebar.app https://*.pastebar.ru tauri://localhost https://tauri.localhost",
+        "frame-src": "'self' https://*.pastebar.app https://*.youtube.com https://*.youtube-nocookie.com https://*.x.com https://*.twitter.com https://*.instagram.com",
+        "img-src": "'self' asset: https://asset.localhost blob: data: *",
+        "img-srcset": "'self' asset: https://asset.localhost blob: data:",
+        "media-src": "'self' asset: https://asset.localhost blob: data: *",
+        "style-src": "'unsafe-inline' 'self' asset: https://asset.localhost",
+        "script-src": "'self' 'wasm-unsafe-eval' asset: https://*.pastebar.app https://*.x.com https://*.twitter.com https://*.instagram.com"
       }
     },
     "updater": {
