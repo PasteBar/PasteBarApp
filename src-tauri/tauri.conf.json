@@ -17,13 +17,44 @@
     },
     "allowlist": {
       "window": {
-        "all": true
+        "create": true,
+        "center": true,
+        "requestUserAttention": true,
+        "setResizable": true,
+        "setTitle": true,
+        "maximize": true,
+        "unmaximize": true,
+        "minimize": true,
+        "unminimize": true,
+        "show": true,
+        "hide": true,
+        "close": true,
+        "setDecorations": true,
+        "setAlwaysOnTop": true,
+        "setSize": true,
+        "setMinSize": true,
+        "setMaxSize": true,
+        "setPosition": true,
+        "setFullscreen": true,
+        "setFocus": true,
+        "setIcon": true,
+        "setSkipTaskbar": true,
+        "setCursorGrab": true,
+        "setCursorVisible": true,
+        "setCursorIcon": true,
+        "setCursorPosition": true,
+        "setIgnoreCursorEvents": true,
+        "startDragging": true
       },
       "shell": {
         "open": true
       },
       "dialog": {
-        "all": true
+        "open": true,
+        "save": true,
+        "message": true,
+        "ask": true,
+        "confirm": true
       },
       "http": {
         "all": true,
@@ -31,22 +62,40 @@
         "scope": [
           "http://localhost:8788/api/user/*",
           "http://localhost:8788/api/error-report",
-          "https://contact.pastebar.app/api/error-report"
+          "https://contact.pastebar.app/api/error-report",
+          "https://**",
+          "http://**"
         ]
       },
       "protocol": {
         "asset": true,
-        "assetScope": ["**"]
+        "assetScope": {
+          "allow": ["**"]
+        }
       },
       "clipboard": {
-        "all": true
+        "readText": true,
+        "writeText": true
       },
       "globalShortcut": {
         "all": true
       },
-      "all": true,
       "path": {
         "all": true
+      },
+      "os": {
+        "all": true
+      },
+      "fs": {
+        "readFile": true,
+        "writeFile": true,
+        "readDir": true,
+        "copyFile": true,
+        "createDir": true,
+        "removeDir": true,
+        "removeFile": true,
+        "renameFile": true,
+        "exists": true
       }
     },
     "bundle": {
@@ -87,14 +136,15 @@
     },
     "security": {
       "csp": {
-        "default-src": "'self' customprotocol: asset: pastebar.app *.pastebar.app pastebar.ru *.pastebar.ru",
-        "connect-src": "ipc: https://ipc.localhost asset: https://*.pastebar.app https://*.pastebar.ru tauri://localhost https://tauri.localhost",
-        "frame-src": "'self' https://*.pastebar.app https://*.youtube.com https://*.youtube-nocookie.com https://*.x.com https://*.twitter.com https://*.instagram.com",
-        "img-src": "'self' asset: https://asset.localhost blob: data: *",
-        "img-srcset": "'self' asset: https://asset.localhost blob: data:",
-        "media-src": "'self' asset: https://asset.localhost blob: data: *",
-        "style-src": "'unsafe-inline' 'self' asset: https://asset.localhost",
-        "script-src": "'self' 'wasm-unsafe-eval' asset: https://*.pastebar.app https://*.x.com https://*.twitter.com https://*.instagram.com"
+        "default-src": "'self' customprotocol: asset: https: data:",
+        "connect-src": "'self' ipc: https: wss: tauri: asset:",
+        "font-src": "'self' asset: https: data:",
+        "img-src": "'self' asset: https: http: blob: data:",
+        "media-src": "'self' asset: https: http: blob: data:",
+        "object-src": "'none'",
+        "script-src": "'self' 'wasm-unsafe-eval' asset:",
+        "style-src": "'self' 'unsafe-inline' asset: https:",
+        "frame-src": "'self' https:"
       }
     },
     "updater": {
