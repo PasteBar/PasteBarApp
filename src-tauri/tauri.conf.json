@@ -63,7 +63,6 @@
           "http://localhost:8788/api/user/*",
           "http://localhost:8788/api/error-report",
           "https://contact.pastebar.app/api/error-report",
-          "https://**",
           "http://**"
         ]
       },
