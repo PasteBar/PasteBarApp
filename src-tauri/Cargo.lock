@@ -5891,6 +5891,7 @@ dependencies = [
 name = "tauri-plugin-single-instance"
 version = "0.0.1"
 dependencies = [
+ "serde_json",
  "tauri",
  "windows-sys 0.42.0",
  "zbus",

@@ -103,7 +103,6 @@ tauri = { version = "1.8.3", features = [
   "os-all",
   "system-tray",
   "icon-png",
-  "clipboard",
   "updater",
   "reqwest-client"
 ] }
