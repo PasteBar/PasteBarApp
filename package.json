@@ -135,7 +135,6 @@
     "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log",
     "tauri-plugin-positioner-api": "github:tauri-apps/tauri-plugin-positioner",
     "ts-deepmerge": "^7.0.0",
-    "url-parse": "^1.5.10",
     "use-resize-observer": "^9.1.0",
     "vite-plugin-dynamic-import": "^1.6.0",
     "vite-plugin-static-copy": "^2.2.0",
