@@ -1,11 +1,15 @@
 name: Claude Code Review
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
     # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
+    paths:
+      - "src-tauri/src/**/*.rs"
+      - "packages/pastebar-app-ui/src/**/*.tsx"
+      - "packages/pastebar-app-ui/src/**/*.ts"
     #   - "src/**/*.tsx"
     #   - "src/**/*.js"
     #   - "src/**/*.jsx"
