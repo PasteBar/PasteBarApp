@@ -203,9 +203,7 @@ export function BoardEdit({
                 }}
                 defaultValue={boardName}
                 onFocus={e => {
-                  if (boardName === t('New Board', { ns: 'dashboard' })) {
-                    e.target.select()
-                  }
+                  e.target.select()
                 }}
                 onChange={e => {
                   if (showBoardNameNotSavedError.value) {

@@ -395,9 +395,7 @@ export function ClipEditName({
               }}
               defaultValue={name}
               onFocus={e => {
-                if (name === t('New Clip', { ns: 'dashboard' })) {
-                  e.target.select()
-                }
+                e.target.select()
               }}
               onChange={e => {
                 if (
