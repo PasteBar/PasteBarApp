@@ -139,6 +139,8 @@ img_hash = "3.2.0"
 sha-1 = "0.10.1"
 regex = "1.9.3"
 active-win-pos-rs = "0.8"
+chacha20poly1305 = "0.10.1"
+rand = "0.8.5"
 
 lang_detect = { path = "libs/lang_detect" }
 auto-launch = { path = "libs/auto-launch" }

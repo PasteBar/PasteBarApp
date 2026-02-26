@@ -9,6 +9,7 @@ pub(crate) mod link_metadata_commands;
 pub(crate) mod request_commands;
 pub(crate) mod security_commands;
 pub(crate) mod shell_commands;
+pub(crate) mod sync_commands;
 pub(crate) mod tabs_commands;
 pub(crate) mod translations_commands;
 pub(crate) mod user_settings_command;

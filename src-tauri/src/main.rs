@@ -42,6 +42,7 @@ mod models;
 mod schema;
 mod services;
 mod simple_cache;
+mod sync;
 
 use crate::commands::clipboard_commands::copy_paste_clip_item_from_menu;
 use crate::commands::clipboard_commands::write_image_to_clipboard;
@@ -63,6 +64,7 @@ use commands::link_metadata_commands;
 use commands::request_commands;
 use commands::security_commands;
 use commands::shell_commands;
+use commands::sync_commands;
 use commands::tabs_commands;
 use commands::translations_commands;
 use commands::user_settings_command;
@@ -1375,6 +1377,10 @@ async fn main() {
       security_commands::verify_os_password,
       security_commands::delete_os_password,
       security_commands::get_stored_os_password,
+      sync_commands::sync_get_ui_status,
+      sync_commands::sync_set_mode,
+      sync_commands::sync_retry,
+      sync_commands::sync_disconnect,
       user_settings_command::cmd_get_custom_db_path,
       // user_settings_command::cmd_set_custom_db_path, // Replaced by cmd_set_and_relocate_db
       // user_settings_command::cmd_remove_custom_db_path, // Replaced by cmd_revert_to_default_db_location
@@ -1408,3 +1414,613 @@ async fn main() {
     .run(tauri::generate_context!())
     .expect("Error While Running PasteBar App");
 }
+
+
+#[cfg(test)]
+mod sync_plan_tests {
+  use diesel::r2d2::CustomizeConnection;
+  use diesel::prelude::*;
+  use diesel::sql_types::{BigInt, Integer, Text};
+  use diesel::QueryableByName;
+  use diesel_migrations::{FileBasedMigrations, MigrationHarness};
+
+  #[derive(QueryableByName)]
+  struct NameRow {
+    #[diesel(sql_type = Text)]
+    name: String,
+  }
+
+  #[derive(QueryableByName)]
+  struct HlcRow {
+    #[diesel(sql_type = BigInt)]
+    wall_ms: i64,
+    #[diesel(sql_type = Integer)]
+    counter: i32,
+  }
+
+  #[derive(QueryableByName)]
+  struct JournalModeRow {
+    #[diesel(sql_type = Text)]
+    journal_mode: String,
+  }
+
+  #[derive(QueryableByName)]
+  struct CountRow {
+    #[diesel(sql_type = BigInt)]
+    total: i64,
+  }
+
+  #[derive(QueryableByName)]
+  struct IdRow {
+    #[diesel(sql_type = Integer)]
+    id: i32,
+  }
+
+  #[derive(QueryableByName)]
+  struct SeqRow {
+    #[diesel(sql_type = BigInt)]
+    seq: i64,
+  }
+
+  #[derive(QueryableByName)]
+  struct CursorRow {
+    #[diesel(sql_type = BigInt)]
+    last_applied_seq: i64,
+  }
+
+  fn sync_changes_count(connection: &mut diesel::sqlite::SqliteConnection) -> i64 {
+    let rows: Vec<CountRow> = diesel::sql_query("SELECT COUNT(*) AS total FROM sync_changes")
+      .load(connection)
+      .expect("Failed to count sync_changes rows");
+    rows[0].total
+  }
+
+  fn sync_pending_count(connection: &mut diesel::sqlite::SqliteConnection) -> i64 {
+    let rows: Vec<CountRow> = diesel::sql_query("SELECT COUNT(*) AS total FROM sync_pending_apply")
+      .load(connection)
+      .expect("Failed to count sync_pending_apply rows");
+    rows[0].total
+  }
+
+  fn sync_dead_letter_count(connection: &mut diesel::sqlite::SqliteConnection) -> i64 {
+    let rows: Vec<CountRow> = diesel::sql_query("SELECT COUNT(*) AS total FROM sync_dead_letter")
+      .load(connection)
+      .expect("Failed to count sync_dead_letter rows");
+    rows[0].total
+  }
+
+  #[test]
+  fn default_sync_mode_is_off() {
+    let cfg = crate::sync::config::SyncConfig::default();
+    assert_eq!(cfg.mode, crate::sync::types::SyncMode::Off);
+  }
+
+  #[test]
+  fn sync_mode_default_off_regression_guard() {
+    assert_eq!(
+      crate::sync::config::SyncConfig::default().mode,
+      crate::sync::types::SyncMode::Off
+    );
+  }
+
+  #[test]
+  fn sync_core_tables_exist_after_migration() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    let rows: Vec<NameRow> = diesel::sql_query(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('sync_meta','sync_changes','sync_peer_cursor','sync_pending_apply','sync_dead_letter','sync_gc_state','sync_conflict_log','sync_blob_refs')",
+    )
+    .load(&mut connection)
+    .expect("Failed to query sqlite_master");
+
+    assert_eq!(rows.len(), 8, "Expected all 8 sync core tables");
+  }
+
+  #[test]
+  fn sqlite_hlc_functions_are_available() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::ConnectionOptions {
+      enable_wal: false,
+      enable_foreign_keys: false,
+      busy_timeout: None,
+    };
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let rows: Vec<HlcRow> =
+      diesel::sql_query("SELECT get_hlc_wall_ms() AS wall_ms, get_hlc_counter() AS counter")
+        .load(&mut connection)
+        .expect("HLC SQL functions should be available");
+
+    assert_eq!(rows.len(), 1);
+    assert!(rows[0].wall_ms > 0);
+    assert!(rows[0].counter > 0);
+  }
+
+  #[test]
+  fn sqlite_journal_mode_is_wal() {
+    let temp_db = tempfile::NamedTempFile::new().expect("Failed to create temp db file");
+    let db_path = temp_db.path().to_string_lossy().to_string();
+    let mut connection = diesel::sqlite::SqliteConnection::establish(&db_path)
+      .expect("Failed to create sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let rows: Vec<JournalModeRow> = diesel::sql_query("PRAGMA journal_mode;")
+      .load(&mut connection)
+      .expect("Failed to read sqlite journal mode");
+
+    assert_eq!(rows.len(), 1);
+    assert_eq!(rows[0].journal_mode.to_lowercase(), "wal");
+  }
+
+  #[test]
+  fn remote_apply_context_does_not_emit_outbox_event() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    diesel::sql_query(
+      "INSERT INTO items (
+        item_id, name, is_active, is_disabled, is_deleted, is_folder, is_separator, is_board, is_menu, is_clip,
+        layout_split, created_at, updated_at, created_date, updated_date
+      ) VALUES (
+        'sync-trigger-test-item-001', 'Initial', 1, 0, 0, 0, 0, 0, 0, 1,
+        50, 1000, 1000, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+      )",
+    )
+    .execute(&mut connection)
+    .expect("Failed to insert test item");
+
+    let before = sync_changes_count(&mut connection);
+
+    crate::sync::apply_context::enable_remote_apply_context(&mut connection)
+      .expect("Failed to enable remote apply context");
+    diesel::sql_query(
+      "UPDATE items
+       SET name = 'RemoteApply', updated_at = updated_at + 1
+       WHERE item_id = 'sync-trigger-test-item-001'",
+    )
+    .execute(&mut connection)
+    .expect("Failed to update item during remote apply context");
+    crate::sync::apply_context::disable_remote_apply_context(&mut connection)
+      .expect("Failed to disable remote apply context");
+
+    let after_remote_apply = sync_changes_count(&mut connection);
+    assert_eq!(after_remote_apply, before);
+
+    diesel::sql_query(
+      "UPDATE items
+       SET name = 'LocalApply', updated_at = updated_at + 1
+       WHERE item_id = 'sync-trigger-test-item-001'",
+    )
+    .execute(&mut connection)
+    .expect("Failed to update item without remote apply context");
+
+    let after_local_apply = sync_changes_count(&mut connection);
+    assert_eq!(after_local_apply, after_remote_apply + 1);
+  }
+
+  #[test]
+  fn switching_to_off_stops_sync_runtime() {
+    let engine = crate::sync::engine::SyncEngine::default();
+
+    engine
+      .set_mode(crate::sync::types::SyncMode::On)
+      .expect("Failed to switch sync mode to On");
+    engine
+      .set_mode(crate::sync::types::SyncMode::Off)
+      .expect("Failed to switch sync mode to Off");
+
+    let snapshot = engine.snapshot();
+    assert_eq!(snapshot.mode, crate::sync::types::SyncMode::Off);
+    assert!(!snapshot.discovery_running);
+    assert!(!snapshot.session_running);
+    assert!(!snapshot.schedulers_running);
+  }
+
+  #[test]
+  fn request_below_pruned_seq_returns_cursor_pruned_nack() {
+    let result = crate::sync::cursor::validate_since_seq(90, 100);
+    assert_eq!(
+      result,
+      Err(crate::sync::protocol::SyncMsg::Nack {
+        reason: "cursor_pruned".to_string(),
+        recoverable: false,
+      })
+    );
+  }
+
+  #[test]
+  fn identical_hlc_event_is_noop() {
+    let hlc = crate::sync::hlc::Hlc {
+      wall_ms: 1000,
+      counter: 4,
+    };
+
+    let decision = crate::sync::apply::idempotent_apply_decision(hlc, hlc);
+    assert_eq!(decision, crate::sync::apply::ApplyDecision::Noop);
+  }
+
+  #[test]
+  fn pending_item_moves_to_dead_letter_after_max_retries() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    diesel::sql_query(
+      "INSERT INTO sync_pending_apply (
+         source_device_id, table_name, row_id, op, hlc_wall_ms, hlc_counter, updated_at, row_json, retry_count, created_at
+       ) VALUES (
+         'peer-a', 'items', 'row-1', 'update', 1000, 1, 1000, NULL, 3, 1000
+       )",
+    )
+    .execute(&mut connection)
+    .expect("Failed to insert pending row");
+
+    let pending_id: i32 = diesel::sql_query("SELECT id FROM sync_pending_apply LIMIT 1")
+      .load::<IdRow>(&mut connection)
+      .expect("Failed to load pending id")[0]
+      .id;
+
+    let result = crate::sync::pending::process_pending_retry(
+      &mut connection,
+      pending_id,
+      3,
+      "dependency_missing",
+    )
+    .expect("Failed to process pending retry");
+
+    assert_eq!(result, crate::sync::pending::PendingProcessResult::MovedToDeadLetter);
+    assert_eq!(sync_pending_count(&mut connection), 0);
+    assert_eq!(sync_dead_letter_count(&mut connection), 1);
+  }
+
+  #[test]
+  fn snapshot_manifest_contains_checkpoint_seq() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    diesel::sql_query(
+      "INSERT INTO sync_changes (
+         source_device_id, table_name, row_id, op, hlc_wall_ms, hlc_counter, updated_at, row_json, created_at
+       ) VALUES
+         ('peer-a', 'items', 'row-1', 'insert', 1000, 1, 1000, '{}', 1000),
+         ('peer-a', 'items', 'row-2', 'update', 1001, 2, 1001, '{}', 1001)",
+    )
+    .execute(&mut connection)
+    .expect("Failed to seed sync_changes");
+
+    let snapshot_dir = tempfile::tempdir().expect("Failed to create temp snapshot directory");
+    let snapshot_path = snapshot_dir.path().join("snapshot.sqlite");
+
+    let manifest = crate::sync::snapshot::create_snapshot(
+      &mut connection,
+      snapshot_path
+        .to_str()
+        .expect("Snapshot path should be valid UTF-8"),
+    )
+    .expect("Failed to build snapshot manifest");
+
+    assert_eq!(manifest.checkpoint_seq, 2);
+  }
+
+  #[test]
+  fn compaction_uses_min_trusted_non_stale_cursor() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    diesel::sql_query(
+      "INSERT INTO sync_peer_cursor (
+        peer_device_id, last_acked_seq, last_applied_seq, is_trusted, is_stale, last_seen_at, created_at, updated_at
+      ) VALUES
+        ('peer-500', 500, 500, 1, 0, 1000, 1000, 1000),
+        ('peer-700-stale', 700, 700, 1, 1, 1000, 1000, 1000),
+        ('peer-620', 620, 620, 1, 0, 1000, 1000, 1000),
+        ('peer-400-untrusted', 400, 400, 0, 0, 1000, 1000, 1000)",
+    )
+    .execute(&mut connection)
+    .expect("Failed to seed sync_peer_cursor");
+
+    let floor = crate::sync::gc::compaction_floor_from_db(&mut connection)
+      .expect("Failed to compute compaction floor");
+
+    assert_eq!(floor, Some(500));
+  }
+
+  #[test]
+  fn sync_mode_on_starts_discovery_and_transport() {
+    let engine = crate::sync::engine::SyncEngine::default();
+    engine
+      .set_mode(crate::sync::types::SyncMode::On)
+      .expect("Failed to set sync mode to On");
+
+    let network = engine.network_snapshot();
+    assert!(network.discovery_running);
+    assert!(network.transport_running);
+  }
+
+  #[test]
+  fn missing_blob_hash_triggers_media_fetch_job() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    let blob_hash = "blob-hash-missing-001";
+    crate::sync::media::clear_fetch_queue();
+
+    let queued = crate::sync::media::ensure_blob_available(&mut connection, blob_hash, 1000)
+      .expect("Failed to ensure blob availability");
+    assert!(queued);
+    assert!(crate::sync::media::is_blob_fetch_queued(blob_hash));
+  }
+
+  #[test]
+  fn unreferenced_blob_is_removed_by_gc() {
+    use std::sync::{Arc, Mutex};
+
+    struct TestBlobStore {
+      deleted: Arc<Mutex<Vec<String>>>,
+    }
+
+    impl crate::sync::media::BlobStore for TestBlobStore {
+      fn delete(&self, blob_hash: &str) -> Result<(), String> {
+        self
+          .deleted
+          .lock()
+          .map_err(|_| "Failed to lock deleted list".to_string())?
+          .push(blob_hash.to_string());
+        Ok(())
+      }
+    }
+
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    let media_root = tempfile::tempdir().expect("Failed to create media root");
+    let local_rel_path = "blob-a.png";
+    let local_file = media_root.path().join(local_rel_path);
+    std::fs::write(&local_file, b"image-bytes").expect("Failed to write blob file");
+
+    diesel::sql_query(
+      "INSERT INTO sync_blob_refs (
+         blob_hash, local_rel_path, mime_type, size_bytes, ref_count, last_seen_at, created_at, updated_at
+       ) VALUES (
+         'blob-a', ?, 'image/png', 10, 0, 1000, 1000, 1000
+       )",
+    )
+    .bind::<Text, _>(local_rel_path.to_string())
+    .execute(&mut connection)
+    .expect("Failed to insert blob ref");
+
+    let deleted = Arc::new(Mutex::new(Vec::new()));
+    let store = TestBlobStore {
+      deleted: deleted.clone(),
+    };
+
+    let removed_hashes = crate::sync::media::garbage_collect_unreferenced_blobs(
+      &mut connection,
+      &store,
+      media_root.path(),
+    )
+    .expect("Failed to run blob GC");
+
+    assert_eq!(removed_hashes, vec!["blob-a".to_string()]);
+    assert!(!local_file.exists());
+
+    let deleted_hashes = deleted.lock().expect("Failed to lock deleted list");
+    assert_eq!(deleted_hashes.as_slice(), ["blob-a"]);
+
+    let remaining: Vec<CountRow> = diesel::sql_query("SELECT COUNT(*) AS total FROM sync_blob_refs")
+      .load(&mut connection)
+      .expect("Failed to count sync_blob_refs rows");
+    assert_eq!(remaining[0].total, 0);
+  }
+
+  #[test]
+  fn encrypted_envelope_roundtrip_succeeds() {
+    let key = crate::sync::security::keys::generate_data_key();
+    let payload = br#"{"table":"items","row_id":"x-1","op":"update"}"#;
+
+    let envelope = crate::sync::security::envelope::encrypt_payload(payload, &key)
+      .expect("Failed to encrypt payload");
+    let decrypted = crate::sync::security::envelope::decrypt_payload(&envelope, &key)
+      .expect("Failed to decrypt payload");
+
+    assert_eq!(decrypted, payload);
+  }
+
+  #[test]
+  fn recovery_key_can_restore_wrapped_udk() {
+    let udk = crate::sync::security::keys::generate_data_key();
+    let recovery_key = crate::sync::commands::export_recovery_key();
+
+    crate::sync::commands::import_recovery_key(&recovery_key)
+      .expect("Failed to import recovery key");
+    let recovery_key_bytes = crate::sync::security::keys::recovery_key_from_string(&recovery_key)
+      .expect("Failed to decode recovery key");
+
+    let wrapped = crate::sync::security::keys::wrap_data_key_with_recovery_key(
+      &udk,
+      &recovery_key_bytes,
+    )
+    .expect("Failed to wrap UDK with recovery key");
+
+    let restored = crate::sync::security::keys::unwrap_data_key_with_recovery_key(
+      &wrapped,
+      &recovery_key_bytes,
+    )
+    .expect("Failed to unwrap UDK with recovery key");
+
+    assert_eq!(restored, udk);
+  }
+
+  #[test]
+  fn two_device_incremental_sync_converges() {
+    let mut conn_a = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create device A sqlite connection");
+    let mut conn_b = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create device B sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut conn_a)
+      .expect("Failed to configure device A connection");
+    options
+      .on_acquire(&mut conn_b)
+      .expect("Failed to configure device B connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    conn_a
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations for device A");
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    conn_b
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations for device B");
+
+    diesel::sql_query(
+      "INSERT INTO items (
+        item_id, name, is_active, is_disabled, is_deleted, is_folder, is_separator, is_board, is_menu, is_clip,
+        layout_split, created_at, updated_at, created_date, updated_date
+      ) VALUES (
+        'sync-e2e-item-001', 'DeviceAItem', 1, 0, 0, 0, 0, 0, 0, 1,
+        50, 1000, 1000, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+      )",
+    )
+    .execute(&mut conn_a)
+    .expect("Failed to insert source item on device A");
+
+    let source_seq: i64 = diesel::sql_query("SELECT MAX(seq) AS seq FROM sync_changes")
+      .load::<SeqRow>(&mut conn_a)
+      .expect("Failed to read source seq")[0]
+      .seq;
+
+    crate::sync::apply_context::enable_remote_apply_context(&mut conn_b)
+      .expect("Failed to enable remote apply context on device B");
+    diesel::sql_query(
+      "INSERT INTO items (
+        item_id, name, is_active, is_disabled, is_deleted, is_folder, is_separator, is_board, is_menu, is_clip,
+        layout_split, created_at, updated_at, created_date, updated_date
+      ) VALUES (
+        'sync-e2e-item-001', 'DeviceAItem', 1, 0, 0, 0, 0, 0, 0, 1,
+        50, 1000, 1000, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+      )",
+    )
+    .execute(&mut conn_b)
+    .expect("Failed to apply replicated item on device B");
+    crate::sync::apply_context::disable_remote_apply_context(&mut conn_b)
+      .expect("Failed to disable remote apply context on device B");
+
+    diesel::sql_query(
+      "INSERT INTO sync_peer_cursor (
+        peer_device_id, last_acked_seq, last_applied_seq, is_trusted, is_stale, last_seen_at, created_at, updated_at
+      ) VALUES (
+        'device-a', ?, ?, 1, 0, 1000, 1000, 1000
+      )
+      ON CONFLICT(peer_device_id) DO UPDATE SET
+        last_acked_seq = excluded.last_acked_seq,
+        last_applied_seq = excluded.last_applied_seq,
+        updated_at = excluded.updated_at",
+    )
+    .bind::<BigInt, _>(source_seq)
+    .bind::<BigInt, _>(source_seq)
+    .execute(&mut conn_b)
+    .expect("Failed to advance peer cursor on device B");
+
+    let item_count: i64 = diesel::sql_query(
+      "SELECT COUNT(*) AS total FROM items WHERE item_id = 'sync-e2e-item-001'",
+    )
+    .load::<CountRow>(&mut conn_b)
+    .expect("Failed to count replicated items on device B")[0]
+      .total;
+    assert_eq!(item_count, 1);
+
+    let cursor_seq: i64 = diesel::sql_query(
+      "SELECT last_applied_seq FROM sync_peer_cursor WHERE peer_device_id = 'device-a'",
+    )
+    .load::<CursorRow>(&mut conn_b)
+    .expect("Failed to read device B cursor")[0]
+      .last_applied_seq;
+    assert_eq!(cursor_seq, source_seq);
+
+    let engine = crate::sync::engine::SyncEngine::default();
+    engine.record_applied_events(1);
+    let stats = engine
+      .collect_stats(&mut conn_b)
+      .expect("Failed to collect sync stats");
+
+    assert_eq!(stats.applied_events, 1);
+    assert_eq!(stats.pending_events, 0);
+    assert_eq!(stats.dead_letter_events, 0);
+  }
+}
+

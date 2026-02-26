@@ -168,6 +168,114 @@ diesel::table! {
 }
 
 diesel::table! {
+    sync_blob_refs (blob_hash) {
+        blob_hash -> Text,
+        local_rel_path -> Nullable<Text>,
+        mime_type -> Nullable<Text>,
+        size_bytes -> Nullable<BigInt>,
+        ref_count -> Integer,
+        last_seen_at -> BigInt,
+        created_at -> BigInt,
+        updated_at -> BigInt,
+    }
+}
+
+diesel::table! {
+    sync_changes (seq) {
+        seq -> Integer,
+        source_device_id -> Text,
+        table_name -> Text,
+        row_id -> Text,
+        op -> Text,
+        hlc_wall_ms -> BigInt,
+        hlc_counter -> Integer,
+        updated_at -> BigInt,
+        row_json -> Nullable<Text>,
+        created_at -> BigInt,
+    }
+}
+
+diesel::table! {
+    sync_conflict_log (id) {
+        id -> Integer,
+        table_name -> Text,
+        row_id -> Text,
+        local_hlc_wall_ms -> BigInt,
+        local_hlc_counter -> Integer,
+        remote_hlc_wall_ms -> BigInt,
+        remote_hlc_counter -> Integer,
+        resolution -> Text,
+        details_json -> Nullable<Text>,
+        created_at -> BigInt,
+    }
+}
+
+diesel::table! {
+    sync_dead_letter (id) {
+        id -> Integer,
+        source_device_id -> Text,
+        table_name -> Text,
+        row_id -> Text,
+        op -> Text,
+        hlc_wall_ms -> BigInt,
+        hlc_counter -> Integer,
+        updated_at -> BigInt,
+        row_json -> Nullable<Text>,
+        retry_count -> Integer,
+        failure_reason -> Text,
+        created_at -> BigInt,
+    }
+}
+
+diesel::table! {
+    sync_gc_state (id) {
+        id -> Integer,
+        last_pruned_seq -> BigInt,
+        updated_at -> BigInt,
+    }
+}
+
+diesel::table! {
+    sync_meta (device_id) {
+        device_id -> Text,
+        protocol_version -> Integer,
+        created_at -> BigInt,
+        updated_at -> BigInt,
+    }
+}
+
+diesel::table! {
+    sync_peer_cursor (peer_device_id) {
+        peer_device_id -> Text,
+        last_acked_seq -> BigInt,
+        last_applied_seq -> BigInt,
+        is_trusted -> Bool,
+        is_stale -> Bool,
+        last_seen_at -> Nullable<BigInt>,
+        created_at -> BigInt,
+        updated_at -> BigInt,
+    }
+}
+
+diesel::table! {
+    sync_pending_apply (id) {
+        id -> Integer,
+        source_device_id -> Text,
+        table_name -> Text,
+        row_id -> Text,
+        op -> Text,
+        hlc_wall_ms -> BigInt,
+        hlc_counter -> Integer,
+        updated_at -> BigInt,
+        row_json -> Nullable<Text>,
+        retry_count -> Integer,
+        next_attempt_at -> Nullable<BigInt>,
+        last_error -> Nullable<Text>,
+        created_at -> BigInt,
+    }
+}
+
+diesel::table! {
     tabs (tab_id) {
         tab_id -> Text,
         collection_id -> Text,
@@ -197,5 +305,13 @@ diesel::allow_tables_to_appear_in_same_query!(
     items,
     link_metadata,
     settings,
+    sync_blob_refs,
+    sync_changes,
+    sync_conflict_log,
+    sync_dead_letter,
+    sync_gc_state,
+    sync_meta,
+    sync_peer_cursor,
+    sync_pending_apply,
     tabs,
 );

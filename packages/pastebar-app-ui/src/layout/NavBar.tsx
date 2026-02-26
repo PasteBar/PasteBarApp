@@ -68,6 +68,7 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import Modal from '~/components/molecules/modal'
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -100,9 +101,34 @@ import { PlayerMenu } from '../components/audio-player/PlayerMenu'
 import Logo from './Logo'
 import { TranslatedBoardingSteps } from './Tour'
 
+type SyncUiStatus = {
+  mode: 'on' | 'off' | 'paused' | string
+  state: 'synced' | 'error' | 'attention' | 'idle' | string
+  pendingEvents: number
+  deadLetterEvents: number
+  discoveryRunning: boolean
+  sessionRunning: boolean
+  statusText: string
+  lastError?: string | null
+}
+
+const DEFAULT_SYNC_STATUS: SyncUiStatus = {
+  mode: 'off',
+  state: 'idle',
+  pendingEvents: 0,
+  deadLetterEvents: 0,
+  discoveryRunning: false,
+  sessionRunning: false,
+  statusText: 'Sync not configured',
+  lastError: null,
+}
+
 export function NavBar() {
   const { t, i18n } = useTranslation()
   const [isAutoStartEnabled, setIsAutoStartEnabled] = useState(false)
+  const [syncStatus, setSyncStatus] = useState<SyncUiStatus>(DEFAULT_SYNC_STATUS)
+  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false)
+  const [isSyncActionRunning, setIsSyncActionRunning] = useState(false)
   const navigate = useNavigate()
   const { toast } = useToast()
   const { systemTheme } = useTheme()
@@ -124,6 +150,79 @@ export function NavBar() {
   } = useAtomValue(playerStoreAtom)
 
   const { deleteClipboardHistoryByIds } = useDeleteClipboardHistoryByIds()
+
+  const syncStatusDotClassName = (state: SyncUiStatus['state']) => {
+    if (state === 'synced') {
+      return 'bg-green-500'
+    }
+    if (state === 'error') {
+      return 'bg-red-500'
+    }
+    if (state === 'attention') {
+      return 'bg-amber-500'
+    }
+    return 'border border-gray-400 bg-transparent'
+  }
+
+  const syncStatusLabel = (state: SyncUiStatus['state']) => {
+    if (state === 'synced') {
+      return 'Synced'
+    }
+    if (state === 'error') {
+      return 'Error'
+    }
+    if (state === 'attention') {
+      return 'Needs attention'
+    }
+    return 'Not configured'
+  }
+
+  const refreshSyncStatus = async (notifyOnError = false) => {
+    try {
+      const status = await invoke<SyncUiStatus>('sync_get_ui_status')
+      setSyncStatus(status)
+    } catch (error) {
+      setSyncStatus(prev => ({
+        ...prev,
+        state: 'error',
+        statusText: 'Unable to load sync status',
+        lastError: String(error),
+      }))
+
+      if (notifyOnError) {
+        toast({
+          variant: 'destructive',
+          title: 'Sync status failed',
+          description: String(error),
+        })
+      }
+    }
+  }
+
+  const runSyncAction = async (
+    command: 'sync_set_mode' | 'sync_retry' | 'sync_disconnect',
+    payload?: Record<string, unknown>
+  ) => {
+    setIsSyncActionRunning(true)
+    try {
+      const status = await invoke<SyncUiStatus>(command, payload)
+      setSyncStatus(status)
+      toast({
+        variant: status.state === 'error' ? 'destructive' : 'success',
+        title: 'Sync updated',
+        description: status.statusText,
+      })
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Sync action failed',
+        description: String(error),
+      })
+      await refreshSyncStatus()
+    } finally {
+      setIsSyncActionRunning(false)
+    }
+  }
 
   const { currentCollectionId, collections, pinnedClips } =
     useAtomValue(collectionsStoreAtom)
@@ -155,6 +254,36 @@ export function NavBar() {
       listenToOnUpdaterEventUnlisten.then(unlisten => {
         unlisten()
       })
+    }
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadSyncState = async () => {
+      try {
+        const status = await invoke<SyncUiStatus>('sync_get_ui_status')
+        if (isMounted) {
+          setSyncStatus(status)
+        }
+      } catch (error) {
+        if (isMounted) {
+          setSyncStatus(prev => ({
+            ...prev,
+            state: 'error',
+            statusText: 'Unable to load sync status',
+            lastError: String(error),
+          }))
+        }
+      }
+    }
+
+    loadSyncState()
+    const intervalId = setInterval(loadSyncState, 15000)
+
+    return () => {
+      isMounted = false
+      clearInterval(intervalId)
     }
   }, [])
 
@@ -1609,6 +1738,81 @@ export function NavBar() {
                   className={`font-normal px-2.5 whitespace-nowrap ${
                     isShowNavBarItems ? 'opacity-1' : 'opacity-0'
                   }`}
+                  id="navbar-sync_tour"
+                >
+                  <Flex className="items-center gap-1.5">
+                    <span
+                      className={`inline-block h-2 w-2 rounded-full ${syncStatusDotClassName(
+                        syncStatus.state
+                      )}`}
+                    />
+                    <span>Sync</span>
+                  </Flex>
+                </MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem disabled className="flex-col items-start">
+                    <Text className="font-medium">
+                      {syncStatusLabel(syncStatus.state)}
+                    </Text>
+                    <Text className="text-xs text-muted-foreground">
+                      {syncStatus.statusText}
+                    </Text>
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem
+                    onClick={() => {
+                      setIsSyncModalOpen(true)
+                    }}
+                  >
+                    Open Sync Center
+                  </MenubarItem>
+                  {syncStatus.mode === 'on' ? (
+                    <MenubarItem
+                      onClick={() => {
+                        runSyncAction('sync_set_mode', { mode: 'paused' })
+                      }}
+                    >
+                      Pause Sync
+                    </MenubarItem>
+                  ) : (
+                    <MenubarItem
+                      onClick={() => {
+                        runSyncAction('sync_set_mode', { mode: 'on' })
+                      }}
+                    >
+                      Start Sync
+                    </MenubarItem>
+                  )}
+                  <MenubarItem
+                    onClick={() => {
+                      runSyncAction('sync_retry')
+                    }}
+                  >
+                    Retry Connection
+                  </MenubarItem>
+                  <MenubarItem
+                    onClick={() => {
+                      runSyncAction('sync_disconnect')
+                    }}
+                    className="text-red-500 dark:text-red-400"
+                  >
+                    Disconnect Devices
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem
+                    onClick={() => {
+                      refreshSyncStatus(true)
+                    }}
+                  >
+                    Refresh Status
+                  </MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+              <MenubarMenu>
+                <MenubarTrigger
+                  className={`font-normal px-2.5 whitespace-nowrap ${
+                    isShowNavBarItems ? 'opacity-1' : 'opacity-0'
+                  }`}
                   id="navbar-help_tour"
                 >
                   {t('Help', { ns: 'help' })}
@@ -2010,6 +2214,141 @@ export function NavBar() {
               </MenubarMenu>
             </>
           )}
+
+          <Modal
+            open={isSyncModalOpen}
+            handleClose={() => {
+              setIsSyncModalOpen(false)
+            }}
+            isLargeModal
+            positionTop
+          >
+            <Modal.Body className="w-[560px] relative">
+              <Button
+                variant="link"
+                type="button"
+                onClick={() => {
+                  setIsSyncModalOpen(false)
+                }}
+                className="hover:bg-slate-200 px-2 absolute right-1.5 top-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 hover:dark:text-slate-400 hover:bg-transparent dark:hover:bg-transparent"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+
+              <Modal.Content className="pt-6 px-7 pb-5">
+                <Flex className="flex-col items-start mb-3">
+                  <Text className="text-lg font-semibold">Sync Center</Text>
+                  <Text className="text-sm text-muted-foreground">
+                    Connect devices, monitor sync health, and quickly retry or disconnect.
+                  </Text>
+                </Flex>
+                <Box className="rounded-md border p-3">
+                  <Flex className="items-center justify-between">
+                    <Text className="font-medium">Current status</Text>
+                    <Flex className="items-center gap-2">
+                      <span
+                        className={`inline-block h-2.5 w-2.5 rounded-full ${syncStatusDotClassName(
+                          syncStatus.state
+                        )}`}
+                      />
+                      <Badge variant="outline">{syncStatusLabel(syncStatus.state)}</Badge>
+                    </Flex>
+                  </Flex>
+                  <Text className="text-sm text-muted-foreground mt-1">
+                    {syncStatus.statusText}
+                  </Text>
+                  {syncStatus.lastError && (
+                    <Text className="text-xs text-red-500 mt-2">
+                      {syncStatus.lastError}
+                    </Text>
+                  )}
+                </Box>
+
+                <Flex className="grid grid-cols-2 gap-3 mt-3">
+                  <Box className="rounded-md border p-3">
+                    <Text className="text-xs text-muted-foreground">Mode</Text>
+                    <Text className="font-medium uppercase">{syncStatus.mode}</Text>
+                  </Box>
+                  <Box className="rounded-md border p-3">
+                    <Text className="text-xs text-muted-foreground">Pending changes</Text>
+                    <Text className="font-medium">{syncStatus.pendingEvents}</Text>
+                  </Box>
+                  <Box className="rounded-md border p-3">
+                    <Text className="text-xs text-muted-foreground">
+                      Dead-letter events
+                    </Text>
+                    <Text className="font-medium">{syncStatus.deadLetterEvents}</Text>
+                  </Box>
+                  <Box className="rounded-md border p-3">
+                    <Text className="text-xs text-muted-foreground">Network</Text>
+                    <Text className="font-medium">
+                      {syncStatus.discoveryRunning && syncStatus.sessionRunning
+                        ? 'Connected'
+                        : 'Disconnected'}
+                    </Text>
+                  </Box>
+                </Flex>
+              </Modal.Content>
+
+              <Modal.Footer className="justify-end gap-2 border-t border-slate-200 dark:border-slate-700">
+                <Button
+                  variant="outline"
+                  disabled={isSyncActionRunning}
+                  onClick={() => {
+                    refreshSyncStatus(true)
+                  }}
+                >
+                  {isSyncActionRunning ? (
+                    <>
+                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                      Working...
+                    </>
+                  ) : (
+                    'Refresh'
+                  )}
+                </Button>
+                {syncStatus.mode === 'on' ? (
+                  <Button
+                    variant="outline"
+                    disabled={isSyncActionRunning}
+                    onClick={() => {
+                      runSyncAction('sync_set_mode', { mode: 'paused' })
+                    }}
+                  >
+                    Pause Sync
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    disabled={isSyncActionRunning}
+                    onClick={() => {
+                      runSyncAction('sync_set_mode', { mode: 'on' })
+                    }}
+                  >
+                    Start Sync
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  disabled={isSyncActionRunning}
+                  onClick={() => {
+                    runSyncAction('sync_retry')
+                  }}
+                >
+                  Retry
+                </Button>
+                <Button
+                  variant="danger"
+                  disabled={isSyncActionRunning}
+                  onClick={() => {
+                    runSyncAction('sync_disconnect')
+                  }}
+                >
+                  Disconnect
+                </Button>
+              </Modal.Footer>
+            </Modal.Body>
+          </Modal>
 
           <Button
             onClick={minimizeWindow}

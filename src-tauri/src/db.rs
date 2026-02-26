@@ -12,6 +12,8 @@ use diesel::prelude::*;
 use diesel::r2d2 as diesel_r2d2;
 
 use crate::services::user_settings_service::load_user_config;
+use crate::sync::apply_context::initialize_apply_context;
+use crate::sync::hlc_sqlite::register_hlc_sql_functions;
 use diesel::sqlite::SqliteConnection;
 
 // use diesel::connection::{set_default_instrumentation, Instrumentation, InstrumentationEvent};
@@ -47,20 +49,35 @@ impl diesel::r2d2::CustomizeConnection<SqliteConnection, diesel::r2d2::Error>
   for ConnectionOptions
 {
   fn on_acquire(&self, conn: &mut SqliteConnection) -> Result<(), diesel::r2d2::Error> {
-    (|| {
-      if self.enable_wal {
-        conn.batch_execute("PRAGMA journal_mode = WAL; PRAGMA synchronous = NORMAL;")?;
-      }
-      if self.enable_foreign_keys {
-        conn.batch_execute("PRAGMA foreign_keys = ON;")?;
-      }
-      if let Some(d) = self.busy_timeout {
-        conn.batch_execute(&format!("PRAGMA busy_timeout = {};", d.as_millis()))?;
-      }
-      Ok(())
-    })()
+    configure_connection(conn, self)
     .map_err(diesel::r2d2::Error::QueryError)
   }
+}
+
+pub(crate) fn runtime_connection_options() -> ConnectionOptions {
+  ConnectionOptions {
+    enable_wal: true,
+    enable_foreign_keys: false,
+    busy_timeout: Some(Duration::from_secs(5)),
+  }
+}
+
+fn configure_connection(
+  conn: &mut SqliteConnection,
+  options: &ConnectionOptions,
+) -> QueryResult<()> {
+  if options.enable_wal {
+    conn.batch_execute("PRAGMA journal_mode = WAL; PRAGMA synchronous = NORMAL;")?;
+  }
+  if options.enable_foreign_keys {
+    conn.batch_execute("PRAGMA foreign_keys = ON;")?;
+  }
+  if let Some(d) = options.busy_timeout {
+    conn.batch_execute(&format!("PRAGMA busy_timeout = {};", d.as_millis()))?;
+  }
+  register_hlc_sql_functions(conn)?;
+  initialize_apply_context(conn)?;
+  Ok(())
 }
 
 pub fn adjust_canonicalization<P: AsRef<Path>>(p: P) -> String {
@@ -84,11 +101,7 @@ fn init_connection_pool() -> Pool {
 
   let manager = diesel_r2d2::ConnectionManager::<SqliteConnection>::new(db_path);
   r2d2::Pool::builder()
-    .connection_customizer(Box::new(ConnectionOptions {
-      enable_wal: false,
-      enable_foreign_keys: false,
-      busy_timeout: Some(Duration::from_secs(3)),
-    }))
+    .connection_customizer(Box::new(runtime_connection_options()))
     .build(manager)
     .expect("Failed to create db pool.")
 }
@@ -199,8 +212,10 @@ pub fn _establish_direct_db_connection() -> SqliteConnection {
   let db_path = get_db_path().clone();
   println!("Connecting to database at: {}", db_path);
 
-  let connection = SqliteConnection::establish(&db_path)
+  let mut connection = SqliteConnection::establish(&db_path)
     .unwrap_or_else(|_| panic!("Error connecting to {}", db_path));
+  configure_connection(&mut connection, &runtime_connection_options())
+    .unwrap_or_else(|e| panic!("Error configuring sqlite connection: {}", e));
 
   connection
 }
