@@ -1381,6 +1381,11 @@ async fn main() {
       sync_commands::sync_set_mode,
       sync_commands::sync_retry,
       sync_commands::sync_disconnect,
+      sync_commands::sync_generate_pair_code,
+      sync_commands::sync_cancel_pair_code,
+      sync_commands::sync_join_with_code,
+      sync_commands::sync_list_peers,
+      sync_commands::sync_remove_peer,
       user_settings_command::cmd_get_custom_db_path,
       // user_settings_command::cmd_set_custom_db_path, // Replaced by cmd_set_and_relocate_db
       // user_settings_command::cmd_remove_custom_db_path, // Replaced by cmd_revert_to_default_db_location
@@ -1593,17 +1598,18 @@ mod sync_plan_tests {
 
     let before = sync_changes_count(&mut connection);
 
-    crate::sync::apply_context::enable_remote_apply_context(&mut connection)
-      .expect("Failed to enable remote apply context");
-    diesel::sql_query(
-      "UPDATE items
-       SET name = 'RemoteApply', updated_at = updated_at + 1
-       WHERE item_id = 'sync-trigger-test-item-001'",
-    )
-    .execute(&mut connection)
-    .expect("Failed to update item during remote apply context");
-    crate::sync::apply_context::disable_remote_apply_context(&mut connection)
-      .expect("Failed to disable remote apply context");
+    {
+      let mut remote_apply_guard =
+        crate::sync::apply_context::enable_remote_apply_context(&mut connection)
+          .expect("Failed to enable remote apply context");
+      diesel::sql_query(
+        "UPDATE items
+         SET name = 'RemoteApply', updated_at = updated_at + 1
+         WHERE item_id = 'sync-trigger-test-item-001'",
+      )
+      .execute(remote_apply_guard.conn_mut())
+      .expect("Failed to update item during remote apply context");
+    }
 
     let after_remote_apply = sync_changes_count(&mut connection);
     assert_eq!(after_remote_apply, before);
@@ -1964,21 +1970,22 @@ mod sync_plan_tests {
       .expect("Failed to read source seq")[0]
       .seq;
 
-    crate::sync::apply_context::enable_remote_apply_context(&mut conn_b)
-      .expect("Failed to enable remote apply context on device B");
-    diesel::sql_query(
-      "INSERT INTO items (
-        item_id, name, is_active, is_disabled, is_deleted, is_folder, is_separator, is_board, is_menu, is_clip,
-        layout_split, created_at, updated_at, created_date, updated_date
-      ) VALUES (
-        'sync-e2e-item-001', 'DeviceAItem', 1, 0, 0, 0, 0, 0, 0, 1,
-        50, 1000, 1000, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
-      )",
-    )
-    .execute(&mut conn_b)
-    .expect("Failed to apply replicated item on device B");
-    crate::sync::apply_context::disable_remote_apply_context(&mut conn_b)
-      .expect("Failed to disable remote apply context on device B");
+    {
+      let mut remote_apply_guard =
+        crate::sync::apply_context::enable_remote_apply_context(&mut conn_b)
+          .expect("Failed to enable remote apply context on device B");
+      diesel::sql_query(
+        "INSERT INTO items (
+          item_id, name, is_active, is_disabled, is_deleted, is_folder, is_separator, is_board, is_menu, is_clip,
+          layout_split, created_at, updated_at, created_date, updated_date
+        ) VALUES (
+          'sync-e2e-item-001', 'DeviceAItem', 1, 0, 0, 0, 0, 0, 0, 1,
+          50, 1000, 1000, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+        )",
+      )
+      .execute(remote_apply_guard.conn_mut())
+      .expect("Failed to apply replicated item on device B");
+    }
 
     diesel::sql_query(
       "INSERT INTO sync_peer_cursor (

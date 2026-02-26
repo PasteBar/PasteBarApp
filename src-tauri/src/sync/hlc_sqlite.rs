@@ -15,12 +15,18 @@ fn get_hlc_wall_ms() -> i64 {
 }
 
 fn get_hlc_counter() -> i32 {
-  let next = HLC_COUNTER.fetch_add(1, Ordering::SeqCst).wrapping_add(1);
-  if next <= 0 {
-    HLC_COUNTER.store(1, Ordering::SeqCst);
-    1
-  } else {
-    next
+  let mut current = HLC_COUNTER.load(Ordering::SeqCst);
+  loop {
+    let next = if current == i32::MAX { 1 } else { current + 1 };
+    match HLC_COUNTER.compare_exchange_weak(
+      current,
+      next,
+      Ordering::SeqCst,
+      Ordering::Relaxed,
+    ) {
+      Ok(_) => return next,
+      Err(observed) => current = observed,
+    }
   }
 }
 

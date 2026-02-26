@@ -90,7 +90,7 @@ import { Icons } from '~/components/icons'
 import SimpleBar from '~/components/libs/simplebar-react'
 import { SocialContacts } from '~/components/organisms/modals/SocialContacts'
 import { ThemeModeToggle } from '~/components/theme-mode-toggle'
-import { Badge, Box, Button, Flex, Shortcut, Text } from '~/components/ui'
+import { Badge, Box, Button, Flex, Input, Shortcut, Text } from '~/components/ui'
 
 import { useSelectCollectionById } from '~/hooks/queries/use-collections'
 import { useDeleteClipboardHistoryByIds } from '~/hooks/queries/use-history-items'
@@ -110,6 +110,20 @@ type SyncUiStatus = {
   sessionRunning: boolean
   statusText: string
   lastError?: string | null
+  discoverable: boolean
+  discoverableUntilMs?: number | null
+  pairCode?: string | null
+  trustedPeers: number
+  lastPairingError?: string | null
+}
+
+type SyncPeerInfo = {
+  peerDeviceId: string
+  isTrusted: boolean
+  isStale: boolean
+  lastSeenAt?: number | null
+  lastAppliedSeq: number
+  updatedAt: number
 }
 
 const DEFAULT_SYNC_STATUS: SyncUiStatus = {
@@ -121,14 +135,22 @@ const DEFAULT_SYNC_STATUS: SyncUiStatus = {
   sessionRunning: false,
   statusText: 'Sync not configured',
   lastError: null,
+  discoverable: false,
+  discoverableUntilMs: null,
+  pairCode: null,
+  trustedPeers: 0,
+  lastPairingError: null,
 }
 
 export function NavBar() {
   const { t, i18n } = useTranslation()
   const [isAutoStartEnabled, setIsAutoStartEnabled] = useState(false)
   const [syncStatus, setSyncStatus] = useState<SyncUiStatus>(DEFAULT_SYNC_STATUS)
+  const [syncPeers, setSyncPeers] = useState<SyncPeerInfo[]>([])
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false)
   const [isSyncActionRunning, setIsSyncActionRunning] = useState(false)
+  const [pairCodeInput, setPairCodeInput] = useState('')
+  const [syncNowMs, setSyncNowMs] = useState(Date.now())
   const navigate = useNavigate()
   const { toast } = useToast()
   const { systemTheme } = useTheme()
@@ -177,10 +199,22 @@ export function NavBar() {
     return 'Not configured'
   }
 
+  const discoverableSecondsLeft =
+    syncStatus.discoverable && syncStatus.discoverableUntilMs
+      ? Math.max(
+          0,
+          Math.ceil((syncStatus.discoverableUntilMs - syncNowMs) / 1000)
+        )
+      : 0
+
   const refreshSyncStatus = async (notifyOnError = false) => {
     try {
-      const status = await invoke<SyncUiStatus>('sync_get_ui_status')
+      const [status, peers] = await Promise.all([
+        invoke<SyncUiStatus>('sync_get_ui_status'),
+        invoke<SyncPeerInfo[]>('sync_list_peers'),
+      ])
       setSyncStatus(status)
+      setSyncPeers(peers)
     } catch (error) {
       setSyncStatus(prev => ({
         ...prev,
@@ -188,6 +222,7 @@ export function NavBar() {
         statusText: 'Unable to load sync status',
         lastError: String(error),
       }))
+      setSyncPeers([])
 
       if (notifyOnError) {
         toast({
@@ -200,13 +235,22 @@ export function NavBar() {
   }
 
   const runSyncAction = async (
-    command: 'sync_set_mode' | 'sync_retry' | 'sync_disconnect',
+    command:
+      | 'sync_set_mode'
+      | 'sync_retry'
+      | 'sync_disconnect'
+      | 'sync_generate_pair_code'
+      | 'sync_cancel_pair_code'
+      | 'sync_join_with_code'
+      | 'sync_remove_peer',
     payload?: Record<string, unknown>
   ) => {
     setIsSyncActionRunning(true)
     try {
       const status = await invoke<SyncUiStatus>(command, payload)
       setSyncStatus(status)
+      const peers = await invoke<SyncPeerInfo[]>('sync_list_peers')
+      setSyncPeers(peers)
       toast({
         variant: status.state === 'error' ? 'destructive' : 'success',
         title: 'Sync updated',
@@ -262,9 +306,13 @@ export function NavBar() {
 
     const loadSyncState = async () => {
       try {
-        const status = await invoke<SyncUiStatus>('sync_get_ui_status')
+        const [status, peers] = await Promise.all([
+          invoke<SyncUiStatus>('sync_get_ui_status'),
+          invoke<SyncPeerInfo[]>('sync_list_peers'),
+        ])
         if (isMounted) {
           setSyncStatus(status)
+          setSyncPeers(peers)
         }
       } catch (error) {
         if (isMounted) {
@@ -274,6 +322,7 @@ export function NavBar() {
             statusText: 'Unable to load sync status',
             lastError: String(error),
           }))
+          setSyncPeers([])
         }
       }
     }
@@ -286,6 +335,25 @@ export function NavBar() {
       clearInterval(intervalId)
     }
   }, [])
+
+  useEffect(() => {
+    if (!isSyncModalOpen) {
+      return
+    }
+    refreshSyncStatus()
+  }, [isSyncModalOpen])
+
+  useEffect(() => {
+    if (!isSyncModalOpen || !syncStatus.discoverable) {
+      return
+    }
+    const timerId = setInterval(() => {
+      setSyncNowMs(Date.now())
+    }, 1000)
+    return () => {
+      clearInterval(timerId)
+    }
+  }, [isSyncModalOpen, syncStatus.discoverable])
 
   useEffect(() => {
     if (systemTheme) {
@@ -1761,6 +1829,7 @@ export function NavBar() {
                   <MenubarSeparator />
                   <MenubarItem
                     onClick={() => {
+                      setPairCodeInput('')
                       setIsSyncModalOpen(true)
                     }}
                   >
@@ -2262,6 +2331,11 @@ export function NavBar() {
                       {syncStatus.lastError}
                     </Text>
                   )}
+                  {syncStatus.lastPairingError && (
+                    <Text className="text-xs text-red-500 mt-1">
+                      {syncStatus.lastPairingError}
+                    </Text>
+                  )}
                 </Box>
 
                 <Flex className="grid grid-cols-2 gap-3 mt-3">
@@ -2288,6 +2362,109 @@ export function NavBar() {
                     </Text>
                   </Box>
                 </Flex>
+
+                <Box className="rounded-md border p-3 mt-3">
+                  <Text className="text-sm font-medium">Pair Devices (6-digit code)</Text>
+                  <Text className="text-xs text-muted-foreground mt-1">
+                    Device is discoverable only for 1 minute while a code is active.
+                  </Text>
+
+                  {syncStatus.discoverable && syncStatus.pairCode ? (
+                    <Flex className="items-center justify-between mt-3">
+                      <Box>
+                        <Text className="text-xs text-muted-foreground">Active code</Text>
+                        <Text className="font-mono text-2xl tracking-widest">
+                          {syncStatus.pairCode}
+                        </Text>
+                        <Text className="text-xs text-muted-foreground mt-1">
+                          Expires in {discoverableSecondsLeft}s
+                        </Text>
+                      </Box>
+                      <Button
+                        variant="outline"
+                        disabled={isSyncActionRunning}
+                        onClick={() => {
+                          runSyncAction('sync_cancel_pair_code')
+                        }}
+                      >
+                        Cancel Code
+                      </Button>
+                    </Flex>
+                  ) : (
+                    <Button
+                      className="mt-3"
+                      variant="outline"
+                      disabled={isSyncActionRunning}
+                      onClick={() => {
+                        runSyncAction('sync_generate_pair_code')
+                      }}
+                    >
+                      Generate 6-digit Code
+                    </Button>
+                  )}
+
+                  <Flex className="items-center gap-2 mt-3">
+                    <Input
+                      placeholder="Enter 6-digit code"
+                      value={pairCodeInput}
+                      maxLength={6}
+                      onChange={event => {
+                        const digitsOnly = event.target.value.replace(/\D/g, '')
+                        setPairCodeInput(digitsOnly.slice(0, 6))
+                      }}
+                    />
+                    <Button
+                      variant="outline"
+                      disabled={isSyncActionRunning || pairCodeInput.length !== 6}
+                      onClick={() => {
+                        runSyncAction('sync_join_with_code', { code: pairCodeInput })
+                        setPairCodeInput('')
+                      }}
+                    >
+                      Connect
+                    </Button>
+                  </Flex>
+                </Box>
+
+                <Box className="rounded-md border p-3 mt-3">
+                  <Flex className="items-center justify-between">
+                    <Text className="text-sm font-medium">Paired devices</Text>
+                    <Badge variant="outline">{syncStatus.trustedPeers}</Badge>
+                  </Flex>
+                  {syncPeers.length === 0 ? (
+                    <Text className="text-xs text-muted-foreground mt-2">
+                      No paired devices yet.
+                    </Text>
+                  ) : (
+                    <Flex className="flex-col gap-2 mt-2">
+                      {syncPeers.map(peer => (
+                        <Flex
+                          key={peer.peerDeviceId}
+                          className="items-center justify-between rounded border p-2"
+                        >
+                          <Box>
+                            <Text className="text-sm font-medium">{peer.peerDeviceId}</Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {peer.isTrusted ? 'Trusted' : 'Untrusted'} |{' '}
+                              {peer.isStale ? 'Stale' : 'Active'}
+                            </Text>
+                          </Box>
+                          <Button
+                            variant="outline"
+                            disabled={isSyncActionRunning}
+                            onClick={() => {
+                              runSyncAction('sync_remove_peer', {
+                                peerDeviceId: peer.peerDeviceId,
+                              })
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </Flex>
+                      ))}
+                    </Flex>
+                  )}
+                </Box>
               </Modal.Content>
 
               <Modal.Footer className="justify-end gap-2 border-t border-slate-200 dark:border-slate-700">

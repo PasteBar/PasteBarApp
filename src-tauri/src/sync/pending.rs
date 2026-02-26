@@ -54,29 +54,31 @@ pub fn process_pending_retry(
   let next_retry = row.retry_count + 1;
 
   if next_retry > max_retries {
-    diesel::sql_query(
-      "INSERT INTO sync_dead_letter (
-         source_device_id, table_name, row_id, op, hlc_wall_ms, hlc_counter, updated_at, row_json, retry_count, failure_reason, created_at
-       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    )
-    .bind::<Text, _>(row.source_device_id)
-    .bind::<Text, _>(row.table_name)
-    .bind::<Text, _>(row.row_id)
-    .bind::<Text, _>(row.op)
-    .bind::<BigInt, _>(row.hlc_wall_ms)
-    .bind::<Integer, _>(row.hlc_counter)
-    .bind::<BigInt, _>(row.updated_at)
-    .bind::<Nullable<Text>, _>(row.row_json)
-    .bind::<Integer, _>(next_retry)
-    .bind::<Text, _>(failure_reason.to_string())
-    .bind::<BigInt, _>(row.created_at)
-    .execute(conn)?;
+    return conn.transaction(|transaction_conn| {
+      diesel::sql_query(
+        "INSERT INTO sync_dead_letter (
+           source_device_id, table_name, row_id, op, hlc_wall_ms, hlc_counter, updated_at, row_json, retry_count, failure_reason, created_at
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      )
+      .bind::<Text, _>(row.source_device_id)
+      .bind::<Text, _>(row.table_name)
+      .bind::<Text, _>(row.row_id)
+      .bind::<Text, _>(row.op)
+      .bind::<BigInt, _>(row.hlc_wall_ms)
+      .bind::<Integer, _>(row.hlc_counter)
+      .bind::<BigInt, _>(row.updated_at)
+      .bind::<Nullable<Text>, _>(row.row_json)
+      .bind::<Integer, _>(next_retry)
+      .bind::<Text, _>(failure_reason.to_string())
+      .bind::<BigInt, _>(row.created_at)
+      .execute(transaction_conn)?;
 
-    diesel::sql_query("DELETE FROM sync_pending_apply WHERE id = ?")
-      .bind::<Integer, _>(row.id)
-      .execute(conn)?;
+      diesel::sql_query("DELETE FROM sync_pending_apply WHERE id = ?")
+        .bind::<Integer, _>(row.id)
+        .execute(transaction_conn)?;
 
-    return Ok(PendingProcessResult::MovedToDeadLetter);
+      Ok(PendingProcessResult::MovedToDeadLetter)
+    });
   }
 
   diesel::sql_query(

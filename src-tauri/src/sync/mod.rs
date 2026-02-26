@@ -9,6 +9,7 @@ pub mod hlc;
 pub mod hlc_sqlite;
 pub mod media;
 pub mod observability;
+pub mod pairing_runtime;
 pub mod pending;
 pub mod protocol;
 pub mod security;

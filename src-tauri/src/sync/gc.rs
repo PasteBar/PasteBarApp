@@ -52,20 +52,22 @@ pub fn compact_outbox_to_floor(
   floor_seq: i64,
   now_ms: i64,
 ) -> QueryResult<usize> {
-  let deleted = diesel::sql_query("DELETE FROM sync_changes WHERE seq <= ?")
+  conn.transaction(|transaction_conn| {
+    let deleted = diesel::sql_query("DELETE FROM sync_changes WHERE seq <= ?")
+      .bind::<BigInt, _>(floor_seq)
+      .execute(transaction_conn)?;
+
+    diesel::sql_query(
+      "INSERT INTO sync_gc_state (id, last_pruned_seq, updated_at)
+       VALUES (1, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         last_pruned_seq = excluded.last_pruned_seq,
+         updated_at = excluded.updated_at",
+    )
     .bind::<BigInt, _>(floor_seq)
-    .execute(conn)?;
+    .bind::<BigInt, _>(now_ms)
+    .execute(transaction_conn)?;
 
-  diesel::sql_query(
-    "INSERT INTO sync_gc_state (id, last_pruned_seq, updated_at)
-     VALUES (1, ?, ?)
-     ON CONFLICT(id) DO UPDATE SET
-       last_pruned_seq = excluded.last_pruned_seq,
-       updated_at = excluded.updated_at",
-  )
-  .bind::<BigInt, _>(floor_seq)
-  .bind::<BigInt, _>(now_ms)
-  .execute(conn)?;
-
-  Ok(deleted)
+    Ok(deleted)
+  })
 }
