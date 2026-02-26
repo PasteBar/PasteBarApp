@@ -175,12 +175,10 @@ impl PairingRuntime {
       .map_err(|e| format!("Failed to serialize pairing request: {}", e))?;
 
     let broadcast_addr = SocketAddr::from(([255, 255, 255, 255], PAIRING_PORT));
-    let loopback_addr = SocketAddr::from(([127, 0, 0, 1], PAIRING_PORT));
     let mut last_rejection: Option<String> = None;
 
     for _ in 0..JOIN_ATTEMPTS {
       let _ = socket.send_to(&payload, broadcast_addr);
-      let _ = socket.send_to(&payload, loopback_addr);
 
       let attempt_deadline = now_ms() + JOIN_WAIT_PER_ATTEMPT_MS;
       while now_ms() < attempt_deadline {
@@ -210,12 +208,22 @@ impl PairingRuntime {
           continue;
         }
 
+        if should_ignore_rejection_for_self_not_discoverable(
+          accepted,
+          &host_device_id,
+          requester_device_id,
+          reason.as_deref(),
+        ) {
+          continue;
+        }
+
         if accepted {
           self.clear_last_error()?;
           return Ok(PairingJoinResult { host_device_id });
         }
 
-        last_rejection = Some(reason.unwrap_or_else(|| "Pairing rejected".to_string()));
+        let rejection_reason = reason.unwrap_or_else(|| "pairing_rejected".to_string());
+        last_rejection = Some(humanize_rejection_reason(&rejection_reason));
       }
     }
 
@@ -259,8 +267,12 @@ impl PairingRuntime {
       return Ok(());
     }
 
-    let socket = UdpSocket::bind(("0.0.0.0", PAIRING_PORT))
-      .map_err(|e| format!("Failed to bind pairing listener on port {}: {}", PAIRING_PORT, e))?;
+    let socket = UdpSocket::bind(("0.0.0.0", PAIRING_PORT)).map_err(|e| {
+      format!(
+        "Failed to bind pairing listener on port {}: {}",
+        PAIRING_PORT, e
+      )
+    })?;
     socket
       .set_broadcast(true)
       .map_err(|e| format!("Failed to enable listener broadcast mode: {}", e))?;
@@ -311,6 +323,28 @@ impl PairingRuntime {
       .map_err(|_| "Pairing state lock poisoned".to_string())?;
     state.last_error = Some(message);
     Ok(())
+  }
+}
+
+fn should_ignore_rejection_for_self_not_discoverable(
+  accepted: bool,
+  host_device_id: &str,
+  requester_device_id: &str,
+  reason: Option<&str>,
+) -> bool {
+  !accepted && host_device_id == requester_device_id && matches!(reason, Some("not_discoverable"))
+}
+
+fn humanize_rejection_reason(reason: &str) -> String {
+  match reason {
+    "not_discoverable" => {
+      "Target device is not discoverable. Generate a new 6-digit code and retry.".to_string()
+    }
+    "invalid_code" => "The 6-digit code is invalid for the target device.".to_string(),
+    "sync_off" => "Target device has sync turned off.".to_string(),
+    "database_error" => "Target device failed to save pairing state.".to_string(),
+    "runtime_lock_error" => "Target device pairing runtime is busy. Retry.".to_string(),
+    other => other.to_string(),
   }
 }
 
@@ -449,3 +483,42 @@ fn now_ms() -> i64 {
     .as_millis() as i64
 }
 
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn ignores_self_not_discoverable_rejection() {
+    assert!(should_ignore_rejection_for_self_not_discoverable(
+      false,
+      "device-a",
+      "device-a",
+      Some("not_discoverable"),
+    ));
+  }
+
+  #[test]
+  fn does_not_ignore_non_self_not_discoverable_rejection() {
+    assert!(!should_ignore_rejection_for_self_not_discoverable(
+      false,
+      "device-b",
+      "device-a",
+      Some("not_discoverable"),
+    ));
+  }
+
+  #[test]
+  fn does_not_ignore_self_when_accepted() {
+    assert!(!should_ignore_rejection_for_self_not_discoverable(
+      true, "device-a", "device-a", None,
+    ));
+  }
+
+  #[test]
+  fn humanizes_not_discoverable_reason() {
+    assert_eq!(
+      humanize_rejection_reason("not_discoverable"),
+      "Target device is not discoverable. Generate a new 6-digit code and retry."
+    );
+  }
+}

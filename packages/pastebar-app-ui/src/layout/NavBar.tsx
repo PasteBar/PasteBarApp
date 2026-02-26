@@ -68,7 +68,6 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import Modal from '~/components/molecules/modal'
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -88,6 +87,7 @@ import { useToast } from '~/components/ui/use-toast'
 import ToolTip from '~/components/atoms/tooltip'
 import { Icons } from '~/components/icons'
 import SimpleBar from '~/components/libs/simplebar-react'
+import Modal from '~/components/molecules/modal'
 import { SocialContacts } from '~/components/organisms/modals/SocialContacts'
 import { ThemeModeToggle } from '~/components/theme-mode-toggle'
 import { Badge, Box, Button, Flex, Input, Shortcut, Text } from '~/components/ui'
@@ -201,10 +201,7 @@ export function NavBar() {
 
   const discoverableSecondsLeft =
     syncStatus.discoverable && syncStatus.discoverableUntilMs
-      ? Math.max(
-          0,
-          Math.ceil((syncStatus.discoverableUntilMs - syncNowMs) / 1000)
-        )
+      ? Math.max(0, Math.ceil((syncStatus.discoverableUntilMs - syncNowMs) / 1000))
       : 0
 
   const refreshSyncStatus = async (notifyOnError = false) => {
@@ -226,6 +223,7 @@ export function NavBar() {
 
       if (notifyOnError) {
         toast({
+          id: 'sync-error',
           variant: 'destructive',
           title: 'Sync status failed',
           description: String(error),
@@ -252,12 +250,14 @@ export function NavBar() {
       const peers = await invoke<SyncPeerInfo[]>('sync_list_peers')
       setSyncPeers(peers)
       toast({
+        id: 'sync-success',
         variant: status.state === 'error' ? 'destructive' : 'success',
         title: 'Sync updated',
         description: status.statusText,
       })
     } catch (error) {
       toast({
+        id: 'sync-error',
         variant: 'destructive',
         title: 'Sync action failed',
         description: String(error),
@@ -2289,29 +2289,36 @@ export function NavBar() {
             handleClose={() => {
               setIsSyncModalOpen(false)
             }}
+            canClose={false}
             isLargeModal
             positionTop
           >
-            <Modal.Body className="w-[560px] relative">
-              <Button
-                variant="link"
-                type="button"
-                onClick={() => {
-                  setIsSyncModalOpen(false)
-                }}
-                className="hover:bg-slate-200 px-2 absolute right-1.5 top-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 hover:dark:text-slate-400 hover:bg-transparent dark:hover:bg-transparent"
-              >
-                <X className="w-5 h-5" />
-              </Button>
-
-              <Modal.Content className="pt-6 px-7 pb-5">
-                <Flex className="flex-col items-start mb-3">
+            <Modal.Body
+              className="w-[560px] relative rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex flex-col"
+              style={{ height: 'calc(100vh - 180px)' }}
+            >
+              <div className="flex items-start justify-between px-7 py-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                <Flex className="flex-col items-start">
                   <Text className="text-lg font-semibold">Sync Center</Text>
                   <Text className="text-sm text-muted-foreground">
                     Connect devices, monitor sync health, and quickly retry or disconnect.
                   </Text>
                 </Flex>
-                <Box className="rounded-md border p-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setIsSyncModalOpen(false)
+                  }}
+                  className="cursor-pointer border-0 p-1.5 -mr-1 -mt-1"
+                >
+                  <X size={20} />
+                </Button>
+              </div>
+
+              <Modal.Content className="px-7 py-4 grow min-h-0 !overflow-hidden">
+                <SimpleBar className="h-full w-full pr-1" autoHide={false}>
+                  <Box className="rounded-md border p-3 bg-slate-50 dark:bg-slate-800/60">
                   <Flex className="items-center justify-between">
                     <Text className="font-medium">Current status</Text>
                     <Flex className="items-center gap-2">
@@ -2338,22 +2345,22 @@ export function NavBar() {
                   )}
                 </Box>
 
-                <Flex className="grid grid-cols-2 gap-3 mt-3">
-                  <Box className="rounded-md border p-3">
+                  <Flex className="grid grid-cols-2 gap-3 mt-3">
+                    <Box className="rounded-md border p-3 bg-slate-50 dark:bg-slate-800/60">
                     <Text className="text-xs text-muted-foreground">Mode</Text>
                     <Text className="font-medium uppercase">{syncStatus.mode}</Text>
                   </Box>
-                  <Box className="rounded-md border p-3">
+                    <Box className="rounded-md border p-3 bg-slate-50 dark:bg-slate-800/60">
                     <Text className="text-xs text-muted-foreground">Pending changes</Text>
                     <Text className="font-medium">{syncStatus.pendingEvents}</Text>
                   </Box>
-                  <Box className="rounded-md border p-3">
+                    <Box className="rounded-md border p-3 bg-slate-50 dark:bg-slate-800/60">
                     <Text className="text-xs text-muted-foreground">
                       Dead-letter events
                     </Text>
                     <Text className="font-medium">{syncStatus.deadLetterEvents}</Text>
                   </Box>
-                  <Box className="rounded-md border p-3">
+                    <Box className="rounded-md border p-3 bg-slate-50 dark:bg-slate-800/60">
                     <Text className="text-xs text-muted-foreground">Network</Text>
                     <Text className="font-medium">
                       {syncStatus.discoveryRunning && syncStatus.sessionRunning
@@ -2363,7 +2370,7 @@ export function NavBar() {
                   </Box>
                 </Flex>
 
-                <Box className="rounded-md border p-3 mt-3">
+                  <Box className="rounded-md border p-3 mt-3 bg-slate-50 dark:bg-slate-800/60">
                   <Text className="text-sm font-medium">Pair Devices (6-digit code)</Text>
                   <Text className="text-xs text-muted-foreground mt-1">
                     Device is discoverable only for 1 minute while a code is active.
@@ -2426,7 +2433,7 @@ export function NavBar() {
                   </Flex>
                 </Box>
 
-                <Box className="rounded-md border p-3 mt-3">
+                  <Box className="rounded-md border p-3 mt-3 bg-slate-50 dark:bg-slate-800/60">
                   <Flex className="items-center justify-between">
                     <Text className="text-sm font-medium">Paired devices</Text>
                     <Badge variant="outline">{syncStatus.trustedPeers}</Badge>
@@ -2440,10 +2447,12 @@ export function NavBar() {
                       {syncPeers.map(peer => (
                         <Flex
                           key={peer.peerDeviceId}
-                          className="items-center justify-between rounded border p-2"
+                          className="items-center justify-between rounded-md border p-2 bg-slate-50 dark:bg-slate-800/60"
                         >
                           <Box>
-                            <Text className="text-sm font-medium">{peer.peerDeviceId}</Text>
+                            <Text className="text-sm font-medium">
+                              {peer.peerDeviceId}
+                            </Text>
                             <Text className="text-xs text-muted-foreground">
                               {peer.isTrusted ? 'Trusted' : 'Untrusted'} |{' '}
                               {peer.isStale ? 'Stale' : 'Active'}
@@ -2465,9 +2474,19 @@ export function NavBar() {
                     </Flex>
                   )}
                 </Box>
+                </SimpleBar>
               </Modal.Content>
 
               <Modal.Footer className="justify-end gap-2 border-t border-slate-200 dark:border-slate-700">
+                <Button
+                  variant="outline"
+                  disabled={isSyncActionRunning}
+                  onClick={() => {
+                    setIsSyncModalOpen(false)
+                  }}
+                >
+                  Cancel
+                </Button>
                 <Button
                   variant="outline"
                   disabled={isSyncActionRunning}
