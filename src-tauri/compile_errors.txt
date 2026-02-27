@@ -1,0 +1,501 @@
+warning: variable does not need to be mutable
+   --> libs\tao-0.16.7\src\platform_impl\windows\system_tray.rs:265:7
+    |
+265 |   let mut subclass_input = &mut *(subclass_input_ptr);
+    |       ----^^^^^^^^^^^^^^
+    |       |
+    |       help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `Cursor` is never constructed
+  --> libs\tao-0.16.7\src\platform_impl\windows\mod.rs:78:12
+   |
+78 | pub struct Cursor(pub *const u16);
+   |            ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `high_surrogate` is never read
+  --> libs\tao-0.16.7\src\platform_impl\windows\window_state.rs:40:7
+   |
+21 | pub struct WindowState {
+   |            ----------- field in this struct
+...
+40 |   pub high_surrogate: Option<u16>,
+   |       ^^^^^^^^^^^^^^
+
+warning: variable `dwStyle` should have a snake case name
+   --> libs\tao-0.16.7\src\platform_impl\windows\util.rs:297:3
+    |
+297 |   dwStyle: WINDOW_STYLE,
+    |   ^^^^^^^ help: convert the identifier to snake case: `dw_style`
+    |
+    = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: variable `bMenu` should have a snake case name
+   --> libs\tao-0.16.7\src\platform_impl\windows\util.rs:298:3
+    |
+298 |   bMenu: BOOL,
+    |   ^^^^^ help: convert the identifier to snake case: `b_menu`
+
+warning: variable `dwExStyle` should have a snake case name
+   --> libs\tao-0.16.7\src\platform_impl\windows\util.rs:299:3
+    |
+299 |   dwExStyle: WINDOW_EX_STYLE,
+    |   ^^^^^^^^^ help: convert the identifier to snake case: `dw_ex_style`
+
+warning: unused return value of `Box::<T>::into_raw` that must be used
+    --> libs\tao-0.16.7\src\platform_impl\windows\event_loop.rs:2282:5
+     |
+2282 |     Box::into_raw(subclass_input);
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: losing the pointer will leak memory
+     = note: `#[warn(unused_must_use)]` (part of `#[warn(unused)]`) on by default
+help: use `let _ = ...` to ignore the resulting value
+     |
+2282 |     let _ = Box::into_raw(subclass_input);
+     |     +++++++
+
+warning: `tao` (lib) generated 7 warnings (run `cargo fix --lib -p tao` to apply 1 suggestion)
+warning: unused import: `crate::MIDError`
+ --> libs\mid-hardware-id\src\utils.rs:1:5
+  |
+1 | use crate::MIDError;
+  |     ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ffi::OsStr` and `process::Command`
+ --> libs\mid-hardware-id\src\utils.rs:2:11
+  |
+2 | use std::{ffi::OsStr, process::Command};
+  |           ^^^^^^^^^^  ^^^^^^^^^^^^^^^^
+
+warning: unused import: `AtomicPtr`
+ --> libs\inputbot\src\common.rs:5:18
+  |
+5 |   sync::atomic::{AtomicPtr, Ordering},
+  |                  ^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary parentheses around `let` scrutinee expression
+   --> libs\inputbot\src\public.rs:362:32
+    |
+362 |       if let Some(keybd_key) = ({
+    |                                ^
+...
+374 |       }) {
+    |        ^
+    |
+    = note: `#[warn(unused_parens)]` (part of `#[warn(unused)]`) on by default
+help: remove these parentheses
+    |
+362 ~       if let Some(keybd_key) = {
+363 |         if c.is_uppercase()
+...
+373 |         get_keybd_key(c)
+374 ~       }  {
+    |
+
+warning: unused import: `transmute_copy`
+ --> libs\inputbot\src\windows\mod.rs:4:18
+  |
+4 |   mem::{size_of, transmute_copy, MaybeUninit},
+  |                  ^^^^^^^^^^^^^^
+
+warning: unnecessary parentheses around `let` scrutinee expression
+   --> libs\inputbot\src\windows\mod.rs:167:31
+    |
+167 |   } else if let Some(event) = (match w_param as u32 {
+    |                               ^
+...
+181 |   }) {
+    |    ^
+    |
+help: remove these parentheses
+    |
+167 ~   } else if let Some(event) = match w_param as u32 {
+168 |     WM_LBUTTONDOWN => Some(MouseButton::LeftButton),
+...
+180 |     _ => None,
+181 ~   }  {
+    |
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:225:27
+    |
+225 |   let mouse: MOUSEINPUT = unsafe {
+    |                           ^^^^^^ unnecessary `unsafe` block
+    |
+    = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:276:33
+    |
+276 |   let keybd_vdown: KEYBDINPUT = unsafe {
+    |                                 ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:286:31
+    |
+286 |   let keybd_vup: KEYBDINPUT = unsafe {
+    |                               ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:296:39
+    |
+296 |   let keybd_controldown: KEYBDINPUT = unsafe {
+    |                                       ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:306:37
+    |
+306 |   let keybd_controlup: KEYBDINPUT = unsafe {
+    |                                     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:366:38
+    |
+366 |   let keybd_enter_down: KEYBDINPUT = unsafe {
+    |                                      ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:376:36
+    |
+376 |   let keybd_enter_up: KEYBDINPUT = unsafe {
+    |                                    ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:419:36
+    |
+419 |   let keybd_tab_down: KEYBDINPUT = unsafe {
+    |                                    ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> libs\inputbot\src\windows\mod.rs:429:34
+    |
+429 |   let keybd_tab_up: KEYBDINPUT = unsafe {
+    |                                  ^^^^^^ unnecessary `unsafe` block
+
+warning: fields `language` and `points` are never read
+  --> libs\lang_detect\src\types.rs:54:3
+   |
+53 | pub struct LanguagePoints {
+   |            -------------- fields in this struct
+54 |   language: String,
+   |   ^^^^^^^^
+55 |   points: i32,
+   |   ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `mid` (lib) generated 2 warnings (run `cargo fix --lib -p mid` to apply 2 suggestions)
+warning: `inputbot` (lib) generated 13 warnings (run `cargo fix --lib -p inputbot` to apply 4 suggestions)
+warning: `lang_detect` (lib) generated 1 warning
+    Checking pastebar-app v0.0.1 (C:\Users\skurd\Documents\pastebar\PasteBarApp\src-tauri)
+warning: unused import: `std::fs`
+  --> src\main.rs:21:5
+   |
+21 | use std::fs;
+   |     ^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `pretty_print_struct`
+ --> src\commands\history_commands.rs:4:66
+  |
+4 | use crate::services::utils::{ensure_url_prefix, is_base64_image, pretty_print_struct};
+  |                                                                  ^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `pretty_print_json` and `pretty_print_struct`
+  --> src\commands\items_commands.rs:13:39
+   |
+13 |   ensure_url_prefix, is_base64_image, pretty_print_json, pretty_print_struct,
+   |                                       ^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `image::Delay`
+ --> src\commands\security_commands.rs:4:5
+  |
+4 | use image::Delay;
+  |     ^^^^^^^^^^^^
+
+warning: unused import: `tauri::AppHandle`
+ --> src\commands\translations_commands.rs:5:5
+  |
+5 | use tauri::AppHandle;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `tauri::Manager`
+ --> src\commands\translations_commands.rs:6:5
+  |
+6 | use tauri::Manager;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused import: `std::sync::Mutex`
+  --> src\commands\translations_commands.rs:12:5
+   |
+12 | use std::sync::Mutex;
+   |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::Setting`
+  --> src\commands\translations_commands.rs:14:5
+   |
+14 | use crate::models::Setting;
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `get_clip_images_dir`, `get_clipboard_images_dir`, `get_db_path`, `get_default_data_dir`, and `get_default_db_path_string`
+ --> src\commands\user_settings_command.rs:8:3
+  |
+8 |   get_clip_images_dir, get_clipboard_images_dir, get_data_dir, get_db_path, get_default_data_dir,
+  |   ^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^                ^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+9 |   get_default_db_path_string,
+  |   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `set_custom_db_path`
+  --> src\commands\user_settings_command.rs:13:42
+   |
+13 |   remove_custom_db_path, remove_setting, set_custom_db_path, set_setting,
+   |                                          ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `debug_output`
+ --> src\menu.rs:6:30
+  |
+6 | use crate::services::utils::{debug_output, mask_value};
+  |                              ^^^^^^^^^^^^
+
+warning: unused import: `super::items_service::CreateItem`
+  --> src\services\collections_service.rs:24:5
+   |
+24 | use super::items_service::CreateItem;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::dsl::select`
+ --> src\services\history_service.rs:2:5
+  |
+2 | use diesel::dsl::select;
+  |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `APP_CONSTANTS`
+  --> src\services\history_service.rs:36:23
+   |
+36 | use crate::db::{self, APP_CONSTANTS};
+   |                       ^^^^^^^^^^^^^
+
+warning: unused import: `super::utils::is_valid_json`
+  --> src\services\history_service.rs:49:5
+   |
+49 | use super::utils::is_valid_json;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::debug_query`
+  --> src\services\history_service.rs:51:5
+   |
+51 | use diesel::debug_query;
+   |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::sqlite::Sqlite`
+  --> src\services\history_service.rs:52:5
+   |
+52 | use diesel::sqlite::Sqlite;
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `IfAddr` and `get_if_addrs`
+ --> src\sync\pairing_runtime.rs:4:16
+  |
+4 | use if_addrs::{get_if_addrs, IfAddr};
+  |                ^^^^^^^^^^^^  ^^^^^^
+
+warning: unused import: `BTreeSet`
+  --> src\sync\pairing_runtime.rs:10:34
+   |
+10 | use std::collections::{BTreeMap, BTreeSet, HashMap};
+   |                                  ^^^^^^^^
+
+warning: unused imports: `SocketAddr` and `UdpSocket`
+  --> src\sync\pairing_runtime.rs:11:34
+   |
+11 | use std::net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket};
+   |                                  ^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `once_cell::sync::Lazy`
+  --> src\main.rs:85:5
+   |
+85 | use once_cell::sync::Lazy;
+   |     ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::ptr`
+  --> src\main.rs:86:5
+   |
+86 | use std::ptr;
+   |     ^^^^^^^^
+
+warning: unused import: `std::sync::Arc`
+  --> src\main.rs:87:5
+   |
+87 | use std::sync::Arc;
+   |     ^^^^^^^^^^^^^^
+
+warning: unused import: `std::time::Instant`
+  --> src\main.rs:90:5
+   |
+90 | use std::time::Instant;
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `tokio::sync::Mutex as TokioMutex`
+  --> src\main.rs:91:5
+   |
+91 | use tokio::sync::Mutex as TokioMutex;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `base64::encode`: Use Engine::encode
+   --> src\main.rs:783:44
+    |
+783 |                 let base64_image = base64::encode(&img_data);
+    |                                            ^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `base64::encode`: Use Engine::encode
+   --> src\main.rs:929:44
+    |
+929 |                 let base64_image = base64::encode(&img_data);
+    |                                            ^^^^^^
+
+warning: use of deprecated function `base64::encode`: Use Engine::encode
+   --> src\commands\clipboard_commands.rs:141:35
+    |
+141 |           Ok(img_data) => base64::encode(&img_data),
+    |                                   ^^^^^^
+
+warning: use of deprecated function `base64::decode`: Use Engine::decode
+   --> src\commands\clipboard_commands.rs:182:25
+    |
+182 |   let decoded = base64::decode(&base64_image).map_err(|err| err.to_string())?;
+    |                         ^^^^^^
+
+warning: use of deprecated function `base64::encode`: Use Engine::encode
+   --> src\commands\clipboard_commands.rs:432:35
+    |
+432 |           Ok(img_data) => base64::encode(&img_data),
+    |                                   ^^^^^^
+
+warning: use of deprecated function `base64::decode`: Use Engine::decode
+   --> src\commands\history_commands.rs:318:35
+    |
+318 |           img_data = Some(base64::decode(base64_data).map_err(|e| e.to_string())?);
+    |                                   ^^^^^^
+
+warning: use of deprecated function `base64::decode`: Use Engine::decode
+   --> src\commands\items_commands.rs:535:35
+    |
+535 |           img_data = Some(base64::decode(base64_data).map_err(|e| e.to_string())?);
+    |                                   ^^^^^^
+
+warning: use of deprecated function `base64::encode`: Use Engine::encode
+   --> src\commands\link_metadata_commands.rs:339:15
+    |
+339 |       base64::encode(favicon_bytes)
+    |               ^^^^^^
+
+warning: variable does not need to be mutable
+   --> src\services\request_service.rs:294:7
+    |
+294 |   let mut has_rules_error = false;
+    |       ----^^^^^^^^^^^^^^^
+    |       |
+    |       help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+error[E0004]: non-exhaustive patterns: `Ok(_)` not covered
+   --> src\sync\pairing_runtime.rs:797:13
+    |
+797 |         match backfill_history_outbox_from_existing(
+    |  _____________^
+798 | |         &mut conn,
+799 | |         HISTORY_BACKFILL_LIMIT,
+800 | |         min_updated_at_ms,
+801 | |       ) {
+    | |_______^ pattern `Ok(_)` not covered
+    |
+note: `Result<usize, std::string::String>` defined here
+   --> C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+    |
+557 | pub enum Result<T, E> {
+    | ^^^^^^^^^^^^^^^^^^^^^
+...
+561 |     Ok(#[stable(feature = "rust1", since = "1.0.0")] T),
+    |     -- not covered
+    = note: the matched value is of type `Result<usize, std::string::String>`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+    |
+818 ~         },
+819 +         Ok(_) => todo!()
+    |
+
+warning: use of deprecated method `image::DynamicImage::to_bytes`: use `image.into_bytes()` or `image.as_bytes().to_vec()` instead
+   --> src\services\history_service.rs:349:75
+    |
+349 |     img_hash::image::ImageBuffer::from_raw(img.width(), img.height(), img.to_bytes())
+    |                                                                           ^^^^^^^^
+
+warning: use of deprecated associated function `chrono::NaiveDateTime::from_timestamp_opt`: use `DateTime::from_timestamp` instead
+   --> src\sync\history_sync.rs:407:18
+    |
+407 |   NaiveDateTime::from_timestamp_opt(millis / 1000, 0)
+    |                  ^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated associated function `chrono::NaiveDateTime::from_timestamp_opt`: use `DateTime::from_timestamp` instead
+   --> src\sync\history_sync.rs:408:39
+    |
+408 |     .unwrap_or_else(|| NaiveDateTime::from_timestamp_opt(0, 0).expect("unix epoch must exist"))
+    |                                       ^^^^^^^^^^^^^^^^^^
+
+warning: variable does not need to be mutable
+   --> src\menu.rs:202:7
+    |
+202 |   let mut menuitem_quit = CustomMenuItem::new("quit".to_string(), Translations::get("quit"));
+    |       ----^^^^^^^^^^^^^
+    |       |
+    |       help: remove this `mut`
+
+warning: unused variable: `item_number`
+   --> src\menu.rs:389:11
+    |
+389 |       let item_number = ((index + 1) % 10).to_string();
+    |           ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_item_number`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `skipped_peer_echo`
+    --> src\sync\pairing_runtime.rs:1194:9
+     |
+1194 |     let skipped_peer_echo = raw_changes
+     |         ^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_skipped_peer_echo`
+
+warning: unused variable: `host_device_id`
+    --> src\sync\pairing_runtime.rs:1252:7
+     |
+1252 |       host_device_id,
+     |       ^^^^^^^^^^^^^^ help: try ignoring the field: `host_device_id: _`
+
+warning: unused variable: `service_type`
+  --> src\sync\discovery.rs:48:46
+   |
+48 |                 ServiceEvent::ServiceRemoved(service_type, fullname) => {
+   |                                              ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_service_type`
+
+warning: variable does not need to be mutable
+   --> src\main.rs:273:7
+    |
+273 |   let mut is_permissions_trusted = true;
+    |       ----^^^^^^^^^^^^^^^^^^^^^^
+    |       |
+    |       help: remove this `mut`
+
+For more information about this error, try `rustc --explain E0004`.
+warning: `pastebar-app` (bin "pastebar-app") generated 43 warnings
+error: could not compile `pastebar-app` (bin "pastebar-app") due to 1 previous error; 43 warnings emitted

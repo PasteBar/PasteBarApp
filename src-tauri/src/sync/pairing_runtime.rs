@@ -320,7 +320,7 @@ impl PairingRuntime {
     Ok(())
   }
 
-  pub fn join_with_code(
+  pub async fn join_with_code(
     &self,
     code: &str,
     requester_device_id: &str,
@@ -347,73 +347,58 @@ impl PairingRuntime {
       requester_device_id: requester_device_id.to_string(),
     };
 
-    let rt = tokio::runtime::Runtime::new().map_err(|e| e.to_string())?;
     let mut last_rejection: Option<String> = None;
 
-    let join_result: Result<Option<PairingJoinResult>, String> = rt.block_on(async {
-      let client = reqwest::Client::builder()
-        .timeout(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS))
-        .build()
-        .map_err(|e| format!("Failed to build reqwest client: {}", e))?;
+    let client = reqwest::Client::builder()
+      .timeout(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS))
+      .build()
+      .map_err(|e| format!("Failed to build reqwest client: {}", e))?;
 
-      for _ in 0..JOIN_ATTEMPTS {
-        let peers = {
-          let ips = crate::sync::discovery::get_peer_ips().read().unwrap();
-          ips.values().cloned().collect::<Vec<_>>()
-        };
+    for _ in 0..JOIN_ATTEMPTS {
+      let peers = {
+        let ips = crate::sync::discovery::get_peer_ips().read().unwrap();
+        ips.values().cloned().collect::<Vec<_>>()
+      };
 
-        if peers.is_empty() {
-          tokio::time::sleep(Duration::from_millis(JOIN_WAIT_PER_ATTEMPT_MS as u64)).await;
-          continue;
-        }
+      if peers.is_empty() {
+        tokio::time::sleep(Duration::from_millis(JOIN_WAIT_PER_ATTEMPT_MS as u64)).await;
+        continue;
+      }
 
-        for addr in peers {
-          let url = format!("http://{}:{}/sync/pair/request", addr.ip(), addr.port());
-          
-          if let Ok(resp) = client.post(&url).json(&request_packet).send().await {
-            if resp.status().is_success() {
-              if let Ok(ack_packet) = resp.json::<crate::sync::types::PairAckResponse>().await {
-                if ack_packet.request_id != request_id {
-                  continue;
-                }
-
-                if should_ignore_rejection_for_self_not_discoverable(
-                  ack_packet.accepted,
-                  &ack_packet.host_device_id,
-                  requester_device_id,
-                  ack_packet.reason.as_deref(),
-                ) {
-                  continue;
-                }
-
-                if ack_packet.accepted {
-                  return Ok(Some(PairingJoinResult { 
-                    host_device_id: ack_packet.host_device_id 
-                  }));
-                }
-
-                let rejection_reason = ack_packet.reason.unwrap_or_else(|| "pairing_rejected".to_string());
-                last_rejection = Some(humanize_rejection_reason(&rejection_reason));
+      for addr in peers {
+        let url = format!("http://{}:{}/sync/pair/request", addr.ip(), addr.port());
+        
+        if let Ok(resp) = client.post(&url).json(&request_packet).send().await {
+          if resp.status().is_success() {
+            if let Ok(ack_packet) = resp.json::<crate::sync::types::PairAckResponse>().await {
+              if ack_packet.request_id != request_id {
+                continue;
               }
+
+              if should_ignore_rejection_for_self_not_discoverable(
+                ack_packet.accepted,
+                &ack_packet.host_device_id,
+                requester_device_id,
+                ack_packet.reason.as_deref(),
+              ) {
+                continue;
+              }
+
+              if ack_packet.accepted {
+                self.clear_last_error()?;
+                return Ok(PairingJoinResult { 
+                  host_device_id: ack_packet.host_device_id 
+                });
+              }
+
+              let rejection_reason = ack_packet.reason.unwrap_or_else(|| "pairing_rejected".to_string());
+              last_rejection = Some(humanize_rejection_reason(&rejection_reason));
             }
           }
         }
-        
-        tokio::time::sleep(Duration::from_millis(JOIN_WAIT_PER_ATTEMPT_MS as u64)).await;
       }
-      Ok(None)
-    });
-
-    match join_result {
-      Ok(Some(result)) => {
-        self.clear_last_error()?;
-        return Ok(result);
-      }
-      Ok(None) => {}
-      Err(e) => {
-        self.set_last_error(e.clone())?;
-        return Err(e);
-      }
+      
+      tokio::time::sleep(Duration::from_millis(JOIN_WAIT_PER_ATTEMPT_MS as u64)).await;
     }
 
     let error = last_rejection.unwrap_or_else(|| {
@@ -452,8 +437,8 @@ impl PairingRuntime {
     Ok(devices)
   }
 
-  pub fn sync_history_now(&self) -> Result<usize, String> {
-    sync_history_now_internal(&self.state)
+  pub async fn sync_history_now(&self) -> Result<usize, String> {
+    sync_history_now_internal(&self.state).await
   }
 
   pub async fn ping_trusted_peers(
@@ -781,7 +766,7 @@ impl PairingRuntime {
   }
 }
 
-fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, String> {
+async fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, String> {
   let started_at = now_ms();
   let min_updated_at_ms = started_at - HISTORY_SYNC_WINDOW_MS;
   {
@@ -814,13 +799,14 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
         HISTORY_BACKFILL_LIMIT,
         min_updated_at_ms,
       ) {
-        Ok(inserted) => {
-          debug_output(|| {
-            println!(
-              "[sync-history] seeded history outbox from clipboard_history inserted={} latest_before={} min_updated_at={}",
-              inserted, latest_seq, min_updated_at_ms
-            );
-          });
+        Ok(count) if count > 0 => {
+          let _ = sync_history_to_peer(
+            &local_device,
+            &peers[0].peer_device_id,
+            0,
+            min_updated_at_ms,
+          ).await;
+          return Ok(count);
         }
         Err(error) => {
           debug_output(|| {
@@ -830,6 +816,7 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
             );
           });
         }
+        _ => {}
       }
     }
   }
@@ -861,7 +848,7 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
       &peer.peer_device_id,
       peer.last_acked_seq,
       min_updated_at_ms,
-    ) {
+    ).await {
       Ok(applied) => applied,
       Err(error) => {
         set_history_sync_diagnostics(
@@ -937,6 +924,14 @@ fn set_history_sync_diagnostics(
 }
 
 fn run_history_auto_sync_loop(state: Arc<Mutex<PairingState>>, stop_signal: Arc<AtomicBool>) {
+  let rt = match tokio::runtime::Builder::new_current_thread().enable_all().build() {
+    Ok(rt) => rt,
+    Err(e) => {
+      eprintln!("Failed to start Tokio runtime for auto sync loop: {}", e);
+      return;
+    }
+  };
+
   while !stop_signal.load(Ordering::SeqCst) {
     let should_run = state
       .lock()
@@ -944,7 +939,7 @@ fn run_history_auto_sync_loop(state: Arc<Mutex<PairingState>>, stop_signal: Arc<
       .unwrap_or(false);
 
     if should_run {
-      match sync_history_now_internal(&state) {
+      match rt.block_on(sync_history_now_internal(&state)) {
         Ok(_) => {
           if let Ok(mut runtime_state) = state.lock() {
             runtime_state.last_error = None;
@@ -1175,7 +1170,7 @@ fn trusted_peers_with_cursor() -> Result<Vec<PeerSyncCursorRow>, String> {
   .map_err(|e| e.to_string())
 }
 
-fn sync_history_to_peer(
+async fn sync_history_to_peer(
   local_device: &str,
   peer_device_id: &str,
   mut since_seq: i64,
@@ -1235,29 +1230,23 @@ fn sync_history_to_peer(
 
     let url = format!("http://{}/sync/history", target_addr);
 
-    let rt = tokio::runtime::Runtime::new().map_err(|e| e.to_string())?;
-    
-    let result: Result<crate::sync::types::HistorySyncAckResponse, String> = rt.block_on(async {
-      let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(10))
-        .build()
-        .map_err(|e| e.to_string())?;
+    let client = reqwest::Client::builder()
+      .timeout(Duration::from_secs(10))
+      .build()
+      .map_err(|e| e.to_string())?;
 
-      let resp = client.post(&url)
-        .header("Content-Type", "application/json")
-        .body(payload)
-        .send()
-        .await
-        .map_err(|e| e.to_string())?;
+    let resp = client.post(&url)
+      .header("Content-Type", "application/json")
+      .body(payload)
+      .send()
+      .await
+      .map_err(|e| e.to_string())?;
 
-      if !resp.status().is_success() {
-        return Err(format!("HTTP error {}", resp.status()));
-      }
+    if !resp.status().is_success() {
+      return Err(format!("HTTP error {}", resp.status()));
+    }
 
-      resp.json::<crate::sync::types::HistorySyncAckResponse>().await.map_err(|e| e.to_string())
-    });
-
-    let ack_packet = result?;
+    let ack_packet = resp.json::<crate::sync::types::HistorySyncAckResponse>().await.map_err(|e| e.to_string())?;
 
     let crate::sync::types::HistorySyncAckResponse {
       request_id: ack_request_id,

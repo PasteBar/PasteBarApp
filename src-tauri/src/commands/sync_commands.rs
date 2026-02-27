@@ -162,7 +162,7 @@ pub fn sync_cancel_pair_code() -> Result<SyncUiStatus, String> {
 }
 
 #[tauri::command]
-pub fn sync_join_with_code(code: String) -> Result<SyncUiStatus, String> {
+pub async fn sync_join_with_code(code: String) -> Result<SyncUiStatus, String> {
   if SYNC_ENGINE.snapshot().mode != SyncMode::On {
     crate::sync::commands::set_sync_mode(&SYNC_ENGINE, SyncMode::On)?;
   }
@@ -170,7 +170,7 @@ pub fn sync_join_with_code(code: String) -> Result<SyncUiStatus, String> {
 
   let mut conn = establish_pool_db_connection();
   let local_id = ensure_local_sync_identity(&mut conn)?;
-  let join_result = PAIRING_RUNTIME.join_with_code(&code, &local_id)?;
+  let join_result = PAIRING_RUNTIME.join_with_code(&code, &local_id).await?;
   upsert_trusted_peer(&mut conn, &join_result.host_device_id)?;
 
   build_sync_ui_status(None)
@@ -204,13 +204,13 @@ pub fn sync_scan_network_devices() -> Result<Vec<SyncDiscoveredDevice>, String> 
 }
 
 #[tauri::command]
-pub fn sync_history_now() -> Result<SyncUiStatus, String> {
+pub async fn sync_history_now() -> Result<SyncUiStatus, String> {
   let snapshot = SYNC_ENGINE.snapshot();
   if snapshot.mode != SyncMode::On {
     return Err("Sync must be ON before syncing history.".to_string());
   }
 
-  PAIRING_RUNTIME.sync_history_now()?;
+  PAIRING_RUNTIME.sync_history_now().await?;
   build_sync_ui_status(None)
 }
 

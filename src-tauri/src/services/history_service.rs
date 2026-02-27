@@ -1208,7 +1208,15 @@ fn trigger_history_sync_background(source: &str, history_id_value: &str) {
   let source_label = source.to_string();
   let history_id_owned = history_id_value.to_string();
   std::thread::spawn(move || {
-    match crate::commands::sync_commands::sync_history_now() {
+    let rt = match tokio::runtime::Builder::new_current_thread().enable_all().build() {
+      Ok(rt) => rt,
+      Err(e) => {
+        eprintln!("[sync-history][capture] failed to start Tokio runtime: {}", e);
+        return;
+      }
+    };
+
+    match rt.block_on(crate::commands::sync_commands::sync_history_now()) {
       Ok(_) => {
         debug_output(|| {
           println!(
