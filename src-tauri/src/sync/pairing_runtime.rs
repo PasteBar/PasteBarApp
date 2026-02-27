@@ -1138,11 +1138,12 @@ fn refresh_mdns_advertisement(
   properties.insert("sync_enabled".to_string(), "1".to_string());
 
   let host_name = format!("{}.local.", local_device_id());
+  let instance_name = format!("{}-{}", local_device_id(), nanoid::nanoid!(4));
   let local_ip = local_ip_address::local_ip().unwrap_or(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)));
 
   let service_info = ServiceInfo::new(
     MDNS_SERVICE_TYPE,
-    &local_device_id(),
+    &instance_name,
     &host_name,
     local_ip,
     PAIRING_PORT,
@@ -1155,7 +1156,7 @@ fn refresh_mdns_advertisement(
     .daemon
     .register(service_info)
     .map_err(|e| format!("Failed to register mDNS service: {}", e))?;
-  advertiser.service_fullname = Some(mdns_service_fullname(&local_device_id()));
+  advertiser.service_fullname = Some(mdns_service_fullname(&instance_name));
   Ok(())
 }
 

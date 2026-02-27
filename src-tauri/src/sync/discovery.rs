@@ -31,8 +31,15 @@ impl DiscoveryService {
             if let Ok(event) = receiver.recv_timeout(std::time::Duration::from_millis(500)) {
               match event {
                 ServiceEvent::ServiceResolved(info) => {
-                  let fullname = info.get_fullname();
-                  let device_id = fullname.split('.').next().unwrap_or("").to_string();
+                  let props = info.get_properties();
+                  let device_id = props.iter().find(|entry| entry.key() == "device_id")
+                    .and_then(|entry| entry.val())
+                    .map(|value| String::from_utf8_lossy(value).to_string())
+                    .unwrap_or_else(|| {
+                       let fullname = info.get_fullname();
+                       fullname.split('.').next().unwrap_or("").to_string()
+                    });
+
                   if let Some(addr) = info.get_addresses().iter().next() {
                     let port = info.get_port();
                     let ip_str = addr.to_string();
