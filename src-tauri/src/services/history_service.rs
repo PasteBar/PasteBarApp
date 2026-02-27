@@ -1144,6 +1144,12 @@ pub fn insert_clipboard_history(new_clipboard_history: &ClipboardHistory) -> Str
     "insert",
     "insert_clipboard_history",
   );
+  if new_clipboard_history.is_image != Some(true) {
+    trigger_history_sync_background(
+      "insert_clipboard_history",
+      &new_clipboard_history.history_id,
+    );
+  }
 
   "ok".to_string()
 }
@@ -1196,6 +1202,31 @@ fn debug_history_sync_capture(
       });
     }
   }
+}
+
+fn trigger_history_sync_background(source: &str, history_id_value: &str) {
+  let source_label = source.to_string();
+  let history_id_owned = history_id_value.to_string();
+  std::thread::spawn(move || {
+    match crate::commands::sync_commands::sync_history_now() {
+      Ok(_) => {
+        debug_output(|| {
+          println!(
+            "[sync-history][capture] source={} history_id={} immediate_sync=ok",
+            source_label, history_id_owned
+          );
+        });
+      }
+      Err(error) => {
+        debug_output(|| {
+          println!(
+            "[sync-history][capture] source={} history_id={} immediate_sync=skipped error={}",
+            source_label, history_id_owned, error
+          );
+        });
+      }
+    }
+  });
 }
 
 fn ensure_history_sync_outbox_entry(

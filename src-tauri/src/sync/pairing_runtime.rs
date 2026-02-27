@@ -99,7 +99,7 @@ enum PairingPacket {
   },
 }
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Clone)]
 struct PairingState {
   enabled: bool,
   history_auto_sync_enabled: bool,
@@ -109,6 +109,21 @@ struct PairingState {
   pair_code: Option<String>,
   discoverable_until_ms: Option<i64>,
   last_error: Option<String>,
+}
+
+impl Default for PairingState {
+  fn default() -> Self {
+    Self {
+      enabled: false,
+      history_auto_sync_enabled: true,
+      history_last_sync_at_ms: None,
+      history_last_sync_result: None,
+      history_last_sync_sent_changes: 0,
+      pair_code: None,
+      discoverable_until_ms: None,
+      last_error: None,
+    }
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -1540,7 +1555,7 @@ fn run_listener_loop(
   mdns_advertiser: Arc<Mutex<Option<MdnsAdvertiser>>>,
 ) {
   while !stop_signal.load(Ordering::SeqCst) {
-    let mut buffer = [0u8; 4096];
+    let mut buffer = [0u8; 65535];
     let recv = socket.recv_from(&mut buffer);
     let (len, source_addr) = match recv {
       Ok(result) => result,
@@ -1652,6 +1667,16 @@ fn run_listener_loop(
         target_device_id,
         changes,
       } => {
+        debug_output(|| {
+          println!(
+            "[sync-history][recv] source_addr={} source_device_id={} target_device_id={} payload_bytes={} changes={}",
+            source_addr,
+            source_device_id,
+            target_device_id,
+            len,
+            changes.len()
+          );
+        });
         if target_device_id != local_device_id() {
           continue;
         }
