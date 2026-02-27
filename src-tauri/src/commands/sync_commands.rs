@@ -3,7 +3,7 @@ use serde::Serialize;
 
 use crate::db::establish_pool_db_connection;
 use crate::sync::engine::SyncEngine;
-use crate::sync::pairing_runtime::{local_device_id, PairingRuntime};
+use crate::sync::pairing_runtime::{local_device_id, PairingDiscoveredDevice, PairingRuntime};
 use crate::sync::types::SyncMode;
 use diesel::sql_types::{BigInt, Bool, Nullable, Text};
 use diesel::QueryableByName;
@@ -40,6 +40,16 @@ pub struct SyncPeerInfo {
   pub last_seen_at: Option<i64>,
   pub last_applied_seq: i64,
   pub updated_at: i64,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SyncDiscoveredDevice {
+  pub host_device_id: String,
+  pub source_addr: String,
+  pub discoverable: bool,
+  pub sync_enabled: bool,
+  pub is_local: bool,
 }
 
 #[derive(QueryableByName)]
@@ -144,6 +154,33 @@ pub fn sync_join_with_code(code: String) -> Result<SyncUiStatus, String> {
   upsert_trusted_peer(&mut conn, &join_result.host_device_id)?;
 
   build_sync_ui_status(None)
+}
+
+#[tauri::command]
+pub fn sync_scan_network_devices() -> Result<Vec<SyncDiscoveredDevice>, String> {
+  let mut conn = establish_pool_db_connection();
+  let local_id = ensure_local_sync_identity(&mut conn)?;
+  let devices = PAIRING_RUNTIME.scan_network_devices(&local_id)?;
+
+  Ok(
+    devices
+      .into_iter()
+      .map(
+        |PairingDiscoveredDevice {
+           host_device_id,
+           source_addr,
+           discoverable,
+           sync_enabled,
+         }| SyncDiscoveredDevice {
+          is_local: host_device_id == local_id,
+          host_device_id,
+          source_addr,
+          discoverable,
+          sync_enabled,
+        },
+      )
+      .collect(),
+  )
 }
 
 #[tauri::command]
@@ -405,4 +442,3 @@ fn now_ms() -> i64 {
     .unwrap_or_default()
     .as_millis() as i64
 }
-

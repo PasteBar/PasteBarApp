@@ -126,6 +126,14 @@ type SyncPeerInfo = {
   updatedAt: number
 }
 
+type SyncDiscoveredDevice = {
+  hostDeviceId: string
+  sourceAddr: string
+  discoverable: boolean
+  syncEnabled: boolean
+  isLocal: boolean
+}
+
 const DEFAULT_SYNC_STATUS: SyncUiStatus = {
   mode: 'off',
   state: 'idle',
@@ -147,8 +155,12 @@ export function NavBar() {
   const [isAutoStartEnabled, setIsAutoStartEnabled] = useState(false)
   const [syncStatus, setSyncStatus] = useState<SyncUiStatus>(DEFAULT_SYNC_STATUS)
   const [syncPeers, setSyncPeers] = useState<SyncPeerInfo[]>([])
+  const [syncDiscoveredDevices, setSyncDiscoveredDevices] = useState<
+    SyncDiscoveredDevice[]
+  >([])
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false)
   const [isSyncActionRunning, setIsSyncActionRunning] = useState(false)
+  const [isSyncScanRunning, setIsSyncScanRunning] = useState(false)
   const [pairCodeInput, setPairCodeInput] = useState('')
   const [syncNowMs, setSyncNowMs] = useState(Date.now())
   const navigate = useNavigate()
@@ -232,6 +244,27 @@ export function NavBar() {
     }
   }
 
+  const scanSyncDevices = async (notifyOnError = false) => {
+    setIsSyncScanRunning(true)
+    try {
+      const devices =
+        await invoke<SyncDiscoveredDevice[]>('sync_scan_network_devices')
+      setSyncDiscoveredDevices(devices)
+    } catch (error) {
+      setSyncDiscoveredDevices([])
+      if (notifyOnError) {
+        toast({
+          id: 'sync-scan-error',
+          variant: 'destructive',
+          title: 'LAN scan failed',
+          description: String(error),
+        })
+      }
+    } finally {
+      setIsSyncScanRunning(false)
+    }
+  }
+
   const runSyncAction = async (
     command:
       | 'sync_set_mode'
@@ -249,6 +282,9 @@ export function NavBar() {
       setSyncStatus(status)
       const peers = await invoke<SyncPeerInfo[]>('sync_list_peers')
       setSyncPeers(peers)
+      if (isSyncModalOpen) {
+        await scanSyncDevices(false)
+      }
       toast({
         id: 'sync-success',
         variant: status.state === 'error' ? 'destructive' : 'success',
@@ -263,6 +299,9 @@ export function NavBar() {
         description: String(error),
       })
       await refreshSyncStatus()
+      if (isSyncModalOpen) {
+        await scanSyncDevices(false)
+      }
     } finally {
       setIsSyncActionRunning(false)
     }
@@ -338,9 +377,11 @@ export function NavBar() {
 
   useEffect(() => {
     if (!isSyncModalOpen) {
+      setSyncDiscoveredDevices([])
       return
     }
     refreshSyncStatus()
+    scanSyncDevices()
   }, [isSyncModalOpen])
 
   useEffect(() => {
@@ -2435,6 +2476,73 @@ export function NavBar() {
 
                   <Box className="rounded-md border p-3 mt-3 bg-slate-50 dark:bg-slate-800/60">
                   <Flex className="items-center justify-between">
+                    <Box>
+                      <Text className="text-sm font-medium">LAN devices (debug)</Text>
+                      <Text className="text-xs text-muted-foreground mt-1">
+                        Shows reachable devices and whether they are discoverable right now.
+                      </Text>
+                    </Box>
+                    <Button
+                      variant="outline"
+                      disabled={isSyncActionRunning || isSyncScanRunning}
+                      onClick={() => {
+                        scanSyncDevices(true)
+                      }}
+                    >
+                      {isSyncScanRunning ? (
+                        <>
+                          <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                          Scanning...
+                        </>
+                      ) : (
+                        'Scan LAN'
+                      )}
+                    </Button>
+                  </Flex>
+                  {syncDiscoveredDevices.length === 0 ? (
+                    <Text className="text-xs text-muted-foreground mt-2">
+                      No devices responded. Ensure Sync is ON and target device has an active
+                      6-digit code.
+                    </Text>
+                  ) : (
+                    <Flex className="flex-col gap-2 mt-2">
+                      {syncDiscoveredDevices.map(device => (
+                        <Flex
+                          key={`${device.hostDeviceId}-${device.sourceAddr}`}
+                          className="items-center justify-between rounded-md border p-2 bg-white dark:bg-slate-900/60"
+                        >
+                          <Box>
+                            <Text className="text-sm font-medium">
+                              {device.hostDeviceId}
+                            </Text>
+                            <Text className="text-xs text-muted-foreground">
+                              {device.sourceAddr}
+                            </Text>
+                          </Box>
+                          <Flex className="items-center gap-1.5">
+                            {device.isLocal && <Badge variant="outline">This device</Badge>}
+                            <Badge variant="outline">
+                              {device.syncEnabled ? 'Sync On' : 'Sync Off'}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className={
+                                device.discoverable
+                                  ? 'text-green-600 dark:text-green-400'
+                                  : ''
+                              }
+                            >
+                              {device.discoverable ? 'Discoverable' : 'Not discoverable'}
+                            </Badge>
+                          </Flex>
+                        </Flex>
+                      ))}
+                    </Flex>
+                  )}
+                </Box>
+
+                  <Box className="rounded-md border p-3 mt-3 bg-slate-50 dark:bg-slate-800/60">
+                  <Flex className="items-center justify-between">
                     <Text className="text-sm font-medium">Paired devices</Text>
                     <Badge variant="outline">{syncStatus.trustedPeers}</Badge>
                   </Flex>
@@ -2489,12 +2597,13 @@ export function NavBar() {
                 </Button>
                 <Button
                   variant="outline"
-                  disabled={isSyncActionRunning}
+                  disabled={isSyncActionRunning || isSyncScanRunning}
                   onClick={() => {
                     refreshSyncStatus(true)
+                    scanSyncDevices(true)
                   }}
                 >
-                  {isSyncActionRunning ? (
+                  {isSyncActionRunning || isSyncScanRunning ? (
                     <>
                       <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                       Working...

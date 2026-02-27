@@ -3,6 +3,7 @@ use diesel::RunQueryDsl;
 use once_cell::sync::Lazy;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::net::{SocketAddr, UdpSocket};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
@@ -16,6 +17,8 @@ const DISCOVERABLE_WINDOW_MS: i64 = 60_000;
 const SOCKET_POLL_TIMEOUT_MS: u64 = 250;
 const JOIN_ATTEMPTS: usize = 3;
 const JOIN_WAIT_PER_ATTEMPT_MS: i64 = 1_500;
+const DISCOVERY_ATTEMPTS: usize = 2;
+const DISCOVERY_WAIT_PER_ATTEMPT_MS: i64 = 900;
 
 static LOCAL_DEVICE_ID: Lazy<String> = Lazy::new(resolve_local_device_id);
 
@@ -32,6 +35,16 @@ enum PairingPacket {
     accepted: bool,
     host_device_id: String,
     reason: Option<String>,
+  },
+  DiscoveryProbe {
+    request_id: String,
+    requester_device_id: String,
+  },
+  DiscoveryAck {
+    request_id: String,
+    host_device_id: String,
+    discoverable: bool,
+    sync_enabled: bool,
   },
 }
 
@@ -55,6 +68,14 @@ pub struct PairingSnapshot {
 #[derive(Debug, Clone)]
 pub struct PairingJoinResult {
   pub host_device_id: String,
+}
+
+#[derive(Debug, Clone)]
+pub struct PairingDiscoveredDevice {
+  pub host_device_id: String,
+  pub source_addr: String,
+  pub discoverable: bool,
+  pub sync_enabled: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -235,18 +256,101 @@ impl PairingRuntime {
     Err(error)
   }
 
+  pub fn scan_network_devices(
+    &self,
+    requester_device_id: &str,
+  ) -> Result<Vec<PairingDiscoveredDevice>, String> {
+    {
+      let state = self
+        .state
+        .lock()
+        .map_err(|_| "Pairing state lock poisoned".to_string())?;
+      if !state.enabled {
+        return Err("Sync must be enabled before scanning nearby devices.".to_string());
+      }
+    }
+
+    let socket = UdpSocket::bind("0.0.0.0:0")
+      .map_err(|e| format!("Failed to open discovery socket: {}", e))?;
+    socket
+      .set_broadcast(true)
+      .map_err(|e| format!("Failed to enable UDP broadcast: {}", e))?;
+    socket
+      .set_read_timeout(Some(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)))
+      .map_err(|e| format!("Failed to configure discovery socket timeout: {}", e))?;
+
+    let request_id = nanoid::nanoid!(12);
+    let probe_packet = PairingPacket::DiscoveryProbe {
+      request_id: request_id.clone(),
+      requester_device_id: requester_device_id.to_string(),
+    };
+    let payload = serde_json::to_vec(&probe_packet)
+      .map_err(|e| format!("Failed to serialize discovery request: {}", e))?;
+
+    let broadcast_addr = SocketAddr::from(([255, 255, 255, 255], PAIRING_PORT));
+    let loopback_addr = SocketAddr::from(([127, 0, 0, 1], PAIRING_PORT));
+    let mut discovered: BTreeMap<String, PairingDiscoveredDevice> = BTreeMap::new();
+
+    for _ in 0..DISCOVERY_ATTEMPTS {
+      let _ = socket.send_to(&payload, broadcast_addr);
+      let _ = socket.send_to(&payload, loopback_addr);
+
+      let attempt_deadline = now_ms() + DISCOVERY_WAIT_PER_ATTEMPT_MS;
+      while now_ms() < attempt_deadline {
+        let mut buffer = [0u8; 4096];
+        let recv = socket.recv_from(&mut buffer);
+        let (len, source_addr) = match recv {
+          Ok(result) => result,
+          Err(_) => continue,
+        };
+
+        let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
+          Ok(packet) => packet,
+          Err(_) => continue,
+        };
+
+        let PairingPacket::DiscoveryAck {
+          request_id: ack_request_id,
+          host_device_id,
+          discoverable,
+          sync_enabled,
+        } = packet
+        else {
+          continue;
+        };
+
+        if ack_request_id != request_id {
+          continue;
+        }
+
+        discovered.insert(
+          host_device_id.clone(),
+          PairingDiscoveredDevice {
+            host_device_id,
+            source_addr: source_addr.to_string(),
+            discoverable,
+            sync_enabled,
+          },
+        );
+      }
+    }
+
+    let mut devices: Vec<PairingDiscoveredDevice> = discovered.into_values().collect();
+    devices.sort_by(|a, b| {
+      b.discoverable
+        .cmp(&a.discoverable)
+        .then_with(|| a.host_device_id.cmp(&b.host_device_id))
+    });
+    Ok(devices)
+  }
+
   pub fn snapshot(&self) -> Result<PairingSnapshot, String> {
     {
       let mut state = self
         .state
         .lock()
         .map_err(|_| "Pairing state lock poisoned".to_string())?;
-      if let Some(expires_at) = state.discoverable_until_ms {
-        if now_ms() >= expires_at {
-          state.pair_code = None;
-          state.discoverable_until_ms = None;
-        }
-      }
+      expire_discoverable_window(&mut state, now_ms());
     }
 
     let state = self
@@ -348,6 +452,15 @@ fn humanize_rejection_reason(reason: &str) -> String {
   }
 }
 
+fn expire_discoverable_window(runtime_state: &mut PairingState, now: i64) {
+  if let Some(expires_at) = runtime_state.discoverable_until_ms {
+    if now >= expires_at {
+      runtime_state.pair_code = None;
+      runtime_state.discoverable_until_ms = None;
+    }
+  }
+}
+
 pub fn local_device_id() -> String {
   LOCAL_DEVICE_ID.clone()
 }
@@ -384,68 +497,89 @@ fn run_listener_loop(
       Err(_) => continue,
     };
 
-    let PairingPacket::PairRequest {
-      request_id,
-      code,
-      requester_device_id,
-    } = packet
-    else {
-      continue;
-    };
+    match packet {
+      PairingPacket::PairRequest {
+        request_id,
+        code,
+        requester_device_id,
+      } => {
+        let now = now_ms();
+        let mut accepted = false;
+        let mut rejection_reason: Option<String> = None;
 
-    let now = now_ms();
-    let mut accepted = false;
-    let mut rejection_reason: Option<String> = None;
-
-    if let Ok(mut runtime_state) = state.lock() {
-      if !runtime_state.enabled {
-        rejection_reason = Some("sync_off".to_string());
-      } else {
-        if let Some(expires_at) = runtime_state.discoverable_until_ms {
-          if now >= expires_at {
-            runtime_state.pair_code = None;
-            runtime_state.discoverable_until_ms = None;
-          }
-        }
-
-        match runtime_state.pair_code.as_deref() {
-          Some(active_code) if active_code == code => {
-            accepted = true;
-            runtime_state.pair_code = None;
-            runtime_state.discoverable_until_ms = None;
-            runtime_state.last_error = None;
-          }
-          Some(_) => {
-            rejection_reason = Some("invalid_code".to_string());
-          }
-          None => {
-            rejection_reason = Some("not_discoverable".to_string());
-          }
-        }
-      }
-    } else {
-      rejection_reason = Some("runtime_lock_error".to_string());
-    }
-
-    if accepted {
-      if let Err(err) = trust_peer_in_db(&requester_device_id) {
-        accepted = false;
-        rejection_reason = Some("database_error".to_string());
         if let Ok(mut runtime_state) = state.lock() {
-          runtime_state.last_error = Some(err);
+          if !runtime_state.enabled {
+            rejection_reason = Some("sync_off".to_string());
+          } else {
+            expire_discoverable_window(&mut runtime_state, now);
+
+            match runtime_state.pair_code.as_deref() {
+              Some(active_code) if active_code == code => {
+                accepted = true;
+                runtime_state.pair_code = None;
+                runtime_state.discoverable_until_ms = None;
+                runtime_state.last_error = None;
+              }
+              Some(_) => {
+                rejection_reason = Some("invalid_code".to_string());
+              }
+              None => {
+                rejection_reason = Some("not_discoverable".to_string());
+              }
+            }
+          }
+        } else {
+          rejection_reason = Some("runtime_lock_error".to_string());
+        }
+
+        if accepted {
+          if let Err(err) = trust_peer_in_db(&requester_device_id) {
+            accepted = false;
+            rejection_reason = Some("database_error".to_string());
+            if let Ok(mut runtime_state) = state.lock() {
+              runtime_state.last_error = Some(err);
+            }
+          }
+        }
+
+        let ack_packet = PairingPacket::PairAck {
+          request_id,
+          accepted,
+          host_device_id: local_device_id(),
+          reason: rejection_reason,
+        };
+
+        if let Ok(payload) = serde_json::to_vec(&ack_packet) {
+          let _ = socket.send_to(&payload, source_addr);
         }
       }
-    }
+      PairingPacket::DiscoveryProbe {
+        request_id,
+        requester_device_id: _,
+      } => {
+        let now = now_ms();
+        let (discoverable, sync_enabled) = if let Ok(mut runtime_state) = state.lock() {
+          expire_discoverable_window(&mut runtime_state, now);
+          (
+            runtime_state.enabled && runtime_state.pair_code.is_some(),
+            runtime_state.enabled,
+          )
+        } else {
+          (false, false)
+        };
 
-    let ack_packet = PairingPacket::PairAck {
-      request_id,
-      accepted,
-      host_device_id: local_device_id(),
-      reason: rejection_reason,
-    };
+        let ack_packet = PairingPacket::DiscoveryAck {
+          request_id,
+          host_device_id: local_device_id(),
+          discoverable,
+          sync_enabled,
+        };
 
-    if let Ok(payload) = serde_json::to_vec(&ack_packet) {
-      let _ = socket.send_to(&payload, source_addr);
+        if let Ok(payload) = serde_json::to_vec(&ack_packet) {
+          let _ = socket.send_to(&payload, source_addr);
+        }
+      }
+      _ => continue,
     }
   }
 }
