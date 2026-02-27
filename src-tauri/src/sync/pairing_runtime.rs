@@ -189,6 +189,12 @@ struct HistoryOutboxStatsRow {
   pending_rows: i64,
 }
 
+#[derive(QueryableByName)]
+struct SyncMetaDeviceRow {
+  #[diesel(sql_type = Text)]
+  device_id: String,
+}
+
 #[derive(Clone)]
 pub struct PairingRuntime {
   state: Arc<Mutex<PairingState>>,
@@ -592,11 +598,18 @@ impl PairingRuntime {
           };
 
           if ack_request_id != request_id
-            || source_device_id != peer.peer_device_id
             || target_device_id != requester_device_id
             || id != payload_id
           {
             continue;
+          }
+          if source_device_id != peer.peer_device_id {
+            debug_output(|| {
+              println!(
+                "[sync-ping] peer={} payload_id={} pong_source_device_id_mismatch expected={} actual={}",
+                peer.peer_device_id, payload_id, peer.peer_device_id, source_device_id
+              );
+            });
           }
 
           let round_trip_ms = (now_ms() - ping_started_at).max(0);
@@ -1332,8 +1345,16 @@ fn sync_history_to_peer(
             continue;
           };
 
-          if ack_request_id != request_id || host_device_id != peer_device_id {
+          if ack_request_id != request_id {
             continue;
+          }
+          if host_device_id != peer_device_id {
+            debug_output(|| {
+              println!(
+                "[sync-history] peer={} request_id={} ack_source_device_id_mismatch expected={} actual={}",
+                peer_device_id, request_id, peer_device_id, host_device_id
+              );
+            });
           }
 
           if !accepted {
@@ -1475,6 +1496,35 @@ fn peer_is_trusted(peer_device_id: &str) -> Result<bool, String> {
   Ok(rows.first().map(|row| row.is_trusted).unwrap_or(false))
 }
 
+fn matches_local_target_device(target_device_id: &str) -> bool {
+  let local = local_device_id();
+  if target_device_id == local {
+    return true;
+  }
+
+  let mut conn = establish_pool_db_connection();
+  let rows: Vec<SyncMetaDeviceRow> = diesel::sql_query(
+    "SELECT device_id
+     FROM sync_meta
+     WHERE device_id = ?
+     LIMIT 1",
+  )
+  .bind::<Text, _>(target_device_id.to_string())
+  .load(&mut conn)
+  .unwrap_or_default();
+
+  let matched = rows.iter().any(|row| row.device_id == target_device_id);
+  if matched {
+    debug_output(|| {
+      println!(
+        "[sync-net] accepted legacy local target_id={} current_local_device_id={}",
+        target_device_id, local
+      );
+    });
+  }
+  matched
+}
+
 fn update_peer_last_applied_seq(peer_device_id: &str, seq: i64) -> Result<(), String> {
   let now = now_ms();
   let mut conn = establish_pool_db_connection();
@@ -1554,6 +1604,7 @@ fn run_listener_loop(
   stop_signal: Arc<AtomicBool>,
   mdns_advertiser: Arc<Mutex<Option<MdnsAdvertiser>>>,
 ) {
+  let mut ping_log_seen_at: HashMap<String, i64> = HashMap::new();
   while !stop_signal.load(Ordering::SeqCst) {
     let mut buffer = [0u8; 65535];
     let recv = socket.recv_from(&mut buffer);
@@ -1677,7 +1728,15 @@ fn run_listener_loop(
             changes.len()
           );
         });
-        if target_device_id != local_device_id() {
+        if !matches_local_target_device(&target_device_id) {
+          debug_output(|| {
+            println!(
+              "[sync-net][drop] kind=history_sync_push reason=target_mismatch source_device_id={} target_device_id={} local_device_id={}",
+              source_device_id,
+              target_device_id,
+              local_device_id()
+            );
+          });
           continue;
         }
 
@@ -1702,6 +1761,12 @@ fn run_listener_loop(
 
         let trusted = peer_is_trusted(&source_device_id).unwrap_or(false);
         if !trusted {
+          debug_output(|| {
+            println!(
+              "[sync-net][drop] kind=history_sync_push reason=untrusted_peer source_device_id={} target_device_id={}",
+              source_device_id, target_device_id
+            );
+          });
           let ack_packet = PairingPacket::HistorySyncAck {
             request_id,
             host_device_id: local_device_id(),
@@ -1761,7 +1826,15 @@ fn run_listener_loop(
         time,
         pong: _,
       } => {
-        if target_device_id != local_device_id() {
+        if !matches_local_target_device(&target_device_id) {
+          debug_output(|| {
+            println!(
+              "[sync-net][drop] kind=ping reason=target_mismatch source_device_id={} target_device_id={} local_device_id={}",
+              source_device_id,
+              target_device_id,
+              local_device_id()
+            );
+          });
           continue;
         }
 
@@ -1775,10 +1848,22 @@ fn run_listener_loop(
 
         let trusted = peer_is_trusted(&source_device_id).unwrap_or(false);
         if !trusted {
-          continue;
+          debug_output(|| {
+            println!(
+              "[sync-ping] source_device_id={} is not trusted yet; responding anyway for diagnostics target_device_id={}",
+              source_device_id, target_device_id
+            );
+          });
         }
 
         let ping_id = id.clone();
+        let now = now_ms();
+        ping_log_seen_at.retain(|_, seen_at| now - *seen_at <= 5_000);
+        let ping_log_key = format!("{}:{}:{}", source_device_id, request_id, ping_id);
+        let should_log = ping_log_seen_at
+          .insert(ping_log_key, now)
+          .map(|seen_at| now - seen_at > 1_500)
+          .unwrap_or(true);
         let response = PairingPacket::PongJson {
           request_id,
           source_device_id: local_device_id(),
@@ -1787,12 +1872,14 @@ fn run_listener_loop(
           time,
           pong: true,
         };
-        debug_output(|| {
-          println!(
-            "[sync-ping] responding_to={} id={} time={} pong=true",
-            source_addr, ping_id, time
-          );
-        });
+        if should_log {
+          debug_output(|| {
+            println!(
+              "[sync-ping] responding_to={} id={} time={} pong=true trusted_source={}",
+              source_addr, ping_id, time, trusted
+            );
+          });
+        }
         if let Ok(payload) = serde_json::to_vec(&response) {
           let _ = socket.send_to(&payload, source_addr);
         }
