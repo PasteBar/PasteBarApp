@@ -114,6 +114,73 @@ pub fn load_history_changes_since(
   )
 }
 
+pub fn backfill_history_outbox_from_existing(
+  conn: &mut SqliteConnection,
+  limit: i64,
+) -> Result<usize, String> {
+  diesel::sql_query(
+    "INSERT INTO sync_changes (
+       source_device_id,
+       table_name,
+       row_id,
+       op,
+       hlc_wall_ms,
+       hlc_counter,
+       updated_at,
+       row_json,
+       created_at
+     )
+     SELECT
+       COALESCE((SELECT device_id FROM sync_meta LIMIT 1), 'local'),
+       'clipboard_history',
+       h.history_id,
+       'update',
+       get_hlc_wall_ms(),
+       get_hlc_counter(),
+       h.updated_at,
+       json_object(
+         'history_id', h.history_id,
+         'title', h.title,
+         'value', h.value,
+         'value_preview', h.value_preview,
+         'value_more_preview_lines', h.value_more_preview_lines,
+         'value_more_preview_chars', h.value_more_preview_chars,
+         'value_hash', h.value_hash,
+         'is_image', h.is_image,
+         'is_masked', h.is_masked,
+         'is_text', h.is_text,
+         'is_code', h.is_code,
+         'is_link', h.is_link,
+         'is_video', h.is_video,
+         'has_emoji', h.has_emoji,
+         'has_masked_words', h.has_masked_words,
+         'is_pinned', h.is_pinned,
+         'is_favorite', h.is_favorite,
+         'links', h.links,
+         'detected_language', h.detected_language,
+         'pinned_order_number', h.pinned_order_number,
+         'created_at', h.created_at,
+         'updated_at', h.updated_at,
+         'history_options', h.history_options,
+         'copied_from_app', h.copied_from_app
+       ),
+       get_hlc_wall_ms()
+     FROM clipboard_history h
+     WHERE COALESCE(h.is_image, 0) = 0
+       AND NOT EXISTS (
+         SELECT 1
+         FROM sync_changes s
+         WHERE s.table_name = 'clipboard_history'
+           AND s.row_id = h.history_id
+       )
+     ORDER BY h.updated_at ASC
+     LIMIT ?",
+  )
+  .bind::<BigInt, _>(limit)
+  .execute(conn)
+  .map_err(|e| e.to_string())
+}
+
 pub fn apply_history_change(
   conn: &mut SqliteConnection,
   change: &HistorySyncChange,

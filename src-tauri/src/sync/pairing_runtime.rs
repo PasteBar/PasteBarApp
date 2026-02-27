@@ -17,7 +17,8 @@ use crate::db::establish_pool_db_connection;
 use crate::services::utils::debug_output;
 use crate::sync::apply_context::enable_remote_apply_context;
 use crate::sync::history_sync::{
-  apply_history_changes, load_history_changes_since, HistorySyncChange,
+  apply_history_changes, backfill_history_outbox_from_existing, load_history_changes_since,
+  HistorySyncChange,
 };
 
 const PAIRING_PORT: u16 = 45879;
@@ -30,6 +31,7 @@ const DISCOVERY_WAIT_PER_ATTEMPT_MS: i64 = 900;
 const HISTORY_SYNC_ATTEMPTS: usize = 2;
 const HISTORY_SYNC_WAIT_PER_ATTEMPT_MS: i64 = 1_200;
 const HISTORY_SYNC_BATCH_LIMIT: i64 = 200;
+const HISTORY_BACKFILL_LIMIT: i64 = 2_000;
 const HISTORY_SYNC_MAX_PACKET_BYTES: usize = 48 * 1024;
 const HISTORY_AUTO_SYNC_INTERVAL_MS: u64 = 5_000;
 const MAX_SUBNET_SWEEP_HOSTS_PER_INTERFACE: usize = 256;
@@ -127,6 +129,16 @@ struct PeerSyncCursorRow {
 struct PeerTrustRow {
   #[diesel(sql_type = Bool)]
   is_trusted: bool,
+}
+
+#[derive(QueryableByName)]
+struct HistoryOutboxStatsRow {
+  #[diesel(sql_type = BigInt)]
+  latest_seq: i64,
+  #[diesel(sql_type = BigInt)]
+  total_rows: i64,
+  #[diesel(sql_type = BigInt)]
+  pending_rows: i64,
 }
 
 #[derive(Clone)]
@@ -607,8 +619,51 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
     return Ok(0);
   }
 
+  // First-run migration aid: if history outbox is empty, seed it from existing local history.
+  if let Ok((latest_seq, total_rows, _)) = history_outbox_stats_since(0) {
+    if total_rows == 0 {
+      let mut conn = establish_pool_db_connection();
+      match backfill_history_outbox_from_existing(&mut conn, HISTORY_BACKFILL_LIMIT) {
+        Ok(inserted) => {
+          debug_output(|| {
+            println!(
+              "[sync-history] seeded history outbox from clipboard_history inserted={} latest_before={}",
+              inserted, latest_seq
+            );
+          });
+        }
+        Err(error) => {
+          debug_output(|| {
+            println!(
+              "[sync-history] failed to seed history outbox from clipboard_history: {}",
+              error
+            );
+          });
+        }
+      }
+    }
+  }
+
   let mut synced_changes = 0usize;
+  let mut peer_debug_details: Vec<String> = Vec::new();
   for peer in peers {
+    let (latest_seq, total_rows, pending_rows) = history_outbox_stats_since(peer.last_acked_seq)
+      .unwrap_or((0, 0, 0));
+    debug_output(|| {
+      println!(
+        "[sync-history] peer={} last_acked_seq={} latest_history_seq={} total_history_rows={} pending_rows={}",
+        peer.peer_device_id,
+        peer.last_acked_seq,
+        latest_seq,
+        total_rows,
+        pending_rows
+      );
+    });
+    peer_debug_details.push(format!(
+      "peer={} acked={} latest={} pending={} total={}",
+      peer.peer_device_id, peer.last_acked_seq, latest_seq, pending_rows, total_rows
+    ));
+
     let applied = match sync_history_to_peer(&local_device, &peer.peer_device_id, peer.last_acked_seq)
     {
       Ok(applied) => applied,
@@ -626,12 +681,42 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
   }
 
   let result = if synced_changes == 0 {
-    "History sync completed. No new changes to send.".to_string()
+    if peer_debug_details.is_empty() {
+      "History sync completed. No new changes to send.".to_string()
+    } else {
+      format!(
+        "History sync completed. No new changes to send. {}",
+        peer_debug_details.join(" | ")
+      )
+    }
   } else {
     format!("History sync completed. Sent {} change(s).", synced_changes)
   };
   set_history_sync_diagnostics(state, started_at, &result, synced_changes);
   Ok(synced_changes)
+}
+
+fn history_outbox_stats_since(since_seq: i64) -> Result<(i64, i64, i64), String> {
+  let mut conn = establish_pool_db_connection();
+  let rows: Vec<HistoryOutboxStatsRow> = diesel::sql_query(
+    "SELECT
+       COALESCE(MAX(CAST(seq AS BIGINT)), 0) AS latest_seq,
+       CAST(COUNT(*) AS BIGINT) AS total_rows,
+       COALESCE(
+         CAST(SUM(CASE WHEN CAST(seq AS BIGINT) > ? THEN 1 ELSE 0 END) AS BIGINT),
+         0
+       ) AS pending_rows
+     FROM sync_changes
+     WHERE table_name = 'clipboard_history'",
+  )
+  .bind::<BigInt, _>(since_seq)
+  .load(&mut conn)
+  .map_err(|e| e.to_string())?;
+
+  let row = rows
+    .first()
+    .ok_or_else(|| "History outbox stats query returned no rows".to_string())?;
+  Ok((row.latest_seq, row.total_rows, row.pending_rows))
 }
 
 fn set_history_sync_diagnostics(
