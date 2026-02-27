@@ -1386,6 +1386,7 @@ async fn main() {
       sync_commands::sync_join_with_code,
       sync_commands::sync_scan_network_devices,
       sync_commands::sync_history_now,
+      sync_commands::sync_set_history_auto_sync,
       sync_commands::sync_list_peers,
       sync_commands::sync_remove_peer,
       user_settings_command::cmd_get_custom_db_path,

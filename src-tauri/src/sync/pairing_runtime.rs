@@ -13,9 +13,12 @@ use std::sync::{Arc, Mutex};
 use std::thread::JoinHandle;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use crate::sync::apply_context::enable_remote_apply_context;
-use crate::sync::history_sync::{apply_history_changes, load_history_changes_since, HistorySyncChange};
 use crate::db::establish_pool_db_connection;
+use crate::services::utils::debug_output;
+use crate::sync::apply_context::enable_remote_apply_context;
+use crate::sync::history_sync::{
+  apply_history_changes, load_history_changes_since, HistorySyncChange,
+};
 
 const PAIRING_PORT: u16 = 45879;
 const DISCOVERABLE_WINDOW_MS: i64 = 60_000;
@@ -27,6 +30,8 @@ const DISCOVERY_WAIT_PER_ATTEMPT_MS: i64 = 900;
 const HISTORY_SYNC_ATTEMPTS: usize = 2;
 const HISTORY_SYNC_WAIT_PER_ATTEMPT_MS: i64 = 1_200;
 const HISTORY_SYNC_BATCH_LIMIT: i64 = 200;
+const HISTORY_SYNC_MAX_PACKET_BYTES: usize = 48 * 1024;
+const HISTORY_AUTO_SYNC_INTERVAL_MS: u64 = 5_000;
 const MAX_SUBNET_SWEEP_HOSTS_PER_INTERFACE: usize = 256;
 const MDNS_SERVICE_TYPE: &str = "_pastebar-sync._udp.local";
 
@@ -75,6 +80,10 @@ enum PairingPacket {
 #[derive(Debug, Default, Clone)]
 struct PairingState {
   enabled: bool,
+  history_auto_sync_enabled: bool,
+  history_last_sync_at_ms: Option<i64>,
+  history_last_sync_result: Option<String>,
+  history_last_sync_sent_changes: usize,
   pair_code: Option<String>,
   discoverable_until_ms: Option<i64>,
   last_error: Option<String>,
@@ -85,6 +94,10 @@ pub struct PairingSnapshot {
   pub discoverable: bool,
   pub discoverable_until_ms: Option<i64>,
   pub pair_code: Option<String>,
+  pub history_auto_sync_enabled: bool,
+  pub history_last_sync_at_ms: Option<i64>,
+  pub history_last_sync_result: Option<String>,
+  pub history_last_sync_sent_changes: usize,
   pub listener_running: bool,
   pub last_error: Option<String>,
 }
@@ -121,6 +134,8 @@ pub struct PairingRuntime {
   state: Arc<Mutex<PairingState>>,
   stop_signal: Arc<AtomicBool>,
   worker: Arc<Mutex<Option<JoinHandle<()>>>>,
+  auto_sync_stop_signal: Arc<AtomicBool>,
+  auto_sync_worker: Arc<Mutex<Option<JoinHandle<()>>>>,
   mdns_advertiser: Arc<Mutex<Option<MdnsAdvertiser>>>,
 }
 
@@ -135,6 +150,8 @@ impl Default for PairingRuntime {
       state: Arc::new(Mutex::new(PairingState::default())),
       stop_signal: Arc::new(AtomicBool::new(false)),
       worker: Arc::new(Mutex::new(None)),
+      auto_sync_stop_signal: Arc::new(AtomicBool::new(false)),
+      auto_sync_worker: Arc::new(Mutex::new(None)),
       mdns_advertiser: Arc::new(Mutex::new(None)),
     }
   }
@@ -143,14 +160,18 @@ impl Default for PairingRuntime {
 impl PairingRuntime {
   pub fn set_enabled(&self, enabled: bool) -> Result<(), String> {
     if enabled {
-      {
+      let should_start_auto_sync = {
         let mut state = self
           .state
           .lock()
           .map_err(|_| "Pairing state lock poisoned".to_string())?;
         state.enabled = true;
-      }
+        state.history_auto_sync_enabled
+      };
       self.start_listener()?;
+      if should_start_auto_sync {
+        self.start_history_auto_sync_worker()?;
+      }
       let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
       Ok(())
     } else {
@@ -163,10 +184,30 @@ impl PairingRuntime {
         state.pair_code = None;
         state.discoverable_until_ms = None;
       }
+      self.stop_history_auto_sync_worker();
       self.stop_listener();
       let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
       Ok(())
     }
+  }
+
+  pub fn set_history_auto_sync_enabled(&self, enabled: bool) -> Result<(), String> {
+    let sync_is_enabled = {
+      let mut state = self
+        .state
+        .lock()
+        .map_err(|_| "Pairing state lock poisoned".to_string())?;
+      state.history_auto_sync_enabled = enabled;
+      state.enabled
+    };
+
+    if enabled && sync_is_enabled {
+      self.start_history_auto_sync_worker()?;
+    } else if !enabled {
+      self.stop_history_auto_sync_worker();
+    }
+
+    Ok(())
   }
 
   pub fn generate_pair_code(&self) -> Result<String, String> {
@@ -402,29 +443,7 @@ impl PairingRuntime {
   }
 
   pub fn sync_history_now(&self) -> Result<usize, String> {
-    {
-      let state = self
-        .state
-        .lock()
-        .map_err(|_| "Pairing state lock poisoned".to_string())?;
-      if !state.enabled {
-        return Err("Sync must be enabled before history sync.".to_string());
-      }
-    }
-
-    let local_device = local_device_id();
-    let peers = trusted_peers_with_cursor()?;
-    if peers.is_empty() {
-      return Ok(0);
-    }
-
-    let mut synced_changes = 0usize;
-    for peer in peers {
-      let applied = sync_history_to_peer(&local_device, &peer.peer_device_id, peer.last_acked_seq)?;
-      synced_changes += applied;
-    }
-
-    Ok(synced_changes)
+    sync_history_now_internal(&self.state)
   }
 
   pub fn snapshot(&self) -> Result<PairingSnapshot, String> {
@@ -450,6 +469,10 @@ impl PairingRuntime {
       discoverable: state.enabled && state.pair_code.is_some(),
       discoverable_until_ms: state.discoverable_until_ms,
       pair_code: state.pair_code.clone(),
+      history_auto_sync_enabled: state.history_auto_sync_enabled,
+      history_last_sync_at_ms: state.history_last_sync_at_ms,
+      history_last_sync_result: state.history_last_sync_result.clone(),
+      history_last_sync_sent_changes: state.history_last_sync_sent_changes,
       listener_running: self.is_listener_running(),
       last_error: state.last_error.clone(),
     })
@@ -510,6 +533,47 @@ impl PairingRuntime {
       .unwrap_or(false)
   }
 
+  fn start_history_auto_sync_worker(&self) -> Result<(), String> {
+    if self.is_history_auto_sync_worker_running() {
+      return Ok(());
+    }
+
+    self.auto_sync_stop_signal.store(false, Ordering::SeqCst);
+    let state = Arc::clone(&self.state);
+    let stop_signal = Arc::clone(&self.auto_sync_stop_signal);
+
+    let handle = std::thread::Builder::new()
+      .name("pastebar-sync-history-auto".to_string())
+      .spawn(move || {
+        run_history_auto_sync_loop(state, stop_signal);
+      })
+      .map_err(|e| format!("Failed to start auto history sync thread: {}", e))?;
+
+    let mut worker_guard = self
+      .auto_sync_worker
+      .lock()
+      .map_err(|_| "Pairing auto sync worker lock poisoned".to_string())?;
+    *worker_guard = Some(handle);
+    Ok(())
+  }
+
+  fn stop_history_auto_sync_worker(&self) {
+    self.auto_sync_stop_signal.store(true, Ordering::SeqCst);
+    if let Ok(mut worker_guard) = self.auto_sync_worker.lock() {
+      if let Some(handle) = worker_guard.take() {
+        let _ = handle.join();
+      }
+    }
+  }
+
+  fn is_history_auto_sync_worker_running(&self) -> bool {
+    self
+      .auto_sync_worker
+      .lock()
+      .map(|guard| guard.is_some())
+      .unwrap_or(false)
+  }
+
   fn set_last_error(&self, message: String) -> Result<(), String> {
     let mut state = self
       .state
@@ -517,6 +581,101 @@ impl PairingRuntime {
       .map_err(|_| "Pairing state lock poisoned".to_string())?;
     state.last_error = Some(message);
     Ok(())
+  }
+}
+
+fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, String> {
+  let started_at = now_ms();
+  {
+    let state_guard = state
+      .lock()
+      .map_err(|_| "Pairing state lock poisoned".to_string())?;
+    if !state_guard.enabled {
+      return Err("Sync must be enabled before history sync.".to_string());
+    }
+  }
+
+  let local_device = local_device_id();
+  let peers = trusted_peers_with_cursor()?;
+  if peers.is_empty() {
+    set_history_sync_diagnostics(
+      state,
+      started_at,
+      "No trusted peers. Pair another device first.",
+      0,
+    );
+    return Ok(0);
+  }
+
+  let mut synced_changes = 0usize;
+  for peer in peers {
+    let applied = match sync_history_to_peer(&local_device, &peer.peer_device_id, peer.last_acked_seq)
+    {
+      Ok(applied) => applied,
+      Err(error) => {
+        set_history_sync_diagnostics(
+          state,
+          started_at,
+          &format!("Failed for peer {}: {}", peer.peer_device_id, error),
+          synced_changes,
+        );
+        return Err(error);
+      }
+    };
+    synced_changes += applied;
+  }
+
+  let result = if synced_changes == 0 {
+    "History sync completed. No new changes to send.".to_string()
+  } else {
+    format!("History sync completed. Sent {} change(s).", synced_changes)
+  };
+  set_history_sync_diagnostics(state, started_at, &result, synced_changes);
+  Ok(synced_changes)
+}
+
+fn set_history_sync_diagnostics(
+  state: &Arc<Mutex<PairingState>>,
+  at_ms: i64,
+  result: &str,
+  sent_changes: usize,
+) {
+  if let Ok(mut state_guard) = state.lock() {
+    state_guard.history_last_sync_at_ms = Some(at_ms);
+    state_guard.history_last_sync_result = Some(result.to_string());
+    state_guard.history_last_sync_sent_changes = sent_changes;
+  }
+  debug_output(|| {
+    println!(
+      "[sync-history] at={} result=\"{}\" sent_changes={}",
+      at_ms, result, sent_changes
+    );
+  });
+}
+
+fn run_history_auto_sync_loop(state: Arc<Mutex<PairingState>>, stop_signal: Arc<AtomicBool>) {
+  while !stop_signal.load(Ordering::SeqCst) {
+    let should_run = state
+      .lock()
+      .map(|runtime_state| runtime_state.enabled && runtime_state.history_auto_sync_enabled)
+      .unwrap_or(false);
+
+    if should_run {
+      match sync_history_now_internal(&state) {
+        Ok(_) => {
+          if let Ok(mut runtime_state) = state.lock() {
+            runtime_state.last_error = None;
+          }
+        }
+        Err(error) => {
+          if let Ok(mut runtime_state) = state.lock() {
+            runtime_state.last_error = Some(error);
+          }
+        }
+      }
+    }
+
+    std::thread::sleep(Duration::from_millis(HISTORY_AUTO_SYNC_INTERVAL_MS));
   }
 }
 
@@ -778,16 +937,25 @@ fn sync_history_to_peer(
     if changes.is_empty() {
       return Ok(total_applied);
     }
+    debug_output(|| {
+      println!(
+        "[sync-history] peer={} since_seq={} loaded_changes={}",
+        peer_device_id,
+        since_seq,
+        changes.len()
+      );
+    });
 
-    let request_id = nanoid::nanoid!(12);
-    let packet = PairingPacket::HistorySyncPush {
-      request_id: request_id.clone(),
-      source_device_id: local_device.to_string(),
-      target_device_id: peer_device_id.to_string(),
-      changes,
-    };
-    let payload =
-      serde_json::to_vec(&packet).map_err(|e| format!("Failed to encode history sync: {}", e))?;
+    let batches =
+      split_history_changes_for_udp(local_device, peer_device_id, &changes, HISTORY_SYNC_MAX_PACKET_BYTES)?;
+    debug_output(|| {
+      println!(
+        "[sync-history] peer={} batches={} max_packet_bytes={}",
+        peer_device_id,
+        batches.len(),
+        HISTORY_SYNC_MAX_PACKET_BYTES
+      );
+    });
 
     let socket = UdpSocket::bind("0.0.0.0:0")
       .map_err(|e| format!("Failed to open history sync socket: {}", e))?;
@@ -799,71 +967,157 @@ fn sync_history_to_peer(
       .map_err(|e| format!("Failed to set history sync socket timeout: {}", e))?;
 
     let targets = discovery_target_addresses();
-    let mut received_ack = false;
-    for _ in 0..HISTORY_SYNC_ATTEMPTS {
-      for target in &targets {
-        let _ = socket.send_to(&payload, *target);
-      }
+    for batch in batches {
+      let request_id = nanoid::nanoid!(12);
+      let payload = encode_history_sync_push(local_device, peer_device_id, &request_id, &batch)?;
+      debug_output(|| {
+        println!(
+          "[sync-history] peer={} request_id={} batch_changes={} payload_bytes={}",
+          peer_device_id,
+          request_id,
+          batch.len(),
+          payload.len()
+        );
+      });
+      let mut received_ack = false;
+      let mut send_errors = 0usize;
 
-      let deadline = now_ms() + HISTORY_SYNC_WAIT_PER_ATTEMPT_MS;
-      while now_ms() < deadline {
-        let mut buffer = [0u8; 65535];
-        let recv = socket.recv_from(&mut buffer);
-        let (len, _source_addr) = match recv {
-          Ok(result) => result,
-          Err(_) => continue,
-        };
-
-        let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
-          Ok(packet) => packet,
-          Err(_) => continue,
-        };
-
-        let PairingPacket::HistorySyncAck {
-          request_id: ack_request_id,
-          host_device_id,
-          accepted,
-          applied_count,
-          last_applied_seq,
-          reason,
-        } = packet
-        else {
-          continue;
-        };
-
-        if ack_request_id != request_id || host_device_id != peer_device_id {
-          continue;
+      for _ in 0..HISTORY_SYNC_ATTEMPTS {
+        for target in &targets {
+          if socket.send_to(&payload, *target).is_err() {
+            send_errors += 1;
+          }
         }
 
-        if !accepted {
-          let message = reason.unwrap_or_else(|| "history_sync_rejected".to_string());
-          return Err(message);
+        let deadline = now_ms() + HISTORY_SYNC_WAIT_PER_ATTEMPT_MS;
+        while now_ms() < deadline {
+          let mut buffer = [0u8; 65535];
+          let recv = socket.recv_from(&mut buffer);
+          let (len, _source_addr) = match recv {
+            Ok(result) => result,
+            Err(_) => continue,
+          };
+
+          let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
+            Ok(packet) => packet,
+            Err(_) => continue,
+          };
+
+          let PairingPacket::HistorySyncAck {
+            request_id: ack_request_id,
+            host_device_id,
+            accepted,
+            applied_count,
+            last_applied_seq,
+            reason,
+          } = packet
+          else {
+            continue;
+          };
+
+          if ack_request_id != request_id || host_device_id != peer_device_id {
+            continue;
+          }
+
+          if !accepted {
+            let message = reason.unwrap_or_else(|| "history_sync_rejected".to_string());
+            return Err(message);
+          }
+
+          let acked_seq = last_applied_seq.max(since_seq);
+          update_peer_acked_seq(peer_device_id, acked_seq)?;
+          since_seq = acked_seq;
+          total_applied += applied_count;
+          debug_output(|| {
+            println!(
+              "[sync-history] peer={} request_id={} acked_seq={} applied_count={}",
+              peer_device_id,
+              request_id,
+              acked_seq,
+              applied_count
+            );
+          });
+          received_ack = true;
+          break;
         }
 
-        let acked_seq = last_applied_seq.max(since_seq);
-        update_peer_acked_seq(peer_device_id, acked_seq)?;
-        since_seq = acked_seq;
-        total_applied += applied_count;
-        received_ack = true;
-        break;
+        if received_ack {
+          break;
+        }
       }
 
-      if received_ack {
-        break;
+      if !received_ack {
+        return Err(format!(
+          "No history sync ACK from peer {} (send_errors={}, payload_bytes={}). Ensure both devices are online.",
+          peer_device_id,
+          send_errors,
+          payload.len()
+        ));
       }
     }
+  }
+}
 
-    if !received_ack {
+fn split_history_changes_for_udp(
+  local_device: &str,
+  peer_device_id: &str,
+  changes: &[HistorySyncChange],
+  max_packet_bytes: usize,
+) -> Result<Vec<Vec<HistorySyncChange>>, String> {
+  let mut batches: Vec<Vec<HistorySyncChange>> = Vec::new();
+  let mut current_batch: Vec<HistorySyncChange> = Vec::new();
+
+  for change in changes.iter().cloned() {
+    let mut candidate = current_batch.clone();
+    candidate.push(change.clone());
+    let candidate_payload_size =
+      encode_history_sync_push(local_device, peer_device_id, "probe", &candidate)?.len();
+
+    if candidate_payload_size <= max_packet_bytes {
+      current_batch = candidate;
+      continue;
+    }
+
+    if current_batch.is_empty() {
       return Err(format!(
-        "No history sync ACK from peer {}. Ensure both devices are online.",
-        peer_device_id
+        "History change {} is too large for UDP payload ({} bytes > {} bytes).",
+        change.row_id, candidate_payload_size, max_packet_bytes
       ));
     }
 
-    if total_applied == 0 {
-      return Ok(0);
+    batches.push(current_batch);
+    current_batch = vec![change];
+
+    let single_payload_size =
+      encode_history_sync_push(local_device, peer_device_id, "probe", &current_batch)?.len();
+    if single_payload_size > max_packet_bytes {
+      return Err(format!(
+        "History change {} is too large for UDP payload ({} bytes > {} bytes).",
+        current_batch[0].row_id, single_payload_size, max_packet_bytes
+      ));
     }
   }
+
+  if !current_batch.is_empty() {
+    batches.push(current_batch);
+  }
+
+  Ok(batches)
+}
+
+fn encode_history_sync_push(
+  local_device: &str,
+  peer_device_id: &str,
+  request_id: &str,
+  changes: &[HistorySyncChange],
+) -> Result<Vec<u8>, String> {
+  let packet = PairingPacket::HistorySyncPush {
+    request_id: request_id.to_string(),
+    source_device_id: local_device.to_string(),
+    target_device_id: peer_device_id.to_string(),
+    changes: changes.to_vec(),
+  };
+  serde_json::to_vec(&packet).map_err(|e| format!("Failed to encode history sync: {}", e))
 }
 
 fn update_peer_acked_seq(peer_device_id: &str, seq: i64) -> Result<(), String> {
@@ -1246,6 +1500,35 @@ mod tests {
     assert_eq!(
       humanize_rejection_reason("not_discoverable"),
       "Target device is not discoverable. Generate a new 6-digit code and retry."
+    );
+  }
+
+  #[test]
+  fn splits_history_batches_when_payload_too_large() {
+    let changes: Vec<HistorySyncChange> = (0..4)
+      .map(|idx| HistorySyncChange {
+        seq: idx + 1,
+        source_device_id: "device-a".to_string(),
+        op: "insert".to_string(),
+        row_id: format!("history-{}", idx),
+        hlc_wall_ms: 1_000 + idx,
+        hlc_counter: 1,
+        updated_at: 1_000 + idx,
+        row_json: Some(format!(
+          "{{\"history_id\":\"history-{}\",\"value\":\"{}\"}}",
+          idx,
+          "x".repeat(128)
+        )),
+      })
+      .collect();
+
+    let batches = split_history_changes_for_udp("device-a", "device-b", &changes, 700)
+      .expect("Failed to split history changes");
+
+    assert!(batches.len() >= 2);
+    assert_eq!(
+      batches.iter().map(|batch| batch.len()).sum::<usize>(),
+      changes.len()
     );
   }
 }

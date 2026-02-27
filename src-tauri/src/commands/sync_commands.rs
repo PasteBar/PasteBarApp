@@ -27,6 +27,10 @@ pub struct SyncUiStatus {
   pub discoverable: bool,
   pub discoverable_until_ms: Option<i64>,
   pub pair_code: Option<String>,
+  pub history_auto_sync_enabled: bool,
+  pub history_last_sync_at_ms: Option<i64>,
+  pub history_last_sync_result: Option<String>,
+  pub history_last_sync_sent_changes: u64,
   pub trusted_peers: u64,
   pub last_pairing_error: Option<String>,
 }
@@ -195,6 +199,12 @@ pub fn sync_history_now() -> Result<SyncUiStatus, String> {
 }
 
 #[tauri::command]
+pub fn sync_set_history_auto_sync(enabled: bool) -> Result<SyncUiStatus, String> {
+  PAIRING_RUNTIME.set_history_auto_sync_enabled(enabled)?;
+  build_sync_ui_status(None)
+}
+
+#[tauri::command]
 pub fn sync_list_peers() -> Result<Vec<SyncPeerInfo>, String> {
   let mut conn = establish_pool_db_connection();
   let rows: Vec<PeerRow> = diesel::sql_query(
@@ -302,6 +312,10 @@ fn build_sync_ui_status(last_error: Option<String>) -> Result<SyncUiStatus, Stri
     discoverable: pairing_snapshot.discoverable,
     discoverable_until_ms: pairing_snapshot.discoverable_until_ms,
     pair_code: pairing_snapshot.pair_code,
+    history_auto_sync_enabled: pairing_snapshot.history_auto_sync_enabled,
+    history_last_sync_at_ms: pairing_snapshot.history_last_sync_at_ms,
+    history_last_sync_result: pairing_snapshot.history_last_sync_result,
+    history_last_sync_sent_changes: pairing_snapshot.history_last_sync_sent_changes as u64,
     trusted_peers,
     last_pairing_error: pairing_snapshot.last_error,
   })

@@ -113,6 +113,10 @@ type SyncUiStatus = {
   discoverable: boolean
   discoverableUntilMs?: number | null
   pairCode?: string | null
+  historyAutoSyncEnabled: boolean
+  historyLastSyncAtMs?: number | null
+  historyLastSyncResult?: string | null
+  historyLastSyncSentChanges: number
   trustedPeers: number
   lastPairingError?: string | null
 }
@@ -146,6 +150,10 @@ const DEFAULT_SYNC_STATUS: SyncUiStatus = {
   discoverable: false,
   discoverableUntilMs: null,
   pairCode: null,
+  historyAutoSyncEnabled: false,
+  historyLastSyncAtMs: null,
+  historyLastSyncResult: null,
+  historyLastSyncSentChanges: 0,
   trustedPeers: 0,
   lastPairingError: null,
 }
@@ -274,6 +282,7 @@ export function NavBar() {
       | 'sync_cancel_pair_code'
       | 'sync_join_with_code'
       | 'sync_history_now'
+      | 'sync_set_history_auto_sync'
       | 'sync_remove_peer',
     payload?: Record<string, unknown>
   ) => {
@@ -2411,6 +2420,46 @@ export function NavBar() {
                     </Text>
                   </Box>
                 </Flex>
+
+                  <Box className="rounded-md border p-3 mt-3 bg-slate-50 dark:bg-slate-800/60">
+                  <Flex className="items-center justify-between gap-3">
+                    <Box>
+                      <Text className="text-sm font-medium">History sync mode</Text>
+                      <Text className="text-xs text-muted-foreground mt-1">
+                        Auto sync pushes new history in the background. Manual mode only syncs when
+                        you press "Sync History Now".
+                      </Text>
+                    </Box>
+                    <Button
+                      variant="outline"
+                      disabled={isSyncActionRunning}
+                      onClick={() => {
+                        runSyncAction('sync_set_history_auto_sync', {
+                          enabled: !syncStatus.historyAutoSyncEnabled,
+                        })
+                      }}
+                    >
+                      {syncStatus.historyAutoSyncEnabled ? 'Auto: On' : 'Auto: Off'}
+                    </Button>
+                  </Flex>
+                </Box>
+
+                  <Box className="rounded-md border p-3 mt-3 bg-slate-50 dark:bg-slate-800/60">
+                  <Text className="text-sm font-medium">History sync diagnostics</Text>
+                  <Text className="text-xs text-muted-foreground mt-1">
+                    Last run:{' '}
+                    {syncStatus.historyLastSyncAtMs
+                      ? new Date(syncStatus.historyLastSyncAtMs).toLocaleString()
+                      : 'Never'}
+                  </Text>
+                  <Text className="text-xs text-muted-foreground mt-1">
+                    Result:{' '}
+                    {syncStatus.historyLastSyncResult ?? 'No diagnostics yet'}
+                  </Text>
+                  <Text className="text-xs text-muted-foreground mt-1">
+                    Sent changes: {syncStatus.historyLastSyncSentChanges}
+                  </Text>
+                </Box>
 
                   <Box className="rounded-md border p-3 mt-3 bg-slate-50 dark:bg-slate-800/60">
                   <Text className="text-sm font-medium">Pair Devices (6-digit code)</Text>
