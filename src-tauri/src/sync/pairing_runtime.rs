@@ -48,7 +48,7 @@ const HISTORY_AUTO_SYNC_INTERVAL_MS: u64 = 5_000;
 const PING_ATTEMPTS: usize = 2;
 const PING_WAIT_PER_ATTEMPT_MS: i64 = 1_000;
 const MAX_SUBNET_SWEEP_HOSTS_PER_INTERFACE: usize = 256;
-const MDNS_SERVICE_TYPE: &str = "_pastebar-sync._udp.local";
+const MDNS_SERVICE_TYPE: &str = "_pastebar-sync._udp.local.";
 
 static LOCAL_DEVICE_ID: Lazy<String> = Lazy::new(resolve_local_device_id);
 
@@ -1137,7 +1137,7 @@ fn refresh_mdns_advertisement(
   );
   properties.insert("sync_enabled".to_string(), "1".to_string());
 
-  let host_name = format!("{}.local", local_device_id());
+  let host_name = format!("{}.local.", local_device_id());
   let local_ip = local_ip_address::local_ip().unwrap_or(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)));
 
   let service_info = ServiceInfo::new(
