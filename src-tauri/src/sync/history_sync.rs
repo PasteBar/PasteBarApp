@@ -4,6 +4,7 @@ use diesel::sql_types::{BigInt, Bool, Integer, Nullable, Text, Timestamp};
 use diesel::sqlite::SqliteConnection;
 use diesel::QueryableByName;
 use serde::{Deserialize, Serialize};
+use crate::services::utils::debug_output;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct HistorySyncChange {
@@ -75,6 +76,7 @@ pub fn load_history_changes_since(
   conn: &mut SqliteConnection,
   since_seq: i64,
   limit: i64,
+  min_updated_at_ms: i64,
 ) -> Result<Vec<HistorySyncChange>, String> {
   let rows: Vec<ChangeRow> = diesel::sql_query(
     "SELECT
@@ -89,10 +91,12 @@ pub fn load_history_changes_since(
      FROM sync_changes
      WHERE table_name = 'clipboard_history'
        AND CAST(seq AS BIGINT) > ?
+       AND updated_at >= ?
      ORDER BY seq ASC
      LIMIT ?",
   )
   .bind::<BigInt, _>(since_seq)
+  .bind::<BigInt, _>(min_updated_at_ms)
   .bind::<BigInt, _>(limit)
   .load(conn)
   .map_err(|e| e.to_string())?;
@@ -117,6 +121,7 @@ pub fn load_history_changes_since(
 pub fn backfill_history_outbox_from_existing(
   conn: &mut SqliteConnection,
   limit: i64,
+  min_updated_at_ms: i64,
 ) -> Result<usize, String> {
   diesel::sql_query(
     "INSERT INTO sync_changes (
@@ -167,6 +172,7 @@ pub fn backfill_history_outbox_from_existing(
        get_hlc_wall_ms()
      FROM clipboard_history h
      WHERE COALESCE(h.is_image, 0) = 0
+       AND h.updated_at >= ?
        AND NOT EXISTS (
          SELECT 1
          FROM sync_changes s
@@ -176,6 +182,7 @@ pub fn backfill_history_outbox_from_existing(
      ORDER BY h.updated_at ASC
      LIMIT ?",
   )
+  .bind::<BigInt, _>(min_updated_at_ms)
   .bind::<BigInt, _>(limit)
   .execute(conn)
   .map_err(|e| e.to_string())
@@ -191,6 +198,12 @@ pub fn apply_history_change(
 
   if let Some(existing_updated_at) = current_updated_at {
     if existing_updated_at >= effective_updated_at {
+      debug_output(|| {
+        println!(
+          "[sync-history][recv] skipped duplicate/stale history_id={} existing_updated_at={} incoming_updated_at={}",
+          history_id, existing_updated_at, effective_updated_at
+        );
+      });
       return Ok(());
     }
   }
@@ -216,7 +229,7 @@ pub fn apply_history_change(
   let created_date = timestamp_from_millis(created_at);
   let updated_date = timestamp_from_millis(updated_at);
 
-  diesel::sql_query(
+  let affected_rows = diesel::sql_query(
     "INSERT INTO clipboard_history (
       history_id,
       title,
@@ -273,7 +286,7 @@ pub fn apply_history_change(
       copied_from_app = excluded.copied_from_app
     WHERE excluded.updated_at > clipboard_history.updated_at",
   )
-  .bind::<Text, _>(history_id)
+  .bind::<Text, _>(history_id.clone())
   .bind::<Nullable<Text>, _>(payload.title)
   .bind::<Nullable<Text>, _>(payload.value)
   .bind::<Nullable<Text>, _>(payload.value_preview)
@@ -301,6 +314,13 @@ pub fn apply_history_change(
   .bind::<Nullable<Text>, _>(payload.copied_from_app)
   .execute(conn)
   .map_err(|e| e.to_string())?;
+
+  debug_output(|| {
+    println!(
+      "[sync-history][recv] upsert history_id={} incoming_updated_at={} affected_rows={}",
+      history_id, updated_at, affected_rows
+    );
+  });
 
   Ok(())
 }
@@ -343,4 +363,61 @@ fn current_history_updated_at(
 fn timestamp_from_millis(millis: i64) -> NaiveDateTime {
   NaiveDateTime::from_timestamp_opt(millis / 1000, 0)
     .unwrap_or_else(|| NaiveDateTime::from_timestamp_opt(0, 0).expect("unix epoch must exist"))
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use diesel::Connection;
+  use std::time::{SystemTime, UNIX_EPOCH};
+
+  fn now_ms() -> i64 {
+    SystemTime::now()
+      .duration_since(UNIX_EPOCH)
+      .unwrap_or_default()
+      .as_millis() as i64
+  }
+
+  #[test]
+  fn load_history_changes_since_only_returns_last_hour_rows() {
+    let mut conn =
+      SqliteConnection::establish(":memory:").expect("failed to open in-memory sqlite");
+
+    diesel::sql_query(
+      "CREATE TABLE sync_changes (
+         seq INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+         source_device_id TEXT NOT NULL,
+         table_name TEXT NOT NULL,
+         row_id TEXT NOT NULL,
+         op TEXT NOT NULL,
+         hlc_wall_ms BIGINT NOT NULL,
+         hlc_counter INTEGER NOT NULL,
+         updated_at BIGINT NOT NULL,
+         row_json TEXT,
+         created_at BIGINT NOT NULL
+       )",
+    )
+    .execute(&mut conn)
+    .expect("failed to create sync_changes table");
+
+    let cutoff = now_ms() - 3_600_000;
+    let older_than_hour = cutoff - 1_000;
+    let within_last_hour = cutoff + 1_000;
+
+    diesel::sql_query(
+      "INSERT INTO sync_changes (
+         source_device_id, table_name, row_id, op, hlc_wall_ms, hlc_counter, updated_at, row_json, created_at
+       ) VALUES
+         ('device-a', 'clipboard_history', 'old-row', 'insert', 1, 1, ?, '{\"history_id\":\"old-row\"}', 1),
+         ('device-a', 'clipboard_history', 'recent-row', 'insert', 2, 2, ?, '{\"history_id\":\"recent-row\"}', 2)",
+    )
+    .bind::<BigInt, _>(older_than_hour)
+    .bind::<BigInt, _>(within_last_hour)
+    .execute(&mut conn)
+    .expect("failed to seed sync_changes");
+
+    let rows = load_history_changes_since(&mut conn, 0, 100, cutoff).expect("query failed");
+    assert_eq!(rows.len(), 1, "expected only recent row within last hour");
+    assert_eq!(rows[0].row_id, "recent-row");
+  }
 }

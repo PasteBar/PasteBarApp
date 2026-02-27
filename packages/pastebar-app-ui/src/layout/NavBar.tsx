@@ -138,6 +138,18 @@ type SyncDiscoveredDevice = {
   isLocal: boolean
 }
 
+type SyncPingResult = {
+  peerDeviceId: string
+  sourceAddr?: string | null
+  payloadId: string
+  payloadTime: number
+  pong: boolean
+  roundTripMs?: number | null
+  requestJson: string
+  responseJson?: string | null
+  error?: string | null
+}
+
 const DEFAULT_SYNC_STATUS: SyncUiStatus = {
   mode: 'off',
   state: 'idle',
@@ -169,6 +181,8 @@ export function NavBar() {
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false)
   const [isSyncActionRunning, setIsSyncActionRunning] = useState(false)
   const [isSyncScanRunning, setIsSyncScanRunning] = useState(false)
+  const [isSyncPingRunning, setIsSyncPingRunning] = useState(false)
+  const [syncPingResults, setSyncPingResults] = useState<SyncPingResult[]>([])
   const [pairCodeInput, setPairCodeInput] = useState('')
   const [syncNowMs, setSyncNowMs] = useState(Date.now())
   const navigate = useNavigate()
@@ -270,6 +284,34 @@ export function NavBar() {
       }
     } finally {
       setIsSyncScanRunning(false)
+    }
+  }
+
+  const pingSyncPeersJson = async (notifyOnError = false) => {
+    setIsSyncPingRunning(true)
+    try {
+      const results = await invoke<SyncPingResult[]>('sync_ping_peers_json')
+      setSyncPingResults(results)
+      const successCount = results.filter(result => result.pong).length
+      const failCount = results.length - successCount
+      toast({
+        id: 'sync-ping-result',
+        variant: failCount > 0 ? 'destructive' : 'success',
+        title: failCount > 0 ? 'Ping completed with issues' : 'Ping completed',
+        description: `Pong: ${successCount}, failed: ${failCount}`,
+      })
+    } catch (error) {
+      setSyncPingResults([])
+      if (notifyOnError) {
+        toast({
+          id: 'sync-ping-error',
+          variant: 'destructive',
+          title: 'Ping failed',
+          description: String(error),
+        })
+      }
+    } finally {
+      setIsSyncPingRunning(false)
     }
   }
 
@@ -388,6 +430,7 @@ export function NavBar() {
   useEffect(() => {
     if (!isSyncModalOpen) {
       setSyncDiscoveredDevices([])
+      setSyncPingResults([])
       return
     }
     refreshSyncStatus()
@@ -2586,6 +2629,77 @@ export function NavBar() {
                             </Badge>
                           </Flex>
                         </Flex>
+                      ))}
+                    </Flex>
+                  )}
+                </Box>
+
+                  <Box className="rounded-md border p-3 mt-3 bg-slate-50 dark:bg-slate-800/60">
+                  <Flex className="items-center justify-between">
+                    <Box>
+                      <Text className="text-sm font-medium">Ping JSON (debug)</Text>
+                      <Text className="text-xs text-muted-foreground mt-1">
+                        Sends payload {'{ id, time, pong:false }'} to each paired device and expects
+                        {' { id, time, pong:true }'} back.
+                      </Text>
+                    </Box>
+                    <Button
+                      variant="outline"
+                      disabled={isSyncActionRunning || isSyncPingRunning || syncPeers.length === 0}
+                      onClick={() => {
+                        pingSyncPeersJson(true)
+                      }}
+                    >
+                      {isSyncPingRunning ? (
+                        <>
+                          <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                          Pinging...
+                        </>
+                      ) : (
+                        'Ping Paired'
+                      )}
+                    </Button>
+                  </Flex>
+                  {syncPingResults.length === 0 ? (
+                    <Text className="text-xs text-muted-foreground mt-2">
+                      No ping results yet.
+                    </Text>
+                  ) : (
+                    <Flex className="flex-col gap-2 mt-2">
+                      {syncPingResults.map(result => (
+                        <Box
+                          key={`${result.peerDeviceId}-${result.payloadId}`}
+                          className="rounded-md border p-2 bg-white dark:bg-slate-900/60"
+                        >
+                          <Flex className="items-center justify-between">
+                            <Text className="text-sm font-medium">{result.peerDeviceId}</Text>
+                            <Badge
+                              variant="outline"
+                              className={
+                                result.pong
+                                  ? 'text-green-600 dark:text-green-400'
+                                  : 'text-red-600 dark:text-red-400'
+                              }
+                            >
+                              {result.pong ? 'Pong received' : 'No pong'}
+                            </Badge>
+                          </Flex>
+                          <Text className="text-xs text-muted-foreground mt-1">
+                            {result.sourceAddr ?? 'Unknown source'} | RTT:{' '}
+                            {typeof result.roundTripMs === 'number'
+                              ? `${result.roundTripMs} ms`
+                              : 'n/a'}
+                          </Text>
+                          <Text className="text-[11px] font-mono break-all mt-1">
+                            request: {result.requestJson}
+                          </Text>
+                          <Text className="text-[11px] font-mono break-all mt-1">
+                            response: {result.responseJson ?? 'none'}
+                          </Text>
+                          {result.error && (
+                            <Text className="text-xs text-red-500 mt-1">{result.error}</Text>
+                          )}
+                        </Box>
                       ))}
                     </Flex>
                   )}

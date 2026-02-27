@@ -21,6 +21,7 @@ use std::{collections::HashMap, sync::Mutex};
 
 use diesel::prelude::*;
 use diesel::result::Error;
+use diesel::QueryableByName;
 use image::{self, DynamicImage};
 use image::{ImageBuffer, RgbaImage};
 use lang_detect::detect_language;
@@ -49,6 +50,7 @@ use super::utils::is_valid_json;
 
 use diesel::debug_query;
 use diesel::sqlite::Sqlite;
+use diesel::sqlite::SqliteConnection;
 
 type ImageHashSize = [u8; 8];
 
@@ -273,14 +275,22 @@ pub fn add_clipboard_history_from_image(
       }
     }
 
+    let now_ms = Utc::now().timestamp_millis();
+    let now_dt = Utc::now().naive_utc();
     let connection = &mut establish_pool_db_connection();
-    let _ = diesel::update(clipboard_history.filter(history_id.eq(&existing_history.history_id)))
+    let rows_updated = diesel::update(clipboard_history.filter(history_id.eq(&existing_history.history_id)))
       .set((
         is_favorite.eq(is_favorite_item),
-        updated_at.eq(Utc::now().timestamp_millis()),
-        updated_date.eq(Utc::now().naive_utc()),
+        updated_at.eq(now_ms),
+        updated_date.eq(now_dt),
       ))
       .execute(connection);
+    debug_output(|| {
+      println!(
+        "[sync-history][capture] source=image-update history_id={} updated_at={} rows_updated={:?} skipped_sync_image=true",
+        existing_history.history_id, now_ms, rows_updated
+      );
+    });
   } else {
     let folder_path = base_dir.join(folder_name);
     ensure_dir_exists(&folder_path);
@@ -306,6 +316,12 @@ pub fn add_clipboard_history_from_image(
     );
 
     let _ = insert_clipboard_history(&new_history);
+    debug_output(|| {
+      println!(
+        "[sync-history][capture] source=image-insert history_id={} updated_at={} skipped_sync_image=true",
+        new_history.history_id, new_history.updated_at
+      );
+    });
   }
 
   "ok".to_string()
@@ -465,15 +481,23 @@ pub fn add_clipboard_history_from_text(
       }
     }
 
+    let now_ms = Utc::now().timestamp_millis();
+    let now_dt = Utc::now().naive_utc();
     let connection = &mut establish_pool_db_connection();
-
-    let _ = diesel::update(clipboard_history.filter(history_id.eq(&existing_history.history_id)))
+    let rows_updated = diesel::update(clipboard_history.filter(history_id.eq(&existing_history.history_id)))
       .set((
         is_favorite.eq(is_favorite_item),
-        updated_at.eq(Utc::now().timestamp_millis()),
-        updated_date.eq(Utc::now().naive_utc()),
+        updated_at.eq(now_ms),
+        updated_date.eq(now_dt),
       ))
       .execute(connection);
+    debug_output(|| {
+      println!(
+        "[sync-history][capture] source=text-update history_id={} updated_at={} rows_updated={:?}",
+        existing_history.history_id, now_ms, rows_updated
+      );
+    });
+    debug_history_sync_capture(connection, &existing_history.history_id, "update", "text-update");
 
     "ok".to_string()
   } else {
@@ -1102,11 +1126,146 @@ pub fn count_clipboard_histories() -> Result<i64, Error> {
 
 pub fn insert_clipboard_history(new_clipboard_history: &ClipboardHistory) -> String {
   let connection = &mut establish_pool_db_connection();
-  let _ = diesel::insert_into(clipboard_history)
+  let insert_result = diesel::insert_into(clipboard_history)
     .values(new_clipboard_history)
     .execute(connection);
+  debug_output(|| {
+    println!(
+      "[sync-history][capture] source=insert_clipboard_history history_id={} updated_at={} is_image={:?} rows_inserted={:?}",
+      new_clipboard_history.history_id,
+      new_clipboard_history.updated_at,
+      new_clipboard_history.is_image,
+      insert_result
+    );
+  });
+  debug_history_sync_capture(
+    connection,
+    &new_clipboard_history.history_id,
+    "insert",
+    "insert_clipboard_history",
+  );
 
   "ok".to_string()
+}
+
+#[derive(Debug, QueryableByName)]
+struct SyncHistoryOutboxStateRow {
+  #[diesel(sql_type = diesel::sql_types::BigInt)]
+  total_rows: i64,
+  #[diesel(sql_type = diesel::sql_types::BigInt)]
+  latest_seq: i64,
+}
+
+fn debug_history_sync_capture(
+  connection: &mut SqliteConnection,
+  history_id_value: &str,
+  op: &str,
+  source: &str,
+) {
+  let inserted = ensure_history_sync_outbox_entry(connection, history_id_value, op);
+  let outbox_state: Result<Vec<SyncHistoryOutboxStateRow>, Error> = diesel::sql_query(
+    "SELECT
+      CAST(COUNT(*) AS BIGINT) AS total_rows,
+      COALESCE(MAX(CAST(seq AS BIGINT)), 0) AS latest_seq
+     FROM sync_changes
+     WHERE table_name = 'clipboard_history'
+       AND row_id = ?",
+  )
+  .bind::<diesel::sql_types::Text, _>(history_id_value.to_string())
+  .load(connection);
+
+  match (inserted, outbox_state) {
+    (Ok(inserted_rows), Ok(rows)) => {
+      let (total_rows, latest_seq) = rows
+        .first()
+        .map(|row| (row.total_rows, row.latest_seq))
+        .unwrap_or((0, 0));
+      debug_output(|| {
+        println!(
+          "[sync-history][capture] source={} history_id={} op={} outbox_inserted={} outbox_total={} outbox_latest_seq={}",
+          source, history_id_value, op, inserted_rows, total_rows, latest_seq
+        );
+      });
+    }
+    (insert_result, state_result) => {
+      debug_output(|| {
+        println!(
+          "[sync-history][capture] source={} history_id={} op={} outbox_check_failed insert_result={:?} state_result={:?}",
+          source, history_id_value, op, insert_result, state_result
+        );
+      });
+    }
+  }
+}
+
+fn ensure_history_sync_outbox_entry(
+  connection: &mut SqliteConnection,
+  history_id_value: &str,
+  op: &str,
+) -> Result<usize, Error> {
+  diesel::sql_query(
+    "INSERT INTO sync_changes (
+       source_device_id,
+       table_name,
+       row_id,
+       op,
+       hlc_wall_ms,
+       hlc_counter,
+       updated_at,
+       row_json,
+       created_at
+     )
+     SELECT
+       COALESCE((SELECT device_id FROM sync_meta LIMIT 1), 'local'),
+       'clipboard_history',
+       h.history_id,
+       ?,
+       get_hlc_wall_ms(),
+       get_hlc_counter(),
+       h.updated_at,
+       json_object(
+         'history_id', h.history_id,
+         'title', h.title,
+         'value', h.value,
+         'value_preview', h.value_preview,
+         'value_more_preview_lines', h.value_more_preview_lines,
+         'value_more_preview_chars', h.value_more_preview_chars,
+         'value_hash', h.value_hash,
+         'is_image', h.is_image,
+         'is_masked', h.is_masked,
+         'is_text', h.is_text,
+         'is_code', h.is_code,
+         'is_link', h.is_link,
+         'is_video', h.is_video,
+         'has_emoji', h.has_emoji,
+         'has_masked_words', h.has_masked_words,
+         'is_pinned', h.is_pinned,
+         'is_favorite', h.is_favorite,
+         'links', h.links,
+         'detected_language', h.detected_language,
+         'pinned_order_number', h.pinned_order_number,
+         'created_at', h.created_at,
+         'updated_at', h.updated_at,
+         'history_options', h.history_options,
+         'copied_from_app', h.copied_from_app
+       ),
+       get_hlc_wall_ms()
+     FROM clipboard_history h
+     WHERE h.history_id = ?
+       AND COALESCE(h.is_image, 0) = 0
+       AND NOT EXISTS (
+         SELECT 1
+         FROM sync_changes s
+         WHERE s.table_name = 'clipboard_history'
+           AND s.row_id = h.history_id
+           AND s.op = ?
+           AND s.updated_at = h.updated_at
+       )",
+  )
+  .bind::<diesel::sql_types::Text, _>(op.to_string())
+  .bind::<diesel::sql_types::Text, _>(history_id_value.to_string())
+  .bind::<diesel::sql_types::Text, _>(op.to_string())
+  .execute(connection)
 }
 
 pub fn update_clipboard_history_by_id(

@@ -6,6 +6,7 @@ use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
 use once_cell::sync::Lazy;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -32,8 +33,11 @@ const HISTORY_SYNC_ATTEMPTS: usize = 2;
 const HISTORY_SYNC_WAIT_PER_ATTEMPT_MS: i64 = 1_200;
 const HISTORY_SYNC_BATCH_LIMIT: i64 = 200;
 const HISTORY_BACKFILL_LIMIT: i64 = 2_000;
+const HISTORY_SYNC_WINDOW_MS: i64 = 60 * 60 * 1000;
 const HISTORY_SYNC_MAX_PACKET_BYTES: usize = 48 * 1024;
 const HISTORY_AUTO_SYNC_INTERVAL_MS: u64 = 5_000;
+const PING_ATTEMPTS: usize = 2;
+const PING_WAIT_PER_ATTEMPT_MS: i64 = 1_000;
 const MAX_SUBNET_SWEEP_HOSTS_PER_INTERFACE: usize = 256;
 const MDNS_SERVICE_TYPE: &str = "_pastebar-sync._udp.local";
 
@@ -77,6 +81,22 @@ enum PairingPacket {
     last_applied_seq: i64,
     reason: Option<String>,
   },
+  PingJson {
+    request_id: String,
+    source_device_id: String,
+    target_device_id: String,
+    id: String,
+    time: i64,
+    pong: bool,
+  },
+  PongJson {
+    request_id: String,
+    source_device_id: String,
+    target_device_id: String,
+    id: String,
+    time: i64,
+    pong: bool,
+  },
 }
 
 #[derive(Debug, Default, Clone)]
@@ -115,6 +135,19 @@ pub struct PairingDiscoveredDevice {
   pub source_addr: String,
   pub discoverable: bool,
   pub sync_enabled: bool,
+}
+
+#[derive(Debug, Clone)]
+pub struct PairingPingResult {
+  pub peer_device_id: String,
+  pub source_addr: Option<String>,
+  pub payload_id: String,
+  pub payload_time: i64,
+  pub pong: bool,
+  pub round_trip_ms: Option<i64>,
+  pub request_json: String,
+  pub response_json: Option<String>,
+  pub error: Option<String>,
 }
 
 #[derive(QueryableByName)]
@@ -458,6 +491,149 @@ impl PairingRuntime {
     sync_history_now_internal(&self.state)
   }
 
+  pub fn ping_trusted_peers(
+    &self,
+    requester_device_id: &str,
+  ) -> Result<Vec<PairingPingResult>, String> {
+    {
+      let state = self
+        .state
+        .lock()
+        .map_err(|_| "Pairing state lock poisoned".to_string())?;
+      if !state.enabled {
+        return Err("Sync must be enabled before ping.".to_string());
+      }
+    }
+
+    let peers = trusted_peers_with_cursor()?;
+    if peers.is_empty() {
+      return Err("No trusted peers available for ping.".to_string());
+    }
+
+    let socket =
+      UdpSocket::bind("0.0.0.0:0").map_err(|e| format!("Failed to open ping socket: {}", e))?;
+    socket
+      .set_broadcast(true)
+      .map_err(|e| format!("Failed to enable UDP broadcast for ping: {}", e))?;
+    socket
+      .set_read_timeout(Some(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)))
+      .map_err(|e| format!("Failed to set ping socket timeout: {}", e))?;
+
+    let targets = discovery_target_addresses();
+    let mut results: Vec<PairingPingResult> = Vec::new();
+
+    for peer in peers {
+      let ping_started_at = now_ms();
+      let request_id = nanoid::nanoid!(12);
+      let payload_id = nanoid::nanoid!(10);
+      let payload_time = now_ms();
+      let ping_packet = PairingPacket::PingJson {
+        request_id: request_id.clone(),
+        source_device_id: requester_device_id.to_string(),
+        target_device_id: peer.peer_device_id.clone(),
+        id: payload_id.clone(),
+        time: payload_time,
+        pong: false,
+      };
+      let request_json = json!({
+        "id": payload_id,
+        "time": payload_time,
+        "pong": false
+      })
+      .to_string();
+      let payload = serde_json::to_vec(&ping_packet)
+        .map_err(|e| format!("Failed to encode ping payload: {}", e))?;
+
+      let mut matched: Option<PairingPingResult> = None;
+      for _ in 0..PING_ATTEMPTS {
+        for target in &targets {
+          let _ = socket.send_to(&payload, *target);
+        }
+
+        let deadline = now_ms() + PING_WAIT_PER_ATTEMPT_MS;
+        while now_ms() < deadline {
+          let mut buffer = [0u8; 4096];
+          let recv = socket.recv_from(&mut buffer);
+          let (len, source_addr) = match recv {
+            Ok(result) => result,
+            Err(_) => continue,
+          };
+
+          let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
+            Ok(packet) => packet,
+            Err(_) => continue,
+          };
+
+          let PairingPacket::PongJson {
+            request_id: ack_request_id,
+            source_device_id,
+            target_device_id,
+            id,
+            time,
+            pong,
+          } = packet
+          else {
+            continue;
+          };
+
+          if ack_request_id != request_id
+            || source_device_id != peer.peer_device_id
+            || target_device_id != requester_device_id
+            || id != payload_id
+          {
+            continue;
+          }
+
+          let round_trip_ms = (now_ms() - ping_started_at).max(0);
+          let response_json = json!({
+            "id": id,
+            "time": time,
+            "pong": pong
+          })
+          .to_string();
+          matched = Some(PairingPingResult {
+            peer_device_id: peer.peer_device_id.clone(),
+            source_addr: Some(source_addr.to_string()),
+            payload_id: payload_id.clone(),
+            payload_time,
+            pong,
+            round_trip_ms: Some(round_trip_ms),
+            request_json: request_json.clone(),
+            response_json: Some(response_json),
+            error: None,
+          });
+          break;
+        }
+
+        if matched.is_some() {
+          break;
+        }
+      }
+
+      let result = matched.unwrap_or_else(|| PairingPingResult {
+        peer_device_id: peer.peer_device_id.clone(),
+        source_addr: None,
+        payload_id: payload_id.clone(),
+        payload_time,
+        pong: false,
+        round_trip_ms: None,
+        request_json: request_json.clone(),
+        response_json: None,
+        error: Some("timeout_no_pong".to_string()),
+      });
+
+      debug_output(|| {
+        println!(
+          "[sync-ping] peer={} payload_id={} pong={} rtt_ms={:?} error={:?}",
+          result.peer_device_id, result.payload_id, result.pong, result.round_trip_ms, result.error
+        );
+      });
+      results.push(result);
+    }
+
+    Ok(results)
+  }
+
   pub fn snapshot(&self) -> Result<PairingSnapshot, String> {
     let mdns_needs_refresh = {
       let mut state = self
@@ -598,6 +774,7 @@ impl PairingRuntime {
 
 fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, String> {
   let started_at = now_ms();
+  let min_updated_at_ms = started_at - HISTORY_SYNC_WINDOW_MS;
   {
     let state_guard = state
       .lock()
@@ -620,15 +797,19 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
   }
 
   // First-run migration aid: if history outbox is empty, seed it from existing local history.
-  if let Ok((latest_seq, total_rows, _)) = history_outbox_stats_since(0) {
+  if let Ok((latest_seq, total_rows, _)) = history_outbox_stats_since(0, min_updated_at_ms) {
     if total_rows == 0 {
       let mut conn = establish_pool_db_connection();
-      match backfill_history_outbox_from_existing(&mut conn, HISTORY_BACKFILL_LIMIT) {
+      match backfill_history_outbox_from_existing(
+        &mut conn,
+        HISTORY_BACKFILL_LIMIT,
+        min_updated_at_ms,
+      ) {
         Ok(inserted) => {
           debug_output(|| {
             println!(
-              "[sync-history] seeded history outbox from clipboard_history inserted={} latest_before={}",
-              inserted, latest_seq
+              "[sync-history] seeded history outbox from clipboard_history inserted={} latest_before={} min_updated_at={}",
+              inserted, latest_seq, min_updated_at_ms
             );
           });
         }
@@ -647,16 +828,18 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
   let mut synced_changes = 0usize;
   let mut peer_debug_details: Vec<String> = Vec::new();
   for peer in peers {
-    let (latest_seq, total_rows, pending_rows) = history_outbox_stats_since(peer.last_acked_seq)
+    let (latest_seq, total_rows, pending_rows) =
+      history_outbox_stats_since(peer.last_acked_seq, min_updated_at_ms)
       .unwrap_or((0, 0, 0));
     debug_output(|| {
       println!(
-        "[sync-history] peer={} last_acked_seq={} latest_history_seq={} total_history_rows={} pending_rows={}",
+        "[sync-history] peer={} last_acked_seq={} latest_history_seq={} total_history_rows={} pending_rows={} min_updated_at={}",
         peer.peer_device_id,
         peer.last_acked_seq,
         latest_seq,
         total_rows,
-        pending_rows
+        pending_rows,
+        min_updated_at_ms
       );
     });
     peer_debug_details.push(format!(
@@ -664,8 +847,12 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
       peer.peer_device_id, peer.last_acked_seq, latest_seq, pending_rows, total_rows
     ));
 
-    let applied = match sync_history_to_peer(&local_device, &peer.peer_device_id, peer.last_acked_seq)
-    {
+    let applied = match sync_history_to_peer(
+      &local_device,
+      &peer.peer_device_id,
+      peer.last_acked_seq,
+      min_updated_at_ms,
+    ) {
       Ok(applied) => applied,
       Err(error) => {
         set_history_sync_diagnostics(
@@ -685,7 +872,7 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
       "History sync completed. No new changes to send.".to_string()
     } else {
       format!(
-        "History sync completed. No new changes to send. {}",
+        "History sync completed. No new changes to send in the last hour. {}",
         peer_debug_details.join(" | ")
       )
     }
@@ -696,7 +883,7 @@ fn sync_history_now_internal(state: &Arc<Mutex<PairingState>>) -> Result<usize, 
   Ok(synced_changes)
 }
 
-fn history_outbox_stats_since(since_seq: i64) -> Result<(i64, i64, i64), String> {
+fn history_outbox_stats_since(since_seq: i64, min_updated_at_ms: i64) -> Result<(i64, i64, i64), String> {
   let mut conn = establish_pool_db_connection();
   let rows: Vec<HistoryOutboxStatsRow> = diesel::sql_query(
     "SELECT
@@ -707,9 +894,11 @@ fn history_outbox_stats_since(since_seq: i64) -> Result<(i64, i64, i64), String>
          0
        ) AS pending_rows
      FROM sync_changes
-     WHERE table_name = 'clipboard_history'",
+     WHERE table_name = 'clipboard_history'
+       AND updated_at >= ?",
   )
   .bind::<BigInt, _>(since_seq)
+  .bind::<BigInt, _>(min_updated_at_ms)
   .load(&mut conn)
   .map_err(|e| e.to_string())?;
 
@@ -1011,22 +1200,50 @@ fn sync_history_to_peer(
   local_device: &str,
   peer_device_id: &str,
   mut since_seq: i64,
+  min_updated_at_ms: i64,
 ) -> Result<usize, String> {
   let mut total_applied = 0usize;
 
   loop {
-    let changes = {
+    let raw_changes = {
       let mut conn = establish_pool_db_connection();
-      load_history_changes_since(&mut conn, since_seq, HISTORY_SYNC_BATCH_LIMIT)?
+      load_history_changes_since(
+        &mut conn,
+        since_seq,
+        HISTORY_SYNC_BATCH_LIMIT,
+        min_updated_at_ms,
+      )?
     };
-    if changes.is_empty() {
+    if raw_changes.is_empty() {
       return Ok(total_applied);
+    }
+    let loaded_max_seq = raw_changes.last().map(|change| change.seq).unwrap_or(since_seq);
+    let skipped_peer_echo = raw_changes
+      .iter()
+      .filter(|change| change.source_device_id == peer_device_id)
+      .count();
+    let changes: Vec<HistorySyncChange> = raw_changes
+      .into_iter()
+      .filter(|change| change.source_device_id != peer_device_id)
+      .collect();
+    if changes.is_empty() {
+      since_seq = loaded_max_seq;
+      update_peer_acked_seq(peer_device_id, since_seq)?;
+      debug_output(|| {
+        println!(
+          "[sync-history] peer={} skipped peer-origin rows={} advanced_cursor_to_seq={}",
+          peer_device_id, skipped_peer_echo, since_seq
+        );
+      });
+      continue;
     }
     debug_output(|| {
       println!(
-        "[sync-history] peer={} since_seq={} loaded_changes={}",
+        "[sync-history] peer={} since_seq={} loaded_changes={} skipped_peer_echo={} outgoing_changes={}",
         peer_device_id,
         since_seq,
+        changes.len() + skipped_peer_echo,
+        skipped_peer_echo,
         changes.len()
       );
     });
@@ -1509,6 +1726,50 @@ fn run_listener_loop(
               let _ = socket.send_to(&payload, source_addr);
             }
           }
+        }
+      }
+      PairingPacket::PingJson {
+        request_id,
+        source_device_id,
+        target_device_id,
+        id,
+        time,
+        pong: _,
+      } => {
+        if target_device_id != local_device_id() {
+          continue;
+        }
+
+        let is_enabled = state
+          .lock()
+          .map(|runtime_state| runtime_state.enabled)
+          .unwrap_or(false);
+        if !is_enabled {
+          continue;
+        }
+
+        let trusted = peer_is_trusted(&source_device_id).unwrap_or(false);
+        if !trusted {
+          continue;
+        }
+
+        let ping_id = id.clone();
+        let response = PairingPacket::PongJson {
+          request_id,
+          source_device_id: local_device_id(),
+          target_device_id: source_device_id,
+          id,
+          time,
+          pong: true,
+        };
+        debug_output(|| {
+          println!(
+            "[sync-ping] responding_to={} id={} time={} pong=true",
+            source_addr, ping_id, time
+          );
+        });
+        if let Ok(payload) = serde_json::to_vec(&response) {
+          let _ = socket.send_to(&payload, source_addr);
         }
       }
       _ => continue,

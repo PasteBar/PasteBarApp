@@ -3,7 +3,9 @@ use serde::Serialize;
 
 use crate::db::establish_pool_db_connection;
 use crate::sync::engine::SyncEngine;
-use crate::sync::pairing_runtime::{local_device_id, PairingDiscoveredDevice, PairingRuntime};
+use crate::sync::pairing_runtime::{
+  local_device_id, PairingDiscoveredDevice, PairingPingResult, PairingRuntime,
+};
 use crate::sync::types::SyncMode;
 use diesel::sql_types::{BigInt, Bool, Nullable, Text};
 use diesel::QueryableByName;
@@ -54,6 +56,20 @@ pub struct SyncDiscoveredDevice {
   pub discoverable: bool,
   pub sync_enabled: bool,
   pub is_local: bool,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SyncPingResult {
+  pub peer_device_id: String,
+  pub source_addr: Option<String>,
+  pub payload_id: String,
+  pub payload_time: i64,
+  pub pong: bool,
+  pub round_trip_ms: Option<i64>,
+  pub request_json: String,
+  pub response_json: Option<String>,
+  pub error: Option<String>,
 }
 
 #[derive(QueryableByName)]
@@ -202,6 +218,42 @@ pub fn sync_history_now() -> Result<SyncUiStatus, String> {
 pub fn sync_set_history_auto_sync(enabled: bool) -> Result<SyncUiStatus, String> {
   PAIRING_RUNTIME.set_history_auto_sync_enabled(enabled)?;
   build_sync_ui_status(None)
+}
+
+#[tauri::command]
+pub fn sync_ping_peers_json() -> Result<Vec<SyncPingResult>, String> {
+  let mut conn = establish_pool_db_connection();
+  let local_id = ensure_local_sync_identity(&mut conn)?;
+  let responses = PAIRING_RUNTIME.ping_trusted_peers(&local_id)?;
+
+  Ok(
+    responses
+      .into_iter()
+      .map(
+        |PairingPingResult {
+           peer_device_id,
+           source_addr,
+           payload_id,
+           payload_time,
+           pong,
+           round_trip_ms,
+           request_json,
+           response_json,
+           error,
+         }| SyncPingResult {
+          peer_device_id,
+          source_addr,
+          payload_id,
+          payload_time,
+          pong,
+          round_trip_ms,
+          request_json,
+          response_json,
+          error,
+        },
+      )
+      .collect(),
+  )
 }
 
 #[tauri::command]
