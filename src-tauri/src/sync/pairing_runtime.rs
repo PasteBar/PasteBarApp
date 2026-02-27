@@ -1052,12 +1052,17 @@ fn scan_mdns_devices(
 
     let discoverable = matches!(mdns_txt_value(props, "discoverable").as_deref(), Some("1"));
     let sync_enabled = !matches!(mdns_txt_value(props, "sync_enabled").as_deref(), Some("0"));
-    let source_addr = info
-      .get_addresses()
-      .iter()
-      .find(|ip| !ip.is_loopback())
-      .map(|ip| format!("{}:{}", ip, info.get_port()))
-      .unwrap_or_else(|| format!("mdns:{}", info.get_port()));
+    
+    let cached_ips = crate::sync::discovery::get_peer_ips().read().unwrap().clone();
+    let source_addr = if let Some(addr) = cached_ips.get(&host_device_id) {
+         addr.to_string()
+    } else {
+         info.get_addresses()
+             .iter()
+             .find(|ip| !ip.is_loopback() && ip.is_ipv4())
+             .map(|ip| format!("{}:{}", ip, info.get_port()))
+             .unwrap_or_else(|| format!("mdns:{}", info.get_port()))
+    };
 
     discovered.insert(
       host_device_id.clone(),
@@ -1125,8 +1130,6 @@ fn refresh_mdns_advertisement(
   }
 
   let mut properties = HashMap::new();
-  properties.insert("app".to_string(), "pastebar".to_string());
-  properties.insert("proto".to_string(), "sync".to_string());
   properties.insert("device_id".to_string(), local_device_id());
   properties.insert(
     "discoverable".to_string(),
@@ -1135,11 +1138,13 @@ fn refresh_mdns_advertisement(
   properties.insert("sync_enabled".to_string(), "1".to_string());
 
   let host_name = format!("{}.local", local_device_id());
+  let local_ip = local_ip_address::local_ip().unwrap_or(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)));
+
   let service_info = ServiceInfo::new(
     MDNS_SERVICE_TYPE,
     &local_device_id(),
     &host_name,
-    IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+    local_ip,
     PAIRING_PORT,
     Some(properties),
   )
