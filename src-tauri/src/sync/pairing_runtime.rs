@@ -1,10 +1,12 @@
 use diesel::sql_types::{BigInt, Text};
 use diesel::RunQueryDsl;
+use if_addrs::{get_if_addrs, IfAddr};
+use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
 use once_cell::sync::Lazy;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
-use std::net::{SocketAddr, UdpSocket};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread::JoinHandle;
@@ -19,6 +21,8 @@ const JOIN_ATTEMPTS: usize = 3;
 const JOIN_WAIT_PER_ATTEMPT_MS: i64 = 1_500;
 const DISCOVERY_ATTEMPTS: usize = 2;
 const DISCOVERY_WAIT_PER_ATTEMPT_MS: i64 = 900;
+const MAX_SUBNET_SWEEP_HOSTS_PER_INTERFACE: usize = 256;
+const MDNS_SERVICE_TYPE: &str = "_pastebar-sync._udp.local.";
 
 static LOCAL_DEVICE_ID: Lazy<String> = Lazy::new(resolve_local_device_id);
 
@@ -78,11 +82,16 @@ pub struct PairingDiscoveredDevice {
   pub sync_enabled: bool,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct PairingRuntime {
   state: Arc<Mutex<PairingState>>,
   stop_signal: Arc<AtomicBool>,
   worker: Arc<Mutex<Option<JoinHandle<()>>>>,
+  mdns_advertiser: Arc<Mutex<Option<MdnsAdvertiser>>>,
+}
+
+struct MdnsAdvertiser {
+  daemon: ServiceDaemon,
 }
 
 impl Default for PairingRuntime {
@@ -91,6 +100,7 @@ impl Default for PairingRuntime {
       state: Arc::new(Mutex::new(PairingState::default())),
       stop_signal: Arc::new(AtomicBool::new(false)),
       worker: Arc::new(Mutex::new(None)),
+      mdns_advertiser: Arc::new(Mutex::new(None)),
     }
   }
 }
@@ -105,7 +115,8 @@ impl PairingRuntime {
           .map_err(|_| "Pairing state lock poisoned".to_string())?;
         state.enabled = true;
       }
-      self.start_listener()
+      self.start_listener()?;
+      refresh_mdns_advertisement(&self.state, &self.mdns_advertiser)
     } else {
       {
         let mut state = self
@@ -117,7 +128,7 @@ impl PairingRuntime {
         state.discoverable_until_ms = None;
       }
       self.stop_listener();
-      Ok(())
+      refresh_mdns_advertisement(&self.state, &self.mdns_advertiser)
     }
   }
 
@@ -135,6 +146,8 @@ impl PairingRuntime {
     state.pair_code = Some(code.clone());
     state.discoverable_until_ms = Some(now_ms() + DISCOVERABLE_WINDOW_MS);
     state.last_error = None;
+    drop(state);
+    refresh_mdns_advertisement(&self.state, &self.mdns_advertiser)?;
     Ok(code)
   }
 
@@ -145,6 +158,8 @@ impl PairingRuntime {
       .map_err(|_| "Pairing state lock poisoned".to_string())?;
     state.pair_code = None;
     state.discoverable_until_ms = None;
+    drop(state);
+    refresh_mdns_advertisement(&self.state, &self.mdns_advertiser)?;
     Ok(())
   }
 
@@ -195,11 +210,13 @@ impl PairingRuntime {
     let payload = serde_json::to_vec(&request_packet)
       .map_err(|e| format!("Failed to serialize pairing request: {}", e))?;
 
-    let broadcast_addr = SocketAddr::from(([255, 255, 255, 255], PAIRING_PORT));
+    let discovery_targets = discovery_target_addresses();
     let mut last_rejection: Option<String> = None;
 
     for _ in 0..JOIN_ATTEMPTS {
-      let _ = socket.send_to(&payload, broadcast_addr);
+      for target in &discovery_targets {
+        let _ = socket.send_to(&payload, *target);
+      }
 
       let attempt_deadline = now_ms() + JOIN_WAIT_PER_ATTEMPT_MS;
       while now_ms() < attempt_deadline {
@@ -287,13 +304,16 @@ impl PairingRuntime {
     let payload = serde_json::to_vec(&probe_packet)
       .map_err(|e| format!("Failed to serialize discovery request: {}", e))?;
 
-    let broadcast_addr = SocketAddr::from(([255, 255, 255, 255], PAIRING_PORT));
-    let loopback_addr = SocketAddr::from(([127, 0, 0, 1], PAIRING_PORT));
+    let discovery_targets = discovery_target_addresses();
     let mut discovered: BTreeMap<String, PairingDiscoveredDevice> = BTreeMap::new();
+    for mdns_device in scan_mdns_devices(requester_device_id) {
+      discovered.insert(mdns_device.host_device_id.clone(), mdns_device);
+    }
 
     for _ in 0..DISCOVERY_ATTEMPTS {
-      let _ = socket.send_to(&payload, broadcast_addr);
-      let _ = socket.send_to(&payload, loopback_addr);
+      for target in &discovery_targets {
+        let _ = socket.send_to(&payload, *target);
+      }
 
       let attempt_deadline = now_ms() + DISCOVERY_WAIT_PER_ATTEMPT_MS;
       while now_ms() < attempt_deadline {
@@ -345,12 +365,18 @@ impl PairingRuntime {
   }
 
   pub fn snapshot(&self) -> Result<PairingSnapshot, String> {
-    {
+    let mdns_needs_refresh = {
       let mut state = self
         .state
         .lock()
         .map_err(|_| "Pairing state lock poisoned".to_string())?;
+      let discoverable_before = state.pair_code.is_some();
       expire_discoverable_window(&mut state, now_ms());
+      let discoverable_after = state.pair_code.is_some();
+      discoverable_before != discoverable_after
+    };
+    if mdns_needs_refresh {
+      let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
     }
 
     let state = self
@@ -387,11 +413,12 @@ impl PairingRuntime {
     self.stop_signal.store(false, Ordering::SeqCst);
     let state = Arc::clone(&self.state);
     let stop_signal = Arc::clone(&self.stop_signal);
+    let mdns_advertiser = Arc::clone(&self.mdns_advertiser);
 
     let handle = std::thread::Builder::new()
       .name("pastebar-sync-pairing-listener".to_string())
       .spawn(move || {
-        run_listener_loop(socket, state, stop_signal);
+        run_listener_loop(socket, state, stop_signal, mdns_advertiser);
       })
       .map_err(|e| format!("Failed to start pairing listener thread: {}", e))?;
 
@@ -461,6 +488,193 @@ fn expire_discoverable_window(runtime_state: &mut PairingState, now: i64) {
   }
 }
 
+fn discovery_target_addresses() -> Vec<SocketAddr> {
+  let mut targets = BTreeSet::new();
+  targets.insert(SocketAddr::from(([255, 255, 255, 255], PAIRING_PORT)));
+  targets.insert(SocketAddr::from(([127, 0, 0, 1], PAIRING_PORT)));
+
+  if let Ok(ifaces) = get_if_addrs() {
+    for iface in ifaces {
+      let IfAddr::V4(v4) = iface.addr else {
+        continue;
+      };
+
+      if v4.ip.is_loopback() {
+        continue;
+      }
+
+      let directed_broadcast = v4
+        .broadcast
+        .unwrap_or_else(|| ipv4_broadcast_from_ip_and_netmask(v4.ip, v4.netmask));
+      targets.insert(SocketAddr::from((directed_broadcast, PAIRING_PORT)));
+
+      for host in ipv4_subnet_hosts(v4.ip, v4.netmask)
+        .into_iter()
+        .take(MAX_SUBNET_SWEEP_HOSTS_PER_INTERFACE)
+      {
+        targets.insert(SocketAddr::from((host, PAIRING_PORT)));
+      }
+    }
+  }
+
+  targets.into_iter().collect()
+}
+
+fn scan_mdns_devices(requester_device_id: &str) -> Vec<PairingDiscoveredDevice> {
+  let mut discovered: BTreeMap<String, PairingDiscoveredDevice> = BTreeMap::new();
+  let mdns = match ServiceDaemon::new() {
+    Ok(daemon) => daemon,
+    Err(_) => return Vec::new(),
+  };
+  let receiver = match mdns.browse(MDNS_SERVICE_TYPE) {
+    Ok(receiver) => receiver,
+    Err(_) => {
+      let _ = mdns.shutdown();
+      return Vec::new();
+    }
+  };
+
+  let deadline = now_ms() + (DISCOVERY_WAIT_PER_ATTEMPT_MS * 2);
+  while now_ms() < deadline {
+    let event = match receiver.recv_timeout(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)) {
+      Ok(event) => event,
+      Err(_) => continue,
+    };
+
+    let ServiceEvent::ServiceResolved(info) = event else {
+      continue;
+    };
+
+    let props = info.get_properties();
+    let host_device_id = mdns_txt_value(props, "device_id")
+      .or_else(|| mdns_txt_value(props, "app_id"))
+      .unwrap_or_else(|| {
+        info
+          .get_fullname()
+          .trim_end_matches(MDNS_SERVICE_TYPE)
+          .trim_end_matches('.')
+          .to_string()
+      });
+
+    if host_device_id.is_empty() || host_device_id == requester_device_id {
+      continue;
+    }
+
+    let discoverable = matches!(mdns_txt_value(props, "discoverable").as_deref(), Some("1"));
+    let sync_enabled = !matches!(mdns_txt_value(props, "sync_enabled").as_deref(), Some("0"));
+    let source_addr = info
+      .get_addresses()
+      .iter()
+      .find(|ip| !ip.is_loopback())
+      .map(|ip| format!("{}:{}", ip, info.get_port()))
+      .unwrap_or_else(|| format!("mdns:{}", info.get_port()));
+
+    discovered.insert(
+      host_device_id.clone(),
+      PairingDiscoveredDevice {
+        host_device_id,
+        source_addr,
+        discoverable,
+        sync_enabled,
+      },
+    );
+  }
+
+  let _ = mdns.shutdown();
+  discovered.into_values().collect()
+}
+
+fn mdns_txt_value(props: &mdns_sd::TxtProperties, key: &str) -> Option<String> {
+  props
+    .iter()
+    .find(|entry| entry.key() == key)
+    .and_then(|entry| entry.val())
+    .map(|value| String::from_utf8_lossy(value).to_string())
+}
+
+fn refresh_mdns_advertisement(
+  state: &Arc<Mutex<PairingState>>,
+  mdns_advertiser: &Arc<Mutex<Option<MdnsAdvertiser>>>,
+) -> Result<(), String> {
+  let (enabled, discoverable) = {
+    let state_guard = state
+      .lock()
+      .map_err(|_| "Pairing state lock poisoned".to_string())?;
+    (
+      state_guard.enabled,
+      state_guard.enabled && state_guard.pair_code.is_some(),
+    )
+  };
+
+  let mut advertiser_guard = mdns_advertiser
+    .lock()
+    .map_err(|_| "mDNS advertiser lock poisoned".to_string())?;
+
+  if let Some(existing) = advertiser_guard.take() {
+    let _ = existing.daemon.shutdown();
+  }
+
+  if !enabled {
+    return Ok(());
+  }
+
+  let daemon = ServiceDaemon::new().map_err(|e| format!("Failed to create mDNS daemon: {}", e))?;
+  let mut properties = HashMap::new();
+  properties.insert("app".to_string(), "pastebar".to_string());
+  properties.insert("proto".to_string(), "sync".to_string());
+  properties.insert("device_id".to_string(), local_device_id());
+  properties.insert(
+    "discoverable".to_string(),
+    if discoverable { "1" } else { "0" }.to_string(),
+  );
+  properties.insert("sync_enabled".to_string(), "1".to_string());
+
+  let host_name = format!("{}.local.", local_device_id());
+  let service_info = ServiceInfo::new(
+    MDNS_SERVICE_TYPE,
+    &local_device_id(),
+    &host_name,
+    IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+    PAIRING_PORT,
+    Some(properties),
+  )
+  .map_err(|e| format!("Failed to build mDNS service info: {}", e))?
+  .enable_addr_auto();
+
+  daemon
+    .register(service_info)
+    .map_err(|e| format!("Failed to register mDNS service: {}", e))?;
+
+  *advertiser_guard = Some(MdnsAdvertiser { daemon });
+  Ok(())
+}
+
+fn ipv4_broadcast_from_ip_and_netmask(ip: Ipv4Addr, netmask: Ipv4Addr) -> Ipv4Addr {
+  let ip_u32 = u32::from(ip);
+  let netmask_u32 = u32::from(netmask);
+  Ipv4Addr::from(ip_u32 | !netmask_u32)
+}
+
+fn ipv4_subnet_hosts(ip: Ipv4Addr, netmask: Ipv4Addr) -> Vec<Ipv4Addr> {
+  let ip_u32 = u32::from(ip);
+  let netmask_u32 = u32::from(netmask);
+  let network = ip_u32 & netmask_u32;
+  let broadcast = network | !netmask_u32;
+
+  if broadcast <= network + 1 {
+    return Vec::new();
+  }
+
+  let mut hosts = Vec::new();
+  for host in (network + 1)..broadcast {
+    let candidate = Ipv4Addr::from(host);
+    if candidate != ip {
+      hosts.push(candidate);
+    }
+  }
+  hosts
+}
+
 pub fn local_device_id() -> String {
   LOCAL_DEVICE_ID.clone()
 }
@@ -483,6 +697,7 @@ fn run_listener_loop(
   socket: UdpSocket,
   state: Arc<Mutex<PairingState>>,
   stop_signal: Arc<AtomicBool>,
+  mdns_advertiser: Arc<Mutex<Option<MdnsAdvertiser>>>,
 ) {
   while !stop_signal.load(Ordering::SeqCst) {
     let mut buffer = [0u8; 4096];
@@ -506,11 +721,13 @@ fn run_listener_loop(
         let now = now_ms();
         let mut accepted = false;
         let mut rejection_reason: Option<String> = None;
+        let mut refresh_mdns = false;
 
         if let Ok(mut runtime_state) = state.lock() {
           if !runtime_state.enabled {
             rejection_reason = Some("sync_off".to_string());
           } else {
+            let discoverable_before = runtime_state.pair_code.is_some();
             expire_discoverable_window(&mut runtime_state, now);
 
             match runtime_state.pair_code.as_deref() {
@@ -527,9 +744,13 @@ fn run_listener_loop(
                 rejection_reason = Some("not_discoverable".to_string());
               }
             }
+            refresh_mdns = discoverable_before != runtime_state.pair_code.is_some();
           }
         } else {
           rejection_reason = Some("runtime_lock_error".to_string());
+        }
+        if refresh_mdns {
+          let _ = refresh_mdns_advertisement(&state, &mdns_advertiser);
         }
 
         if accepted {
@@ -558,8 +779,11 @@ fn run_listener_loop(
         requester_device_id: _,
       } => {
         let now = now_ms();
+        let mut refresh_mdns = false;
         let (discoverable, sync_enabled) = if let Ok(mut runtime_state) = state.lock() {
+          let discoverable_before = runtime_state.pair_code.is_some();
           expire_discoverable_window(&mut runtime_state, now);
+          refresh_mdns = discoverable_before != runtime_state.pair_code.is_some();
           (
             runtime_state.enabled && runtime_state.pair_code.is_some(),
             runtime_state.enabled,
@@ -567,6 +791,9 @@ fn run_listener_loop(
         } else {
           (false, false)
         };
+        if refresh_mdns {
+          let _ = refresh_mdns_advertisement(&state, &mdns_advertiser);
+        }
 
         let ack_packet = PairingPacket::DiscoveryAck {
           request_id,

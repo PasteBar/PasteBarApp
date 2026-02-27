@@ -141,6 +141,8 @@ regex = "1.9.3"
 active-win-pos-rs = "0.8"
 chacha20poly1305 = "0.10.1"
 rand = "0.8.5"
+if-addrs = "0.13.3"
+mdns-sd = "0.15"
 
 lang_detect = { path = "libs/lang_detect" }
 auto-launch = { path = "libs/auto-launch" }
