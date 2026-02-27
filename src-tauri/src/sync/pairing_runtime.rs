@@ -92,6 +92,7 @@ pub struct PairingRuntime {
 
 struct MdnsAdvertiser {
   daemon: ServiceDaemon,
+  service_fullname: Option<String>,
 }
 
 impl Default for PairingRuntime {
@@ -116,7 +117,8 @@ impl PairingRuntime {
         state.enabled = true;
       }
       self.start_listener()?;
-      refresh_mdns_advertisement(&self.state, &self.mdns_advertiser)
+      let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
+      Ok(())
     } else {
       {
         let mut state = self
@@ -128,7 +130,8 @@ impl PairingRuntime {
         state.discoverable_until_ms = None;
       }
       self.stop_listener();
-      refresh_mdns_advertisement(&self.state, &self.mdns_advertiser)
+      let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
+      Ok(())
     }
   }
 
@@ -147,7 +150,7 @@ impl PairingRuntime {
     state.discoverable_until_ms = Some(now_ms() + DISCOVERABLE_WINDOW_MS);
     state.last_error = None;
     drop(state);
-    refresh_mdns_advertisement(&self.state, &self.mdns_advertiser)?;
+    let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
     Ok(code)
   }
 
@@ -159,7 +162,7 @@ impl PairingRuntime {
     state.pair_code = None;
     state.discoverable_until_ms = None;
     drop(state);
-    refresh_mdns_advertisement(&self.state, &self.mdns_advertiser)?;
+    let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
     Ok(())
   }
 
@@ -306,7 +309,7 @@ impl PairingRuntime {
 
     let discovery_targets = discovery_target_addresses();
     let mut discovered: BTreeMap<String, PairingDiscoveredDevice> = BTreeMap::new();
-    for mdns_device in scan_mdns_devices(requester_device_id) {
+    for mdns_device in scan_mdns_devices(requester_device_id, &self.mdns_advertiser) {
       discovered.insert(mdns_device.host_device_id.clone(), mdns_device);
     }
 
@@ -520,29 +523,49 @@ fn discovery_target_addresses() -> Vec<SocketAddr> {
   targets.into_iter().collect()
 }
 
-fn scan_mdns_devices(requester_device_id: &str) -> Vec<PairingDiscoveredDevice> {
+fn scan_mdns_devices(
+  requester_device_id: &str,
+  mdns_advertiser: &Arc<Mutex<Option<MdnsAdvertiser>>>,
+) -> Vec<PairingDiscoveredDevice> {
   let mut discovered: BTreeMap<String, PairingDiscoveredDevice> = BTreeMap::new();
-  let mdns = match ServiceDaemon::new() {
-    Ok(daemon) => daemon,
-    Err(_) => return Vec::new(),
-  };
-  let receiver = match mdns.browse(MDNS_SERVICE_TYPE) {
-    Ok(receiver) => receiver,
-    Err(_) => {
-      let _ = mdns.shutdown();
+  let receiver = {
+    let mut advertiser_guard = match mdns_advertiser.lock() {
+      Ok(guard) => guard,
+      Err(_) => return Vec::new(),
+    };
+    if advertiser_guard.is_none() {
+      let daemon = match ServiceDaemon::new() {
+        Ok(daemon) => daemon,
+        Err(_) => return Vec::new(),
+      };
+      *advertiser_guard = Some(MdnsAdvertiser {
+        daemon,
+        service_fullname: None,
+      });
+    }
+    let Some(advertiser) = advertiser_guard.as_mut() else {
       return Vec::new();
+    };
+    match advertiser.daemon.browse(MDNS_SERVICE_TYPE) {
+      Ok(receiver) => receiver,
+      Err(_) => return Vec::new(),
     }
   };
 
-  let deadline = now_ms() + (DISCOVERY_WAIT_PER_ATTEMPT_MS * 2);
+  let mut deadline = now_ms() + (DISCOVERY_WAIT_PER_ATTEMPT_MS * 2);
   while now_ms() < deadline {
     let event = match receiver.recv_timeout(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)) {
       Ok(event) => event,
       Err(_) => continue,
     };
 
-    let ServiceEvent::ServiceResolved(info) = event else {
-      continue;
+    let info = match event {
+      ServiceEvent::ServiceFound(_, _) => {
+        deadline = deadline.max(now_ms() + SOCKET_POLL_TIMEOUT_MS as i64);
+        continue;
+      }
+      ServiceEvent::ServiceResolved(info) => info,
+      _ => continue,
     };
 
     let props = info.get_properties();
@@ -580,7 +603,6 @@ fn scan_mdns_devices(requester_device_id: &str) -> Vec<PairingDiscoveredDevice> 
     );
   }
 
-  let _ = mdns.shutdown();
   discovered.into_values().collect()
 }
 
@@ -610,15 +632,31 @@ fn refresh_mdns_advertisement(
     .lock()
     .map_err(|_| "mDNS advertiser lock poisoned".to_string())?;
 
-  if let Some(existing) = advertiser_guard.take() {
-    let _ = existing.daemon.shutdown();
-  }
-
   if !enabled {
+    if let Some(mut existing) = advertiser_guard.take() {
+      if let Some(service_fullname) = existing.service_fullname.take() {
+        let _ = existing.daemon.unregister(&service_fullname);
+      }
+      let _ = existing.daemon.shutdown();
+    }
     return Ok(());
   }
 
-  let daemon = ServiceDaemon::new().map_err(|e| format!("Failed to create mDNS daemon: {}", e))?;
+  if advertiser_guard.is_none() {
+    let daemon =
+      ServiceDaemon::new().map_err(|e| format!("Failed to create mDNS daemon: {}", e))?;
+    *advertiser_guard = Some(MdnsAdvertiser {
+      daemon,
+      service_fullname: None,
+    });
+  }
+  let Some(advertiser) = advertiser_guard.as_mut() else {
+    return Err("mDNS advertiser not available".to_string());
+  };
+  if let Some(previous_fullname) = advertiser.service_fullname.take() {
+    let _ = advertiser.daemon.unregister(&previous_fullname);
+  }
+
   let mut properties = HashMap::new();
   properties.insert("app".to_string(), "pastebar".to_string());
   properties.insert("proto".to_string(), "sync".to_string());
@@ -641,12 +679,16 @@ fn refresh_mdns_advertisement(
   .map_err(|e| format!("Failed to build mDNS service info: {}", e))?
   .enable_addr_auto();
 
-  daemon
+  advertiser
+    .daemon
     .register(service_info)
     .map_err(|e| format!("Failed to register mDNS service: {}", e))?;
-
-  *advertiser_guard = Some(MdnsAdvertiser { daemon });
+  advertiser.service_fullname = Some(mdns_service_fullname(&local_device_id()));
   Ok(())
+}
+
+fn mdns_service_fullname(device_id: &str) -> String {
+  format!("{}.{}", device_id, MDNS_SERVICE_TYPE)
 }
 
 fn ipv4_broadcast_from_ip_and_netmask(ip: Ipv4Addr, netmask: Ipv4Addr) -> Ipv4Addr {
