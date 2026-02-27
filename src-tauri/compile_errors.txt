@@ -180,6 +180,8 @@ warning: unnecessary `unsafe` block
 429 |   let keybd_tab_up: KEYBDINPUT = unsafe {
     |                                  ^^^^^^ unnecessary `unsafe` block
 
+warning: `mid` (lib) generated 2 warnings (run `cargo fix --lib -p mid` to apply 2 suggestions)
+warning: `inputbot` (lib) generated 13 warnings (run `cargo fix --lib -p inputbot` to apply 4 suggestions)
 warning: fields `language` and `points` are never read
   --> libs\lang_detect\src\types.rs:54:3
    |
@@ -192,10 +194,14 @@ warning: fields `language` and `points` are never read
    |
    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
 
-warning: `mid` (lib) generated 2 warnings (run `cargo fix --lib -p mid` to apply 2 suggestions)
-warning: `inputbot` (lib) generated 13 warnings (run `cargo fix --lib -p inputbot` to apply 4 suggestions)
 warning: `lang_detect` (lib) generated 1 warning
     Checking pastebar-app v0.0.1 (C:\Users\skurd\Documents\pastebar\PasteBarApp\src-tauri)
+error[E0425]: cannot find function `load_sync_config` in module `crate::sync::commands`
+  --> src\commands\sync_commands.rs:17:39
+   |
+17 |   let config = crate::sync::commands::load_sync_config(&mut conn).unwrap_or_default();
+   |                                       ^^^^^^^^^^^^^^^^ not found in `crate::sync::commands`
+
 warning: unused import: `std::fs`
   --> src\main.rs:21:5
    |
@@ -410,32 +416,6 @@ warning: variable does not need to be mutable
     |
     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
 
-error[E0004]: non-exhaustive patterns: `Ok(_)` not covered
-   --> src\sync\pairing_runtime.rs:797:13
-    |
-797 |         match backfill_history_outbox_from_existing(
-    |  _____________^
-798 | |         &mut conn,
-799 | |         HISTORY_BACKFILL_LIMIT,
-800 | |         min_updated_at_ms,
-801 | |       ) {
-    | |_______^ pattern `Ok(_)` not covered
-    |
-note: `Result<usize, std::string::String>` defined here
-   --> C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
-    |
-557 | pub enum Result<T, E> {
-    | ^^^^^^^^^^^^^^^^^^^^^
-...
-561 |     Ok(#[stable(feature = "rust1", since = "1.0.0")] T),
-    |     -- not covered
-    = note: the matched value is of type `Result<usize, std::string::String>`
-help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
-    |
-818 ~         },
-819 +         Ok(_) => todo!()
-    |
-
 warning: use of deprecated method `image::DynamicImage::to_bytes`: use `image.into_bytes()` or `image.as_bytes().to_vec()` instead
    --> src\services\history_service.rs:349:75
     |
@@ -454,6 +434,384 @@ warning: use of deprecated associated function `chrono::NaiveDateTime::from_time
 408 |     .unwrap_or_else(|| NaiveDateTime::from_timestamp_opt(0, 0).expect("unix epoch must exist"))
     |                                       ^^^^^^^^^^^^^^^^^^
 
+error[E0599]: the method `blocking_kind` exists for reference `&Result<SyncUiStatus, std::string::String>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:106:1
+     |
+  29 |   pub struct SyncUiStatus {
+     |   ----------------------- doesn't satisfy `SyncUiStatus: _::_serde::Serialize`
+...
+ 106 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called on `&Result<SyncUiStatus, std::string::String>` due to unsatisfied trait bounds
+     |
+    ::: C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+     |
+ 557 |   pub enum Result<T, E> {
+     |   --------------------- doesn't satisfy `_: ResultKind` or `_: Serialize`
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `SyncUiStatus: _::_serde::Serialize`
+             which is required by `Result<SyncUiStatus, std::string::String>: tauri::command::private::ResultKind`
+             `Result<SyncUiStatus, std::string::String>: _::_serde::Serialize`
+             which is required by `&Result<SyncUiStatus, std::string::String>: tauri::command::private::SerializeKind`
+note: the trait `_::_serde::Serialize` must be implemented
+    --> C:\Users\skurd\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.228\src\ser\mod.rs:234:1
+     |
+ 234 | pub trait Serialize {
+     | ^^^^^^^^^^^^^^^^^^^
+     = note: this error originates in the macro `sync_commands::__cmd__sync_get_ui_status` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `blocking_kind` exists for reference `&Result<SyncUiStatus, std::string::String>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:111:1
+     |
+  29 |   pub struct SyncUiStatus {
+     |   ----------------------- doesn't satisfy `SyncUiStatus: _::_serde::Serialize`
+...
+ 111 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called on `&Result<SyncUiStatus, std::string::String>` due to unsatisfied trait bounds
+     |
+    ::: C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+     |
+ 557 |   pub enum Result<T, E> {
+     |   --------------------- doesn't satisfy `_: ResultKind` or `_: Serialize`
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `SyncUiStatus: _::_serde::Serialize`
+             which is required by `Result<SyncUiStatus, std::string::String>: tauri::command::private::ResultKind`
+             `Result<SyncUiStatus, std::string::String>: _::_serde::Serialize`
+             which is required by `&Result<SyncUiStatus, std::string::String>: tauri::command::private::SerializeKind`
+note: the trait `_::_serde::Serialize` must be implemented
+    --> C:\Users\skurd\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.228\src\ser\mod.rs:234:1
+     |
+ 234 | pub trait Serialize {
+     | ^^^^^^^^^^^^^^^^^^^
+     = note: this error originates in the macro `sync_commands::__cmd__sync_set_mode` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `blocking_kind` exists for reference `&Result<SyncUiStatus, std::string::String>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:123:1
+     |
+  29 |   pub struct SyncUiStatus {
+     |   ----------------------- doesn't satisfy `SyncUiStatus: _::_serde::Serialize`
+...
+ 123 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called on `&Result<SyncUiStatus, std::string::String>` due to unsatisfied trait bounds
+     |
+    ::: C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+     |
+ 557 |   pub enum Result<T, E> {
+     |   --------------------- doesn't satisfy `_: ResultKind` or `_: Serialize`
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `SyncUiStatus: _::_serde::Serialize`
+             which is required by `Result<SyncUiStatus, std::string::String>: tauri::command::private::ResultKind`
+             `Result<SyncUiStatus, std::string::String>: _::_serde::Serialize`
+             which is required by `&Result<SyncUiStatus, std::string::String>: tauri::command::private::SerializeKind`
+note: the trait `_::_serde::Serialize` must be implemented
+    --> C:\Users\skurd\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.228\src\ser\mod.rs:234:1
+     |
+ 234 | pub trait Serialize {
+     | ^^^^^^^^^^^^^^^^^^^
+     = note: this error originates in the macro `sync_commands::__cmd__sync_retry` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `blocking_kind` exists for reference `&Result<SyncUiStatus, std::string::String>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:141:1
+     |
+  29 |   pub struct SyncUiStatus {
+     |   ----------------------- doesn't satisfy `SyncUiStatus: _::_serde::Serialize`
+...
+ 141 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called on `&Result<SyncUiStatus, std::string::String>` due to unsatisfied trait bounds
+     |
+    ::: C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+     |
+ 557 |   pub enum Result<T, E> {
+     |   --------------------- doesn't satisfy `_: ResultKind` or `_: Serialize`
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `SyncUiStatus: _::_serde::Serialize`
+             which is required by `Result<SyncUiStatus, std::string::String>: tauri::command::private::ResultKind`
+             `Result<SyncUiStatus, std::string::String>: _::_serde::Serialize`
+             which is required by `&Result<SyncUiStatus, std::string::String>: tauri::command::private::SerializeKind`
+note: the trait `_::_serde::Serialize` must be implemented
+    --> C:\Users\skurd\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.228\src\ser\mod.rs:234:1
+     |
+ 234 | pub trait Serialize {
+     | ^^^^^^^^^^^^^^^^^^^
+     = note: this error originates in the macro `sync_commands::__cmd__sync_disconnect` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `blocking_kind` exists for reference `&Result<SyncUiStatus, std::string::String>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:154:1
+     |
+  29 |   pub struct SyncUiStatus {
+     |   ----------------------- doesn't satisfy `SyncUiStatus: _::_serde::Serialize`
+...
+ 154 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called on `&Result<SyncUiStatus, std::string::String>` due to unsatisfied trait bounds
+     |
+    ::: C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+     |
+ 557 |   pub enum Result<T, E> {
+     |   --------------------- doesn't satisfy `_: ResultKind` or `_: Serialize`
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `SyncUiStatus: _::_serde::Serialize`
+             which is required by `Result<SyncUiStatus, std::string::String>: tauri::command::private::ResultKind`
+             `Result<SyncUiStatus, std::string::String>: _::_serde::Serialize`
+             which is required by `&Result<SyncUiStatus, std::string::String>: tauri::command::private::SerializeKind`
+note: the trait `_::_serde::Serialize` must be implemented
+    --> C:\Users\skurd\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.228\src\ser\mod.rs:234:1
+     |
+ 234 | pub trait Serialize {
+     | ^^^^^^^^^^^^^^^^^^^
+     = note: this error originates in the macro `sync_commands::__cmd__sync_generate_pair_code` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `blocking_kind` exists for reference `&Result<SyncUiStatus, std::string::String>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:167:1
+     |
+  29 |   pub struct SyncUiStatus {
+     |   ----------------------- doesn't satisfy `SyncUiStatus: _::_serde::Serialize`
+...
+ 167 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called on `&Result<SyncUiStatus, std::string::String>` due to unsatisfied trait bounds
+     |
+    ::: C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+     |
+ 557 |   pub enum Result<T, E> {
+     |   --------------------- doesn't satisfy `_: ResultKind` or `_: Serialize`
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `SyncUiStatus: _::_serde::Serialize`
+             which is required by `Result<SyncUiStatus, std::string::String>: tauri::command::private::ResultKind`
+             `Result<SyncUiStatus, std::string::String>: _::_serde::Serialize`
+             which is required by `&Result<SyncUiStatus, std::string::String>: tauri::command::private::SerializeKind`
+note: the trait `_::_serde::Serialize` must be implemented
+    --> C:\Users\skurd\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.228\src\ser\mod.rs:234:1
+     |
+ 234 | pub trait Serialize {
+     | ^^^^^^^^^^^^^^^^^^^
+     = note: this error originates in the macro `sync_commands::__cmd__sync_cancel_pair_code` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `async_kind` exists for reference `&impl Future<Output = Result<SyncUiStatus, std::string::String>>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:173:1
+     |
+ 173 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `impl Future<Output = Result<SyncUiStatus, std::string::String>>: _::_serde::Serialize`
+             which is required by `&impl Future<Output = Result<SyncUiStatus, std::string::String>>: tauri::command::private::SerializeKind`
+             `<&impl Future<Output = Result<SyncUiStatus, std::string::String>> as Future>::Output = Result<_, _>`
+             which is required by `&impl Future<Output = Result<SyncUiStatus, std::string::String>>: tauri::command::private::ResultFutureKind`
+             `&impl Future<Output = Result<SyncUiStatus, std::string::String>>: Future`
+             which is required by `&impl Future<Output = Result<SyncUiStatus, std::string::String>>: tauri::command::private::ResultFutureKind`
+     = note: this error originates in the macro `sync_commands::__cmd__sync_join_with_code` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `async_kind` exists for reference `&impl Future<Output = Result<SyncUiStatus, std::string::String>>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:215:1
+     |
+ 215 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `impl Future<Output = Result<SyncUiStatus, std::string::String>>: _::_serde::Serialize`
+             which is required by `&impl Future<Output = Result<SyncUiStatus, std::string::String>>: tauri::command::private::SerializeKind`
+             `<&impl Future<Output = Result<SyncUiStatus, std::string::String>> as Future>::Output = Result<_, _>`
+             which is required by `&impl Future<Output = Result<SyncUiStatus, std::string::String>>: tauri::command::private::ResultFutureKind`
+             `&impl Future<Output = Result<SyncUiStatus, std::string::String>>: Future`
+             which is required by `&impl Future<Output = Result<SyncUiStatus, std::string::String>>: tauri::command::private::ResultFutureKind`
+     = note: this error originates in the macro `sync_commands::__cmd__sync_history_now` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `blocking_kind` exists for reference `&Result<SyncUiStatus, std::string::String>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:226:1
+     |
+  29 |   pub struct SyncUiStatus {
+     |   ----------------------- doesn't satisfy `SyncUiStatus: _::_serde::Serialize`
+...
+ 226 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called on `&Result<SyncUiStatus, std::string::String>` due to unsatisfied trait bounds
+     |
+    ::: C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+     |
+ 557 |   pub enum Result<T, E> {
+     |   --------------------- doesn't satisfy `_: ResultKind` or `_: Serialize`
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `SyncUiStatus: _::_serde::Serialize`
+             which is required by `Result<SyncUiStatus, std::string::String>: tauri::command::private::ResultKind`
+             `Result<SyncUiStatus, std::string::String>: _::_serde::Serialize`
+             which is required by `&Result<SyncUiStatus, std::string::String>: tauri::command::private::SerializeKind`
+note: the trait `_::_serde::Serialize` must be implemented
+    --> C:\Users\skurd\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.228\src\ser\mod.rs:234:1
+     |
+ 234 | pub trait Serialize {
+     | ^^^^^^^^^^^^^^^^^^^
+     = note: this error originates in the macro `sync_commands::__cmd__sync_set_history_auto_sync` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `blocking_kind` exists for reference `&Result<SyncUiStatus, std::string::String>`, but its trait bounds were not satisfied
+    --> src\commands\sync_commands.rs:300:1
+     |
+  29 |   pub struct SyncUiStatus {
+     |   ----------------------- doesn't satisfy `SyncUiStatus: _::_serde::Serialize`
+...
+ 300 |   #[tauri::command]
+     |   ^^^^^^^^^^^^^^^^^ method cannot be called on `&Result<SyncUiStatus, std::string::String>` due to unsatisfied trait bounds
+     |
+    ::: C:\Users\skurd\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\result.rs:557:1
+     |
+ 557 |   pub enum Result<T, E> {
+     |   --------------------- doesn't satisfy `_: ResultKind` or `_: Serialize`
+     |
+    ::: src\main.rs:1284:21
+     |
+1284 |       .invoke_handler(tauri::generate_handler![
+     |  _____________________-
+1285 | |       app_ready,
+1286 | |       get_app_settings,
+1287 | |       update_setting,
+...    |
+1414 | |       set_icon
+1415 | |     ])
+     | |_____- in this macro invocation
+     |
+     = note: the following trait bounds were not satisfied:
+             `SyncUiStatus: _::_serde::Serialize`
+             which is required by `Result<SyncUiStatus, std::string::String>: tauri::command::private::ResultKind`
+             `Result<SyncUiStatus, std::string::String>: _::_serde::Serialize`
+             which is required by `&Result<SyncUiStatus, std::string::String>: tauri::command::private::SerializeKind`
+note: the trait `_::_serde::Serialize` must be implemented
+    --> C:\Users\skurd\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.228\src\ser\mod.rs:234:1
+     |
+ 234 | pub trait Serialize {
+     | ^^^^^^^^^^^^^^^^^^^
+     = note: this error originates in the macro `sync_commands::__cmd__sync_remove_peer` which comes from the expansion of the macro `tauri::generate_handler` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: unused variable: `latest_seq`
+   --> src\sync\pairing_runtime.rs:794:14
+    |
+794 |   if let Ok((latest_seq, total_rows, _)) = history_outbox_stats_since(0, min_updated_at_ms) {
+    |              ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_latest_seq`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `skipped_peer_echo`
+    --> src\sync\pairing_runtime.rs:1200:9
+     |
+1200 |     let skipped_peer_echo = raw_changes
+     |         ^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_skipped_peer_echo`
+
+warning: unused variable: `host_device_id`
+    --> src\sync\pairing_runtime.rs:1258:7
+     |
+1258 |       host_device_id,
+     |       ^^^^^^^^^^^^^^ help: try ignoring the field: `host_device_id: _`
+
 warning: variable does not need to be mutable
    --> src\menu.rs:202:7
     |
@@ -467,20 +825,6 @@ warning: unused variable: `item_number`
     |
 389 |       let item_number = ((index + 1) % 10).to_string();
     |           ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_item_number`
-    |
-    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
-
-warning: unused variable: `skipped_peer_echo`
-    --> src\sync\pairing_runtime.rs:1194:9
-     |
-1194 |     let skipped_peer_echo = raw_changes
-     |         ^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_skipped_peer_echo`
-
-warning: unused variable: `host_device_id`
-    --> src\sync\pairing_runtime.rs:1252:7
-     |
-1252 |       host_device_id,
-     |       ^^^^^^^^^^^^^^ help: try ignoring the field: `host_device_id: _`
 
 warning: unused variable: `service_type`
   --> src\sync\discovery.rs:48:46
@@ -496,6 +840,7 @@ warning: variable does not need to be mutable
     |       |
     |       help: remove this `mut`
 
-For more information about this error, try `rustc --explain E0004`.
-warning: `pastebar-app` (bin "pastebar-app") generated 43 warnings
-error: could not compile `pastebar-app` (bin "pastebar-app") due to 1 previous error; 43 warnings emitted
+Some errors have detailed explanations: E0425, E0599.
+For more information about an error, try `rustc --explain E0425`.
+warning: `pastebar-app` (bin "pastebar-app") generated 44 warnings
+error: could not compile `pastebar-app` (bin "pastebar-app") due to 11 previous errors; 44 warnings emitted

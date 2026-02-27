@@ -12,7 +12,7 @@ use diesel::QueryableByName;
 use diesel::RunQueryDsl;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-static SYNC_ENGINE: Lazy<SyncEngine> = Lazy::new(SyncEngine::default);
+pub static SYNC_ENGINE: Lazy<SyncEngine> = Lazy::new(SyncEngine::default);
 pub static PAIRING_RUNTIME: Lazy<PairingRuntime> = Lazy::new(PairingRuntime::default);
 
 #[derive(Debug, Clone, Serialize)]
