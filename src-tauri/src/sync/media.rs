@@ -5,8 +5,13 @@ use diesel::QueryableByName;
 use once_cell::sync::Lazy;
 use std::collections::HashSet;
 use std::fs;
-use std::path::Path;
-use std::sync::Mutex;
+use std::path::{Path, PathBuf};
+use std::sync::{Arc, Mutex};
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::time::Duration;
+use crate::sync::discovery::get_peer_ips;
+use crate::sync::pairing_runtime::peer_is_trusted;
+use crate::db::establish_pool_db_connection;
 
 static FETCH_QUEUE: Lazy<Mutex<HashSet<String>>> = Lazy::new(|| Mutex::new(HashSet::new()));
 
@@ -181,4 +186,114 @@ fn blob_exists_locally(conn: &mut SqliteConnection, blob_hash: &str) -> QueryRes
   .load(conn)?;
 
   Ok(rows[0].exists_flag == 1)
+}
+
+pub fn start_fetch_queue_worker(stop_signal: Arc<AtomicBool>, media_root: PathBuf) {
+  tokio::spawn(async move {
+    let client = reqwest::Client::builder()
+      .timeout(Duration::from_secs(30))
+      .build()
+      .unwrap_or_default();
+
+    while !stop_signal.load(Ordering::SeqCst) {
+      tokio::time::sleep(Duration::from_millis(500)).await;
+
+      let mut hashes_to_fetch = Vec::new();
+      if let Ok(mut queue) = FETCH_QUEUE.lock() {
+        if !queue.is_empty() {
+          hashes_to_fetch = queue.drain().collect();
+        }
+      }
+
+      if hashes_to_fetch.is_empty() {
+        continue;
+      }
+
+      for blob_hash in hashes_to_fetch {
+        if stop_signal.load(Ordering::SeqCst) {
+          break;
+        }
+
+        let peers = {
+          let peer_ips = get_peer_ips().read().unwrap();
+          let mut trusted_peers = Vec::new();
+          for (device_id, addr) in peer_ips.iter() {
+            if peer_is_trusted(device_id).unwrap_or(false) {
+              trusted_peers.push((device_id.clone(), *addr));
+            }
+          }
+          trusted_peers
+        };
+
+        if peers.is_empty() {
+          enqueue_blob_fetch(&blob_hash);
+          continue;
+        }
+
+        let mut success = false;
+        for (_peer_id, addr) in peers {
+          let url = format!("http://{}:{}/sync/blob/{}", addr.ip(), addr.port(), blob_hash);
+          if let Ok(response) = client.get(&url).send().await {
+            if response.status().is_success() {
+              if let Ok(bytes) = response.bytes().await {
+                // ToDo: Implement Decryption here based on AEAD
+                
+                let rel_path = format!("{}.blob", blob_hash);
+                let full_path = media_root.join(&rel_path);
+                
+                if let Some(parent) = full_path.parent() {
+                  let _ = std::fs::create_dir_all(parent);
+                }
+                
+                if std::fs::write(&full_path, &bytes).is_ok() {
+                  let mut conn = establish_pool_db_connection();
+                  let now = crate::sync::pairing_runtime::now_ms();
+                  let _ = diesel::sql_query(
+                    "UPDATE sync_blob_refs SET local_rel_path = ?, updated_at = ?, size_bytes = ? WHERE blob_hash = ?"
+                  )
+                  .bind::<Text, _>(&rel_path)
+                  .bind::<BigInt, _>(now)
+                  .bind::<BigInt, _>(bytes.len() as i64)
+                  .bind::<Text, _>(&blob_hash)
+                  .execute(&mut conn);
+                  
+                  success = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        if !success {
+          enqueue_blob_fetch(&blob_hash);
+        }
+      }
+    }
+  });
+}
+
+pub fn read_local_blob(blob_hash: &str, media_root: &Path) -> Result<Vec<u8>, String> {
+  #[derive(QueryableByName)]
+  struct PathRow {
+    #[diesel(sql_type = Nullable<Text>)]
+    local_rel_path: Option<String>,
+  }
+
+  let mut conn = establish_pool_db_connection();
+  let rows: Vec<PathRow> = diesel::sql_query(
+    "SELECT local_rel_path FROM sync_blob_refs WHERE blob_hash = ? AND local_rel_path IS NOT NULL LIMIT 1"
+  )
+  .bind::<Text, _>(blob_hash)
+  .load(&mut conn)
+  .map_err(|e| e.to_string())?;
+
+  if let Some(row) = rows.first() {
+    if let Some(rel_path) = &row.local_rel_path {
+      let full_path = media_root.join(rel_path);
+      return fs::read(full_path).map_err(|e| e.to_string());
+    }
+  }
+
+  Err("Blob not found locally".to_string())
 }

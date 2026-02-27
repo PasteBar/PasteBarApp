@@ -13,7 +13,7 @@ use diesel::RunQueryDsl;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 static SYNC_ENGINE: Lazy<SyncEngine> = Lazy::new(SyncEngine::default);
-static PAIRING_RUNTIME: Lazy<PairingRuntime> = Lazy::new(PairingRuntime::default);
+pub static PAIRING_RUNTIME: Lazy<PairingRuntime> = Lazy::new(PairingRuntime::default);
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -221,10 +221,10 @@ pub fn sync_set_history_auto_sync(enabled: bool) -> Result<SyncUiStatus, String>
 }
 
 #[tauri::command]
-pub fn sync_ping_peers_json() -> Result<Vec<SyncPingResult>, String> {
+pub async fn sync_ping_peers_json() -> Result<Vec<SyncPingResult>, String> {
   let mut conn = establish_pool_db_connection();
   let local_id = ensure_local_sync_identity(&mut conn)?;
-  let responses = PAIRING_RUNTIME.ping_trusted_peers(&local_id)?;
+  let responses = PAIRING_RUNTIME.ping_trusted_peers(&local_id).await?;
 
   Ok(
     responses

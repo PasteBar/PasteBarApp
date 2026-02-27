@@ -360,7 +360,7 @@ pub async fn run_web_scraping(request: HttpScraping) -> Result<ContentScraping, 
             results = new_results;
           }
           Err(err) => {
-            has_rules_error = true;
+            // has_rules_error = true;
             return Err(format!("Error occurred: {}", err));
           }
         }

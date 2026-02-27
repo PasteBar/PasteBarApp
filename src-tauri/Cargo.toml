@@ -155,6 +155,9 @@ tld = "2.33.0"
 url = "2.4.1"
 html-escape = "0.2.13"
 zip = "0.6"
+axum = "0.8.4"
+tower-http = { version = "0.6.8", features = ["cors"] }
+tokio-util = { version = "0.7.18", features = ["io"] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 macos-accessibility-client = { path = "libs/macos-accessibility-client" } 

@@ -5,6 +5,7 @@ use diesel::sqlite::SqliteConnection;
 use diesel::QueryableByName;
 use serde::{Deserialize, Deserializer, Serialize};
 use crate::services::utils::debug_output;
+use crate::sync::media::ensure_blob_available;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct HistorySyncChange {
@@ -328,7 +329,7 @@ pub fn apply_history_change(
   .bind::<Nullable<Text>, _>(payload.value_preview)
   .bind::<Nullable<Integer>, _>(payload.value_more_preview_lines)
   .bind::<Nullable<Integer>, _>(payload.value_more_preview_chars)
-  .bind::<Nullable<Text>, _>(payload.value_hash)
+  .bind::<Nullable<Text>, _>(payload.value_hash.clone())
   .bind::<Nullable<Bool>, _>(payload.is_image)
   .bind::<Nullable<Bool>, _>(payload.is_masked)
   .bind::<Nullable<Bool>, _>(payload.is_text)
@@ -350,6 +351,12 @@ pub fn apply_history_change(
   .bind::<Nullable<Text>, _>(payload.copied_from_app)
   .execute(conn)
   .map_err(|e| e.to_string())?;
+
+  if payload.is_image.unwrap_or(false) {
+    if let Some(hash) = payload.value_hash {
+      let _ = ensure_blob_available(conn, &hash, updated_at);
+    }
+  }
 
   debug_output(|| {
     println!(

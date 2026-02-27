@@ -22,6 +22,15 @@ use crate::sync::history_sync::{
   HistorySyncChange,
 };
 
+pub fn now_ms() -> i64 {
+  SystemTime::now()
+    .duration_since(UNIX_EPOCH)
+    .unwrap()
+    .as_millis()
+    .try_into()
+    .unwrap()
+}
+
 const PAIRING_PORT: u16 = 45879;
 const DISCOVERABLE_WINDOW_MS: i64 = 60_000;
 const SOCKET_POLL_TIMEOUT_MS: u64 = 250;
@@ -135,7 +144,6 @@ pub struct PairingSnapshot {
   pub history_last_sync_at_ms: Option<i64>,
   pub history_last_sync_result: Option<String>,
   pub history_last_sync_sent_changes: usize,
-  pub listener_running: bool,
   pub last_error: Option<String>,
 }
 
@@ -199,7 +207,6 @@ struct SyncMetaDeviceRow {
 pub struct PairingRuntime {
   state: Arc<Mutex<PairingState>>,
   stop_signal: Arc<AtomicBool>,
-  worker: Arc<Mutex<Option<JoinHandle<()>>>>,
   auto_sync_stop_signal: Arc<AtomicBool>,
   auto_sync_worker: Arc<Mutex<Option<JoinHandle<()>>>>,
   mdns_advertiser: Arc<Mutex<Option<MdnsAdvertiser>>>,
@@ -215,7 +222,6 @@ impl Default for PairingRuntime {
     Self {
       state: Arc::new(Mutex::new(PairingState::default())),
       stop_signal: Arc::new(AtomicBool::new(false)),
-      worker: Arc::new(Mutex::new(None)),
       auto_sync_stop_signal: Arc::new(AtomicBool::new(false)),
       auto_sync_worker: Arc::new(Mutex::new(None)),
       mdns_advertiser: Arc::new(Mutex::new(None)),
@@ -234,7 +240,6 @@ impl PairingRuntime {
         state.enabled = true;
         state.history_auto_sync_enabled
       };
-      self.start_listener()?;
       if should_start_auto_sync {
         self.start_history_auto_sync_worker()?;
       }
@@ -251,7 +256,6 @@ impl PairingRuntime {
         state.discoverable_until_ms = None;
       }
       self.stop_history_auto_sync_worker();
-      self.stop_listener();
       let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
       Ok(())
     }
@@ -336,76 +340,79 @@ impl PairingRuntime {
       }
     }
 
-    let socket =
-      UdpSocket::bind("0.0.0.0:0").map_err(|e| format!("Failed to open pairing socket: {}", e))?;
-    socket
-      .set_broadcast(true)
-      .map_err(|e| format!("Failed to enable UDP broadcast: {}", e))?;
-    socket
-      .set_read_timeout(Some(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)))
-      .map_err(|e| format!("Failed to configure pairing socket timeout: {}", e))?;
-
     let request_id = nanoid::nanoid!(12);
-    let request_packet = PairingPacket::PairRequest {
+    let request_packet = crate::sync::types::PairRequestInfo {
       request_id: request_id.clone(),
       code: sanitized_code.to_string(),
       requester_device_id: requester_device_id.to_string(),
     };
-    let payload = serde_json::to_vec(&request_packet)
-      .map_err(|e| format!("Failed to serialize pairing request: {}", e))?;
 
-    let discovery_targets = discovery_target_addresses();
+    let rt = tokio::runtime::Runtime::new().map_err(|e| e.to_string())?;
     let mut last_rejection: Option<String> = None;
 
-    for _ in 0..JOIN_ATTEMPTS {
-      for target in &discovery_targets {
-        let _ = socket.send_to(&payload, *target);
+    let join_result: Result<Option<PairingJoinResult>, String> = rt.block_on(async {
+      let client = reqwest::Client::builder()
+        .timeout(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS))
+        .build()
+        .map_err(|e| format!("Failed to build reqwest client: {}", e))?;
+
+      for _ in 0..JOIN_ATTEMPTS {
+        let peers = {
+          let ips = crate::sync::discovery::get_peer_ips().read().unwrap();
+          ips.values().cloned().collect::<Vec<_>>()
+        };
+
+        if peers.is_empty() {
+          tokio::time::sleep(Duration::from_millis(JOIN_WAIT_PER_ATTEMPT_MS as u64)).await;
+          continue;
+        }
+
+        for addr in peers {
+          let url = format!("http://{}:{}/sync/pair/request", addr.ip(), addr.port());
+          
+          if let Ok(resp) = client.post(&url).json(&request_packet).send().await {
+            if resp.status().is_success() {
+              if let Ok(ack_packet) = resp.json::<crate::sync::types::PairAckResponse>().await {
+                if ack_packet.request_id != request_id {
+                  continue;
+                }
+
+                if should_ignore_rejection_for_self_not_discoverable(
+                  ack_packet.accepted,
+                  &ack_packet.host_device_id,
+                  requester_device_id,
+                  ack_packet.reason.as_deref(),
+                ) {
+                  continue;
+                }
+
+                if ack_packet.accepted {
+                  return Ok(Some(PairingJoinResult { 
+                    host_device_id: ack_packet.host_device_id 
+                  }));
+                }
+
+                let rejection_reason = ack_packet.reason.unwrap_or_else(|| "pairing_rejected".to_string());
+                last_rejection = Some(humanize_rejection_reason(&rejection_reason));
+              }
+            }
+          }
+        }
+        
+        tokio::time::sleep(Duration::from_millis(JOIN_WAIT_PER_ATTEMPT_MS as u64)).await;
       }
+      Ok(None)
+    });
 
-      let attempt_deadline = now_ms() + JOIN_WAIT_PER_ATTEMPT_MS;
-      while now_ms() < attempt_deadline {
-        let mut buffer = [0u8; 4096];
-        let recv = socket.recv_from(&mut buffer);
-        let (len, _src) = match recv {
-          Ok(result) => result,
-          Err(_) => continue,
-        };
-
-        let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
-          Ok(packet) => packet,
-          Err(_) => continue,
-        };
-
-        let PairingPacket::PairAck {
-          request_id: ack_request_id,
-          accepted,
-          host_device_id,
-          reason,
-        } = packet
-        else {
-          continue;
-        };
-
-        if ack_request_id != request_id {
-          continue;
-        }
-
-        if should_ignore_rejection_for_self_not_discoverable(
-          accepted,
-          &host_device_id,
-          requester_device_id,
-          reason.as_deref(),
-        ) {
-          continue;
-        }
-
-        if accepted {
-          self.clear_last_error()?;
-          return Ok(PairingJoinResult { host_device_id });
-        }
-
-        let rejection_reason = reason.unwrap_or_else(|| "pairing_rejected".to_string());
-        last_rejection = Some(humanize_rejection_reason(&rejection_reason));
+    match join_result {
+      Ok(Some(result)) => {
+        self.clear_last_error()?;
+        return Ok(result);
+      }
+      Ok(None) => {}
+      Err(e) => {
+        self.set_last_error(e.clone())?;
+        return Err(e);
       }
     }
 
@@ -431,72 +438,9 @@ impl PairingRuntime {
       }
     }
 
-    let socket = UdpSocket::bind("0.0.0.0:0")
-      .map_err(|e| format!("Failed to open discovery socket: {}", e))?;
-    socket
-      .set_broadcast(true)
-      .map_err(|e| format!("Failed to enable UDP broadcast: {}", e))?;
-    socket
-      .set_read_timeout(Some(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)))
-      .map_err(|e| format!("Failed to configure discovery socket timeout: {}", e))?;
-
-    let request_id = nanoid::nanoid!(12);
-    let probe_packet = PairingPacket::DiscoveryProbe {
-      request_id: request_id.clone(),
-      requester_device_id: requester_device_id.to_string(),
-    };
-    let payload = serde_json::to_vec(&probe_packet)
-      .map_err(|e| format!("Failed to serialize discovery request: {}", e))?;
-
-    let discovery_targets = discovery_target_addresses();
     let mut discovered: BTreeMap<String, PairingDiscoveredDevice> = BTreeMap::new();
     for mdns_device in scan_mdns_devices(requester_device_id, &self.mdns_advertiser) {
       discovered.insert(mdns_device.host_device_id.clone(), mdns_device);
-    }
-
-    for _ in 0..DISCOVERY_ATTEMPTS {
-      for target in &discovery_targets {
-        let _ = socket.send_to(&payload, *target);
-      }
-
-      let attempt_deadline = now_ms() + DISCOVERY_WAIT_PER_ATTEMPT_MS;
-      while now_ms() < attempt_deadline {
-        let mut buffer = [0u8; 4096];
-        let recv = socket.recv_from(&mut buffer);
-        let (len, source_addr) = match recv {
-          Ok(result) => result,
-          Err(_) => continue,
-        };
-
-        let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
-          Ok(packet) => packet,
-          Err(_) => continue,
-        };
-
-        let PairingPacket::DiscoveryAck {
-          request_id: ack_request_id,
-          host_device_id,
-          discoverable,
-          sync_enabled,
-        } = packet
-        else {
-          continue;
-        };
-
-        if ack_request_id != request_id {
-          continue;
-        }
-
-        discovered.insert(
-          host_device_id.clone(),
-          PairingDiscoveredDevice {
-            host_device_id,
-            source_addr: source_addr.to_string(),
-            discoverable,
-            sync_enabled,
-          },
-        );
-      }
     }
 
     let mut devices: Vec<PairingDiscoveredDevice> = discovered.into_values().collect();
@@ -512,7 +456,7 @@ impl PairingRuntime {
     sync_history_now_internal(&self.state)
   }
 
-  pub fn ping_trusted_peers(
+  pub async fn ping_trusted_peers(
     &self,
     requester_device_id: &str,
   ) -> Result<Vec<PairingPingResult>, String> {
@@ -531,16 +475,11 @@ impl PairingRuntime {
       return Err("No trusted peers available for ping.".to_string());
     }
 
-    let socket =
-      UdpSocket::bind("0.0.0.0:0").map_err(|e| format!("Failed to open ping socket: {}", e))?;
-    socket
-      .set_broadcast(true)
-      .map_err(|e| format!("Failed to enable UDP broadcast for ping: {}", e))?;
-    socket
-      .set_read_timeout(Some(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)))
-      .map_err(|e| format!("Failed to set ping socket timeout: {}", e))?;
+    let client = reqwest::Client::builder()
+      .timeout(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS))
+      .build()
+      .map_err(|e| format!("Failed to build reqwest client: {}", e))?;
 
-    let targets = discovery_target_addresses();
     let mut results: Vec<PairingPingResult> = Vec::new();
 
     for peer in peers {
@@ -548,7 +487,7 @@ impl PairingRuntime {
       let request_id = nanoid::nanoid!(12);
       let payload_id = nanoid::nanoid!(10);
       let payload_time = now_ms();
-      let ping_packet = PairingPacket::PingJson {
+      let ping_request = crate::sync::types::PingRequest {
         request_id: request_id.clone(),
         source_device_id: requester_device_id.to_string(),
         target_device_id: peer.peer_device_id.clone(),
@@ -562,92 +501,60 @@ impl PairingRuntime {
         "pong": false
       })
       .to_string();
-      let payload = serde_json::to_vec(&ping_packet)
-        .map_err(|e| format!("Failed to encode ping payload: {}", e))?;
+
+      let peer_ip_lookup = {
+        let ips = crate::sync::discovery::get_peer_ips().read().unwrap();
+        ips.get(&peer.peer_device_id).cloned()
+      };
 
       let mut matched: Option<PairingPingResult> = None;
-      for _ in 0..PING_ATTEMPTS {
-        for target in &targets {
-          let _ = socket.send_to(&payload, *target);
-        }
 
-        let deadline = now_ms() + PING_WAIT_PER_ATTEMPT_MS;
-        while now_ms() < deadline {
-          let mut buffer = [0u8; 4096];
-          let recv = socket.recv_from(&mut buffer);
-          let (len, source_addr) = match recv {
-            Ok(result) => result,
-            Err(_) => continue,
-          };
+      if let Some(target_addr) = peer_ip_lookup {
+        let url = format!("http://{}/sync/ping", target_addr);
+        for _ in 0..PING_ATTEMPTS {
+          match client.post(&url).json(&ping_request).send().await {
+            Ok(resp) => {
+              if resp.status().is_success() {
+                if let Ok(pong_resp) = resp.json::<crate::sync::types::PongResponse>().await {
+                  let round_trip_ms = (now_ms() - ping_started_at).max(0);
+                  let response_json = json!({
+                    "id": pong_resp.id,
+                    "time": pong_resp.time,
+                    "pong": true
+                  })
+                  .to_string();
 
-          let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
-            Ok(packet) => packet,
-            Err(_) => continue,
-          };
-
-          let PairingPacket::PongJson {
-            request_id: ack_request_id,
-            source_device_id,
-            target_device_id,
-            id,
-            time,
-            pong,
-          } = packet
-          else {
-            continue;
-          };
-
-          if ack_request_id != request_id
-            || target_device_id != requester_device_id
-            || id != payload_id
-          {
-            continue;
+                  matched = Some(PairingPingResult {
+                    peer_device_id: peer.peer_device_id.clone(),
+                    source_addr: Some(target_addr.to_string()),
+                    payload_id: payload_id.clone(),
+                    payload_time,
+                    pong: true,
+                    round_trip_ms: Some(round_trip_ms),
+                    request_json: request_json.clone(),
+                    response_json: Some(response_json),
+                    error: None,
+                  });
+                  break;
+                }
+              }
+            }
+            Err(_) => {}
           }
-          if source_device_id != peer.peer_device_id {
-            debug_output(|| {
-              println!(
-                "[sync-ping] peer={} payload_id={} pong_source_device_id_mismatch expected={} actual={}",
-                peer.peer_device_id, payload_id, peer.peer_device_id, source_device_id
-              );
-            });
-          }
-
-          let round_trip_ms = (now_ms() - ping_started_at).max(0);
-          let response_json = json!({
-            "id": id,
-            "time": time,
-            "pong": pong
-          })
-          .to_string();
-          matched = Some(PairingPingResult {
-            peer_device_id: peer.peer_device_id.clone(),
-            source_addr: Some(source_addr.to_string()),
-            payload_id: payload_id.clone(),
-            payload_time,
-            pong,
-            round_trip_ms: Some(round_trip_ms),
-            request_json: request_json.clone(),
-            response_json: Some(response_json),
-            error: None,
-          });
-          break;
-        }
-
-        if matched.is_some() {
-          break;
+          tokio::time::sleep(Duration::from_millis(PING_WAIT_PER_ATTEMPT_MS as u64)).await;
         }
       }
 
       let result = matched.unwrap_or_else(|| PairingPingResult {
         peer_device_id: peer.peer_device_id.clone(),
-        source_addr: None,
+        source_addr: peer_ip_lookup.map(|a| a.to_string()),
         payload_id: payload_id.clone(),
         payload_time,
         pong: false,
         round_trip_ms: None,
         request_json: request_json.clone(),
         response_json: None,
-        error: Some("timeout_no_pong".to_string()),
+        error: Some(if peer_ip_lookup.is_none() { "peer_offline_mdns".to_string() } else { "http_req_failed".to_string() }),
       });
 
       debug_output(|| {
@@ -689,64 +596,134 @@ impl PairingRuntime {
       history_last_sync_at_ms: state.history_last_sync_at_ms,
       history_last_sync_result: state.history_last_sync_result.clone(),
       history_last_sync_sent_changes: state.history_last_sync_sent_changes,
-      listener_running: self.is_listener_running(),
       last_error: state.last_error.clone(),
     })
   }
 
-  fn start_listener(&self) -> Result<(), String> {
-    if self.is_listener_running() {
-      return Ok(());
+  pub fn handle_ping_request(
+    &self,
+    req: crate::sync::types::PingRequest,
+  ) -> Result<crate::sync::types::PongResponse, String> {
+    if !matches_local_target_device(&req.target_device_id) {
+      return Err("Mismatch target_device_id".to_string());
     }
 
-    let socket = UdpSocket::bind(("0.0.0.0", PAIRING_PORT)).map_err(|e| {
-      format!(
-        "Failed to bind pairing listener on port {}: {}",
-        PAIRING_PORT, e
-      )
-    })?;
-    socket
-      .set_broadcast(true)
-      .map_err(|e| format!("Failed to enable listener broadcast mode: {}", e))?;
-    socket
-      .set_read_timeout(Some(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)))
-      .map_err(|e| format!("Failed to set listener timeout: {}", e))?;
+    let is_enabled = self.state.lock().map(|s| s.enabled).unwrap_or(false);
+    if !is_enabled {
+      return Err("Sync is disabled".to_string());
+    }
 
-    self.stop_signal.store(false, Ordering::SeqCst);
-    let state = Arc::clone(&self.state);
-    let stop_signal = Arc::clone(&self.stop_signal);
-    let mdns_advertiser = Arc::clone(&self.mdns_advertiser);
-
-    let handle = std::thread::Builder::new()
-      .name("pastebar-sync-pairing-listener".to_string())
-      .spawn(move || {
-        run_listener_loop(socket, state, stop_signal, mdns_advertiser);
-      })
-      .map_err(|e| format!("Failed to start pairing listener thread: {}", e))?;
-
-    let mut worker_guard = self
-      .worker
-      .lock()
-      .map_err(|_| "Pairing worker lock poisoned".to_string())?;
-    *worker_guard = Some(handle);
-    Ok(())
+    Ok(crate::sync::types::PongResponse {
+      request_id: req.request_id,
+      source_device_id: local_device_id(),
+      target_device_id: req.source_device_id,
+      id: req.id,
+      time: req.time,
+      pong: true,
+    })
   }
 
-  fn stop_listener(&self) {
-    self.stop_signal.store(true, Ordering::SeqCst);
-    if let Ok(mut worker_guard) = self.worker.lock() {
-      if let Some(handle) = worker_guard.take() {
-        let _ = handle.join();
+  pub fn handle_pair_request(
+    &self,
+    req: crate::sync::types::PairRequestInfo,
+  ) -> Result<crate::sync::types::PairAckResponse, String> {
+    let now = now_ms();
+    let mut refresh_mdns = false;
+    
+    let (accepted, reason, _) = if let Ok(mut runtime_state) = self.state.lock() {
+      if !runtime_state.enabled {
+        (false, Some("sync_off".to_string()), false)
+      } else {
+        let discoverable_before = runtime_state.pair_code.is_some();
+        expire_discoverable_window(&mut runtime_state, now);
+        refresh_mdns = discoverable_before != runtime_state.pair_code.is_some();
+
+        match runtime_state.pair_code.as_deref() {
+          Some(active_code) if active_code == req.code => {
+            runtime_state.pair_code = None;
+            runtime_state.discoverable_until_ms = None;
+            runtime_state.last_error = None;
+            (true, None, true)
+          }
+          Some(_) => (false, Some("invalid_code".to_string()), true),
+          None => (false, Some("not_discoverable".to_string()), false),
+        }
       }
+    } else {
+      (false, Some("runtime_lock_error".to_string()), false)
+    };
+
+    if refresh_mdns {
+      let _ = refresh_mdns_advertisement(&self.state, &self.mdns_advertiser);
     }
+
+    Ok(crate::sync::types::PairAckResponse {
+      request_id: req.request_id,
+      accepted,
+      host_device_id: local_device_id(),
+      reason,
+    })
   }
 
-  fn is_listener_running(&self) -> bool {
-    self
-      .worker
-      .lock()
-      .map(|guard| guard.is_some())
-      .unwrap_or(false)
+  pub fn handle_history_sync_push(
+    &self,
+    req: crate::sync::types::HistorySyncPushRequest,
+  ) -> Result<crate::sync::types::HistorySyncAckResponse, String> {
+    if !matches_local_target_device(&req.target_device_id) {
+      return Err("Mismatch target_device_id".to_string());
+    }
+
+    let is_enabled = self.state.lock().map(|s| s.enabled).unwrap_or(false);
+    if !is_enabled {
+      return Ok(crate::sync::types::HistorySyncAckResponse {
+        request_id: req.request_id,
+        host_device_id: local_device_id(),
+        accepted: false,
+        applied_count: 0,
+        last_applied_seq: 0,
+        reason: Some("sync_off".to_string()),
+      });
+    }
+
+    let trusted = peer_is_trusted(&req.source_device_id).unwrap_or(false);
+    if !trusted {
+      return Ok(crate::sync::types::HistorySyncAckResponse {
+        request_id: req.request_id,
+        host_device_id: local_device_id(),
+        accepted: false,
+        applied_count: 0,
+        last_applied_seq: 0,
+        reason: Some("untrusted_peer".to_string()),
+      });
+    }
+
+    let apply_result: Result<(usize, i64), String> = (|| {
+      let mut conn = establish_pool_db_connection();
+      let mut remote_apply = enable_remote_apply_context(&mut conn).map_err(|e| e.to_string())?;
+      apply_history_changes(remote_apply.conn_mut(), &req.changes)
+    })();
+
+    match apply_result {
+      Ok((applied_count, last_applied_seq)) => {
+        let _ = update_peer_last_applied_seq(&req.source_device_id, last_applied_seq);
+        Ok(crate::sync::types::HistorySyncAckResponse {
+          request_id: req.request_id,
+          host_device_id: local_device_id(),
+          accepted: true,
+          applied_count,
+          last_applied_seq,
+          reason: None,
+        })
+      }
+      Err(error) => Ok(crate::sync::types::HistorySyncAckResponse {
+        request_id: req.request_id,
+        host_device_id: local_device_id(),
+        accepted: false,
+        applied_count: 0,
+        last_applied_seq: 0,
+        reason: Some(error),
+      }),
+    }
   }
 
   fn start_history_auto_sync_worker(&self) -> Result<(), String> {
@@ -764,6 +741,10 @@ impl PairingRuntime {
         run_history_auto_sync_loop(state, stop_signal);
       })
       .map_err(|e| format!("Failed to start auto history sync thread: {}", e))?;
+
+    let media_stop_signal = Arc::clone(&self.auto_sync_stop_signal);
+    let media_root = crate::db::get_clip_images_dir();
+    crate::sync::media::start_fetch_queue_worker(media_stop_signal, media_root);
 
     let mut worker_guard = self
       .auto_sync_worker
@@ -1012,37 +993,7 @@ fn expire_discoverable_window(runtime_state: &mut PairingState, now: i64) {
   }
 }
 
-fn discovery_target_addresses() -> Vec<SocketAddr> {
-  let mut targets = BTreeSet::new();
-  targets.insert(SocketAddr::from(([255, 255, 255, 255], PAIRING_PORT)));
-  targets.insert(SocketAddr::from(([127, 0, 0, 1], PAIRING_PORT)));
 
-  if let Ok(ifaces) = get_if_addrs() {
-    for iface in ifaces {
-      let IfAddr::V4(v4) = iface.addr else {
-        continue;
-      };
-
-      if v4.ip.is_loopback() {
-        continue;
-      }
-
-      let directed_broadcast = v4
-        .broadcast
-        .unwrap_or_else(|| ipv4_broadcast_from_ip_and_netmask(v4.ip, v4.netmask));
-      targets.insert(SocketAddr::from((directed_broadcast, PAIRING_PORT)));
-
-      for host in ipv4_subnet_hosts(v4.ip, v4.netmask)
-        .into_iter()
-        .take(MAX_SUBNET_SWEEP_HOSTS_PER_INTERFACE)
-      {
-        targets.insert(SocketAddr::from((host, PAIRING_PORT)));
-      }
-    }
-  }
-
-  targets.into_iter().collect()
-}
 
 fn scan_mdns_devices(
   requester_device_id: &str,
@@ -1254,209 +1205,85 @@ fn sync_history_to_peer(
       .into_iter()
       .filter(|change| change.source_device_id != peer_device_id)
       .collect();
+      
     if changes.is_empty() {
       since_seq = loaded_max_seq;
       update_peer_acked_seq(peer_device_id, since_seq)?;
-      debug_output(|| {
-        println!(
-          "[sync-history] peer={} skipped peer-origin rows={} advanced_cursor_to_seq={}",
-          peer_device_id, skipped_peer_echo, since_seq
-        );
-      });
-      continue;
-    }
-    debug_output(|| {
-      println!(
-        "[sync-history] peer={} since_seq={} loaded_changes={} skipped_peer_echo={} outgoing_changes={}",
-        peer_device_id,
-        since_seq,
-        changes.len() + skipped_peer_echo,
-        skipped_peer_echo,
-        changes.len()
-      );
-    });
-
-    let batches =
-      split_history_changes_for_udp(local_device, peer_device_id, &changes, HISTORY_SYNC_MAX_PACKET_BYTES)?;
-    debug_output(|| {
-      println!(
-        "[sync-history] peer={} batches={} max_packet_bytes={}",
-        peer_device_id,
-        batches.len(),
-        HISTORY_SYNC_MAX_PACKET_BYTES
-      );
-    });
-
-    let socket = UdpSocket::bind("0.0.0.0:0")
-      .map_err(|e| format!("Failed to open history sync socket: {}", e))?;
-    socket
-      .set_broadcast(true)
-      .map_err(|e| format!("Failed to enable UDP broadcast for history sync: {}", e))?;
-    socket
-      .set_read_timeout(Some(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)))
-      .map_err(|e| format!("Failed to set history sync socket timeout: {}", e))?;
-
-    let targets = discovery_target_addresses();
-    for batch in batches {
-      let request_id = nanoid::nanoid!(12);
-      let payload = encode_history_sync_push(local_device, peer_device_id, &request_id, &batch)?;
-      debug_output(|| {
-        println!(
-          "[sync-history] peer={} request_id={} batch_changes={} payload_bytes={}",
-          peer_device_id,
-          request_id,
-          batch.len(),
-          payload.len()
-        );
-      });
-      let mut received_ack = false;
-      let mut send_errors = 0usize;
-
-      for _ in 0..HISTORY_SYNC_ATTEMPTS {
-        for target in &targets {
-          if socket.send_to(&payload, *target).is_err() {
-            send_errors += 1;
-          }
-        }
-
-        let deadline = now_ms() + HISTORY_SYNC_WAIT_PER_ATTEMPT_MS;
-        while now_ms() < deadline {
-          let mut buffer = [0u8; 65535];
-          let recv = socket.recv_from(&mut buffer);
-          let (len, _source_addr) = match recv {
-            Ok(result) => result,
-            Err(_) => continue,
-          };
-
-          let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
-            Ok(packet) => packet,
-            Err(_) => continue,
-          };
-
-          let PairingPacket::HistorySyncAck {
-            request_id: ack_request_id,
-            host_device_id,
-            accepted,
-            applied_count,
-            last_applied_seq,
-            reason,
-          } = packet
-          else {
-            continue;
-          };
-
-          if ack_request_id != request_id {
-            continue;
-          }
-          if host_device_id != peer_device_id {
-            debug_output(|| {
-              println!(
-                "[sync-history] peer={} request_id={} ack_source_device_id_mismatch expected={} actual={}",
-                peer_device_id, request_id, peer_device_id, host_device_id
-              );
-            });
-          }
-
-          if !accepted {
-            let message = reason.unwrap_or_else(|| "history_sync_rejected".to_string());
-            return Err(message);
-          }
-
-          let acked_seq = last_applied_seq.max(since_seq);
-          update_peer_acked_seq(peer_device_id, acked_seq)?;
-          since_seq = acked_seq;
-          total_applied += applied_count;
-          debug_output(|| {
-            println!(
-              "[sync-history] peer={} request_id={} acked_seq={} applied_count={}",
-              peer_device_id,
-              request_id,
-              acked_seq,
-              applied_count
-            );
-          });
-          received_ack = true;
-          break;
-        }
-
-        if received_ack {
-          break;
-        }
-      }
-
-      if !received_ack {
-        return Err(format!(
-          "No history sync ACK from peer {} (send_errors={}, payload_bytes={}). Ensure both devices are online.",
-          peer_device_id,
-          send_errors,
-          payload.len()
-        ));
-      }
-    }
-  }
-}
-
-fn split_history_changes_for_udp(
-  local_device: &str,
-  peer_device_id: &str,
-  changes: &[HistorySyncChange],
-  max_packet_bytes: usize,
-) -> Result<Vec<Vec<HistorySyncChange>>, String> {
-  let mut batches: Vec<Vec<HistorySyncChange>> = Vec::new();
-  let mut current_batch: Vec<HistorySyncChange> = Vec::new();
-
-  for change in changes.iter().cloned() {
-    let mut candidate = current_batch.clone();
-    candidate.push(change.clone());
-    let candidate_payload_size =
-      encode_history_sync_push(local_device, peer_device_id, "probe", &candidate)?.len();
-
-    if candidate_payload_size <= max_packet_bytes {
-      current_batch = candidate;
       continue;
     }
 
-    if current_batch.is_empty() {
-      return Err(format!(
-        "History change {} is too large for UDP payload ({} bytes > {} bytes).",
-        change.row_id, candidate_payload_size, max_packet_bytes
-      ));
+    let request_id = nanoid::nanoid!(12);
+    let packet = crate::sync::types::HistorySyncPushRequest {
+      request_id: request_id.clone(),
+      source_device_id: local_device.to_string(),
+      target_device_id: peer_device_id.to_string(),
+      changes: changes.clone(),
+    };
+
+    let peer_ip_lookup = {
+      let ips = crate::sync::discovery::get_peer_ips().read().unwrap();
+      ips.get(peer_device_id).cloned()
+    };
+
+    let target_addr = match peer_ip_lookup {
+      Some(addr) => addr,
+      None => return Err(format!("Peer {} IP not found via mDNS.", peer_device_id)),
+    };
+
+    let payload = serde_json::to_vec(&packet)
+      .map_err(|e| format!("Failed to encode history sync: {}", e))?;
+
+    let url = format!("http://{}/sync/history", target_addr);
+
+    let rt = tokio::runtime::Runtime::new().map_err(|e| e.to_string())?;
+    
+    let result: Result<crate::sync::types::HistorySyncAckResponse, String> = rt.block_on(async {
+      let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(10))
+        .build()
+        .map_err(|e| e.to_string())?;
+
+      let resp = client.post(&url)
+        .header("Content-Type", "application/json")
+        .body(payload)
+        .send()
+        .await
+        .map_err(|e| e.to_string())?;
+
+      if !resp.status().is_success() {
+        return Err(format!("HTTP error {}", resp.status()));
+      }
+
+      resp.json::<crate::sync::types::HistorySyncAckResponse>().await.map_err(|e| e.to_string())
+    });
+
+    let ack_packet = result?;
+
+    let crate::sync::types::HistorySyncAckResponse {
+      request_id: ack_request_id,
+      host_device_id,
+      accepted,
+      applied_count,
+      last_applied_seq,
+      reason,
+    } = ack_packet;
+
+    if ack_request_id != request_id {
+      return Err("Mismatched request ID in ACK".to_string());
     }
 
-    batches.push(current_batch);
-    current_batch = vec![change];
-
-    let single_payload_size =
-      encode_history_sync_push(local_device, peer_device_id, "probe", &current_batch)?.len();
-    if single_payload_size > max_packet_bytes {
-      return Err(format!(
-        "History change {} is too large for UDP payload ({} bytes > {} bytes).",
-        current_batch[0].row_id, single_payload_size, max_packet_bytes
-      ));
+    if !accepted {
+      let message = reason.unwrap_or_else(|| "history_sync_rejected".to_string());
+      return Err(message);
     }
-  }
 
-  if !current_batch.is_empty() {
-    batches.push(current_batch);
+    let acked_seq = last_applied_seq.max(since_seq);
+    update_peer_acked_seq(peer_device_id, acked_seq)?;
+    since_seq = acked_seq;
+    total_applied += applied_count;
   }
-
-  Ok(batches)
 }
 
-fn encode_history_sync_push(
-  local_device: &str,
-  peer_device_id: &str,
-  request_id: &str,
-  changes: &[HistorySyncChange],
-) -> Result<Vec<u8>, String> {
-  let packet = PairingPacket::HistorySyncPush {
-    request_id: request_id.to_string(),
-    source_device_id: local_device.to_string(),
-    target_device_id: peer_device_id.to_string(),
-    changes: changes.to_vec(),
-  };
-  serde_json::to_vec(&packet).map_err(|e| format!("Failed to encode history sync: {}", e))
-}
 
 fn update_peer_acked_seq(peer_device_id: &str, seq: i64) -> Result<(), String> {
   let now = now_ms();
@@ -1481,7 +1308,7 @@ fn update_peer_acked_seq(peer_device_id: &str, seq: i64) -> Result<(), String> {
   Ok(())
 }
 
-fn peer_is_trusted(peer_device_id: &str) -> Result<bool, String> {
+pub fn peer_is_trusted(peer_device_id: &str) -> Result<bool, String> {
   let mut conn = establish_pool_db_connection();
   let rows: Vec<PeerTrustRow> = diesel::sql_query(
     "SELECT is_trusted
@@ -1554,34 +1381,35 @@ fn update_peer_last_applied_seq(peer_device_id: &str, seq: i64) -> Result<(), St
   Ok(())
 }
 
+pub fn local_device_id() -> String {
+  LOCAL_DEVICE_ID.clone()
+}
+
 fn ipv4_broadcast_from_ip_and_netmask(ip: Ipv4Addr, netmask: Ipv4Addr) -> Ipv4Addr {
-  let ip_u32 = u32::from(ip);
-  let netmask_u32 = u32::from(netmask);
-  Ipv4Addr::from(ip_u32 | !netmask_u32)
+  let ip_octets = ip.octets();
+  let nm_octets = netmask.octets();
+  let mut b_octets = [0u8; 4];
+  for i in 0..4 {
+    b_octets[i] = ip_octets[i] | !nm_octets[i];
+  }
+  Ipv4Addr::from(b_octets)
 }
 
 fn ipv4_subnet_hosts(ip: Ipv4Addr, netmask: Ipv4Addr) -> Vec<Ipv4Addr> {
-  let ip_u32 = u32::from(ip);
-  let netmask_u32 = u32::from(netmask);
-  let network = ip_u32 & netmask_u32;
-  let broadcast = network | !netmask_u32;
-
-  if broadcast <= network + 1 {
-    return Vec::new();
-  }
+  let ip_u32 = u32::from_be_bytes(ip.octets());
+  let nm_u32 = u32::from_be_bytes(netmask.octets());
+  let network_u32 = ip_u32 & nm_u32;
+  let broadcast_u32 = network_u32 | !nm_u32;
 
   let mut hosts = Vec::new();
-  for host in (network + 1)..broadcast {
-    let candidate = Ipv4Addr::from(host);
-    if candidate != ip {
-      hosts.push(candidate);
+  if network_u32 + 1 < broadcast_u32 {
+    let start = network_u32 + 1;
+    let end = broadcast_u32;
+    for host_u32 in start..end {
+      hosts.push(Ipv4Addr::from(host_u32));
     }
   }
   hosts
-}
-
-pub fn local_device_id() -> String {
-  LOCAL_DEVICE_ID.clone()
 }
 
 fn resolve_local_device_id() -> String {
@@ -1598,395 +1426,3 @@ fn resolve_local_device_id() -> String {
   }
 }
 
-fn run_listener_loop(
-  socket: UdpSocket,
-  state: Arc<Mutex<PairingState>>,
-  stop_signal: Arc<AtomicBool>,
-  mdns_advertiser: Arc<Mutex<Option<MdnsAdvertiser>>>,
-) {
-  let mut ping_log_seen_at: HashMap<String, i64> = HashMap::new();
-  while !stop_signal.load(Ordering::SeqCst) {
-    let mut buffer = [0u8; 65535];
-    let recv = socket.recv_from(&mut buffer);
-    let (len, source_addr) = match recv {
-      Ok(result) => result,
-      Err(_) => continue,
-    };
-
-    let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
-      Ok(packet) => packet,
-      Err(_) => continue,
-    };
-
-    match packet {
-      PairingPacket::PairRequest {
-        request_id,
-        code,
-        requester_device_id,
-      } => {
-        let now = now_ms();
-        let mut accepted = false;
-        let mut rejection_reason: Option<String> = None;
-        let mut refresh_mdns = false;
-
-        if let Ok(mut runtime_state) = state.lock() {
-          if !runtime_state.enabled {
-            rejection_reason = Some("sync_off".to_string());
-          } else {
-            let discoverable_before = runtime_state.pair_code.is_some();
-            expire_discoverable_window(&mut runtime_state, now);
-
-            match runtime_state.pair_code.as_deref() {
-              Some(active_code) if active_code == code => {
-                accepted = true;
-                runtime_state.pair_code = None;
-                runtime_state.discoverable_until_ms = None;
-                runtime_state.last_error = None;
-              }
-              Some(_) => {
-                rejection_reason = Some("invalid_code".to_string());
-              }
-              None => {
-                rejection_reason = Some("not_discoverable".to_string());
-              }
-            }
-            refresh_mdns = discoverable_before != runtime_state.pair_code.is_some();
-          }
-        } else {
-          rejection_reason = Some("runtime_lock_error".to_string());
-        }
-        if refresh_mdns {
-          let _ = refresh_mdns_advertisement(&state, &mdns_advertiser);
-        }
-
-        if accepted {
-          if let Err(err) = trust_peer_in_db(&requester_device_id) {
-            accepted = false;
-            rejection_reason = Some("database_error".to_string());
-            if let Ok(mut runtime_state) = state.lock() {
-              runtime_state.last_error = Some(err);
-            }
-          }
-        }
-
-        let ack_packet = PairingPacket::PairAck {
-          request_id,
-          accepted,
-          host_device_id: local_device_id(),
-          reason: rejection_reason,
-        };
-
-        if let Ok(payload) = serde_json::to_vec(&ack_packet) {
-          let _ = socket.send_to(&payload, source_addr);
-        }
-      }
-      PairingPacket::DiscoveryProbe {
-        request_id,
-        requester_device_id: _,
-      } => {
-        let now = now_ms();
-        let mut refresh_mdns = false;
-        let (discoverable, sync_enabled) = if let Ok(mut runtime_state) = state.lock() {
-          let discoverable_before = runtime_state.pair_code.is_some();
-          expire_discoverable_window(&mut runtime_state, now);
-          refresh_mdns = discoverable_before != runtime_state.pair_code.is_some();
-          (
-            runtime_state.enabled && runtime_state.pair_code.is_some(),
-            runtime_state.enabled,
-          )
-        } else {
-          (false, false)
-        };
-        if refresh_mdns {
-          let _ = refresh_mdns_advertisement(&state, &mdns_advertiser);
-        }
-
-        let ack_packet = PairingPacket::DiscoveryAck {
-          request_id,
-          host_device_id: local_device_id(),
-          discoverable,
-          sync_enabled,
-        };
-
-        if let Ok(payload) = serde_json::to_vec(&ack_packet) {
-          let _ = socket.send_to(&payload, source_addr);
-        }
-      }
-      PairingPacket::HistorySyncPush {
-        request_id,
-        source_device_id,
-        target_device_id,
-        changes,
-      } => {
-        debug_output(|| {
-          println!(
-            "[sync-history][recv] source_addr={} source_device_id={} target_device_id={} payload_bytes={} changes={}",
-            source_addr,
-            source_device_id,
-            target_device_id,
-            len,
-            changes.len()
-          );
-        });
-        if !matches_local_target_device(&target_device_id) {
-          debug_output(|| {
-            println!(
-              "[sync-net][drop] kind=history_sync_push reason=target_mismatch source_device_id={} target_device_id={} local_device_id={}",
-              source_device_id,
-              target_device_id,
-              local_device_id()
-            );
-          });
-          continue;
-        }
-
-        let is_enabled = state
-          .lock()
-          .map(|runtime_state| runtime_state.enabled)
-          .unwrap_or(false);
-        if !is_enabled {
-          let ack_packet = PairingPacket::HistorySyncAck {
-            request_id,
-            host_device_id: local_device_id(),
-            accepted: false,
-            applied_count: 0,
-            last_applied_seq: 0,
-            reason: Some("sync_off".to_string()),
-          };
-          if let Ok(payload) = serde_json::to_vec(&ack_packet) {
-            let _ = socket.send_to(&payload, source_addr);
-          }
-          continue;
-        }
-
-        let trusted = peer_is_trusted(&source_device_id).unwrap_or(false);
-        if !trusted {
-          debug_output(|| {
-            println!(
-              "[sync-net][drop] kind=history_sync_push reason=untrusted_peer source_device_id={} target_device_id={}",
-              source_device_id, target_device_id
-            );
-          });
-          let ack_packet = PairingPacket::HistorySyncAck {
-            request_id,
-            host_device_id: local_device_id(),
-            accepted: false,
-            applied_count: 0,
-            last_applied_seq: 0,
-            reason: Some("untrusted_peer".to_string()),
-          };
-          if let Ok(payload) = serde_json::to_vec(&ack_packet) {
-            let _ = socket.send_to(&payload, source_addr);
-          }
-          continue;
-        }
-
-        let apply_result: Result<(usize, i64), String> = (|| {
-          let mut conn = establish_pool_db_connection();
-          let mut remote_apply =
-            enable_remote_apply_context(&mut conn).map_err(|e| e.to_string())?;
-          apply_history_changes(remote_apply.conn_mut(), &changes)
-        })();
-
-        match apply_result {
-          Ok((applied_count, last_applied_seq)) => {
-            let _ = update_peer_last_applied_seq(&source_device_id, last_applied_seq);
-            let ack_packet = PairingPacket::HistorySyncAck {
-              request_id,
-              host_device_id: local_device_id(),
-              accepted: true,
-              applied_count,
-              last_applied_seq,
-              reason: None,
-            };
-            if let Ok(payload) = serde_json::to_vec(&ack_packet) {
-              let _ = socket.send_to(&payload, source_addr);
-            }
-          }
-          Err(error) => {
-            let ack_packet = PairingPacket::HistorySyncAck {
-              request_id,
-              host_device_id: local_device_id(),
-              accepted: false,
-              applied_count: 0,
-              last_applied_seq: 0,
-              reason: Some(error),
-            };
-            if let Ok(payload) = serde_json::to_vec(&ack_packet) {
-              let _ = socket.send_to(&payload, source_addr);
-            }
-          }
-        }
-      }
-      PairingPacket::PingJson {
-        request_id,
-        source_device_id,
-        target_device_id,
-        id,
-        time,
-        pong: _,
-      } => {
-        if !matches_local_target_device(&target_device_id) {
-          debug_output(|| {
-            println!(
-              "[sync-net][drop] kind=ping reason=target_mismatch source_device_id={} target_device_id={} local_device_id={}",
-              source_device_id,
-              target_device_id,
-              local_device_id()
-            );
-          });
-          continue;
-        }
-
-        let is_enabled = state
-          .lock()
-          .map(|runtime_state| runtime_state.enabled)
-          .unwrap_or(false);
-        if !is_enabled {
-          continue;
-        }
-
-        let trusted = peer_is_trusted(&source_device_id).unwrap_or(false);
-        if !trusted {
-          debug_output(|| {
-            println!(
-              "[sync-ping] source_device_id={} is not trusted yet; responding anyway for diagnostics target_device_id={}",
-              source_device_id, target_device_id
-            );
-          });
-        }
-
-        let ping_id = id.clone();
-        let now = now_ms();
-        ping_log_seen_at.retain(|_, seen_at| now - *seen_at <= 5_000);
-        let ping_log_key = format!("{}:{}:{}", source_device_id, request_id, ping_id);
-        let should_log = ping_log_seen_at
-          .insert(ping_log_key, now)
-          .map(|seen_at| now - seen_at > 1_500)
-          .unwrap_or(true);
-        let response = PairingPacket::PongJson {
-          request_id,
-          source_device_id: local_device_id(),
-          target_device_id: source_device_id,
-          id,
-          time,
-          pong: true,
-        };
-        if should_log {
-          debug_output(|| {
-            println!(
-              "[sync-ping] responding_to={} id={} time={} pong=true trusted_source={}",
-              source_addr, ping_id, time, trusted
-            );
-          });
-        }
-        if let Ok(payload) = serde_json::to_vec(&response) {
-          let _ = socket.send_to(&payload, source_addr);
-        }
-      }
-      _ => continue,
-    }
-  }
-}
-
-fn trust_peer_in_db(peer_device_id: &str) -> Result<(), String> {
-  let now = now_ms();
-  let mut conn = establish_pool_db_connection();
-
-  diesel::sql_query(
-    "INSERT INTO sync_peer_cursor (
-      peer_device_id, last_acked_seq, last_applied_seq, is_trusted, is_stale, last_seen_at, created_at, updated_at
-    ) VALUES (
-      ?, 0, 0, 1, 0, ?, ?, ?
-    )
-    ON CONFLICT(peer_device_id) DO UPDATE SET
-      is_trusted = 1,
-      is_stale = 0,
-      last_seen_at = excluded.last_seen_at,
-      updated_at = excluded.updated_at",
-  )
-  .bind::<Text, _>(peer_device_id.to_string())
-  .bind::<BigInt, _>(now)
-  .bind::<BigInt, _>(now)
-  .bind::<BigInt, _>(now)
-  .execute(&mut conn)
-  .map_err(|e| e.to_string())?;
-
-  Ok(())
-}
-
-fn now_ms() -> i64 {
-  SystemTime::now()
-    .duration_since(UNIX_EPOCH)
-    .unwrap_or_default()
-    .as_millis() as i64
-}
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn ignores_self_not_discoverable_rejection() {
-    assert!(should_ignore_rejection_for_self_not_discoverable(
-      false,
-      "device-a",
-      "device-a",
-      Some("not_discoverable"),
-    ));
-  }
-
-  #[test]
-  fn does_not_ignore_non_self_not_discoverable_rejection() {
-    assert!(!should_ignore_rejection_for_self_not_discoverable(
-      false,
-      "device-b",
-      "device-a",
-      Some("not_discoverable"),
-    ));
-  }
-
-  #[test]
-  fn does_not_ignore_self_when_accepted() {
-    assert!(!should_ignore_rejection_for_self_not_discoverable(
-      true, "device-a", "device-a", None,
-    ));
-  }
-
-  #[test]
-  fn humanizes_not_discoverable_reason() {
-    assert_eq!(
-      humanize_rejection_reason("not_discoverable"),
-      "Target device is not discoverable. Generate a new 6-digit code and retry."
-    );
-  }
-
-  #[test]
-  fn splits_history_batches_when_payload_too_large() {
-    let changes: Vec<HistorySyncChange> = (0..4)
-      .map(|idx| HistorySyncChange {
-        seq: idx + 1,
-        source_device_id: "device-a".to_string(),
-        op: "insert".to_string(),
-        row_id: format!("history-{}", idx),
-        hlc_wall_ms: 1_000 + idx,
-        hlc_counter: 1,
-        updated_at: 1_000 + idx,
-        row_json: Some(format!(
-          "{{\"history_id\":\"history-{}\",\"value\":\"{}\"}}",
-          idx,
-          "x".repeat(128)
-        )),
-      })
-      .collect();
-
-    let batches = split_history_changes_for_udp("device-a", "device-b", &changes, 700)
-      .expect("Failed to split history changes");
-
-    assert!(batches.len() >= 2);
-    assert_eq!(
-      batches.iter().map(|batch| batch.len()).sum::<usize>(),
-      changes.len()
-    );
-  }
-}
