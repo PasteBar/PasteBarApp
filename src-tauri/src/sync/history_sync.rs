@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use diesel::sql_types::{BigInt, Bool, Integer, Nullable, Text, Timestamp};
 use diesel::sqlite::SqliteConnection;
 use diesel::QueryableByName;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use crate::services::utils::debug_output;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -27,15 +27,25 @@ struct HistoryRowPayload {
   value_more_preview_lines: Option<i32>,
   value_more_preview_chars: Option<i32>,
   value_hash: Option<String>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   is_image: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   is_masked: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   is_text: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   is_code: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   is_link: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   is_video: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   has_emoji: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   has_masked_words: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   is_pinned: Option<bool>,
+  #[serde(default, deserialize_with = "deserialize_boolish_opt")]
   is_favorite: Option<bool>,
   links: Option<String>,
   detected_language: Option<String>,
@@ -44,6 +54,32 @@ struct HistoryRowPayload {
   updated_at: Option<i64>,
   history_options: Option<String>,
   copied_from_app: Option<String>,
+}
+
+fn deserialize_boolish_opt<'de, D>(deserializer: D) -> Result<Option<bool>, D::Error>
+where
+  D: Deserializer<'de>,
+{
+  let value = Option::<serde_json::Value>::deserialize(deserializer)?;
+  match value {
+    None => Ok(None),
+    Some(serde_json::Value::Bool(v)) => Ok(Some(v)),
+    Some(serde_json::Value::Number(n)) => {
+      if let Some(i) = n.as_i64() {
+        Ok(Some(i != 0))
+      } else if let Some(u) = n.as_u64() {
+        Ok(Some(u != 0))
+      } else {
+        Err(serde::de::Error::custom("invalid numeric boolean value"))
+      }
+    }
+    Some(serde_json::Value::String(s)) => match s.trim().to_ascii_lowercase().as_str() {
+      "1" | "true" | "t" | "yes" | "y" => Ok(Some(true)),
+      "0" | "false" | "f" | "no" | "n" => Ok(Some(false)),
+      _ => Err(serde::de::Error::custom("invalid string boolean value")),
+    },
+    Some(_) => Err(serde::de::Error::custom("invalid boolean payload type")),
+  }
 }
 
 #[derive(QueryableByName)]
