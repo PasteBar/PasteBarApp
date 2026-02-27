@@ -1052,6 +1052,11 @@ fn scan_mdns_devices(
 
     let discoverable = matches!(mdns_txt_value(props, "discoverable").as_deref(), Some("1"));
     let sync_enabled = !matches!(mdns_txt_value(props, "sync_enabled").as_deref(), Some("0"));
+
+    crate::services::utils::debug_output(|| {
+      let props_str = props.iter().map(|e| format!("{}={}", e.key(), String::from_utf8_lossy(e.val().unwrap_or(&[])))).collect::<Vec<_>>().join(", ");
+      println!("[mDNS] Found {}: props=[{}] -> discoverable={} sync_enabled={}", host_device_id, props_str, discoverable, sync_enabled);
+    });
     
     let cached_ips = crate::sync::discovery::get_peer_ips().read().unwrap().clone();
     let source_addr = if let Some(addr) = cached_ips.get(&host_device_id) {
@@ -1083,7 +1088,11 @@ fn mdns_txt_value(props: &mdns_sd::TxtProperties, key: &str) -> Option<String> {
     .iter()
     .find(|entry| entry.key() == key)
     .and_then(|entry| entry.val())
-    .map(|value| String::from_utf8_lossy(value).to_string())
+    .map(|value| {
+      String::from_utf8_lossy(value)
+        .trim_matches(|c| c == '\0' || char::is_whitespace(c))
+        .to_string()
+    })
 }
 
 fn refresh_mdns_advertisement(
