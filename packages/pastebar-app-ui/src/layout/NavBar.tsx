@@ -273,6 +273,7 @@ export function NavBar() {
       | 'sync_generate_pair_code'
       | 'sync_cancel_pair_code'
       | 'sync_join_with_code'
+      | 'sync_history_now'
       | 'sync_remove_peer',
     payload?: Record<string, unknown>
   ) => {
@@ -2633,6 +2634,15 @@ export function NavBar() {
                     Start Sync
                   </Button>
                 )}
+                <Button
+                  variant="outline"
+                  disabled={isSyncActionRunning || syncStatus.mode !== 'on'}
+                  onClick={() => {
+                    runSyncAction('sync_history_now')
+                  }}
+                >
+                  Sync History Now
+                </Button>
                 <Button
                   variant="outline"
                   disabled={isSyncActionRunning}

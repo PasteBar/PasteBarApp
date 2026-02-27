@@ -1,4 +1,5 @@
-use diesel::sql_types::{BigInt, Text};
+use diesel::sql_types::{BigInt, Bool, Text};
+use diesel::QueryableByName;
 use diesel::RunQueryDsl;
 use if_addrs::{get_if_addrs, IfAddr};
 use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
@@ -12,6 +13,8 @@ use std::sync::{Arc, Mutex};
 use std::thread::JoinHandle;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+use crate::sync::apply_context::enable_remote_apply_context;
+use crate::sync::history_sync::{apply_history_changes, load_history_changes_since, HistorySyncChange};
 use crate::db::establish_pool_db_connection;
 
 const PAIRING_PORT: u16 = 45879;
@@ -21,8 +24,11 @@ const JOIN_ATTEMPTS: usize = 3;
 const JOIN_WAIT_PER_ATTEMPT_MS: i64 = 1_500;
 const DISCOVERY_ATTEMPTS: usize = 2;
 const DISCOVERY_WAIT_PER_ATTEMPT_MS: i64 = 900;
+const HISTORY_SYNC_ATTEMPTS: usize = 2;
+const HISTORY_SYNC_WAIT_PER_ATTEMPT_MS: i64 = 1_200;
+const HISTORY_SYNC_BATCH_LIMIT: i64 = 200;
 const MAX_SUBNET_SWEEP_HOSTS_PER_INTERFACE: usize = 256;
-const MDNS_SERVICE_TYPE: &str = "_pastebar-sync._udp.local.";
+const MDNS_SERVICE_TYPE: &str = "_pastebar-sync._udp.local";
 
 static LOCAL_DEVICE_ID: Lazy<String> = Lazy::new(resolve_local_device_id);
 
@@ -49,6 +55,20 @@ enum PairingPacket {
     host_device_id: String,
     discoverable: bool,
     sync_enabled: bool,
+  },
+  HistorySyncPush {
+    request_id: String,
+    source_device_id: String,
+    target_device_id: String,
+    changes: Vec<HistorySyncChange>,
+  },
+  HistorySyncAck {
+    request_id: String,
+    host_device_id: String,
+    accepted: bool,
+    applied_count: usize,
+    last_applied_seq: i64,
+    reason: Option<String>,
   },
 }
 
@@ -80,6 +100,20 @@ pub struct PairingDiscoveredDevice {
   pub source_addr: String,
   pub discoverable: bool,
   pub sync_enabled: bool,
+}
+
+#[derive(QueryableByName)]
+struct PeerSyncCursorRow {
+  #[diesel(sql_type = Text)]
+  peer_device_id: String,
+  #[diesel(sql_type = BigInt)]
+  last_acked_seq: i64,
+}
+
+#[derive(QueryableByName)]
+struct PeerTrustRow {
+  #[diesel(sql_type = Bool)]
+  is_trusted: bool,
 }
 
 #[derive(Clone)]
@@ -365,6 +399,32 @@ impl PairingRuntime {
         .then_with(|| a.host_device_id.cmp(&b.host_device_id))
     });
     Ok(devices)
+  }
+
+  pub fn sync_history_now(&self) -> Result<usize, String> {
+    {
+      let state = self
+        .state
+        .lock()
+        .map_err(|_| "Pairing state lock poisoned".to_string())?;
+      if !state.enabled {
+        return Err("Sync must be enabled before history sync.".to_string());
+      }
+    }
+
+    let local_device = local_device_id();
+    let peers = trusted_peers_with_cursor()?;
+    if peers.is_empty() {
+      return Ok(0);
+    }
+
+    let mut synced_changes = 0usize;
+    for peer in peers {
+      let applied = sync_history_to_peer(&local_device, &peer.peer_device_id, peer.last_acked_seq)?;
+      synced_changes += applied;
+    }
+
+    Ok(synced_changes)
   }
 
   pub fn snapshot(&self) -> Result<PairingSnapshot, String> {
@@ -667,7 +727,7 @@ fn refresh_mdns_advertisement(
   );
   properties.insert("sync_enabled".to_string(), "1".to_string());
 
-  let host_name = format!("{}.local.", local_device_id());
+  let host_name = format!("{}.local", local_device_id());
   let service_info = ServiceInfo::new(
     MDNS_SERVICE_TYPE,
     &local_device_id(),
@@ -689,6 +749,188 @@ fn refresh_mdns_advertisement(
 
 fn mdns_service_fullname(device_id: &str) -> String {
   format!("{}.{}", device_id, MDNS_SERVICE_TYPE)
+}
+
+fn trusted_peers_with_cursor() -> Result<Vec<PeerSyncCursorRow>, String> {
+  let mut conn = establish_pool_db_connection();
+  diesel::sql_query(
+    "SELECT peer_device_id, last_acked_seq
+     FROM sync_peer_cursor
+     WHERE is_trusted = 1 AND is_stale = 0
+     ORDER BY updated_at DESC",
+  )
+  .load(&mut conn)
+  .map_err(|e| e.to_string())
+}
+
+fn sync_history_to_peer(
+  local_device: &str,
+  peer_device_id: &str,
+  mut since_seq: i64,
+) -> Result<usize, String> {
+  let mut total_applied = 0usize;
+
+  loop {
+    let changes = {
+      let mut conn = establish_pool_db_connection();
+      load_history_changes_since(&mut conn, since_seq, HISTORY_SYNC_BATCH_LIMIT)?
+    };
+    if changes.is_empty() {
+      return Ok(total_applied);
+    }
+
+    let request_id = nanoid::nanoid!(12);
+    let packet = PairingPacket::HistorySyncPush {
+      request_id: request_id.clone(),
+      source_device_id: local_device.to_string(),
+      target_device_id: peer_device_id.to_string(),
+      changes,
+    };
+    let payload =
+      serde_json::to_vec(&packet).map_err(|e| format!("Failed to encode history sync: {}", e))?;
+
+    let socket = UdpSocket::bind("0.0.0.0:0")
+      .map_err(|e| format!("Failed to open history sync socket: {}", e))?;
+    socket
+      .set_broadcast(true)
+      .map_err(|e| format!("Failed to enable UDP broadcast for history sync: {}", e))?;
+    socket
+      .set_read_timeout(Some(Duration::from_millis(SOCKET_POLL_TIMEOUT_MS)))
+      .map_err(|e| format!("Failed to set history sync socket timeout: {}", e))?;
+
+    let targets = discovery_target_addresses();
+    let mut received_ack = false;
+    for _ in 0..HISTORY_SYNC_ATTEMPTS {
+      for target in &targets {
+        let _ = socket.send_to(&payload, *target);
+      }
+
+      let deadline = now_ms() + HISTORY_SYNC_WAIT_PER_ATTEMPT_MS;
+      while now_ms() < deadline {
+        let mut buffer = [0u8; 65535];
+        let recv = socket.recv_from(&mut buffer);
+        let (len, _source_addr) = match recv {
+          Ok(result) => result,
+          Err(_) => continue,
+        };
+
+        let packet = match serde_json::from_slice::<PairingPacket>(&buffer[..len]) {
+          Ok(packet) => packet,
+          Err(_) => continue,
+        };
+
+        let PairingPacket::HistorySyncAck {
+          request_id: ack_request_id,
+          host_device_id,
+          accepted,
+          applied_count,
+          last_applied_seq,
+          reason,
+        } = packet
+        else {
+          continue;
+        };
+
+        if ack_request_id != request_id || host_device_id != peer_device_id {
+          continue;
+        }
+
+        if !accepted {
+          let message = reason.unwrap_or_else(|| "history_sync_rejected".to_string());
+          return Err(message);
+        }
+
+        let acked_seq = last_applied_seq.max(since_seq);
+        update_peer_acked_seq(peer_device_id, acked_seq)?;
+        since_seq = acked_seq;
+        total_applied += applied_count;
+        received_ack = true;
+        break;
+      }
+
+      if received_ack {
+        break;
+      }
+    }
+
+    if !received_ack {
+      return Err(format!(
+        "No history sync ACK from peer {}. Ensure both devices are online.",
+        peer_device_id
+      ));
+    }
+
+    if total_applied == 0 {
+      return Ok(0);
+    }
+  }
+}
+
+fn update_peer_acked_seq(peer_device_id: &str, seq: i64) -> Result<(), String> {
+  let now = now_ms();
+  let mut conn = establish_pool_db_connection();
+  diesel::sql_query(
+    "UPDATE sync_peer_cursor
+     SET last_acked_seq = CASE
+         WHEN last_acked_seq > ? THEN last_acked_seq
+         ELSE ?
+       END,
+       last_seen_at = ?,
+       updated_at = ?
+     WHERE peer_device_id = ?",
+  )
+  .bind::<BigInt, _>(seq)
+  .bind::<BigInt, _>(seq)
+  .bind::<BigInt, _>(now)
+  .bind::<BigInt, _>(now)
+  .bind::<Text, _>(peer_device_id.to_string())
+  .execute(&mut conn)
+  .map_err(|e| e.to_string())?;
+  Ok(())
+}
+
+fn peer_is_trusted(peer_device_id: &str) -> Result<bool, String> {
+  let mut conn = establish_pool_db_connection();
+  let rows: Vec<PeerTrustRow> = diesel::sql_query(
+    "SELECT is_trusted
+     FROM sync_peer_cursor
+     WHERE peer_device_id = ?
+     LIMIT 1",
+  )
+  .bind::<Text, _>(peer_device_id.to_string())
+  .load(&mut conn)
+  .map_err(|e| e.to_string())?;
+
+  Ok(rows.first().map(|row| row.is_trusted).unwrap_or(false))
+}
+
+fn update_peer_last_applied_seq(peer_device_id: &str, seq: i64) -> Result<(), String> {
+  let now = now_ms();
+  let mut conn = establish_pool_db_connection();
+  diesel::sql_query(
+    "INSERT INTO sync_peer_cursor (
+       peer_device_id, last_acked_seq, last_applied_seq, is_trusted, is_stale, last_seen_at, created_at, updated_at
+     ) VALUES (
+       ?, 0, ?, 1, 0, ?, ?, ?
+     )
+     ON CONFLICT(peer_device_id) DO UPDATE SET
+       last_applied_seq = CASE
+         WHEN sync_peer_cursor.last_applied_seq > excluded.last_applied_seq
+           THEN sync_peer_cursor.last_applied_seq
+           ELSE excluded.last_applied_seq
+       END,
+       is_stale = 0,
+       last_seen_at = excluded.last_seen_at,
+       updated_at = excluded.updated_at",
+  )
+  .bind::<Text, _>(peer_device_id.to_string())
+  .bind::<BigInt, _>(seq)
+  .bind::<BigInt, _>(now)
+  .bind::<BigInt, _>(now)
+  .bind::<BigInt, _>(now)
+  .execute(&mut conn)
+  .map_err(|e| e.to_string())?;
+  Ok(())
 }
 
 fn ipv4_broadcast_from_ip_and_netmask(ip: Ipv4Addr, netmask: Ipv4Addr) -> Ipv4Addr {
@@ -846,6 +1088,88 @@ fn run_listener_loop(
 
         if let Ok(payload) = serde_json::to_vec(&ack_packet) {
           let _ = socket.send_to(&payload, source_addr);
+        }
+      }
+      PairingPacket::HistorySyncPush {
+        request_id,
+        source_device_id,
+        target_device_id,
+        changes,
+      } => {
+        if target_device_id != local_device_id() {
+          continue;
+        }
+
+        let is_enabled = state
+          .lock()
+          .map(|runtime_state| runtime_state.enabled)
+          .unwrap_or(false);
+        if !is_enabled {
+          let ack_packet = PairingPacket::HistorySyncAck {
+            request_id,
+            host_device_id: local_device_id(),
+            accepted: false,
+            applied_count: 0,
+            last_applied_seq: 0,
+            reason: Some("sync_off".to_string()),
+          };
+          if let Ok(payload) = serde_json::to_vec(&ack_packet) {
+            let _ = socket.send_to(&payload, source_addr);
+          }
+          continue;
+        }
+
+        let trusted = peer_is_trusted(&source_device_id).unwrap_or(false);
+        if !trusted {
+          let ack_packet = PairingPacket::HistorySyncAck {
+            request_id,
+            host_device_id: local_device_id(),
+            accepted: false,
+            applied_count: 0,
+            last_applied_seq: 0,
+            reason: Some("untrusted_peer".to_string()),
+          };
+          if let Ok(payload) = serde_json::to_vec(&ack_packet) {
+            let _ = socket.send_to(&payload, source_addr);
+          }
+          continue;
+        }
+
+        let apply_result: Result<(usize, i64), String> = (|| {
+          let mut conn = establish_pool_db_connection();
+          let mut remote_apply =
+            enable_remote_apply_context(&mut conn).map_err(|e| e.to_string())?;
+          apply_history_changes(remote_apply.conn_mut(), &changes)
+        })();
+
+        match apply_result {
+          Ok((applied_count, last_applied_seq)) => {
+            let _ = update_peer_last_applied_seq(&source_device_id, last_applied_seq);
+            let ack_packet = PairingPacket::HistorySyncAck {
+              request_id,
+              host_device_id: local_device_id(),
+              accepted: true,
+              applied_count,
+              last_applied_seq,
+              reason: None,
+            };
+            if let Ok(payload) = serde_json::to_vec(&ack_packet) {
+              let _ = socket.send_to(&payload, source_addr);
+            }
+          }
+          Err(error) => {
+            let ack_packet = PairingPacket::HistorySyncAck {
+              request_id,
+              host_device_id: local_device_id(),
+              accepted: false,
+              applied_count: 0,
+              last_applied_seq: 0,
+              reason: Some(error),
+            };
+            if let Ok(payload) = serde_json::to_vec(&ack_packet) {
+              let _ = socket.send_to(&payload, source_addr);
+            }
+          }
         }
       }
       _ => continue,

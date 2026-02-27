@@ -184,6 +184,17 @@ pub fn sync_scan_network_devices() -> Result<Vec<SyncDiscoveredDevice>, String> 
 }
 
 #[tauri::command]
+pub fn sync_history_now() -> Result<SyncUiStatus, String> {
+  let snapshot = SYNC_ENGINE.snapshot();
+  if snapshot.mode != SyncMode::On {
+    return Err("Sync must be ON before syncing history.".to_string());
+  }
+
+  PAIRING_RUNTIME.sync_history_now()?;
+  build_sync_ui_status(None)
+}
+
+#[tauri::command]
 pub fn sync_list_peers() -> Result<Vec<SyncPeerInfo>, String> {
   let mut conn = establish_pool_db_connection();
   let rows: Vec<PeerRow> = diesel::sql_query(

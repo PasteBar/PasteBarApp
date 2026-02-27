@@ -16,6 +16,71 @@
 2. Ensure Rust toolchain matches repo (`rust-version = 1.75.0`).
 3. Do not enable sync by default; default mode must stay `off`.
 
+## Approved Product Subplan: Sync UX and Data Behavior (v2.1 Addendum)
+
+This section is an approved extension of the core sync/encryption plan and defines the UX behavior that implementation must follow.
+
+### Product Decisions (Locked)
+
+1. Sync remains optional and `off` by default.
+2. Pairing uses a 6-digit code and temporary discoverability.
+3. Discoverability window is 60 seconds; if pairing does not complete, state resets to non-discoverable and a new code is required.
+4. `Clipboard history` uses hybrid policy:
+   - Manual `Send to Sync` is always available.
+   - Auto-sync for history is user-toggleable.
+5. `Saved clips`, `boards`, and `tabs` auto-sync when sync is enabled.
+6. First-pair bootstrap is per-type selectable:
+   - Clipboard history
+   - Saved clips
+   - Boards and tabs
+7. Conflict strategy is Last-Write-Wins (HLC/timestamp tuple ordering).
+8. History auto-sync, when enabled, includes all entries (no implicit sensitive-content filtering in v2.1).
+
+### User Workflow (Must Implement)
+
+1. Single-device default:
+   - Sync is off, no discovery/broadcast, neutral sync indicator.
+2. Start sync:
+   - User opens Sync Center and selects start/pair.
+   - App generates 6-digit code and enters discoverable state for 60s.
+3. Join from another device:
+   - User enters code on second device.
+   - On success both devices become paired/trusted and move to active sync mode.
+4. Initial backfill:
+   - During first pair, user chooses which data types to backfill.
+   - Backfill runs once, then normal incremental sync continues.
+5. Steady state:
+   - Clips/boards/tabs auto-sync.
+   - History follows manual + optional auto policy.
+   - `Send to Sync` remains available from context actions.
+6. Exit paths:
+   - Disconnect specific peer: trust/session removed, local data remains.
+   - Turn sync off globally: stop discovery/transport/jobs and return to single-device state immediately.
+
+### UI/UX Requirements
+
+1. Nav/Header:
+   - Add Sync entry in navbar dropdown area with colored status dot.
+   - Dot semantics: green=healthy synced, amber=needs attention, red=error, neutral=not configured/off.
+2. Sync Center modal:
+   - Dedicated modal flow for pairing, status, errors, retry, disconnect, reconnect, and toggling sync on/off.
+   - Modal body scroll only; header remains pinned with explicit close control.
+   - Keep list of discoverable devices for troubleshooting (include stale/offline markers if available).
+3. Context menus:
+   - Add `Send to Sync` action for history items and clip/item entities.
+4. Status surface:
+   - Show active peers, last sync time, pending/error counters, and actionable retry.
+
+### Acceptance Criteria for This Subplan
+
+1. A user can pair two devices within 60 seconds using a 6-digit code.
+2. If code expires, device is non-discoverable until a new code is generated.
+3. After pairing, selected backfill types sync successfully.
+4. New clips/boards/tabs propagate automatically while sync is on.
+5. History can be synced manually even when history auto-sync is off.
+6. Turning sync off immediately stops replication and discovery without data loss.
+7. UI exposes clear sync health and retry/disconnect controls.
+
 ### Task 1: Create Sync Module Skeleton and Feature Flagged Runtime Wiring
 
 **Files:**

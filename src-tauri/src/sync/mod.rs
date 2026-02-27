@@ -6,6 +6,7 @@ pub mod cursor;
 pub mod engine;
 pub mod gc;
 pub mod hlc;
+pub mod history_sync;
 pub mod hlc_sqlite;
 pub mod media;
 pub mod observability;

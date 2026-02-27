@@ -1385,6 +1385,7 @@ async fn main() {
       sync_commands::sync_cancel_pair_code,
       sync_commands::sync_join_with_code,
       sync_commands::sync_scan_network_devices,
+      sync_commands::sync_history_now,
       sync_commands::sync_list_peers,
       sync_commands::sync_remove_peer,
       user_settings_command::cmd_get_custom_db_path,
@@ -1426,7 +1427,7 @@ async fn main() {
 mod sync_plan_tests {
   use diesel::r2d2::CustomizeConnection;
   use diesel::prelude::*;
-  use diesel::sql_types::{BigInt, Integer, Text};
+  use diesel::sql_types::{BigInt, Integer, Nullable, Text};
   use diesel::QueryableByName;
   use diesel_migrations::{FileBasedMigrations, MigrationHarness};
 
@@ -1469,9 +1470,27 @@ mod sync_plan_tests {
   }
 
   #[derive(QueryableByName)]
+  struct SyncChangeRow {
+    #[diesel(sql_type = Text)]
+    table_name: String,
+    #[diesel(sql_type = Text)]
+    row_id: String,
+    #[diesel(sql_type = Nullable<Text>)]
+    row_json: Option<String>,
+  }
+
+  #[derive(QueryableByName)]
   struct CursorRow {
     #[diesel(sql_type = BigInt)]
     last_applied_seq: i64,
+  }
+
+  #[derive(QueryableByName)]
+  struct HistoryValueRow {
+    #[diesel(sql_type = Nullable<Text>)]
+    value: Option<String>,
+    #[diesel(sql_type = BigInt)]
+    updated_at: i64,
   }
 
   fn sync_changes_count(connection: &mut diesel::sqlite::SqliteConnection) -> i64 {
@@ -1479,6 +1498,32 @@ mod sync_plan_tests {
       .load(connection)
       .expect("Failed to count sync_changes rows");
     rows[0].total
+  }
+
+  fn insert_minimal_history_row(
+    connection: &mut diesel::sqlite::SqliteConnection,
+    history_id_value: &str,
+    updated_at_value: i64,
+  ) {
+    diesel::sql_query(
+      "INSERT INTO clipboard_history (
+         history_id,
+         title,
+         value,
+         is_text,
+         created_at,
+         updated_at,
+         created_date,
+         updated_date
+       ) VALUES (
+         ?, 'HistoryTitle', 'HistoryValue', 1, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+       )",
+    )
+    .bind::<Text, _>(history_id_value.to_string())
+    .bind::<BigInt, _>(updated_at_value)
+    .bind::<BigInt, _>(updated_at_value)
+    .execute(connection)
+    .expect("Failed to insert clipboard_history row");
   }
 
   fn sync_pending_count(connection: &mut diesel::sqlite::SqliteConnection) -> i64 {
@@ -2029,6 +2074,141 @@ mod sync_plan_tests {
     assert_eq!(stats.applied_events, 1);
     assert_eq!(stats.pending_events, 0);
     assert_eq!(stats.dead_letter_events, 0);
+  }
+
+  #[test]
+  fn clipboard_history_insert_emits_outbox_row_json() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    insert_minimal_history_row(&mut connection, "history-sync-trigger-001", 1000);
+
+    let rows: Vec<SyncChangeRow> = diesel::sql_query(
+      "SELECT table_name, row_id, row_json
+       FROM sync_changes
+       WHERE table_name = 'clipboard_history'
+         AND row_id = 'history-sync-trigger-001'
+       ORDER BY seq DESC
+       LIMIT 1",
+    )
+    .load(&mut connection)
+    .expect("Failed to query sync_changes for clipboard_history");
+
+    assert_eq!(rows.len(), 1);
+    assert_eq!(rows[0].table_name, "clipboard_history");
+    assert_eq!(rows[0].row_id, "history-sync-trigger-001");
+    assert!(rows[0].row_json.is_some(), "Expected row_json payload for history sync");
+  }
+
+  #[test]
+  fn history_sync_apply_uses_lww_on_updated_at() {
+    let mut connection = diesel::sqlite::SqliteConnection::establish(":memory:")
+      .expect("Failed to create in-memory sqlite connection");
+    let options = crate::db::runtime_connection_options();
+    options
+      .on_acquire(&mut connection)
+      .expect("Failed to configure sqlite connection");
+
+    let migrations = FileBasedMigrations::find_migrations_directory()
+      .expect("Failed to find migrations directory");
+    connection
+      .run_pending_migrations(migrations)
+      .expect("Failed to run migrations");
+
+    let first_change = crate::sync::history_sync::HistorySyncChange {
+      seq: 1,
+      source_device_id: "peer-a".to_string(),
+      op: "insert".to_string(),
+      row_id: "history-lww-001".to_string(),
+      hlc_wall_ms: 1000,
+      hlc_counter: 1,
+      updated_at: 2000,
+      row_json: Some(
+        serde_json::json!({
+          "history_id": "history-lww-001",
+          "title": "First",
+          "value": "value-v1",
+          "is_text": true,
+          "created_at": 2000,
+          "updated_at": 2000
+        })
+        .to_string(),
+      ),
+    };
+
+    crate::sync::history_sync::apply_history_change(&mut connection, &first_change)
+      .expect("Failed to apply first change");
+
+    let stale_change = crate::sync::history_sync::HistorySyncChange {
+      seq: 2,
+      source_device_id: "peer-a".to_string(),
+      op: "update".to_string(),
+      row_id: "history-lww-001".to_string(),
+      hlc_wall_ms: 1001,
+      hlc_counter: 2,
+      updated_at: 1500,
+      row_json: Some(
+        serde_json::json!({
+          "history_id": "history-lww-001",
+          "title": "Stale",
+          "value": "value-stale",
+          "is_text": true,
+          "created_at": 1500,
+          "updated_at": 1500
+        })
+        .to_string(),
+      ),
+    };
+
+    crate::sync::history_sync::apply_history_change(&mut connection, &stale_change)
+      .expect("Failed to apply stale change");
+
+    let rows: Vec<HistoryValueRow> = diesel::sql_query(
+      "SELECT value, updated_at
+       FROM clipboard_history
+       WHERE history_id = 'history-lww-001'
+       LIMIT 1",
+    )
+    .load(&mut connection)
+    .expect("Failed to query history row");
+
+    assert_eq!(rows.len(), 1);
+    assert_eq!(rows[0].value.as_deref(), Some("value-v1"));
+    assert_eq!(rows[0].updated_at, 2000);
+  }
+
+  #[test]
+  fn history_auto_sync_defaults_to_disabled() {
+    let runtime = crate::sync::pairing_runtime::PairingRuntime::default();
+    let snapshot = runtime.snapshot().expect("Failed to get pairing snapshot");
+    assert!(!snapshot.history_auto_sync_enabled);
+  }
+
+  #[test]
+  fn history_auto_sync_can_be_toggled() {
+    let runtime = crate::sync::pairing_runtime::PairingRuntime::default();
+
+    runtime
+      .set_history_auto_sync_enabled(true)
+      .expect("Failed to enable history auto sync");
+    let enabled_snapshot = runtime.snapshot().expect("Failed to get pairing snapshot");
+    assert!(enabled_snapshot.history_auto_sync_enabled);
+
+    runtime
+      .set_history_auto_sync_enabled(false)
+      .expect("Failed to disable history auto sync");
+    let disabled_snapshot = runtime.snapshot().expect("Failed to get pairing snapshot");
+    assert!(!disabled_snapshot.history_auto_sync_enabled);
   }
 }
 
