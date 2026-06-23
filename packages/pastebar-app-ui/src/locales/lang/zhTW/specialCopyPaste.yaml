@@ -1,0 +1,74 @@
+Add Current Date/Time: 加入目前日期/時間
+Add Line Numbers: 加入行號
+Add One Line Feed: 加入一個換行符
+Add Two Line Feeds: 加入兩個換行符
+Base64 Decode: Base64 解碼
+Base64 Encode: Base64 編碼
+CSV: CSV
+CSV to JSON: CSV 轉 JSON
+CSV to Markdown Table: CSV 轉 Markdown 表格
+Capitalize Case: 首字母大寫
+Code Formatting: 程式碼格式化
+Count Characters: 計算字元數
+Count Lines: 計算行數
+Count Sentences: 計算句子數
+Count Words: 計算單詞數
+Data Conversion: 資料轉換
+Drag and drop category to prioritize its order in the special copy/paste menu.: 拖放類別以在特殊複製/貼上選單中調整其優先順序。
+Enable All: 全部啟用
+Enable special text transformation options for clipboard history items: 為剪貼簿歷史項目啟用特殊文字轉換選項
+Enabled Operations: 已啟用的操作
+Encode/Decode: 編碼/解碼
+Format Converter: 格式轉換器
+HTML: HTML
+HTML Decode: HTML 解碼
+HTML Encode: HTML 編碼
+HTML to Markdown: HTML 轉 Markdown
+HTML to Plain Text: HTML 轉純文字
+HTML to React Component: HTML 轉 React 元件
+HTML to React JSX: HTML 轉 React JSX
+HTML to Text: HTML 轉文字
+JSON: JSON
+JSON Stringify: JSON 字串化
+JSON to CSV: JSON 轉 CSV
+JSON to Markdown Table: JSON 轉 Markdown 表格
+JSON to TOML: JSON 轉 TOML
+JSON to XML: JSON 轉 XML
+JSON to YAML: JSON 轉 YAML
+Markdown: Markdown
+Markdown to HTML: Markdown 轉 HTML
+Markdown to Text: Markdown 轉文字
+Operations: 操作
+PascalCase: PascalCase
+Prioritize Category Order: 調整類別顯示優先順序
+PrioritizeCategoryOrderNote: 拖放類別以調整其在特殊複製/貼上選單中的顯示順序。
+Remove Duplicate Lines: 移除重複行
+Remove Extra Spaces: 移除多餘空格
+Remove Line Feeds: 移除換行符
+Reverse Text: 反轉文字
+Select Operations: 選擇操作
+Sentence case: 句子大小寫
+Sort Lines Alphabetically: 依字母順序排列行
+Special Copy: 特殊複製
+Special Copy/Paste Operations: 特殊複製/貼上操作
+Special Paste: 特殊貼上
+Special Settings: 特殊設定
+TOML: TOML
+TOML to JSON: TOML 轉 JSON
+Text Case: 文字大小寫
+Text Tools: 文字工具
+Title Case: 標題大小寫
+Trim White Space: 修剪空白
+UPPER CASE: 大寫
+URL Decode: URL 解碼
+URL Encode: URL 編碼
+Whitespace & Lines: 空白與行
+XML: XML
+XML to JSON: XML 轉 JSON
+YAML: YAML
+YAML to JSON: YAML 轉 JSON
+camelCase: camelCase
+iNVERT cASE: 反轉大小寫
+kebab-case: kebab-case
+lower case: 小寫
+snake_case: snake_case

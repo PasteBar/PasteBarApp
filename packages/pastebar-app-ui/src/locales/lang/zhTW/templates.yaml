@@ -1,0 +1,24 @@
+Create New Template: 建立新範本
+Create Template: 建立範本
+Enter template content...: 輸入範本內容...
+Enter template name (e.g., "signature", "email"): 輸入範本名稱（例如：「簽名」、「電子郵件」）
+Global: 全域
+Global Template: 全域範本
+Global Templates: 全域範本
+Preview usage: 預覽用法
+Template Usage: 範本用法
+Template name already exists: 範本名稱已存在。請選擇不同的名稱。
+Template name cannot be changed after creation. Delete and recreate to change name.: 範本名稱建立後無法變更。若要變更名稱，請刪除後重新建立。
+Use Global Template: 使用全域範本
+addTemplateButton: 新增範本
+confirmDeleteTemplateMessage: 您確定要刪除全域範本「{{name}}」嗎？
+confirmDeleteTemplateTitle: 確認刪除
+deleteTemplateButtonTooltip: 刪除範本
+enableGlobalTemplatesLabel: 啟用全域範本
+globalTemplatesDescription: 管理可重複使用的文字片段，可使用 {{template_name}} 插入至任何片段中。
+globalTemplatesTitle: 全域範本
+localTemplateConflictWarning: 也存在名為「{{label}}」的全域範本。本地範本將在此片段的表單中優先使用。
+noGlobalTemplatesYet: 尚未定義任何全域範本。點擊「新增範本」來建立一個。
+templateEnabledLabel: 已啟用
+templateNameLabel: 名稱
+templateValueLabel: 值

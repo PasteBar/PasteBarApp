@@ -190,7 +190,7 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['Inter'],
+        sans: ['Inter', '"Microsoft JhengHei"', '"PingFang TC"', '"Noto Sans TC"', '"Microsoft YaHei"', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {

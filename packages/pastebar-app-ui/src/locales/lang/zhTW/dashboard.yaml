@@ -1,0 +1,269 @@
+API Key: API 金鑰
+Add: 新增
+Add Auth: 新增驗證
+Add Clipboard Value: 新增剪貼簿值
+Add Custom: 新增自訂
+Add Custom Field: 新增自訂欄位
+Add Delay Time: 新增延遲時間
+Add First Board: 新增第一個看板
+Add Form Field: 新增表單欄位
+Add Header: 新增標頭
+Add Key Press: 新增按鍵
+Add Key Press After Paste: 貼上後新增按鍵
+Add Link Card: 新增連結卡片
+Add Open URL: 新增開啟網址
+Add Output Template: 新增輸出範本
+Add Regex Match Group Filter: 新增正規表示式群組篩選器
+Add Request Header: 新增請求標頭
+Add Response Filter: 新增回應篩選器
+Add Scraping Rule: 新增擷取規則
+Add Section: 新增區段
+Add Tab: 新增分頁
+Add Template Field: 新增範本欄位
+Add a Tab: 新增一個分頁
+Add field {{name}} into the template: 將欄位 {{name}} 新增至範本中
+Add image: 新增圖片
+Add note: 新增筆記
+Add to Board: 新增至看板
+Add {{type}}: 新增 {{type}}
+All field labels must be unique to ensure they are correctly used within the template.: 所有欄位標籤必須唯一，以確保在範本中正確使用。
+Are you sure you want to delete <strong>{{boardName}}</strong> board?: 確定要刪除 <strong>{{boardName}}</strong> 看板嗎？
+Are you sure you want to delete <strong>{{tabName}}</strong> tab?: 確定要刪除 <strong>{{tabName}}</strong> 分頁嗎？
+Are you sure you want to delete?: 確定要刪除嗎？
+Are you sure you want to remove image from the clip?: 確定要從片段中移除圖片嗎？
+Auth: 驗證
+Auto update is Off: 自動更新已關閉
+Basic Auth: 基本驗證
+Basic Password: 基本密碼
+Basic Username: 基本使用者名稱
+Bearer Token: Bearer Token
+Board Layout Height: 看板版面高度
+Board Layout Split: 看板版面分割
+Board Menu: 看板選單
+Board is Not Empty: 看板不為空
+Boards: 看板
+Border Width: 邊框寬度
+CSS Selector: CSS 選擇器
+Cancel: 取消
+Change Layout: 變更版面
+Change color: 變更顏色
+Clear: 清除
+Clear All Fields: 清除所有欄位
+Click To Add: 點擊新增
+Clip Menu: 片段選單
+Clip Options: 片段選項
+Clipboard: 剪貼簿
+Clips:
+  App: 應用程式
+  Clip Menu: 片段選單
+  Clips: 片段
+  Link: 連結
+Close Edit: 關閉編輯
+Command:
+  error: 錯誤
+  output: 輸出
+Command error: 指令錯誤
+Common Fields: 通用欄位
+Confirm Clear All Fields: 確認清除所有欄位
+Confirm to remove Auth: 確認移除驗證
+Confirm to remove filters: 確認移除篩選器
+Confirm to remove headers: 確認移除標頭
+Copy Clip: 複製片段
+Create Board: 建立看板
+Create Tab: 建立分頁
+Create tab: 建立分頁
+Dashboard: 儀表板
+Delay: 延遲
+Delete Board: 刪除看板
+Delete Clip: 刪除片段
+Delete Tab: 刪除分頁
+Delete board: 刪除看板
+Delete field: 刪除欄位
+Delete tab: 刪除分頁
+Detect Template Fields: 偵測範本欄位
+Detect for Template Fields: 偵測範本欄位
+Disabled field {{name}} has been found in the template: 在範本中發現已停用的欄位 {{name}}
+Done Create Clip: 片段建立完成
+Done Edit: 編輯完成
+Done Edit Tabs: 分頁編輯完成
+Done Organize: 整理完成
+Drag & Drop Path: 拖放路徑
+Drop To Add: 拖放以新增
+Drop image file here, or use a separate window for drag and drop.: 將圖片檔案拖放至此處，或使用獨立視窗進行拖放。
+Drop to Pin: 拖放以釘選
+Edit Note: 編輯筆記
+Edit Template: 編輯範本
+Edit subtitle: 編輯副標題
+Edit tab name: 編輯分頁名稱
+Enable / Disable: 啟用 / 停用
+Enable / Disable URL Open: 啟用 / 停用開啟 URL
+Enter Label: 輸入標籤
+Enter URL: 輸入 URL
+Enter board subtitle or description: 輸入看板副標題或說明
+Enter board title: 輸入看板標題
+Enter clip name: 輸入片段名稱
+Enter clip note: 輸入片段筆記
+Enter code: 輸入程式碼
+Enter credit card number: 輸入信用卡號碼
+Enter default value: 輸入預設值
+Enter field value: 輸入欄位值
+Enter full path to file, folder or application: 輸入檔案、資料夾或應用程式的完整路徑
+Enter regex for output filer: 輸入輸出篩選器的正規表示式
+Enter request url: 輸入請求 URL
+Enter secret value: 輸入密鑰值
+Enter section label: 輸入區段標籤
+Enter select option: 輸入選取選項
+Enter tab name: 輸入分頁名稱
+Enter template or drag from history: 輸入範本或從歷史拖入
+Enter template value: 輸入範本值
+Enter value or drag from history: 輸入值或從歷史拖入
+Enter web link or email: 輸入網頁連結或電子郵件
+Errors:
+  No fields found in the template.: 範本中未找到任何欄位。
+  Please fix output template or confirm to save as is.: 請修正輸出範本，或確認以現狀儲存。
+  Please fix template fields or confirm to save as is.: 請修正範本欄位，或確認以現狀儲存。
+  Please fix the problem or confirm to save as is.: 請修正問題，或確認以現狀儲存。
+  Please verify your link for any errors, or confirm to save as is.: 請確認連結是否有誤，或確認以現狀儲存。
+  Please verify your path for any errors, or confirm to save as is.: 請確認路徑是否有誤，或確認以現狀儲存。
+  Your command runs with errors, confirm you want to save as is.: 您的指令執行時發生錯誤，確認是否以現狀儲存。
+  Your request runs with errors, confirm you want to save as is.: 您的請求執行時發生錯誤，確認是否以現狀儲存。
+FILTERED_TYPES:
+  Dot Path: 點路徑
+  JSON Path: JSON 路徑
+  RegEx: 正規表示式
+  RegEx Replace: 正規表示式取代
+  Remove Quotes: 移除引號
+Field: 欄位
+Field Options: 欄位選項
+Field {{name}} has been found in the template: 在範本中發現欄位 {{name}}
+Fields Value: 欄位值
+File, folder or app path does not exist: 檔案、資料夾或應用程式路徑不存在
+File, folder or app path is valid: 檔案、資料夾或應用程式路徑有效
+File, folder or app path might not be valid: 檔案、資料夾或應用程式路徑可能無效
+Fill Template: 填寫範本
+Filter Type: 篩選類型
+Filter's Value: 篩選值
+Find in Clip: 在片段中搜尋
+Find in clip: 在片段中搜尋
+Find in history: 在歷史中搜尋
+Flex Layout: 彈性版面
+Form Fields: 表單欄位
+General Fields: 一般欄位
+Grid Layout: 格狀版面
+HTML: HTML
+Headers: 標頭
+Hide Label: 隱藏標籤
+History capture is off: 歷史擷取已關閉
+Key Press: 按鍵
+Key Press After: 之後按鍵
+Key Press After Paste: 貼上後按鍵
+'Key Press After Paste: {{keyPress}}': '貼上後按鍵：{{keyPress}}'
+Label Left: 標籤靠左
+Label Top: 標籤靠上
+Label on Left: 標籤在左側
+Labels: 標籤
+Last run: 上次執行
+Last update: 上次更新
+Layout Max Width: 版面最大寬度
+Mask to hide clipboard value in preview: 遮罩以在預覽時隱藏剪貼簿值
+Move Clip: 移動片段
+Moved Clips Panel: 已移動片段的面板
+Name: 名稱
+New Board: 新看板
+New Clip: 新片段
+No Boards: 沒有看板
+No Clipboard History: 沒有剪貼簿歷史
+No Tabs or Boards: 沒有分頁或看板
+Number of columns: 欄數
+Open: 開啟
+Open URL Disable / Enable: 開啟 URL 停用 / 啟用
+Output Template: 輸出範本
+Panel for moved or copied items from other tabs: 來自其他分頁已移動或複製項目的面板
+Please confirm to save as is.: 請確認以現狀儲存。
+Press: 按下
+RETURN_POSITION_TYPES:
+  First Only: 僅第一個
+  Last Only: 僅最後一個
+RULES_TYPES:
+  CSS Selector: CSS 選擇器
+  RegEx Find: 正規表示式尋找
+  RegEx Group Match: 正規表示式群組比對
+  RegEx Match: 正規表示式比對
+  RegEx Replace: 正規表示式取代
+RegEx Find: 正規表示式尋找
+RegEx Match: 正規表示式比對
+RegEx Match Group: 正規表示式比對群組
+RegEx Replace: 正規表示式取代
+Regex Match Group Filter: 正規表示式比對群組篩選器
+Remove Open URL: 移除開啟 URL
+Remove headers: 移除標頭
+Remove image: 移除圖片
+Rename: 重新命名
+Reset to Defaults: 重設為預設值
+Response Filters: 回應篩選器
+Result: 結果
+SEPARATOR_TYPES:
+  Comma (,): 逗號 (,)
+  New Line (\n): 換行 (\n)
+  Pipe (|): 垂直線 (|)
+  Semicolon (;): 分號 (;)
+  Space (' '): 空格 (' ')
+  Tab (\t): 定位字元 (\t)
+Save as Defaults: 儲存為預設值
+Scan for Template Fields: 掃描範本欄位
+Select Color: 選取顏色
+Select Default Option: 選取預設選項
+Select Option: 選取選項
+Select Options: 選取選項
+Show Label: 顯示標籤
+Special Field: 特殊欄位
+Subtitle: 副標題
+Tab: 分頁
+Tab is Not Empty: 分頁不為空
+Tabs Menu: 分頁選單
+Template: 範本
+Template Edit: 範本編輯
+Template Fields: 範本欄位
+'Template should have⠀<b>{{output}}</b>⠀placeholder.': 範本應包含⠀<b>{{output}}</b>⠀佔位符。
+Test Request: 測試請求
+Test Run: 測試執行
+Text: 文字
+This action cannot be undone.: 此操作無法復原。
+This field allows to insert text from clipboard: 此欄位允許從剪貼簿插入文字
+Too long: 太長
+Too short: 太短
+Turn On auto update: 開啟自動更新
+Turn on history capture: 開啟歷史擷取
+Type:
+  Command: 指令
+  Request: 請求
+  Scraper: 擷取器
+URL: URL
+Unsaved name: 未儲存的名稱
+Unsaved note: 未儲存的筆記
+Unsaved subtitle: 未儲存的副標題
+Unsaved title: 未儲存的標題
+Update Link Card: 更新連結卡片
+'Use double curly brackets for {{field name}}. Use {{clipboard}} to add current clipboard value.': 使用雙大括號表示 {{field name}}。使用 {{clipboard}} 新增目前的剪貼簿值。
+Value: 值
+Values: 值
+Vertical Split: 垂直分割
+We need to open a new window where you can drag & drop file, path or application.: 我們需要開啟一個新視窗，讓您可以在其中拖放檔案、路徑或應用程式。
+Web Link or Email might not be valid: 網頁連結或電子郵件可能無效
+Web or Email link is valid: 網頁或電子郵件連結有效
+Website URL: 網站 URL
+Website URL is valid: 網站 URL 有效
+Website URL might not be valid: 網站 URL 可能無效
+Wrap output using {{output}} placeholder: 使用 {{output}} 佔位符包裝輸出
+You have no rules added: 您尚未新增任何規則
+You'll need to clear this board of all clips and subboards before it can be deleted.: 刪除此看板前，您需要先清除其中所有片段與子看板。
+You'll need to clear this tab of all boards before it can be deleted.: 刪除此分頁前，您需要先清除其中所有看板。
+filled template: 已填寫的範本
+new clips: 新片段
+template: 範本
+'{{count}} fields found in template but missing from fields definition._one': '在範本中發現 {{count}} 個欄位，但欄位定義中缺少。'
+'{{count}} fields found in template but missing from fields definition._other': '在範本中發現 {{count}} 個欄位，但欄位定義中缺少。'
+'{{count}} fields not found in the template._one': '在範本中未找到 {{count}} 個欄位。'
+'{{count}} fields not found in the template._other': '在範本中未找到 {{count}} 個欄位。'
+'{{type}} Field': '{{type}} 欄位'
+'{{type}} field': '{{type}} 欄位'

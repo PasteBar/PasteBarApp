@@ -33,6 +33,7 @@ export const timeAgoCache = new Map()
 // Define a mapping for non-dash language codes to the correct dash format
 const langCodeMapping: { [key: string]: string } = {
   zhCN: 'zh-CN',
+  zhTW: 'zh-TW',
   esES: 'es-ES',
 }
 
