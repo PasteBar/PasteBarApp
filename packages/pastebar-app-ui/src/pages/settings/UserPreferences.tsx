@@ -61,6 +61,8 @@ export default function UserPreferences() {
   const {
     isSkipAutoStartPrompt,
     setIsSkipAutoStartPrompt,
+    isAnonymousAnalyticsEnabled,
+    setIsAnonymousAnalyticsEnabled,
     isShowCollectionNameOnNavBar,
     setIsShowCollectionNameOnNavBar,
     isHideCollectionsOnNavBar,
@@ -317,6 +319,54 @@ export default function UserPreferences() {
                           </Checkbox>
                         </Flex>
                       )}
+                    </CardContent>
+                  </Card>
+                </Box>
+
+                <Box className="animate-in fade-in max-w-xl mt-4">
+                  <Card
+                    className={`${
+                      !isAnonymousAnalyticsEnabled
+                        ? 'opacity-80 bg-gray-100 dark:bg-gray-900/80'
+                        : ''
+                    }`}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+                      <CardTitle className="animate-in fade-in text-md font-medium w-full">
+                        {t('Anonymous product analytics', {
+                          ns: 'settings2',
+                          defaultValue: 'Anonymous product analytics',
+                        })}
+                      </CardTitle>
+                      <Switch
+                        checked={isAnonymousAnalyticsEnabled}
+                        className="ml-auto"
+                        onCheckedChange={checked => {
+                          setIsAnonymousAnalyticsEnabled(checked)
+                        }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <Text className="text-sm text-muted-foreground">
+                        {t(
+                          'Help improve PasteBar by sharing anonymous usage statistics. No clipboard contents or personal data are sent—only high-level events about which features are used. You can turn this off at any time.',
+                          {
+                            ns: 'settings2',
+                            defaultValue:
+                              'Help improve PasteBar by sharing anonymous usage statistics. No clipboard contents or personal data are sent—only high-level events about which features are used. You can turn this off at any time.',
+                          }
+                        )}
+                      </Text>
+                      <Text className="text-sm text-muted-foreground mt-2">
+                        {t(
+                          'Our analytics approach is fully documented and open for transparency (docs/analytics).',
+                          {
+                            ns: 'settings2',
+                            defaultValue:
+                              'Our analytics approach is fully documented and open for transparency (docs/analytics).',
+                          }
+                        )}
+                      </Text>
                     </CardContent>
                   </Card>
                 </Box>

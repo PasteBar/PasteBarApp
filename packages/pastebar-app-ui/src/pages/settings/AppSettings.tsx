@@ -1,8 +1,11 @@
+import { useEffect } from 'react'
 import { settingsStoreAtom, uiStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
 import { Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
+
+import { trackSettingsOpened } from '~/lib/analytics'
 
 import Spacer from '~/components/atoms/spacer'
 import {
@@ -18,6 +21,12 @@ export default function AppSettingsPage() {
   const { returnRoute } = useAtomValue(uiStoreAtom)
   const { isSimplifiedLayout } = useAtomValue(settingsStoreAtom)
   const { t } = useTranslation()
+  const location = useLocation()
+
+  useEffect(() => {
+    const section = location.pathname.replace('/app-settings', '').replace(/^\//, '') || 'root'
+    trackSettingsOpened(section)
+  }, [location.pathname])
 
   return (
     <MainContainer>

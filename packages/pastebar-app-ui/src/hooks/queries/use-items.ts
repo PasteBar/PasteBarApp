@@ -1,5 +1,6 @@
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useQueryClient } from '@tanstack/react-query'
+import { trackClipCreated } from '~/lib/analytics'
 import { newBoardItemId, newClipItemId } from '~/store'
 
 import { LinkMetadata } from '~/types/history'
@@ -222,10 +223,13 @@ export function useCreateItem(invalidate = true) {
   const { mutateAsync: createNewItem, isSuccess: createNewItemSuccess } =
     useInvokeMutation<Record<string, unknown>, string>('create_item', {
       onSuccess: data => {
-        if (data && invalidate) {
-          queryClient.invalidateQueries({
-            queryKey: ['get_active_collection_with_clips'],
-          })
+        if (data) {
+          trackClipCreated('item')
+          if (invalidate) {
+            queryClient.invalidateQueries({
+              queryKey: ['get_active_collection_with_clips'],
+            })
+          }
         }
       },
     })

@@ -2,6 +2,7 @@ import { invoke } from '@tauri-apps/api'
 import { emit, listen } from '@tauri-apps/api/event'
 import { relaunch } from '@tauri-apps/api/process'
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater'
+import { trackUpdateAvailable } from '~/lib/analytics'
 import { semverCompare } from '~/libs/utils'
 import i18n from '~/locales'
 import {
@@ -76,6 +77,13 @@ type Settings = {
   isShowCollectionNameOnNavBar: boolean
   isShowDisabledCollectionsOnNavBarMenu: boolean
   isSkipAutoStartPrompt: boolean
+  /** When false, no anonymous product analytics events are sent (except consent preference events). */
+  isAnonymousAnalyticsEnabled: boolean
+  /**
+   * True only after DB settings have been loaded into this webview.
+   * Until then, analytics must not treat the default "enabled" as a real preference.
+   */
+  isAnalyticsPreferenceReady: boolean
   isHideCollectionsOnNavBar: boolean
   isShowNavBarItemsOnHoverOnly: boolean
   isKeepMainWindowClosedOnRestartEnabled: boolean
@@ -179,6 +187,7 @@ export interface SettingsStoreState {
   setIsShowCollectionNameOnNavBar: (isEnabled: boolean) => void
   setIsShowDisabledCollectionsOnNavBarMenu: (isEnabled: boolean) => void
   setIsSkipAutoStartPrompt: (isEnabled: boolean) => void
+  setIsAnonymousAnalyticsEnabled: (isEnabled: boolean) => void
   setUserSelectedLanguage: (language: string) => void
   setIsIdleScreenAutoLockEnabled: (isEnabled: boolean) => void
   setIdleScreenAutoLockTimeInMinutes: (time: number | null) => void
@@ -298,6 +307,8 @@ const initialState: SettingsStoreState & Settings = {
   clipNotesMaxWidth: 220,
   clipNotesMaxHeight: 120,
   isSkipAutoStartPrompt: false,
+  isAnonymousAnalyticsEnabled: true,
+  isAnalyticsPreferenceReady: false,
   userSelectedLanguage: '',
   isHistoryAutoUpdateOnCaputureEnabled: true,
   isHistoryAutoTrimOnCaputureEnabled: true,
@@ -384,6 +395,7 @@ const initialState: SettingsStoreState & Settings = {
   setIsShowCollectionNameOnNavBar: () => {},
   setIsShowDisabledCollectionsOnNavBarMenu: () => {},
   setIsSkipAutoStartPrompt: () => {},
+  setIsAnonymousAnalyticsEnabled: () => {},
   setIdleScreenAutoLockTimeInMinutes: () => {},
   setIsIdleScreenAutoLockEnabled: () => {},
   setIsShowHistoryCaptureOnLockedScreen: () => {},
@@ -649,6 +661,28 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
   },
   setIsSkipAutoStartPrompt: async (isEnabled: boolean) => {
     return get().updateSetting('isSkipAutoStartPrompt', isEnabled)
+  },
+  setIsAnonymousAnalyticsEnabled: async (isEnabled: boolean) => {
+    const wasEnabled = get().isAnonymousAnalyticsEnabled !== false
+
+    // Opt-out: send the final preference event FIRST, then disable all product events
+    if (wasEnabled && !isEnabled) {
+      const { trackAnonymousAnalyticsOptOut } = await import('~/lib/analytics')
+      await trackAnonymousAnalyticsOptOut()
+    }
+
+    const result = await get().updateSetting('isAnonymousAnalyticsEnabled', isEnabled)
+
+    // Propagate to every live webview (main / history / quickpaste)
+    get().syncStateUpdate('isAnonymousAnalyticsEnabled', isEnabled)
+
+    // Opt-in: re-enable first, then send the "turned analytics back on" event
+    if (!wasEnabled && isEnabled) {
+      const { trackAnonymousAnalyticsOptIn } = await import('~/lib/analytics')
+      await trackAnonymousAnalyticsOptIn()
+    }
+
+    return result
   },
   setIsShowDisabledCollectionsOnNavBarMenu: async (isEnabled: boolean) => {
     return get().updateSetting('isShowDisabledCollectionsOnNavBarMenu', isEnabled)
@@ -1060,6 +1094,7 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
         }
         showUpdateAvailable.value = true
         showUpdateChecking.value = false
+        trackUpdateAvailable(manifest?.version)
       } else {
         if (isManualCheck) {
           showUpdateAppIsLatest.value = true
@@ -1250,6 +1285,13 @@ export const settingsStore = createStore<SettingsStoreState & Settings>()((set, 
     set(prev => ({
       ...prev,
       ...newInitSettings,
+      // Prefer loaded value; if the key was never stored, keep default true
+      isAnonymousAnalyticsEnabled:
+        typeof newInitSettings.isAnonymousAnalyticsEnabled === 'boolean'
+          ? newInitSettings.isAnonymousAnalyticsEnabled
+          : prev.isAnonymousAnalyticsEnabled !== false,
+      // Only after DB hydrate may analytics treat the preference as authoritative
+      isAnalyticsPreferenceReady: true,
     }))
   },
 }))
@@ -1260,10 +1302,25 @@ export const listenToSettingsStoreEvents = listen('settings-store-sync', async e
     setting: string
     value: string | boolean | number | null
   }
-  if (
+  const isForeignWindow =
     (window.isHistoryWindow && event.windowLabel !== 'history') ||
-    (window.isMainWindow && event.windowLabel !== 'main')
-  ) {
+    (window.isMainWindow && event.windowLabel !== 'main') ||
+    (window.isQuickPasteWindow && event.windowLabel !== 'quickpaste')
+
+  if (isForeignWindow) {
+    // Privacy-critical: stop product analytics immediately in every open webview
+    if (
+      setting === 'isAnonymousAnalyticsEnabled' &&
+      typeof value === 'boolean' &&
+      settingsStore.getState().isAnonymousAnalyticsEnabled !== value
+    ) {
+      settingsStore.setState({
+        isAnonymousAnalyticsEnabled: value,
+        isAnalyticsPreferenceReady: true,
+      })
+      return
+    }
+
     if (
       setting === 'userSelectedLanguage' &&
       settingsStore.getState().userSelectedLanguage !== value &&

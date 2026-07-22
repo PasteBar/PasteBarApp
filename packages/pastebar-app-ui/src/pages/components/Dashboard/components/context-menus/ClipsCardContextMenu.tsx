@@ -4,6 +4,7 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { useSignals } from '@preact/signals-react/runtime'
 import { invoke } from '@tauri-apps/api'
 import { message } from '@tauri-apps/api/dialog'
+import { trackClipStarred } from '~/lib/analytics'
 import createBoardTree from '~/libs/create-board-tree'
 import {
   collectionsStoreAtom,
@@ -666,6 +667,7 @@ export default function ClipsCardContextMenuComponent({
                   itemId: itemId,
                 },
               })
+              trackClipStarred()
             }}
           >
             {t('Star', { ns: 'contextMenus' })}

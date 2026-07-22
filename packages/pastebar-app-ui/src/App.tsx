@@ -13,8 +13,10 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import LanguageSelectionModal from '~/components/organisms/modals/language-selection-modal'
 import { ThemeProvider } from '~/components/theme-provider'
 
+import { useAnalyticsTracking } from '~/hooks/use-analytics'
 import useKeyPressAlt from '~/hooks/use-keypress-alt'
 import { useSignal } from '~/hooks/use-signal'
+import { trackMenuPasteUsed, trackOnboardingCompleted } from '~/lib/analytics'
 
 import debounce from './components/libs/react-resizable-panels/src/utils/debounce'
 import { Button, Flex } from './components/ui'
@@ -42,6 +44,7 @@ const appIdleEvents = ['mousemove', 'keydown', 'scroll', 'keypress', 'mousedown'
 
 function App() {
   useKeyPressAlt()
+  useAnalyticsTracking()
 
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -63,6 +66,7 @@ function App() {
       settingsStore.updateSetting('userSelectedLanguage', languageCode)
       settingsStore.updateSetting('isFirstRun', false)
       showLanguageSelectionModal.value = false
+      trackOnboardingCompleted(languageCode)
     },
     [settingsStore]
   )
@@ -203,6 +207,8 @@ function App() {
 
           isSearchNameOrLabelOnly: settings.isSearchNameOrLabelOnly?.valueBool,
           isSkipAutoStartPrompt: settings.isSkipAutoStartPrompt?.valueBool,
+          isAnonymousAnalyticsEnabled:
+            settings.isAnonymousAnalyticsEnabled?.valueBool ?? true,
           isShowCollectionNameOnNavBar: settings.isShowCollectionNameOnNavBar?.valueBool,
           isHideCollectionsOnNavBar: settings.isHideCollectionsOnNavBar?.valueBool,
           isShowNavBarItemsOnHoverOnly: settings.isShowNavBarItemsOnHoverOnly?.valueBool,
@@ -403,6 +409,11 @@ function App() {
       }
     )
 
+    // Tray / system menu paste or copy (main window may be hidden)
+    const listenToMenuItemUnlisten = listen('execMenuItemById', () => {
+      trackMenuPasteUsed()
+    })
+
     const listenToClipsUnlisten = listen('clips://clips-monitor/update', async e => {
       if (e.payload === 'update') {
         await queryClient.invalidateQueries({
@@ -510,6 +521,10 @@ function App() {
       })
 
       listenToClipboardUnlisten.then(unlisten => {
+        unlisten()
+      })
+
+      listenToMenuItemUnlisten.then(unlisten => {
         unlisten()
       })
 

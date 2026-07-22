@@ -61,7 +61,7 @@ export function NavBarHistoryWindow() {
   const { toast } = useToast()
   const { systemTheme } = useTheme()
   const isWindowOnTop = useSignal(false)
-  const { setSystemTheme, deviceId } = useAtomValue(themeStoreAtom)
+  const { setSystemTheme } = useAtomValue(themeStoreAtom)
   const {
     playerSongs,
     isPlaying,
@@ -173,14 +173,6 @@ export function NavBarHistoryWindow() {
       closeWindow()
     }
   })
-
-  useEffect(() => {
-    if (window.plausible && deviceId) {
-      window.plausible('History Separate Window', {
-        props: { deviceId, version: APP_VERSION },
-      })
-    }
-  }, [deviceId, window.plausible])
 
   useEffect(() => {
     if (showInvalidTrackWarningAddSong.value) {

@@ -37,6 +37,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { trackHistoryStarred } from '~/lib/analytics'
 import { TRANSFORM_CATEGORIES, type TransformCategory } from '~/lib/text-transforms'
 import { ensureUrlPrefix } from '~/lib/utils'
 
@@ -597,10 +598,14 @@ export default function ClipboardHistoryRowContextMenu({
         </ContextMenuItem>
         <ContextMenuItem
           onClick={async () => {
+            const nextFavorite = !Boolean(isFavorite)
             await updateClipboardHistoryById({
               historyId,
-              updatedData: { isFavorite: !Boolean(isFavorite), historyId },
+              updatedData: { isFavorite: nextFavorite, historyId },
             })
+            if (nextFavorite) {
+              trackHistoryStarred()
+            }
             await queryClient.invalidateQueries({
               queryKey: ['find_clipboard_histories_by_value_or_filters'],
             })

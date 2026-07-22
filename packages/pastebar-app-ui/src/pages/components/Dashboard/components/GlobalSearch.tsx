@@ -19,6 +19,8 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { trackSearchUsed } from '~/lib/analytics'
+
 import mergeRefs from '~/components/atoms/merge-refs'
 import SimpleBar from '~/components/libs/simplebar-react'
 import {
@@ -101,6 +103,12 @@ export function GlobalSearch({ isDark }: { isDark: boolean }) {
   const { menuItems } = useAtomValue(collectionsStoreAtom)
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
+
+  useEffect(() => {
+    if (debouncedSearchTerm.trim().length > 1) {
+      trackSearchUsed()
+    }
+  }, [debouncedSearchTerm])
 
   const [showSearchModal, setShowSearchModal] = useState(false)
 

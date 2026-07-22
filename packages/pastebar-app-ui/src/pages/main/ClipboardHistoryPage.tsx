@@ -67,6 +67,7 @@ import { VariableSizeList } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import useResizeObserver from 'use-resize-observer'
 
+import { trackSearchUsed } from '~/lib/analytics'
 import {
   BatchProcessor,
   calculateDynamicOverscan,
@@ -425,6 +426,12 @@ export default function ClipboardHistoryPage() {
   const searchHistoryInputRef = useRef<HTMLInputElement | null>(null)
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
+
+  useEffect(() => {
+    if (debouncedSearchTerm.trim().length > 1) {
+      trackSearchUsed()
+    }
+  }, [debouncedSearchTerm])
 
   const hasSearchOrFilter = useMemo(() => {
     return debouncedSearchTerm.length > 1 || historyFilters.length > 0

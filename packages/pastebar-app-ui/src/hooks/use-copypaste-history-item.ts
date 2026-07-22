@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core/dist/types'
 import { signal } from '@preact/signals-react'
 import { invoke } from '@tauri-apps/api/tauri'
+import { trackHistoryCopy } from '~/lib/analytics'
 import { settingsStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
 
@@ -36,6 +37,7 @@ export const useCopyPasteHistoryItem = ({
         invoke('copy_history_item', { historyId })
           .then(res => {
             if (res === 'ok') {
+              trackHistoryCopy()
               requestAnimationFrame(() => {
                 copiedItem.value = ''
                 onCopied()

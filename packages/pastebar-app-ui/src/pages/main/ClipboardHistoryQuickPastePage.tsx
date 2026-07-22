@@ -15,6 +15,8 @@ import { VariableSizeList } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import useResizeObserver from 'use-resize-observer'
 
+import { trackSearchUsed } from '~/lib/analytics'
+
 import mergeRefs from '~/components/atoms/merge-refs'
 import ToolTip from '~/components/atoms/tooltip'
 import { Box, ButtonGhost, Flex, Input, Text } from '~/components/ui'
@@ -238,6 +240,12 @@ export default function ClipboardHistoryQuickPastePage() {
   const searchHistoryInputRef = useRef<HTMLInputElement | null>(null)
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
+
+  useEffect(() => {
+    if (debouncedSearchTerm.trim().length > 1) {
+      trackSearchUsed()
+    }
+  }, [debouncedSearchTerm])
 
   const onScrollCallback = throttle(
     () => {

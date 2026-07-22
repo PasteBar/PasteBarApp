@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { listen } from '@tauri-apps/api/event'
 import { type } from '@tauri-apps/api/os'
@@ -9,20 +9,62 @@ import { useAtomValue } from 'jotai'
 import { ThemeProvider } from '~/components/theme-provider'
 
 import { copiedItem, pastedItem } from './hooks/use-copypaste-history-item'
+import { trackPageview, trackSessionAndRetention } from './lib/analytics'
 import { appSettings } from './lib/commands'
 import ClipboardHistoryQuickPastePage from './pages/main/ClipboardHistoryQuickPastePage'
 import { clipboardHistoryStoreAtom } from './store/clipboardHistoryStore'
-import { settingsStoreAtom } from './store/settingsStore'
+import {
+  listenToSettingsStoreEvents,
+  settingsStoreAtom,
+} from './store/settingsStore'
 import { isAppLocked } from './store/signalStore'
+import { themeStoreAtom } from './store/themeStore'
 import { uiStoreAtom } from './store/uiStore'
 
 function QuickPasteApp() {
   const settingsStore = useAtomValue(settingsStoreAtom)
+  const themeStore = useAtomValue(themeStoreAtom)
+  const sessionTrackedRef = useRef(false)
 
   const clipboardHistoryStore = useAtomValue(clipboardHistoryStoreAtom)
 
   const queryClient = useQueryClient()
   const uiState = useAtomValue(uiStoreAtom)
+
+  // Keep analytics preference in sync when user opts out from another window
+  useEffect(() => {
+    let unlisten: (() => void) | undefined
+    listenToSettingsStoreEvents.then(fn => {
+      unlisten = fn
+    })
+    return () => {
+      unlisten?.()
+    }
+  }, [])
+
+  // Ensure hardware deviceId is available (shared via persisted theme store)
+  useEffect(() => {
+    if (themeStore.deviceId === '') {
+      invoke('get_device_id').then(id => {
+        themeStore.setDeviceId(id as string)
+      })
+    }
+  }, [themeStore])
+
+  useEffect(() => {
+    if (!themeStore.deviceId) return
+    if (!settingsStore.isAnalyticsPreferenceReady) return
+    if (!settingsStore.isAnonymousAnalyticsEnabled) return
+    if (sessionTrackedRef.current) return
+
+    sessionTrackedRef.current = true
+    trackSessionAndRetention('quickpaste')
+    trackPageview('/quickpaste')
+  }, [
+    themeStore.deviceId,
+    settingsStore.isAnalyticsPreferenceReady,
+    settingsStore.isAnonymousAnalyticsEnabled,
+  ])
 
   useEffect(() => {
     appSettings().then(res => {
@@ -119,6 +161,8 @@ function QuickPasteApp() {
 
           isSearchNameOrLabelOnly: settings.isSearchNameOrLabelOnly?.valueBool,
           isSkipAutoStartPrompt: settings.isSkipAutoStartPrompt?.valueBool,
+          isAnonymousAnalyticsEnabled:
+            settings.isAnonymousAnalyticsEnabled?.valueBool ?? true,
           isShowCollectionNameOnNavBar: settings.isShowCollectionNameOnNavBar?.valueBool,
           isHideCollectionsOnNavBar: settings.isHideCollectionsOnNavBar?.valueBool,
           isShowNavBarItemsOnHoverOnly: settings.isShowNavBarItemsOnHoverOnly?.valueBool,

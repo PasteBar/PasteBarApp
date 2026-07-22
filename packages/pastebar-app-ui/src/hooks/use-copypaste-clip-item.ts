@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core/dist/types'
 import { signal } from '@preact/signals-react'
 import { invoke } from '@tauri-apps/api/tauri'
+import { trackClipCopy } from '~/lib/analytics'
 import { settingsStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
 
@@ -40,6 +41,7 @@ export const useCopyClipItem = ({
           invoke('copy_clip_item', { itemId, copyFromMenu: false })
             .then(res => {
               if (res === 'ok') {
+                trackClipCopy()
                 requestAnimationFrame(() => {
                   copiedItem.value = ''
                   copyInProgressItem.value = ''

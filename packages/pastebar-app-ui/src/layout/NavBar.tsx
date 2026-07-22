@@ -106,7 +106,7 @@ export function NavBar() {
   const navigate = useNavigate()
   const { toast } = useToast()
   const { systemTheme } = useTheme()
-  const { setSystemTheme, themeDark, deviceId } = useAtomValue(themeStoreAtom)
+  const { setSystemTheme, themeDark } = useAtomValue(themeStoreAtom)
   const {
     playerSongs,
     isPlaying,
@@ -326,12 +326,6 @@ export function NavBar() {
   const isSinglePanelView = isHistoryPanelVisibleOnly || isSavedClipsPanelVisibleOnly
 
   const buildDate = dayjs(BUILD_DATE).format('MMMM, YYYY')
-
-  useEffect(() => {
-    if (window.plausible && deviceId) {
-      window.plausible('App Start', { props: { deviceId, version: APP_VERSION } })
-    }
-  }, [deviceId, window.plausible])
 
   useEffect(() => {
     if (showUpdateErrorQuitAppToFinish.value) {

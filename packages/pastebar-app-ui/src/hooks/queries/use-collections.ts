@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api'
+import { trackCollectionCreated } from '~/lib/analytics'
 import { collectionsStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
 
@@ -283,6 +284,7 @@ export function useCreateNewCollection() {
     useInvokeMutation<Record<string, unknown>, string>('create_collection', {
       onSuccess: data => {
         if (data === 'ok') {
+          trackCollectionCreated()
           queryClient.invalidateQueries({
             queryKey: ['get_collections'],
           })

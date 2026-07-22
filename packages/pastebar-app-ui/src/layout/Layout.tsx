@@ -44,6 +44,7 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { Trans, useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
+import { trackTourCompleted } from '~/lib/analytics'
 import { getSelectedText } from '~/lib/utils'
 
 import { Toaster } from '~/components/ui/toaster'
@@ -606,6 +607,7 @@ const Container: React.ForwardRefRenderFunction<HTMLDivElement, MainContainerPro
             if (!appToursCompletedList.includes(tourName)) {
               setAppToursCompletedList([...appToursCompletedList, tourName])
             }
+            trackTourCompleted(tourName)
           }}
           onSkipped={tourName => {
             if (!appToursSkippedList.includes(tourName)) {

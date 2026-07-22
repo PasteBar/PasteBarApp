@@ -10,22 +10,17 @@ declare global {
     highlighter: unknown
     plausible: (
       event: string,
-      {
-        callback,
-        props,
-      }: {
-        callback?: () => void
-        props: Record<string, unknown>
+      options?: {
+        callback?: (result?: { status?: number }) => void
+        props?: Record<string, unknown>
+        u?: string
       }
     ) => void
     statsEvent: (
       event: string,
-      {
-        callback,
-        props,
-      }: {
-        callback?: () => void
-        props: Record<string, unknown>
+      options?: {
+        callback?: (result?: { status?: number }) => void
+        props?: Record<string, unknown>
       }
     ) => void
     PasteBar: {

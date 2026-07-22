@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
+import { trackTextCopy } from '~/lib/analytics'
 import { settingsStoreAtom } from '~/store'
 import { useAtomValue } from 'jotai'
 
@@ -28,6 +29,7 @@ export const useCopyPaste = ({
         invoke('copy_text', { text })
           .then(res => {
             if (res === 'ok') {
+              trackTextCopy()
               requestAnimationFrame(() => {
                 setIsCopied(false)
               })

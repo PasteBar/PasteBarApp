@@ -80,3 +80,8 @@ Tray Icon Behavior on Windows: Tray Icon Behavior on Windows
 ? When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 : When enabled, single click will copy/paste items in Quick Paste window. If global single click is also enabled, both settings work together.
 When enabled, the Quick Paste window will automatically close after copying or pasting an item.: When enabled, the Quick Paste window will automatically close after copying or pasting an item.
+Anonymous product analytics: Anonymous product analytics
+? Help improve PasteBar by sharing anonymous usage statistics. No clipboard contents or personal data are sent—only high-level events about which features are used. You can turn this off at any time.
+: Help improve PasteBar by sharing anonymous usage statistics. No clipboard contents or personal data are sent—only high-level events about which features are used. You can turn this off at any time.
+? Our analytics approach is fully documented and open for transparency (docs/analytics).
+: Our analytics approach is fully documented and open for transparency (docs/analytics).
