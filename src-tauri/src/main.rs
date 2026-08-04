@@ -91,16 +91,38 @@ use window_state::AppHandleExt;
 use window_state::StateFlags;
 
 #[cfg(target_os = "macos")]
-use objc::{msg_send, sel, sel_impl};
+fn return_focus_to_previous_window(app_handle: &tauri::AppHandle) -> Result<(), String> {
+  app_handle
+    .hide()
+    .map_err(|e| format!("Failed to hide application: {}", e))
+}
+
+// Upper bound on how long we wait for the main thread to run the application
+// hide. If the event loop is wedged rather than gone the oneshot sender is
+// never dropped, so without this the caller would await forever.
+#[cfg(target_os = "macos")]
+const FOCUS_RESTORE_TIMEOUT: StdDuration = StdDuration::from_secs(5);
 
 #[cfg(target_os = "macos")]
-use cocoa::{appkit::NSApplication, base::nil};
+async fn return_focus_to_previous_window_on_main_thread(
+  app_handle: &tauri::AppHandle,
+) -> Result<(), String> {
+  let (sender, receiver) = tokio::sync::oneshot::channel();
+  let app_handle_clone = app_handle.clone();
 
-#[cfg(target_os = "macos")]
-fn return_focus_to_previous_window() {
-  unsafe {
-    let app = NSApplication::sharedApplication(nil);
-    let _: () = msg_send![app, hide: nil];
+  app_handle
+    .run_on_main_thread(move || {
+      let _ = sender.send(return_focus_to_previous_window(&app_handle_clone));
+    })
+    .map_err(|e| format!("Failed to schedule application hide: {}", e))?;
+
+  match tokio::time::timeout(FOCUS_RESTORE_TIMEOUT, receiver).await {
+    Ok(Ok(hide_result)) => hide_result,
+    Ok(Err(e)) => Err(format!("Failed to receive application hide result: {}", e)),
+    Err(_) => Err(format!(
+      "Timed out after {} ms waiting for the application hide to run on the main thread",
+      FOCUS_RESTORE_TIMEOUT.as_millis()
+    )),
   }
 }
 
@@ -136,7 +158,27 @@ async fn quickpaste_hide_paste_close(
 
   // Return focus to the previous window
   #[cfg(target_os = "macos")]
-  return_focus_to_previous_window();
+  if let Err(focus_error) = return_focus_to_previous_window_on_main_thread(&app_handle).await {
+    // Focus was not returned, so a simulated paste would land in the wrong
+    // application. Still put the item on the clipboard so the user can paste it
+    // manually, then tear the Quick Paste window down so it cannot be orphaned.
+    let copy_result = clipboard_commands::copy_history_item(app_handle.clone(), history_id);
+    if copy_result != "ok" {
+      eprintln!(
+        "Failed to copy history item after focus restoration error: {}",
+        copy_result
+      );
+    }
+
+    if let Err(close_error) = window.close() {
+      eprintln!(
+        "Failed to close Quick Paste window after focus restoration error: {}",
+        close_error
+      );
+    }
+
+    return Err(focus_error);
+  }
 
   sleep(StdDuration::from_millis(200)).await;
 
@@ -635,7 +677,9 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle, title: String) -> 
       tauri::WindowEvent::Destroyed => {
         #[cfg(target_os = "macos")]
         {
-          return_focus_to_previous_window();
+          if let Err(e) = return_focus_to_previous_window(&app_handle_clone) {
+            eprintln!("Failed to return focus to previous window: {}", e);
+          }
           if is_main_window_visible {
             let _ = app_handle_clone
               .get_window("main")
@@ -657,7 +701,9 @@ async fn open_quickpaste_window(app_handle: tauri::AppHandle, title: String) -> 
             .map_err(|e| eprintln!("Failed to close window: {}", e));
         }
         #[cfg(target_os = "macos")]
-        return_focus_to_previous_window();
+        if let Err(e) = return_focus_to_previous_window(&app_handle_clone) {
+          eprintln!("Failed to return focus to previous window: {}", e);
+        }
       }
       _ => {}
     });
