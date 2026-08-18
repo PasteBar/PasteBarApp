@@ -1,0 +1,220 @@
+'<strong>{{screenLockPassCodeLength}}</strong> digits passcode is set.': 已設定 <strong>{{screenLockPassCodeLength}}</strong> 位數字密碼。
+Activation Success: 啟用成功
+Add a star to the copied text when you copy it twice within 1 second. This allows you to quickly add copied text or links to your favorites and easily find it in the clipboard history.: 在 1 秒內複製兩次文字時自動加星號。這讓您可以快速將複製的文字或連結加入我的最愛，並在剪貼簿歷史中輕鬆找到。
+Add an unlimited number of tabs within each collection for better organization and easy access.: 在每個收藏集中新增無限數量的分頁，以便更好地整理和快速存取。
+'Add an unlimited number of tabs within each collection for better organization and easy access.                                ': '在每個收藏集中新增無限數量的分頁，以便更好地整理和快速存取。                                '
+Advanced settings: 進階設定
+Already Active: 已啟用
+Application Auto Start: 應用程式自動啟動
+Application Color Theme: 應用程式色彩主題
+Application UI Color Theme: 應用程式介面色彩主題
+Application UI Fonts Scale: 應用程式介面字型縮放
+Application UI Language: 應用程式介面語言
+Applications listed below will not have their copy to clipboard action captured in clipboard history. Case insensitive.: 以下列出的應用程式複製到剪貼簿的動作將不會被記錄在剪貼簿歷史中。不區分大小寫。
+Apply and Restart: 套用並重新啟動
+Are you sure you want to go back to the default data folder? This will remove the custom location setting.: 您確定要回復到預設資料夾嗎？這將移除自訂位置設定。
+Are you sure you want to revert to the default database location? The application will restart.: 您確定要還原至預設資料庫位置嗎？應用程式將重新啟動。
+Are you sure you want to set "{{path}}" as the new data folder? The application will restart.: 您確定要將「{{path}}」設定為新的資料夾嗎？應用程式將重新啟動。
+Are you sure you want to {{operation}} the database to "{{path}}"? The application will restart.: 您確定要將資料庫{{operation}}至「{{path}}」嗎？應用程式將重新啟動。
+Auto Disable History Capture when Screen Unlocked: 螢幕解鎖時自動停用歷史擷取
+Auto Lock Application Screen on User Inactivity: 使用者閒置時自動鎖定應用程式螢幕
+Auto Lock Screen on User Inactivity: 使用者閒置時自動鎖定螢幕
+Auto Lock the Screen on User Inactivity: 使用者閒置時自動鎖定螢幕
+Auto Masking Words List: 自動遮蔽詞清單
+Auto update on capture: 擷取時自動更新
+Auto-Clear Settings: 自動清除設定
+Auto-Generate Link Card Preview: 自動產生連結卡片預覽
+Auto-Preview Link on Hover: 懸停時自動預覽連結
+Auto-Star on Double Copy: 雙次複製時自動加星號
+Auto-Trim Spaces on Capture: 擷取時自動修剪空格
+Auto-Update on Capture: 擷取時自動更新
+Auto-delete clipboard history after: 自動刪除剪貼簿歷史於
+Automatically create link card preview in the clipboard history. This allows to quickly view website details without opening or pasting the link.: 自動在剪貼簿歷史中建立連結卡片預覽。這讓您無需開啟或貼上連結即可快速查看網站詳情。
+Back: 返回
+Capture History: 擷取歷史
+Capture History Text Length Limits: 擷取歷史文字長度限制
+Change Custom Data Folder...: 變更自訂資料夾...
+Change Directory...: 變更目錄...
+Change Selected Folder...: 變更選定的資料夾...
+Change the application UI font size scale: 變更應用程式介面字型大小縮放
+Change the application UI language: 變更應用程式介面語言
+Change the application user interface color theme: 變更應用程式使用者介面色彩主題
+Change the application user interface font size scale: 變更應用程式使用者介面字型大小縮放
+Change the application user interface language: 變更應用程式使用者介面語言
+Changing the database location requires an application restart to take effect.: 變更資料庫位置需要重新啟動應用程式才能生效。
+Clip Notes Popup Maximum Dimensions: 片段筆記彈出視窗最大尺寸
+Clipboard History Settings: 剪貼簿歷史設定
+'Complete details:': '完整詳情：'
+Configure settings to automatically delete clipboard history items after a specified duration.: 設定在指定時間後自動刪除剪貼簿歷史項目。
+ConfirmRevertToDefaultDbPathMessage: 您確定要還原至預設資料位置嗎？您的應用程式資料將移動至預設路徑。
+Copy data: 複製資料
+Copy database file: 複製資料庫檔案
+Create a preview card on link hover in the clipboard history. This allows you to preview the link before opening or pasting it.: 在剪貼簿歷史中懸停連結時建立預覽卡片。這讓您可以在開啟或貼上連結前先預覽。
+Create an unlimited number of collections to organize your clips and menus.: 建立無限數量的收藏集來整理您的片段和選單。
+Current data folder: 目前資料夾
+Current data location: 目前資料位置
+Current database location: 目前資料庫位置
+Custom: 自訂
+Custom Application Data Location: 自訂應用程式資料位置
+Custom Database Location: 自訂資料庫位置
+Custom data location is active. You can change it or revert to the default location. Changes require an application restart.: 自訂資料位置已啟用。您可以變更或還原至預設位置。變更需要重新啟動應用程式。
+Custom themes: 自訂主題
+Decrease UI Font Size: 縮小介面字型
+Default: 預設
+Disable Image Capture: 停用圖片擷取
+Disable capturing and storing images from clipboard: 停用從剪貼簿擷取及儲存圖片
+Display clipboard history capture toggle on the locked application screen. This allows you to control history capture settings directly from the lock screen.: 在已鎖定的應用程式螢幕上顯示剪貼簿歷史擷取開關。這讓您可以直接從鎖定螢幕控制歷史擷取設定。
+Display disabled collections name on the navigation bar collections menu: 在導覽列收藏集選單中顯示已停用的收藏集名稱
+Display disabled collections name on the navigation bar under collections menu: 在導覽列收藏集選單下方顯示已停用的收藏集名稱
+Display full name of selected collection on the navigation bar: 在導覽列顯示所選收藏集的完整名稱
+Do you want to attempt to move the database file from "{{customPath}}" back to the default location?: 您要嘗試將資料庫檔案從「{{customPath}}」移回預設位置嗎？
+Drag and drop to prioritize languages for detection. The higher a language is in the list, the higher its detection priority.: 拖放以設定語言偵測優先順序。清單中越靠上的語言，其偵測優先順序越高。
+Email: 電子郵件
+Email is not valid: 電子郵件格式無效
+'Email:': '電子郵件：'
+Emails do not match: 電子郵件不相符
+Enable Auto Start: 啟用自動啟動
+Enable Clip Title Hover Show with Delay: 啟用片段標題延遲懸停顯示
+Enable application auto start on system boot: 啟用系統開機時應用程式自動啟動
+Enable auto lock the application screen after a certain period of inactivity, to prevent unauthorized access to your data.: 啟用在一定閒置時間後自動鎖定應用程式螢幕，以防止未授權存取您的資料。
+Enable auto lock the application screen when user not active: 使用者未活動時啟用自動鎖定應用程式螢幕
+Enable auto trim spaces on history capture: 啟用歷史擷取時自動修剪空格
+Enable auto update on capture: 啟用擷取時自動更新
+Enable custom data location to store application data in a directory of your choice instead of the default location.: 啟用自訂資料位置，將應用程式資料儲存在您選擇的目錄中，而非預設位置。
+Enable history capture: 啟用歷史擷取
+Enable programming language detection: 啟用程式語言偵測
+Enable screen unlock requirement on app launch for enhanced security, safeguarding data from unauthorized access.: 啟用應用程式啟動時的螢幕解鎖要求，以提升安全性，保護資料免受未授權存取。
+Enter Passcode length: 輸入密碼長度
+Enter new directory path or leave empty for default on next revert: 輸入新目錄路徑，或留空以在下次還原時使用預設路徑
+Enter recovery password to reset passcode.: 輸入復原密碼以重設密碼。
+Enter your <strong>{{screenLockPassCodeLength}} digits</strong> passcode: 輸入您的 <strong>{{screenLockPassCodeLength}} 位數字</strong>密碼
+Entered Passcode is invalid: 輸入的密碼無效
+Excluded Apps List: 排除的應用程式清單
+Execute Web Requests: 執行網路請求
+Execute terminal or shell commands directly from PasteBar clip and copy the results to the clipboard.: 直接從 PasteBar 片段執行終端機或 Shell 指令，並將結果複製到剪貼簿。
+'Expires:': '到期：'
+Failed to revert to default database location.: 還原至預設資料庫位置失敗。
+Failed to select directory: 選擇目錄失敗
+Forgot Passcode ? Enter your recovery password to reset the passcode.: 忘記密碼？請輸入您的復原密碼以重設密碼。
+Forgot passcode ?: 忘記密碼？
+Forgot?: 忘記了？
+Forgot? Reset using Password: 忘記了？使用密碼重設
+Get priority email support from us to resolve any issues or questions you may have about PasteBar.: 取得我們的優先電子郵件支援，解決您對 PasteBar 的任何問題或疑問。
+'Hint: {{screenLockRecoveryPasswordMasked}}': '提示：{{screenLockRecoveryPasswordMasked}}'
+If a database file already exists at the default location, do you want to overwrite it? Choosing "Cancel" will skip moving the file if an existing file is found.: 預設位置已有資料庫檔案，是否要覆蓋？選擇「取消」將在找到現有檔案時略過移動。
+Incorrect passcode.: 密碼不正確。
+Increase UI Font Size: 放大介面字型
+Issued: 發行日期
+Large: 大
+List each application name or window identifier on a new line.: 每行輸入一個應用程式名稱或視窗識別碼。
+List each word or sentence on a new line.: 每行輸入一個詞語或句子。
+Lock Screen Clipboard History Capture Control: 鎖定螢幕剪貼簿歷史擷取控制
+Lock Screen PassCode: 鎖定螢幕密碼
+Lock Screen Passcode: 鎖定螢幕密碼
+Manage Collections: 管理收藏集
+Maximum 10 digits: 最多 10 位數字
+Maximum devices: 最多裝置數
+Medium: 中
+Minimal 4 digits: 最少 4 位數字
+Minimize Window: 最小化視窗
+Minimum number of lines to trigger detection: 觸發偵測的最少行數
+Move data: 移動資料
+Move database file: 移動資料庫檔案
+Name: 名稱
+New Data Directory Path: 新資料目錄路徑
+New Database Directory Path: 新資料庫目錄路徑
+Open Security Settings: 開啟安全性設定
+Operation when applying new path: 套用新路徑時的操作
+Passcode digits remaining: 剩餘密碼位數
+Passcode is locked.: 密碼已鎖定。
+Passcode is not set: 尚未設定密碼
+Passcode is not valid: 密碼無效
+Passcode length: 密碼長度
+Passcode mismatch: 密碼不相符
+Passcode reset is locked.: 密碼重設已鎖定。
+Passcode successfully verified: 密碼驗證成功
+Passcode verification error: 密碼驗證錯誤
+Passcode verification is locked.: 密碼驗證已鎖定。
+Password is incorrect.: 密碼不正確。
+Password is incorrect. <br/>{{screenLockRecoveryPasswordMasked}}: 密碼不正確。<br/>{{screenLockRecoveryPasswordMasked}}
+'Password is incorrect. Hint: {{screenLockRecoveryPasswordMasked}}': '密碼不正確。提示：{{screenLockRecoveryPasswordMasked}}'
+'Password is incorrect. Masked password is: {{screenLockRecoveryPasswordMasked}}': '密碼不正確。遮蔽密碼為：{{screenLockRecoveryPasswordMasked}}'
+Password is incorrect. {{screenLockRecoveryPasswordMasked}}: 密碼不正確。{{screenLockRecoveryPasswordMasked}}
+Passwords do not match: 密碼不相符
+PasteBar Settings: PasteBar 設定
+Pin Window: 釘選視窗
+Pin on Top Window: 釘選視窗至最上層
+Please set up a Passcode and recovery password in Security Settings to enable Screen Lock and ensure better security.: 請在安全性設定中設定密碼及復原密碼，以啟用螢幕鎖定並確保更高的安全性。
+Please try again: 請再試一次
+Preview current popup size on hover.: 懸停時預覽目前彈出視窗大小。
+Prioritize Language Detection: 語言偵測優先順序
+Priority support: 優先支援
+Programming Language Detection: 程式語言偵測
+Programming Language Selection: 程式語言選擇
+Protect your data by requiring screen unlock authentication whenever the application starts.: 透過要求應用程式啟動時進行螢幕解鎖驗證來保護您的資料。
+Recovery Password for Lock Screen Passcode: 鎖定螢幕密碼的復原密碼
+Recovery password is set.: 復原密碼已設定。
+Refresh Application UI: 重新整理應用程式介面
+Refresh UI: 重新整理介面
+Require Screen Unlock at Application Start: 應用程式啟動時要求螢幕解鎖
+Require screen unlock at application launch to enhance security. This setting ensures that only authorized users can access the application, protecting your data from unauthorized access right from the start.: 要求應用程式啟動時螢幕解鎖以提升安全性。此設定確保只有授權的使用者可以存取應用程式，從一開始就保護您的資料免受未授權存取。
+Reset Font Size: 重設字型大小
+Revert to Default: 還原為預設值
+Revert to Default and Restart: 還原為預設值並重新啟動
+Run Terminal or Shell Commands: 執行終端機或 Shell 指令
+Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.: 使用內建的網頁擷取工具擷取並解析網站或 API 回應，並將提取的資料複製到剪貼簿。
+'Scrape and parse websites or API responses using built-in web scraping tools and copy the extracted data to the clipboard.                                ': '使用內建的網頁擷取工具擷取並解析網站或 API 回應，並將提取的資料複製到剪貼簿。                                '
+Security: 安全性
+Security Settings: 安全性設定
+Select Custom Data Folder...: 選擇自訂資料夾...
+Select Data Folder: 選擇資料夾
+Select Data Folder...: 選擇資料夾...
+Select a custom location to store your application data instead of the default location.: 選擇自訂位置來儲存應用程式資料，而非使用預設位置。
+Selected data folder: 已選擇的資料夾
+Selected new data folder: 已選擇新的資料夾
+Selected new data folder for change: 已選擇用於變更的新資料夾
+Send HTTP requests to web APIs or services and copy the response data to the clipboard.: 向網路 API 或服務發送 HTTP 請求，並將回應資料複製到剪貼簿。
+Sensitive words or sentences listed below will automatically be masked if found in the copied text. Case insensitive.: 如果在複製的文字中找到以下列出的敏感詞語或句子，將自動遮蔽。不區分大小寫。
+Set a passcode to unlock the locked screen and protect your data from unauthorized access.: 設定密碼以解鎖鎖定的螢幕，並保護您的資料免受未授權存取。
+Set a recovery password to easily reset your lock screen passcode if forgotten. Your password will be securely stored in your device's OS storage.: 設定復原密碼，以便忘記鎖定螢幕密碼時輕鬆重設。您的密碼將安全地儲存在裝置的作業系統儲存空間中。
+Setting a custom database location requires an application restart to take effect.: 設定自訂資料庫位置需要重新啟動應用程式才能生效。
+Settings: 設定
+Show Clipboard History Capture Control on Lock Screen: 在鎖定螢幕上顯示剪貼簿歷史擷取控制
+Show Disable History Capture When Screen Locked: 螢幕鎖定時顯示停用歷史擷取
+Show Disabled Collections: 顯示已停用的收藏集
+Show clipboard history capture toggle when the application screen is locked. This allow you to control capturing history settings from the application locked screen.: 當應用程式螢幕鎖定時顯示剪貼簿歷史擷取開關。這讓您可以從應用程式鎖定螢幕控制擷取歷史設定。
+Show collection name on the navbar: 在導覽列顯示收藏集名稱
+Show disabled collections on the navbar list: 在導覽列清單中顯示已停用的收藏集
+Skip auto start prompt on app launch: 應用程式啟動時略過自動啟動提示
+Small: 小
+Stop Words List: 停用詞清單
+Swap Panels Layout: 交換面板配置
+Switch the layout position of panels in Clipboard History and Paste Menu views: 在剪貼簿歷史和貼上選單檢視中切換面板的配置位置
+Thank you again for using PasteBar.: 再次感謝您使用 PasteBar。
+Thank you for testing! 🙌: 感謝您的測試！🙌
+The selected folder is not empty and does not contain PasteBar data files. Do you want to create a "pastebar-data" subfolder to store the data?: 選定的資料夾不是空的，且不包含 PasteBar 資料檔案。您要建立「pastebar-data」子資料夾來儲存資料嗎？
+The selected folder is not empty. Do you want to create a "pastebar-data" subfolder to store the data?: 選定的資料夾不是空的。您要建立「pastebar-data」子資料夾來儲存資料嗎？
+This folder already contains PasteBar data. The application will use this existing data after restart.: 此資料夾已包含 PasteBar 資料。應用程式重新啟動後將使用這些現有資料。
+This option lets you control the display and timing of hover notes on clips. You can choose to show notes instantly or with a delay to prevent unintended popups.: 此選項讓您控制片段懸停筆記的顯示和時機。您可以選擇立即顯示筆記或延遲顯示，以防止意外彈出。
+This option lets you customize the maximum width and height of the popup that displays clip notes, ensuring it fits comfortably within your desired size.: 此選項讓您自訂顯示片段筆記之彈出視窗的最大寬度和高度，確保其大小符合您的需求。
+This option lets you customize the minimum and maximum length of text that can be captured in the clipboard history. Setting either value to 0 makes that limit unlimited.: 此選項讓您自訂剪貼簿歷史中可擷取文字的最小和最大長度。將任一值設為 0 表示該限制為無限制。
+To downgrade your current version, please visit: 若要降級目前版本，請造訪
+'To downgrade, please visit: ': '若要降級，請造訪：'
+To ensure the best detection accuracy, please select up to 7 languages. Limiting choices improves precision.: 為確保最佳偵測準確性，請最多選擇 7 種語言。限制選擇可提高精確度。
+Today: 今天
+Tomorrow: 明天
+Try after <strong>{{resetPassCodeNextDelay}}</strong> seconds: 請於 <strong>{{resetPassCodeNextDelay}}</strong> 秒後再試
+Try again after <strong>{{resetPassCodeNextDelay}}</strong> seconds: 請於 <strong>{{resetPassCodeNextDelay}}</strong> 秒後再試一次
+UI Language: 介面語言
+UnPin Window: 取消釘選視窗
+Unlimited Collections: 無限收藏集
+Unlimited Tabs per Collection: 每個收藏集無限分頁
+Unlimited paste history: 無限貼上歷史
+Use Password: 使用密碼
+Use new location: 使用新位置
+User Preferences: 使用者偏好設定
+Web Scraping and Parsing: 網頁擷取與解析
+Words or sentences listed below will not be captured in clipboard history if found in the copied text. Case insensitive.: 如果在複製的文字中找到以下列出的詞語或句子，將不會記錄在剪貼簿歷史中。不區分大小寫。
+none: 無
+passcode reset: 密碼重設
+password reset: 密碼重設

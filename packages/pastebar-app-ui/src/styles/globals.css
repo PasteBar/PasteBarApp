@@ -618,6 +618,10 @@ body .simplified-layout .history-box {
     margin: 0;
     font-family:
       Inter,
+      'Microsoft JhengHei',
+      'PingFang TC',
+      'Noto Sans TC',
+      'Microsoft YaHei',
       -apple-system,
       BlinkMacSystemFont,
       'Segoe UI',

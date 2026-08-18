@@ -92,7 +92,7 @@ function App() {
   }, [isAppLocked.value])
 
   useEffect(() => {
-    appReady().then(res => {
+    appReady().then(async res => {
       if (res === null) return
 
       try {
@@ -282,6 +282,12 @@ function App() {
           settings.isScreenLockPassCodeRequireOnStart?.valueBool
         ) {
           isAppLocked.value = true
+        }
+
+        // Clear any previously-registered global shortcuts before (re)registering,
+        // so changing a hotkey does not leave the old one grabbed until app restart.
+        if (window.isMainWindow) {
+          await unregisterAll().catch(() => {})
         }
 
         if (settings.hotKeysShowHideMainAppWindow?.valueText) {

@@ -5,12 +5,13 @@ import it from 'date-fns/locale/it'
 import ru from 'date-fns/locale/ru'
 import uk from 'date-fns/locale/uk'
 import zhCN from 'date-fns/locale/zh-CN'
+import zhTW from 'date-fns/locale/zh-TW'
 
 interface LocaleMap {
   [key: string]: Locale
 }
 
-const locales: LocaleMap = { en, esES, ru, uk, it, zhCN }
+const locales: LocaleMap = { en, esES, ru, uk, it, zhCN, zhTW }
 
 export function formatLocale(date: Date | number, formatStr = 'Pp'): string {
   const currentLocale = window.__locale__ || 'en'

@@ -1,0 +1,30 @@
+Check for Update: 檢查應用程式更新
+Checking for Update...: 正在檢查更新...
+Confirm Restart: 確認重新啟動
+Confirm Update: 確認更新
+Download Completed: 下載完成
+Download Completed Quit and Manually Install: 下載的更新檔案應會自動開啟。若要完成更新，請先結束 PasteBar 應用程式，再手動完成最新版本的安裝。安裝完成後，請使用更新後的版本啟動 PasteBar。
+Download Update: 下載更新
+Downloading...: 正在下載...
+General Update Error: 更新過程中發生錯誤。請稍後再試。若問題持續發生，請手動下載並安裝更新。
+Install Update: 安裝更新
+Installing Update: 正在安裝更新
+No Update Available: 目前沒有可用的更新
+Permission Denied Message: 由於權限不足，更新程式無法替換舊的應用程式檔案。請使用具有系統管理員權限的使用者帳號，手動下載並更新應用程式檔案。
+Quit PasteBar: 結束 PasteBar
+Release date {{date}}: 發布日期 {{date}}
+Remind Me Later: 稍後提醒我
+Restart: 重新啟動
+Restart Required: 需要重新啟動
+Restart to Finish: 重新啟動以完成更新
+Restart to Update: 重新啟動 PasteBar
+Skip Download: 略過下載
+Skip This Version: 略過此版本
+Try Install Again: 再試一次安裝
+Update Available: 有可用的更新
+Update Error: 更新錯誤
+Update Install Error: 更新安裝錯誤
+'Update: Permission Denied': '更新：存取被拒'
+Upgrade removes Pro features: 升級將移除專業版功能
+Version {{newVersion}} is available: 版本 {{newVersion}} 已可使用
+View Changes: 查看變更內容

@@ -1,0 +1,359 @@
+' No': ' 否'
+' This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.': ' 此權限確保 PasteBar 可以存取剪貼簿，並在應用程式之間執行複製與貼上操作。'
+About PasteBar: 關於 PasteBar
+Action Menu: 操作選單
+? Add <b>{{Clipboard}}</b> field to template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: 新增 <b>{{Clipboard}}</b> 欄位至範本。這可讓您將文字複製到剪貼簿，並自動插入範本中。
+Add Clip: 新增片段
+Add First Option: 新增第一個選項
+Add Link Card: 新增連結卡片
+Add Menu: 新增選單
+Add Option: 新增選項
+Add PasteBar to Accessibility: 將 PasteBar 加入輔助使用
+Add To Player: 加入播放器
+Add to: 加入
+Add to Clips: 加入片段
+Add to Clips or Menu: 加入片段或選單
+Add to Menu: 加入選單
+Add to clip or menu: 加入片段或選單
+Add to template fields: 加入範本欄位
+Added: 已新增
+Adding this file to the player is not recommended unless you trust the source.: 除非您信任來源，否則不建議將此檔案加入播放器。
+Allow PasteBar to Copy and Paste from Clipboard: 允許 PasteBar 從剪貼簿複製與貼上
+Are you sure you want to delete?: 確定要刪除嗎？
+Are you sure?: 確定嗎？
+Attach History Window: 附加歷史視窗
+Back: 返回
+Build on {{buildDate}}: 建置於 {{buildDate}}
+Cancel: 取消
+Cancel Reset: 取消重設
+Check: 檢查
+Check / Done: 檢查 / 完成
+Check and Close: 檢查並關閉
+Check and Done: 檢查並完成
+Clear History: 清除歷史
+Clear Tracks: 清除曲目
+Clear found results and filters: 清除搜尋結果與篩選條件
+Click to Confirm: 點擊確認
+Clip: 片段
+Clip Boards: 看板
+Clipboard: 剪貼簿
+Clipboard History: 剪貼簿歷史
+Clipboard History Only: 僅剪貼簿歷史
+Clipboard History Settings: 剪貼簿歷史設定
+Close: 關閉
+Close Edit: 關閉編輯
+Close Expand Edit: 關閉展開編輯
+Close Find: 關閉搜尋
+Close History Window: 關閉歷史視窗
+Close modal and continue in browser: 關閉對話框並在瀏覽器中繼續
+Confirm: 確認
+Confirm  action: 確認操作
+Confirm Delete: 確認刪除
+Confirm Email: 確認電子郵件
+Confirm Passcode: 確認密碼
+Confirm Password: 確認密碼
+Confirm Remove: 確認移除
+Confirm Your Passcode: 確認您的密碼
+Confirm Passcode Reset: 確認密碼重設
+Confirm Password Reset: 確認密碼重設
+Confirm Add To Protected Collections: 確認加入受保護的收藏集
+Confirm Disable PIN Protection: 確認停用 PIN 保護
+Confirm Remove From Protected Collections: 確認從受保護的收藏集中移除
+Confirm Enable PIN Protection: 確認啟用 PIN 保護
+Contact Form: 聯絡表單
+Copied: 已複製
+Copy: 複製
+Copy & Paste: 複製貼上
+Copy and Paste: 複製貼上
+'Copy of ': '複製 '
+Copy to Clipboard: 複製到剪貼簿
+Create: 建立
+Created: 已建立
+Delay Next: 延遲下一個
+Delete: 刪除
+Deselect All: 取消全選
+Deselect pinned: 取消選取已釘選
+Digits Only Passcode: 純數字密碼
+Disabled: 已停用
+Done: 完成
+Done Adding: 新增完成
+Done Edit: 編輯完成
+Done Reorder: 重新排序完成
+Download mp3: 下載 mp3
+Drag: 拖曳
+Drag to Move: 拖曳以移動
+Drop To Add: 拖放以新增
+Drop Zone: 拖放區
+Edit: 編輯
+Edit Label: 編輯標籤
+'Email: {{email}}': '電子郵件：{{email}}'
+Emoji: 表情符號
+Empty: 空
+Empty Select: 空選取
+Enable / Disable: 啟用 / 停用
+Enable PasteBar in Accessibility Settings: 在輔助使用設定中啟用 PasteBar
+Enabled: 已啟用
+Enter Current Passcode: 輸入目前密碼
+Enter Digits Only Passcode: 輸入純數字密碼
+Enter Email: 輸入電子郵件
+Enter PIN to Access Protected Collection: 輸入 PIN 以存取受保護的收藏集
+Enter Passcode: 輸入密碼
+Enter Password: 輸入密碼
+Enter Recovery Password: 輸入復原密碼
+Enter passcode or password to unlock: 輸入密碼以解鎖
+Error: 錯誤
+Errors:
+  Error loading link: 載入連結錯誤
+  Cant save to file: 無法儲存至檔案
+  Something went wrong! {{err}} Please try again.: 發生錯誤！{{err}} 請重試。
+Expand Edit: 展開編輯
+Expires on {{proExpiresOn}}: 於 {{proExpiresOn}} 到期
+? Field <b>{{Clipboard}}</b> has been found in the template. This allows you to copy text to the clipboard, and it will be inserted into the template
+: 已在範本中找到 <b>{{Clipboard}}</b> 欄位。這可讓您將文字複製到剪貼簿，並自動插入範本中。
+Field is not found in the template: 在範本中找不到此欄位
+Find Clip: 搜尋片段
+Find History: 搜尋歷史
+Found in template but missing from fields definition: 已在範本中找到，但欄位定義中缺少
+Got it: 瞭解
+Hide Muli Select: 隱藏多重選取
+Hide Pinned Board: 隱藏已釘選看板
+History: 歷史
+Image: 圖片
+Image Scale {{ImageScale}}x: 圖片縮放 {{ImageScale}}x
+Image size: 圖片大小
+Image size in pixels: 圖片大小（像素）
+In View: 檢視中
+In View Edit: 檢視中編輯
+Inactive: 非使用中
+Large View: 大型檢視
+Large View Edit: 大型檢視編輯
+Later: 稍後
+Light: 淺色
+Lines Wrap: 自動換行
+Make Active: 設為使用中
+Make Disabled: 設為停用
+Make Enabled: 設為啟用
+Make Inactive: 設為非使用中
+Manage: 管理
+Maximum height: 最大高度
+Maximum length: 最大長度
+Maximum width: 最大寬度
+Menu: 選單
+Minimum length: 最小長度
+Move Down: 向下移動
+Move Up: 向上移動
+Multi Select: 多重選取
+'Name: {{name}}': '名稱：{{name}}'
+Next Delay: 下一個延遲
+Next Track: 下一曲目
+No: 否
+No Key Press: 無按鍵
+No Wrap: 不換行
+Not Now: 暫不
+Not found in the template: 在範本中找不到
+Nothing found: 未找到任何內容
+Number of lines: 行數
+Ok, but later: 好的，稍後
+Open: 開啟
+Open Accessibility: 開啟輔助使用
+Open History Window: 開啟歷史視窗
+Open Window: 開啟視窗
+Open contact form in browser: 在瀏覽器中開啟聯絡表單
+Open payment in browser: 在瀏覽器中開啟付款
+Options: 選項
+Password: 密碼
+Paste Delay: 貼上延遲
+Paste Menu: 貼上選單
+Paste in {{pastingCountDown}}...: 將在 {{pastingCountDown}} 後貼上...
+PasteBar: PasteBar
+PasteBar Application Error: PasteBar 應用程式錯誤
+PasteBar History: PasteBar 歷史
+PasteBar application now can access the clipboard and perform copy and paste operations across applications.: PasteBar 應用程式現在可以存取剪貼簿，並在應用程式之間執行複製與貼上操作。
+PasteBar was successfuly added to Accessibility settings: PasteBar 已成功加入輔助使用設定
+Pasted: 已貼上
+Path: 路徑
+Pause: 暫停
+Pause Playing: 暫停播放
+? 'Permission Check Failed: PasteBar has not been successfully added to Accessibility settings. Please grant the required permissions and click Done again.'
+: '權限檢查失敗：PasteBar 尚未成功加入輔助使用設定。請授予所需權限，然後再次點擊完成。'
+Pin Selected: 釘選已選取
+Pinned: 已釘選
+Play: 播放
+Please add PasteBar to the list of apps in: 請將 PasteBar 加入以下應用程式清單：
+Please confirm your action!: 請確認您的操作！
+Press: 按下
+Press ESC key to close: 按 ESC 鍵關閉
+Previous Track: 上一曲目
+Pro: 專業版
+Quit: 結束
+Rebuild Menu: 重建選單
+Recent History: 最近歷史
+Recovery Password: 復原密碼
+Remove: 移除
+Remove Link Card: 移除連結卡片
+Remove Selected Star: 移除已選取的星號
+Remove all fields from template: 從範本中移除所有欄位
+Remove all tracks: 移除所有曲目
+Remove current track: 移除目前曲目
+Remove from Player: 從播放器移除
+Remove from template: 從範本移除
+Rename: 重新命名
+Renew: 續約
+Reorder pinned: 重新排序已釘選項目
+Repeat 1: 單曲循環
+Repeat all: 全部循環
+Repeat off: 關閉循環
+Report and Try Again: 回報並重試
+Reset: 重設
+Reset Passcode: 重設密碼
+Reset Password: 重設密碼
+Reset with Passcode: 使用密碼重設
+Restart: 重新啟動
+Reverse Order: 反向排序
+Run and Copy Response: 執行並複製回應
+Run and Paste Response: 執行並貼上回應
+Running: 執行中
+Save: 儲存
+Save It!: 儲存！
+Saved: 已儲存
+Scroll to Top: 捲動至頂端
+Second: 秒
+Seconds: 秒
+'Security Alert: MP3 Verification Failed': '安全警告：MP3 驗證失敗'
+Select: 選取
+Select Default Option: 選取預設選項
+Select Language: 選擇語言
+Select default: 選取預設
+Select is empty: 選取為空
+Select option: 選取選項
+Select pinned: 選取已釘選項目
+Separate History Window: 獨立歷史視窗
+Sequence Copy: 依序複製
+Sequence Copy Paste: 依序複製貼上
+Sequence Delay Next: 依序延遲下一個
+Sequence Next Delay: 依序下一個延遲
+Sequence Paste: 依序貼上
+Sequence Reverse Order: 依序反向排序
+Set: 設定
+Set Password: 設定密碼
+Show Large View: 顯示大型檢視
+Show all: 顯示全部
+Size: 大小
+Source: 來源
+Star: 星號
+Star Selected: 為已選取加上星號
+Stay here: 留在此處
+Stay in touch: 保持聯繫
+Success!: 成功！
+Swap Panels Layout: 交換面板配置
+System Settings -> Privacy & Security -> Accessibility: 系統設定 -> 隱私權與安全性 -> 輔助使用
+Thank you for reporting the error.: 感謝您回報錯誤。
+Thank you for using Pro: 感謝您使用專業版
+Thank you!: 謝謝！
+This permission ensures PasteBar can access the clipboard and perform copy and paste operations across applications.: 此權限確保 PasteBar 可以存取剪貼簿，並在應用程式之間執行複製與貼上操作。
+Too long: 太長
+Too short: 太短
+Toolbar:
+  Blank Text Formatting: 空白文字格式
+  Bold Formatting: 粗體格式
+  Bold Text Formatting: 粗體文字格式
+  Copy and Paste Formatting: 複製貼上格式
+  Header Formatting: 標題格式
+  Hightlight Text Formatting: 螢光標示文字格式
+  Italic Formatting: 斜體格式
+  Masked Text Formatting: 遮罩文字格式
+  Remove Text Formatting: 移除文字格式
+Trust and Play: 信任並播放
+Type:
+  App: 應用程式
+  Auto Fill: 自動填入
+  AutoFill: 自動填入
+  Clip: 片段
+  Code: 程式碼
+  Code Snippet: 程式碼片段
+  Command: 指令
+  Email: 電子郵件
+  Emoji: 表情符號
+  Empty: 空
+  Error: 錯誤
+  File: 檔案
+  File, Path or App: 檔案、路徑或應用程式
+  Form Auto Fill: 表單自動填入
+  Image: 圖片
+  Label: 標籤
+  Link: 連結
+  Link or Email: 連結或電子郵件
+  Menu: 選單
+  Mp3: mp3
+  Path: 路徑
+  Plain Text: 純文字
+  Request: 請求
+  Run Auto Fill: 執行自動填入
+  Scraper: 擷取器
+  Secret: 密鑰
+  Trim: 修剪空白
+  Shell Command: Shell 指令
+  Submenu: 子選單
+  Template: 範本
+  Template Fill: 範本填入
+  Text: 文字
+  Video: 影片
+  Web Request (HTTP): 網路請求 (HTTP)
+  Web Scraper / Parser: 網路擷取器 / 解析器
+TypeMenu:
+  Clip Type: 片段類型
+  Code Snippet: 程式碼片段
+  File, Path or App: 檔案、路徑或應用程式
+  Form Auto Fill: 表單自動填入
+  Image: 圖片
+  Link or Email: 連結或電子郵件
+  Link or File, Path or App: 連結或檔案、路徑或應用程式
+  Plain Text: 純文字
+  Run, Execute: 執行
+  Select Language: 選擇語言
+  Shell Command: Shell 指令
+  Template: 範本
+  Template Fill: 範本填入
+  Text Template: 文字範本
+  Web Request (HTTP): 網路請求 (HTTP)
+  Web Scraper / Parser: 網路擷取器 / 解析器
+UnPin All: 取消釘選全部
+UnPin Selected: 取消釘選已選取
+Unlock Application Screen: 解鎖應用程式螢幕
+Unlock Pro features: 解鎖專業版功能
+Unlock Screen: 解鎖螢幕
+Unlock all features: 解鎖所有功能
+Unsaved label: 未儲存的標籤
+Update Error: 更新錯誤
+Update history list: 更新歷史清單
+Updated: 已更新
+Upgrade to Pro: 升級至專業版
+Use Passcode: 使用密碼
+Use Password: 使用密碼
+Using <b>{{Clipboard}}</b> field, allows you to copy text to the clipboard, and it will be inserted into the template: 使用 <b>{{Clipboard}}</b> 欄位，可讓您將文字複製到剪貼簿，並自動插入範本中
+Verify: 驗證
+Verify Current Password: 驗證目前密碼
+Verify Recovery Password: 驗證復原密碼
+Version: 版本
+View: 檢視
+View Edit: 檢視編輯
+Views:
+  Paste Menu: 貼上選單
+We apologize but you found a bug. Please report this issue to us and try again: 非常抱歉，您發現了一個錯誤。請向我們回報此問題，然後重試
+? We couldn't confirm this file's safety. Failed ID3 tag verification and integrity check. MP3 files can potentially contain malware. Please be cautious.
+: 我們無法確認此檔案的安全性。ID3 標籤驗證及完整性檢查失敗。MP3 檔案可能包含惡意軟體。請謹慎使用。
+Yes: 是
+Yes, activate: 是，啟用
+chars: 字元
+contact us.: 聯絡我們。
+found: 已找到
+if this error persists, try to restart the application or: 若此錯誤持續發生，請嘗試重新啟動應用程式或
+lines: 行
+menu items in: 選單項目在
+minutes: 分鐘
+only: 僅
+second: 秒
+seconds: 秒
+show less: 顯示較少
+www.site: www.pastebar.app

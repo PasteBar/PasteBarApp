@@ -1,0 +1,241 @@
+HISTORY_PANEL_TOUR:
+  - element: '#side-panel_tour'
+    popover:
+      title: 剪貼簿歷史面板
+      description: 此面板顯示您複製的剪貼簿歷史，方便稍後存取。滾動瀏覽歷史、搜尋內容，或依類型篩選。您可以調整此面板的大小以獲得自訂的檢視方式。
+      prefferedSide: right
+  - element: '#history-find_tour'
+    popover:
+      title: 尋找並篩選歷史
+      description: 使用搜尋功能快速找到剪貼簿歷史中的特定項目。依類型（文字、圖片或連結）篩選結果，輕鬆定位您需要的內容。再次複製找到的項目，或將其儲存至看板。
+      prefferedSide: bottom
+      alignment: center
+  - element: '#history-list_tour .history-item'
+    popover:
+      title: 剪貼簿歷史項目
+      description: 剪貼簿歷史中的每個項目代表您先前複製的內容。<b>雙擊</b>項目或點擊圖示可將其複製回剪貼簿。<b>按住並拖曳</b>可在看板面板上建立已儲存的片段。<b>右鍵點擊</b>項目可在右鍵選單中查看更多選項。
+      prefferedSide: right
+  - element: '#tabs-history_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 歷史/選單導覽分頁
+      description: 在剪貼簿歷史與貼上選單之間切換，輕鬆管理並存取您的內容。
+      alignment: center
+      prefferedSide: top
+  - element: '#history-menu-button_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 歷史已選項目選單
+      description: 使用此選單管理剪貼簿歷史中已選取的項目。您可以<b>多選</b>項目、取消全選、新增至看板、刪除，或清除特定日期的歷史記錄。
+      alignment: end
+      prefferedSide: right
+  - element: .panel-resize_tour
+    popover:
+      title: 可調整大小的面板檢視
+      description: 透過調整面板檢視的大小來自訂工作區，以符合您的偏好。將<b>滑鼠懸停</b>在面板邊緣，直到出現調整大小的游標，再<b>點擊並拖曳</b>以調整面板大小。
+      prefferedSide: right
+
+DASHBOARD_CLIPS_TOUR:
+  - element: .clips-dashboard-panel_tour
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 儀表板面板
+      description: 此面板提供一個集中樞紐，用於整理和管理您已儲存的片段。建立自訂分頁和看板來組織您的內容。從剪貼簿歷史<b>拖放</b>項目以建立新片段。使用分頁在不同的看板類別之間切換。
+      prefferedSide: left
+  - element: '#dashboard-tabs_tour'
+    popover:
+      title: 儀表板分頁
+      description: 建立自訂分頁，並用來在儀表板的不同區段之間導覽。在類別之間切換，以快速管理並存取您的片段和內容。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#dashboard-tabs-create-button_tour'
+    popover:
+      title: 建立儀表板項目
+      description: 為您的儀表板建立新項目。新增片段、看板或自訂分頁，以整理您的內容。
+      alignment: end
+      prefferedSide: bottom
+  - element: '#dashboard-tabs-context-menu_tour'
+    popover:
+      title: 分頁與版面配置選單
+      description: <b>右鍵點擊</b>分頁或<b>點擊選單圖示</b>，以整理版面配置並管理分頁。您可以編輯現有分頁，或變更儀表板版面以符合您的工作流程偏好。
+      alignment: end
+      prefferedSide: bottom
+  - element: .board-panel_tour
+    popover:
+      title: 看板面板
+      description: 此看板面板讓您整理已儲存的片段，以便快速輕鬆地存取。從剪貼簿歷史<b>拖放</b>項目。使用看板有效率地分類和管理您的內容。
+      alignment: center
+      prefferedSide: right
+  - element: .board-panel-header_tour
+    popover:
+      title: 看板面板標題
+      description: <b>雙擊</b>標題可快速展開看板面板，或<b>右鍵點擊</b>以查看其他選項來自訂和管理看板。
+      alignment: start
+      prefferedSide: right
+  - element: .clip_tour
+    popover:
+      title: 已儲存的片段項目
+      description: 快速存取已儲存的片段內容。<b>雙擊</b>或<b>點擊剪貼簿圖示</b>即可複製。<b>長按</b>以重新排列項目，或<b>右鍵點擊</b>查看更多選項來自訂和整理您的片段。
+      alignment: start
+      prefferedSide: right
+  - element: .panel-resize_tour
+    popover:
+      title: 可調整大小的面板檢視
+      description: 透過調整面板檢視的大小來自訂工作區，以符合您的偏好。將<b>滑鼠懸停</b>在面板邊緣，直到出現調整大小的游標，再<b>點擊並拖曳</b>以調整面板大小。
+      prefferedSide: right
+
+MENU_TOUR:
+  - element: '#side-panel_tour'
+    popover:
+      title: 貼上選單面板
+      description: 此面板讓您管理系統工作列或選單列的原生貼上選單。<b>按住並拖曳</b>項目以重新排列，<b>雙擊</b>以重新命名。<b>按住</b> ALT 或 Command 鍵並點擊任意項目可多選。
+      prefferedSide: right
+  - element: '#menu-find_tour'
+    popover:
+      title: 尋找選單項目
+      description: 使用搜尋列快速找到特定的選單項目。輸入關鍵字以篩選並定位您需要的項目。
+      prefferedSide: bottom
+      alignment: center
+  - element: div[role=treeitem]
+    popover:
+      title: 選單項目樹狀結構
+      description: 選單樹狀結構中的每個項目都可以個別或以群組方式重新排列。<b>雙擊</b>以重新命名，<b>按住並拖曳</b>以重新排列。<b>按住</b> ALT 或 Command 鍵並點擊可多選。
+      prefferedSide: right
+  - element: '#tabs-menu_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 歷史/選單導覽分頁
+      description: 在剪貼簿歷史與貼上選單之間切換，輕鬆管理並存取您的內容。
+      alignment: center
+      prefferedSide: top
+  - element: '#menu-icon-menu-button_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 已選項目貼上選單
+      description: 使用此選單管理多個已選取的選單項目。多選、取消全選、重建原生選單，或刪除項目，以快速整理您的貼上選單。
+      alignment: end
+      prefferedSide: right
+  - element: '#menu-main-list_tour'
+    meta:
+      closeTourCssPosition: hidden
+    popover:
+      title: 管理貼上選單面板
+      description: 此面板讓您管理所有使用中的選單項目。新增、編輯或移除項目以自訂您的貼上選單。建立新項目或連結現有片段。<b>雙擊</b>可將內容複製至剪貼簿，<b>右鍵點擊</b>可查看更多選項。
+      alignment: start
+      prefferedSide: left
+  - element: .menu-item_tour
+    popover:
+      title: 選單項目
+      description: 在此您可以個別管理每個選單項目。<b>點擊</b>展開圖示以查看選單內容。<b>雙擊</b>可將內容複製至剪貼簿，<b>右鍵點擊</b>可查看更多選項。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#add-menu-item__tour'
+    popover:
+      title: 新增選單項目
+      description: 點擊加號圖示，選擇要新增項目的位置，可在現有選單項目之前或之後加入。您可以建立新選單、子選單、分隔線、已停用的選單項目、來自最近歷史的選單項目，或連結至已儲存的片段。
+      alignment: end
+      prefferedSide: bottom
+  - element: '#toggle-inactive-menu-items_tour'
+    popover:
+      title: 切換未使用的選單項目
+      description: 點擊此圖示可顯示或隱藏未使用的選單項目。當需要時，專注於使用中的項目，有助於管理和整理您的選單。簡化選單並整頓工作區，提升工作效率。
+      alignment: start
+      prefferedSide: bottom
+  - element: .panel-resize_tour
+    popover:
+      title: 可調整大小的面板檢視
+      description: 透過調整面板檢視的大小來自訂工作區，以符合您的偏好。將<b>滑鼠懸停</b>在面板邊緣，直到出現調整大小的游標，再<b>點擊並拖曳</b>以調整面板大小。
+      prefferedSide: right
+
+NAVBAR_TOUR:
+  - element: '#navbar-panel_tour'
+    popover:
+      title: 導覽列
+      description: 導覽列提供快速存取 PasteBar 功能與設定的入口。使用它在剪貼簿歷史與貼上選單之間切換、存取您的收藏集、執行全域搜尋、切換已釘選看板的顯示狀態、調整設定，以及在需要時取得說明。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-pastebar_tour'
+    popover:
+      title: PasteBar 選單
+      description: PasteBar 選單提供快速存取基本功能與資訊的入口。在此您可以檢查更新、存取設定、鎖定應用程式螢幕、關閉主視窗，或結束應用程式。
+      alignment: start
+      prefferedSide: bottom
+  - element: '#navbar-view_tour'
+    popover:
+      title: 檢視選單
+      description: 使用檢視選單在剪貼簿歷史和貼上選單之間導覽、調整選項、變更色彩主題、修改 UI 字型大小，以及變更語言。存取其他設定以獲得個人化體驗。
+      alignment: start
+      prefferedSide: bottom
+  - element: '#navbar-collections_tour'
+    popover:
+      title: 收藏集選單
+      description: 收藏集選單讓您在不同的片段、看板和分頁收藏集之間切換。建立並自訂每個收藏集以符合您的特定需求，例如依專案或類別整理內容。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-toggle-history-split'
+    popover:
+      title: 切換歷史視窗
+      description: 點擊此圖示可在獨立的視窗中開啟或關閉剪貼簿歷史。使用此功能可獨立於主視窗管理您的剪貼簿歷史。
+      alignment: center
+      preferredSide: bottom
+  - element: '#navbar-search_tour'
+    popover:
+      title: 全域搜尋
+      description: 使用全域搜尋快速找到目前收藏集中的片段、看板和選單項目。輸入關鍵字篩選結果，有效率地定位您需要的內容。從搜尋結果中<b>雙擊</b>片段即可直接複製。
+      alignment: center
+      prefferedSide: bottom
+  - element: '#navbar-pinned_tour'
+    popover:
+      title: 切換已釘選看板
+      description: 點擊此圖示可顯示或隱藏已釘選的看板。使用此功能保持工作區整潔，並專注於最相關的內容。
+      alignment: end
+      prefferedSide: bottom
+  - element: '#navbar-help_tour'
+    popover:
+      title: 說明選單
+      description: 從說明選單快速存取導覽教學和 UI 功能展示。它提供逐步引導和示範，協助您有效瀏覽並了解 PasteBar 的功能和使用者介面。
+      alignment: end
+      prefferedSide: bottom
+  - element: '#navbar-close-window_tour'
+    popover:
+      title: 關閉主視窗
+      description: 點擊關閉圖示以關閉 PasteBar 主視窗，同時保持其功能可從工作列或選單列圖示存取。您隨時可以從主選單重新開啟主應用程式視窗。
+      alignment: end
+      prefferedSide: bottom
+
+SETTINGS_TOUR:
+  - element: '#app-settings-history_tour'
+    popover:
+      title: 剪貼簿歷史設定
+      description: 調整剪貼簿歷史設定，自訂 PasteBar 擷取和管理您所複製內容的方式。啟用或停用自動更新、自動加星號、連結預覽、停用詞清單，以及程式語言自動偵測等功能，以獲得個人化體驗。
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-collections_tour'
+    popover:
+      title: 管理收藏集設定
+      description: 使用管理收藏集來整理和自訂您的收藏集。新增收藏集、編輯現有收藏集，並在它們之間切換以符合您的工作流程。透過將相關的片段、看板和分頁分組，有效率地管理您的內容。
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-preferences_tour'
+    popover:
+      title: 使用者偏好設定
+      description: 調整字型大小、切換色彩主題、變更介面語言，以及設定自動啟動選項。切換面板版面配置、在導覽列上顯示收藏集名稱，以及管理片段筆記快顯視窗。
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-security_tour'
+    popover:
+      title: 安全性設定
+      description: 設定安全性設定以保護您的資料。設定鎖定螢幕密碼和復原密碼。控制鎖定螢幕時的剪貼簿歷史擷取，並啟用閒置時自動鎖定。調整這些設定以增強 PasteBar 應用程式的安全性。
+      alignment: start
+      prefferedSide: right
+  - element: '#app-settings-back_tour'
+    popover:
+      title: 返回主畫面
+      description: 點擊以從設定返回主應用程式檢視。
+      alignment: start
+      prefferedSide: right

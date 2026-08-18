@@ -1,0 +1,42 @@
+All History Settings: 歷史記錄所有設定
+All done! History's been cleared.: 完成！歷史記錄已清除。
+Auto Update on Capture: 擷取時自動更新
+Auto-Clear Settings: 自動清除設定
+Capture History: 擷取歷史
+Clear: 清除
+Clear All: 全部清除
+Clear All History: 清除所有歷史記錄
+Clear History: 清除歷史記錄
+Confirm Clear All History: 確認清除所有歷史記錄
+Do you really want to remove ALL clipboard history items?: 確定要刪除所有剪貼簿歷史記錄項目嗎？
+Do you want to remove all recent clipboard history older than {{olderThen}} {{durationType}}: 是否要刪除所有早於 {{olderThen}} {{durationType}} 的最近剪貼簿歷史記錄？
+Do you want to remove clipboard history items older than {{olderThen}} {{durationType}}: 是否要刪除早於 {{olderThen}} {{durationType}} 的剪貼簿歷史記錄項目？
+Enable Capture History: 啟用歷史記錄擷取
+Enable Image Capture: 啟用圖片擷取
+Filters:
+  App Filters: 應用程式篩選器
+  Audio: 音訊
+  Clear Filters: 清除篩選器
+  Code: 程式碼
+  Emoji: 表情符號
+  Image: 圖片
+  Language Filters: 語言篩選器
+  Languages: 語言
+  Languages Filter: 語言篩選器
+  Languages Filters: 語言篩選器
+  Link: 連結
+  Pinned: 已釘選
+  Secret: 機密
+  Select Filters: 選擇篩選器
+  Source: 來源
+  Source Application: 來源應用程式
+  Source Filters: 來源篩選器
+  Starred: 已加星號
+  Text: 文字
+  Video: 影片
+Hide pinned history: 隱藏已釘選的歷史記錄
+History Settings: 歷史記錄設定
+Paste Menu: 貼上選單
+Select Filters: 選擇篩選器
+View pinned history: 檢視已釘選的歷史記錄
+'{{isAll}} Clipboard History': '{{isAll}} 剪貼簿歷史'

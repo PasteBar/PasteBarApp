@@ -25,4 +25,5 @@ export const LANGUAGES: {
   },
   { code: 'uk', name: 'Українська', flag: '🇺🇦', website: 'www.pastebar.app' },
   { code: 'zhCN', name: '简体中文', flag: '🇨🇳', website: 'www.pastebar.app' },
+  { code: 'zhTW', name: '繁體中文', flag: '🇹🇼', website: 'www.pastebar.app' },
 ]
