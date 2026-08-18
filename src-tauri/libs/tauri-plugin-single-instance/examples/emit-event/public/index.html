@@ -1,0 +1,35 @@
+<html>
+  <body>
+    <div>Plugin example</div>
+    <pre id="args"></pre>
+    <script type="module">
+      var argsEl = document.getElementById('args')
+
+      function cliProtocolVal({ args: { color: { value }}}) {
+        argsEl.innerHTML = value
+        document.body.style.backgroundColor = value
+      }
+      function cliProtocolErr (err) {
+        argsEl.innerHTML = JSON.stringify(err)
+      }
+
+      window.__TAURI__.cli.getMatches()
+        .then(cliProtocolVal)
+        .catch(cliProtocolErr);
+
+      await window.__TAURI__.event.listen(
+        'single-instance',
+        ({event, ...eventObj}) => {
+          console.log(event, eventObj)
+          let args = eventObj.payload?.args
+
+          if (args?.length > 1) {
+            let color = args[1]
+            argsEl.innerHTML = color
+            document.body.style.backgroundColor = color
+          }
+        }
+      )
+    </script>
+  </body>
+</html>

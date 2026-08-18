@@ -28,6 +28,8 @@ type TextareaProps = React.ComponentPropsWithRef<'textarea'> & {
   maxRows?: number
   autoFocus?: boolean
   maxLength?: number
+  onMouseDown?: (event: React.MouseEvent<HTMLTextAreaElement>) => void
+  onClick?: (event: React.MouseEvent<HTMLTextAreaElement>) => void
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
   onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void
   onPaste?: (event: React.ClipboardEvent<HTMLTextAreaElement>) => void
@@ -58,6 +60,8 @@ const TextArea = forwardRef<TextAreaRef, TextareaProps>(
       onBlur = () => {},
       onPaste = () => {},
       onChange = () => {},
+      onClick = () => {},
+      onMouseDown = () => {},
       onKeyDown = () => {},
       rows = 2,
       maxRows = 5,
@@ -285,6 +289,8 @@ const TextArea = forwardRef<TextAreaRef, TextareaProps>(
             maxLength={maxLength}
             onFocus={onFocus}
             onBlur={onBlur}
+            onMouseDown={onMouseDown}
+            onClick={onClick}
             name={name}
             disabled={isDisabled}
             onChange={onChange}

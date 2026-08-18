@@ -1,0 +1,17 @@
+[package]
+name = "macos-accessibility-client"
+description = "Wrapper around macOS' accessibility client APIs"
+repository = "https://github.com/next-slide-please/macos-accessibility-client"
+version = "0.0.1"
+authors = ["Lucas Jenß"]
+categories = ["os::macos-apis", "accessibility"]
+edition = "2018"
+license = "Apache-2.0"
+build = "build.rs"
+
+[dependencies]
+core-foundation = "0.9"
+core-foundation-sys = "0.8"
+
+[package.metadata.docs.rs]
+default-target = "x86_64-apple-darwin"
